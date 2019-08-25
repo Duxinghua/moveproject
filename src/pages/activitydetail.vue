@@ -70,5 +70,4 @@ export default {
   line-height: 40px;
   margin-bottom: 34px;
 }
-
 </style>
