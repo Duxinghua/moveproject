@@ -24,11 +24,11 @@ export default {
   display: flex;
   flex-direction: column;
   width:100%;
-  margin-bottom: 30px;
+  margin-bottom: 46px;
 }
 .avitem img{
   height:auto;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   width: 100%;
 }
 .avitem .avinfo{
