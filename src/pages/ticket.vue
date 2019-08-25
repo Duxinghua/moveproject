@@ -63,12 +63,19 @@ export default {
 </script>
 
 <style>
+  .ticket{
+    padding-top: 88px;
+  }
 .van-tabs--line .van-tabs__wrap{
   height:88px;
+  position: fixed;
+  width: 100%;
+  top:0;
 }
 .van-tabs__line{
   background:#923D93;
   width:47px !important;
+  bottom: 0;
 }
 .van-tab--active{
   color:#923D93;
@@ -78,6 +85,10 @@ export default {
   flex:0 0 100px!important;
 }
 .van-ellipsis{
-  padding-top:31px;
+  line-height: 40px;
+  padding:23px 0;
+}
+.van-tabs__nav--line{
+  padding-bottom: 0;
 }
 </style>

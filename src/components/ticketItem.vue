@@ -3,8 +3,8 @@
             <img :src="item.img" />
             <div class="ticketItemCon">
               <h4>{{item.title}}</h4>
-              <p class="ticketp">{{item.des}}</p>
-              <p class="ticketd"><span>¥{{item.pr1}}</span><span>¥{{item.pr2}}</span></p>
+              <p class="ticketp">{{item.des}} <span>5.7km</span> </p>
+              <p class="ticketd"><span>¥{{item.pr1}}</span><span >¥{{item.pr2}}</span></p>
               <span class="btn"><router-link to="/ticketdetail" >立即购买</router-link></span>
             </div>
           </div>
@@ -17,13 +17,16 @@ export default {
 </script>
 
 <style>
+  .ticketContent{
+    padding-top: 10px;
+  }
 .ticketItem{
   border-bottom: 1px solid #F3F3F3;
   display: flex;
   flex-direction:row;
   justify-content: flex-start;
   align-items: flex-start;
-  padding-top:10px;
+  padding-top:28px;
   padding-bottom: 32px;
 }
 .ticketItem img{
@@ -34,20 +37,28 @@ export default {
 .ticketItemCon{
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 .ticketItemCon h4{
   color:#333333;
   font-size: 30px;
   font-weight: 500;
-  margin-bottom: 17px;
+  line-height: 40px;
+  margin-bottom: 8px;
 }
 .ticketItemCon .ticketp{
   font-size: 24px;
   color:#999999;
-  margin-bottom: 10px;
+  margin-bottom: 18px;
+  line-height: 28px;
 }
+  .ticketItemCon .ticketp span{
+    float: right;
+  }
 .ticketd{
-  margin-bottom: 10px;
+  margin-bottom: 16px;
+  font-size: 26px;
+  line-height: 32px;
 }
 .ticketd span:nth-child(1){
   font-size: 30px;
@@ -58,7 +69,8 @@ export default {
 .ticketd span:nth-child(2){
   font-size: 26px;
   color:#999999;
-  text-decoration:line-through
+  text-decoration:line-through;
+  font-size: 24px;
 }
 .ticketItemCon .btn{
   width:160px;
@@ -71,6 +83,9 @@ export default {
   align-items: center;
   display: flex;
   font-size: 24px;
+}
+.ticketItemCon .btn a{
+  color: #8C3B92;
 }
 
 </style>
