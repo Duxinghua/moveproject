@@ -5,7 +5,9 @@
         <p>韩辰医疗美容鼻模海选</p>
           <p class="syyouxi">使用有效期</p>
         <p class="tdshp"><span class="addressdeta1">高新二路129号创意产业园3037号</span> <span class="pricetick">¥8888</span></p>
-        <p class="goumai"><span class="goumaisl">购买数量</span> <span class=""></span></p>
+        <p class="goumai">
+          <span class="goumaisl">购买数量</span>
+        </p>
       </div>
     </div>
 
@@ -72,5 +74,6 @@ export default {
     padding: 20px 0 20px 0 ;
     font-size:30px;
     border: none;
+    width: 100%;
   }
 </style>
