@@ -1,6 +1,6 @@
 <template>
   <div class="avitem">
-    <img :src="avitem.img" />
+    <img :src="avitem.image" />
     <div class="avinfo">
       <span>{{avitem.title}}</span>
       <span><router-link to="/activitydetail" >立即参加</router-link></span>
