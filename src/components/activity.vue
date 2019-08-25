@@ -3,7 +3,9 @@
     <img :src="avitem.image" />
     <div class="avinfo">
       <span>{{avitem.title}}</span>
-      <span>立即参加</span>
+
+      <span><router-link :to="'/activitydetail?id='+avitem.activity_id" >立即参加</router-link></span>
+
     </div>
   </router-link>
 </template>
