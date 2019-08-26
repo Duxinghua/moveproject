@@ -9,6 +9,7 @@ import Activitydetail from '../pages/activitydetail.vue'
 import Ticket from '../pages/ticket.vue'
 import Ticketdetail from '../pages/ticketdetail.vue'
 import Ticketpay from '../pages/ticketpay.vue'
+import Ticketpaydetail from '../pages/ticketpaydetail.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -57,6 +58,11 @@ export default new Router({
       path: '/ticketpay',
       name: 'ticketpay',
       component: Ticketpay
+    },
+    {
+      path: '/ticketpaydetail',
+      name: 'ticketpaydetail',
+      component: Ticketpaydetail
     }
   ]
 })
