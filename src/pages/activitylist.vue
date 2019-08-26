@@ -14,7 +14,7 @@
 <script>
 import Activity from '@/components/activity.vue'
 import Pagetab from '@/components/pagetab.vue'
-import {getArticleListApi, activityListApi, activityCateApi} from '@/api'
+import {activityListApi, activityCateApi} from '@/api'
 export default {
   components: {
     Activity,
@@ -31,7 +31,6 @@ export default {
   },
   mounted () {
     this.activityCate()
-    getArticleListApi({type: 1})
   },
   methods: {
     async activityCate () {
