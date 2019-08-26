@@ -14,7 +14,7 @@ module.exports = {
       '/api': {
         target: 'http://xinbr.qixiuu.com',
         changeOrigin: true
-      },
+      }
     },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

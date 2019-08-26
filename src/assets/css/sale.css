@@ -1,0 +1,46 @@
+.sales{
+  display: flex;
+  flex-direction: column;
+  background: #f3f3f3;
+  height:100vh;
+}
+.saleheader{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width:100%;
+  padding:26px 0;
+  background:white;
+  height:93px;
+
+}
+.saleheader .saitem{
+  width:33.33%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.saitem img{
+  width:44px;
+  height:44px;
+  margin-right:15px;
+}
+.saitem span{
+  color:#999999;
+  font-size: 26px;
+  height:44px;
+  line-height: 44px;
+}
+.salecontent{
+  margin-top:10px;
+}
+.saleitems{
+  padding:0px 32px;
+  background:white;
+}
+.wbitems{
+ padding:32px;
+ background:#f3f3f3;
+}
