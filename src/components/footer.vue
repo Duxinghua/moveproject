@@ -6,7 +6,7 @@
       </div>
       <div class="menuitem">
         <img src="../assets/images/sale.png" alt="" />
-        <span>营销</span>
+        <span><router-link to="/sale" >营销</router-link></span>
       </div>
       <div class="menuitem">
         <img src="../assets/images/xbr.png" alt="" />

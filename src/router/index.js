@@ -8,6 +8,13 @@ import Activitylist from '../pages/activitylist.vue'
 import Activitydetail from '../pages/activitydetail.vue'
 import Ticket from '../pages/ticket.vue'
 import Ticketdetail from '../pages/ticketdetail.vue'
+import Sale from '../pages/sale.vue'
+import Join from '../pages/join.vue'
+import Mysy from '../pages/mysy.vue'
+import Myaddress from '../pages/myaddress.vue'
+import AddressList from '../pages/addresslist.vue'
+import Mycenter from '../pages/mycenter.vue'
+import Company from '../pages/company.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -51,6 +58,41 @@ export default new Router({
       path: '/ticketdetail',
       name: 'ticketdetail',
       component: Ticketdetail
+    },
+    {
+      path: '/sale',
+      name: 'sale',
+      component: Sale
+    },
+    {
+      path: '/join',
+      name: 'join',
+      component: Join
+    },
+    {
+      path: '/mysy',
+      name: 'mysy',
+      component: Mysy
+    },
+    {
+      path: '/myaddress',
+      name: 'myaddress',
+      component: Myaddress
+    },
+    {
+      path: '/addresslist',
+      name: 'addresslsit',
+      component: AddressList
+    },
+    {
+      path: '/mycenter',
+      name: 'mycenter',
+      component: Mycenter
+    },
+    {
+      path: '/company',
+      name: 'company',
+      component: Company
     }
   ]
 })

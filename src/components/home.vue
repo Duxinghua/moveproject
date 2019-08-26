@@ -40,7 +40,7 @@
           </div>
           <div class="mitem">
             <img src="../assets/images/hz.png" />
-            <span>合作</span>
+            <span><router-link to="/join" >合作</router-link></span>
           </div>
         </div>
       </div>
