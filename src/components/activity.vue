@@ -1,11 +1,11 @@
 <template>
-  <div class="avitem">
-    <img :src="avitem.img" />
+  <router-link class="avitem" :to="'/activitydetail?id='+avitem.activity_id">
+    <img :src="avitem.image" />
     <div class="avinfo">
       <span>{{avitem.title}}</span>
-      <span><router-link to="/activitydetail" >立即参加</router-link></span>
+      <span>立即参加</span>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
@@ -24,11 +24,12 @@ export default {
   display: flex;
   flex-direction: column;
   width:100%;
-  margin-bottom: 30px;
+  margin-bottom: 46px;
 }
 .avitem img{
-  height:390px;
-  margin-bottom: 30px;
+  height:auto;
+  margin-bottom: 20px;
+  width: 100%;
 }
 .avitem .avinfo{
   display: flex;
@@ -40,6 +41,10 @@ export default {
   font-size: 30px;
   color:#333333;
   font-weight: 500;
+  line-height: 52px;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
 .avitem .avinfo span:nth-child(2){
   background:#E4C1E7;
@@ -52,5 +57,6 @@ export default {
   line-height: 52px;
   text-align: center;
   cursor: pointer;
+  flex-shrink: 0;
 }
 </style>

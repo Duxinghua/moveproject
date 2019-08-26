@@ -15,6 +15,7 @@ import Myaddress from '../pages/myaddress.vue'
 import AddressList from '../pages/addresslist.vue'
 import Mycenter from '../pages/mycenter.vue'
 import Company from '../pages/company.vue'
+// import Ticketpay from '../pages/ticketpay.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -94,5 +95,10 @@ export default new Router({
       name: 'company',
       component: Company
     }
+    // {
+    //   path: '/ticketpay',
+    //   name: 'ticketpay',
+    //   component: Ticketpay
+    // }
   ]
 })
