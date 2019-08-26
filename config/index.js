@@ -12,7 +12,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://xinbr.qixiuu.com',
+        target: 'http://caichenghui.top',
+        // target: 'http://xinbr.qixiuu.com',
         changeOrigin: true
       },
     },
