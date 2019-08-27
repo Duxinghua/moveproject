@@ -17,6 +17,7 @@ import Myaddress from '../pages/myaddress.vue'
 import AddressList from '../pages/addresslist.vue'
 import Mycenter from '../pages/mycenter.vue'
 import Company from '../pages/company.vue'
+import TickOrderList from '@/pages/tickOrderList'
 // import Ticketpay from '../pages/ticketpay.vue'
 Vue.use(Router)
 
@@ -106,6 +107,11 @@ export default new Router({
       path: '/company',
       name: 'company',
       component: Company
+    },
+    {
+      path: '/tickOrderList',
+      name: 'tickOrderList',
+      component: TickOrderList
     }
     // {
     //   path: '/ticketpay',
