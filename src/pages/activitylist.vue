@@ -18,7 +18,10 @@
 <script>
 import Activity from '@/components/activity.vue'
 import Pagetab from '@/components/pagetab.vue'
+<<<<<<< HEAD
 import NoData from '@/components/nodata.vue'
+=======
+>>>>>>> 6168953d14b2b637f7e6da3f902cab874046778c
 import {activityListApi, activityCateApi} from '@/api'
 export default {
   components: {
@@ -42,12 +45,15 @@ export default {
   },
   mounted () {
     this.activityCate()
+<<<<<<< HEAD
     this.$nextTick(() => {
       window.addEventListener('scroll', this.scrollfunction, false)
     })
   },
   destroyed () {
     window.removeEventListener('scroll', this.scrollfunction, false)
+=======
+>>>>>>> 6168953d14b2b637f7e6da3f902cab874046778c
   },
   methods: {
     scrollfunction () {

@@ -12,10 +12,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://caichenghui.top',
-        // target: 'http://xinbr.qixiuu.com',
+        target: 'https://xinbr.qixiuu.com',
         changeOrigin: true
-      },
+      }
     },
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
