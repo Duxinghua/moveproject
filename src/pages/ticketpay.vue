@@ -15,7 +15,7 @@
     </div>
     <div class="activityheader">
       <div class="accontenty">
-        <p>游客信息 <span class="tip">需填1位，用于入园身份证</span> </p>
+        <p>游客信息 <span class="tip">需填<i>1</i>位，用于入园身份证</span> </p>
         <p class="info">
           <label for="cstname">姓名</label>
           <input id="cstname" type="text" placeholder="必填，输入证件上的姓名">
@@ -63,6 +63,10 @@ export default {
             margin-left: 24px;
             font-size: 24px;
             color: #666666;
+            i{
+              color: #F4781D;
+              font-style: normal;
+            }
           }
         }
         .syyouxi{
