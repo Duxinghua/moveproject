@@ -4,9 +4,13 @@
       <div class="activitycate">
         <span v-for="(item,index) in menuList" :key="index" :class="index==aIndex?'active':'' " @click="changetab(index)">{{item.name}}</span>
       </div>
-      <div class="activityitem">
+      <div class="activityitem" v-if="avList.length!=0">
         <Activity v-for="(item,index) in avList" :key="index" :avitem="item" />
+        <div class="loadmore" v-if="hasMoreData">
+          <img :src="loadUrl" alt="">
+        </div>
       </div>
+      <NoData v-if="avList.length==0&&hasGetData"/>
     </div>
   </div>
 </template>
@@ -14,26 +18,53 @@
 <script>
 import Activity from '@/components/activity.vue'
 import Pagetab from '@/components/pagetab.vue'
-import {getArticleListApi, activityListApi, activityCateApi} from '@/api'
+import NoData from '@/components/nodata.vue'
+import {activityListApi, activityCateApi} from '@/api'
 export default {
   components: {
     Activity,
-    Pagetab
+    Pagetab,
+    NoData
   },
   data () {
     return {
+      hasGetData: false,
+      hasMoreData: false,
+      inBottom: false,
       aIndex: 0,
       menuList: [{name: '热门', id: ''}],
+      cate_id: 0,
       page: 1,
       page_size: 10,
-      avList: []
+      avList: [],
+      loadUrl: require('@/assets/images/loading.png')
     }
   },
   mounted () {
     this.activityCate()
-    getArticleListApi({type: 1})
+    this.$nextTick(() => {
+      window.addEventListener('scroll', this.scrollfunction, false)
+    })
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.scrollfunction, false)
   },
   methods: {
+    scrollfunction () {
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      if (scrollHeight <= (scrollTop + windowHeight)) {
+        if (!this.inBottom && this.hasMoreData) {
+          console.log('加载更多')
+          this.page++
+          this.inBottom = true
+          this.activityList()
+        }
+      } else {
+        this.inBottom = false
+      }
+    },
     async activityCate () {
       let formdata = {}
       const data = await activityCateApi(formdata)
@@ -43,16 +74,24 @@ export default {
         this.activityList()
       }
     },
-    async activityList (cate) {
+    async activityList () {
       let formdata = {page: this.page, page_size: this.page_size}
-      if (cate) {
-        formdata.cate_id = cate
-      } else {
+      if (this.aIndex === 0) {
         formdata.recommend = 1
+      } else {
+        formdata.cate_id = this.cate_id
       }
       const data = await activityListApi(formdata)
+      this.hasGetData = true
       if (data.code === 1) {
-        this.avList = data.data.list
+        let {avList} = this
+        this.avList = [...avList, ...data.data.list]
+
+        if (data.data.totalPage === this.page) {
+          this.hasMoreData = false
+        } else {
+          this.hasMoreData = true
+        }
       }
     },
     changetab (index) {
@@ -60,17 +99,27 @@ export default {
         return
       }
       this.aIndex = index
-      if (index === 0) {
-        this.activityList()
-      } else {
-        this.activityList(this.menuList[index].id)
-      }
+      this.cate_id = this.menuList[index].id
+      this.hasGetData = false
+      this.hasMoreData = false
+      this.inBottom = false
+      this.page = 1
+      this.avList = []
+
+      this.activityList()
     }
   }
 
 }
 </script>
 
-<style>
-
+<style lang='scss' scoped>
+  .loadmore{
+    img{
+      display: block;
+      width: 52px;
+      height: 55px;
+      margin: 0 auto;
+    }
+  }
 </style>
