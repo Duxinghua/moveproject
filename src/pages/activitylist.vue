@@ -59,6 +59,7 @@ export default {
           console.log('加载更多')
           this.page++
           this.inBottom = true
+          this.hasMoreData = false
           this.activityList()
         }
       } else {
