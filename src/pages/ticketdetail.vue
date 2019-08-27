@@ -1,13 +1,13 @@
 <template>
-  <div class="ticketdetail">
+  <div class="ticketdetail" v-if="ticketDetail">
     <div class="tdheader">
-      <img src="../assets/images/m1.png" alt="" class="topimg"/>
+      <img :src="ticketDetail.goods_image" v-lazy="ticketDetail.goods_image" alt="" class="topimg"/>
       <div class="tddes">
-        <h4>天空之城成人票+天空之境+往返索道票</h4>
-        <p class="tdpdes">仅售118元，价值700元真人野战主题团建拓展火爆开启！</p>
+        <h4>{{ticketDetail.goods_name}}</h4>
+        <p class="tdpdes">{{ticketDetail.description}}</p>
         <div class="tdpf">
           <div class="tdpfl">
-            <span>活动价</span><span>¥118</span><span>¥700</span>
+            <span>活动价</span><span>¥{{ticketDetail.price}}</span><span>¥{{ticketDetail.price_cost}}</span>
           </div>
           <div class="tdpfr sharebutton">
             <img src="../assets/images/share.png"/>
@@ -21,19 +21,16 @@
         <span>商户</span>
         <img src="../assets/images/call.png" />
       </div>
-      <p>梁子湖真人cs团建拓展</p>
-      <p class="tdshp"><img src="../assets/images/addressposition.png" /><span class="addressdeta">高新二路129号创意产业园3037号</span>
-        <span class="juli">5.7km</span>
+      <p>{{ticketDetail.shop_detail.shop_name}}</p>
+      <p class="tdshp"><img src="../assets/images/addressposition.png" /><span class="addressdeta">{{ticketDetail.shop_detail.address}}</span>
+<!--        <span class="juli">5.7km</span>-->
       </p>
     </div>
     <div class="tdescription">
       <div class="tdesch">
         <span>详情</span>
       </div>
-      <div class="tdescb">
-        <p>真人CS是各种喜欢军事及户外运动的人大家聚集在一起，的一种军事模拟类真人户外竞技运动。使用模拟类游戏战术发射器（BB弹、水弹、彩弹、激光等各类对抗发射器器械）身着战术装备以及各种款式的军装、护具，进行的模拟军队作战训练的一种游戏，也是国际上风行的wargame（野战游戏）。</p>
-        <img src="/static/img/m1.e95871e.png" alt="">
-        <img src="/static/img/m1.e95871e.png" alt="">
+      <div class="tdescb" v-html="ticketDetail.content">
       </div>
     </div>
     <Paybutton @pay="payClient"/>
@@ -41,14 +38,30 @@
 </template>
 
 <script>
+import {ticketDetailApi} from '@/api'
 import Paybutton from '../components/paybutton.vue'
 export default {
+  data () {
+    return {
+      ticketDetail: null
+    }
+  },
   components: {
     Paybutton
+  },
+  mounted () {
+    this.getTicketDetail()
   },
   methods: {
     payClient (e) {
       console.log(e)
+    },
+    async getTicketDetail () {
+      let formdata = {goods_id: this.$route.query.id}
+      const data = await ticketDetailApi(formdata)
+      if (data.code === 1) {
+        this.ticketDetail = data.data
+      }
     }
   }
 
@@ -93,6 +106,7 @@ export default {
     text-align: left;
     line-height: 40px;
     margin-bottom: 34px;
+    width: 100%;
   }
   .ticketdetail{
     padding-bottom: 98px;
@@ -102,11 +116,11 @@ export default {
     padding-bottom: 10px;
     margin-bottom: 39px;
   }
+  .tdescb a{
+    width: 100% !important;
+  }
   .tdescb img{
-    width: 50%;
-    float: left;
-    padding-right:20px;
-    margin-top: 32px;
+    width: 100% !important;
   }
 
 </style>

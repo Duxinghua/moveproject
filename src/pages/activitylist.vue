@@ -17,13 +17,11 @@
 
 <script>
 import Activity from '@/components/activity.vue'
-import Pagetab from '@/components/pagetab.vue'
 import NoData from '@/components/nodata.vue'
 import {activityListApi, activityCateApi} from '@/api'
 export default {
   components: {
     Activity,
-    Pagetab,
     NoData
   },
   data () {

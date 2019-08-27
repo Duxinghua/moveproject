@@ -1,62 +1,109 @@
 <template>
   <div class="ticket">
-    <van-tabs v-model="active" swipeable>
-      <van-tab v-for="index in itemlist" :title="index" :key="index">
-        <div class="ticketContent">
-            <ticketItem :item="item" v-for="(item,index) of itemData" :key="index" />
-        </div>
-      </van-tab>
-    </van-tabs>
+    <div class="activitycate">
+      <span v-for="(item,index) in menuList" :key="index" :class="index==aIndex?'active':'' " @click="changetab(index)">{{item.name}}</span>
+    </div>
+    <div class="ticketContent" v-if="avList.length!=0">
+      <ticketItem v-for="(item,index) in avList" :key="index" :item="item" />
+      <div class="loadmore" v-if="hasMoreData">
+        <img :src="loadUrl" alt="">
+      </div>
+    </div>
+    <NoData v-if="avList.length==0&&hasGetData"/>
   </div>
 </template>
 
 <script>
 import ticketItem from '../components/ticketItem.vue'
+import NoData from '@/components/nodata.vue'
+import {ticketListApi, ticketCateApi} from '@/api'
 export default {
   components: {
-    ticketItem
+    ticketItem,
+    NoData
   },
   data () {
     return {
-      active: 0,
-      itemlist: ['热门', '景点', '展览', '娱乐', '亲子', '游乐场', '其他'],
-      itemData: [
-        {
-          img: require('../assets/images/t1.png'),
-          title: '梁子湖真人cs团建拓展',
-          des: '真人CS | 江汉区江汉区银松路79号',
-          pr1: 99,
-          pr2: 129
-        },
-        {
-          img: require('../assets/images/t1.png'),
-          title: '梁子湖真人cs团建拓展',
-          des: '真人CS | 江汉区江汉区银松路79号',
-          pr1: 99,
-          pr2: 129
-        },
-        {
-          img: require('../assets/images/t1.png'),
-          title: '梁子湖真人cs团建拓展',
-          des: '真人CS | 江汉区江汉区银松路79号',
-          pr1: 99,
-          pr2: 129
-        },
-        {
-          img: require('../assets/images/t1.png'),
-          title: '梁子湖真人cs团建拓展',
-          des: '真人CS | 江汉区江汉区银松路79号',
-          pr1: 99,
-          pr2: 129
-        },
-        {
-          img: require('../assets/images/t1.png'),
-          title: '梁子湖真人cs团建拓展',
-          des: '真人CS | 江汉区江汉区银松路79号',
-          pr1: 99,
-          pr2: 129
+      hasGetData: false,
+      hasMoreData: false,
+      inBottom: false,
+      aIndex: 0,
+      menuList: [{name: '热门', id: ''}],
+      cate_id: 0,
+      page: 1,
+      page_size: 10,
+      avList: [],
+      loadUrl: require('@/assets/images/loading.png')
+    }
+  },
+  mounted () {
+    this.ticketCate()
+    this.$nextTick(() => {
+      window.addEventListener('scroll', this.scrollfunction, false)
+    })
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.scrollfunction, false)
+  },
+  methods: {
+    scrollfunction () {
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      if (scrollHeight <= (scrollTop + windowHeight)) {
+        if (!this.inBottom && this.hasMoreData) {
+          console.log('加载更多')
+          this.page++
+          this.inBottom = true
+          this.hasMoreData = false
+          this.ticketList()
         }
-      ]
+      } else {
+        this.inBottom = false
+      }
+    },
+    async ticketCate () {
+      let formdata = {}
+      const data = await ticketCateApi(formdata)
+      if (data.code === 1) {
+        let {menuList} = this
+        this.menuList = [...menuList, ...data.data]
+        this.ticketList()
+      }
+    },
+    async ticketList () {
+      let formdata = {page: this.page, page_size: this.page_size}
+      if (this.aIndex === 0) {
+        formdata.recommend = 1
+      } else {
+        formdata.cate_id = this.cate_id
+      }
+      const data = await ticketListApi(formdata)
+      this.hasGetData = true
+      if (data.code === 1) {
+        let {avList} = this
+        this.avList = [...avList, ...data.data.list]
+
+        if (data.data.totalPage === this.page) {
+          this.hasMoreData = false
+        } else {
+          this.hasMoreData = true
+        }
+      }
+    },
+    changetab (index) {
+      if (this.aIndex === index) {
+        return
+      }
+      this.aIndex = index
+      this.cate_id = this.menuList[index].id
+      this.hasGetData = false
+      this.hasMoreData = false
+      this.inBottom = false
+      this.page = 1
+      this.avList = []
+
+      this.ticketList()
     }
   }
 }
@@ -66,29 +113,11 @@ export default {
   .ticket{
     padding-top: 88px;
   }
-.van-tabs--line .van-tabs__wrap{
-  height:88px;
-  position: fixed;
-  width: 100%;
-  top:0;
-}
-.van-tabs__line{
-  background:#923D93;
-  width:47px !important;
-  bottom: 0;
-}
-.van-tab--active{
-  color:#923D93;
-}
-.van-tab{
-  font-size:26px;
-  flex:0 0 100px!important;
-}
-.van-ellipsis{
-  line-height: 40px;
-  padding:23px 0;
-}
-.van-tabs__nav--line{
-  padding-bottom: 0;
-}
+  .loadmore img{
+    display: block;
+    width: 52px;
+    height: 55px;
+    margin: 0 auto;
+  }
+
 </style>

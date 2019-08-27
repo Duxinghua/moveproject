@@ -1,13 +1,15 @@
 <template>
+  <router-link  :to="'/ticketdetail?id='+item.goods_id">
           <div class="ticketItem">
-            <img :src="item.img" />
+            <img :src="item.goods_image" v-lazy="item.goods_image"/>
             <div class="ticketItemCon">
-              <h4>{{item.title}}</h4>
-              <p class="ticketp">{{item.des}} <span>5.7km</span> </p>
-              <p class="ticketd"><span>¥{{item.pr1}}</span><span >¥{{item.pr2}}</span></p>
-              <span class="btn"><router-link to="/ticketdetail" >立即购买</router-link></span>
+              <h4>{{item.goods_name}}</h4>
+              <p class="ticketp">{{item.description}}</p>
+              <p class="ticketd"><span>¥{{item.price}}</span><span >¥{{item.price_cost}}</span></p>
+              <span class="btn">立即购买</span>
             </div>
           </div>
+  </router-link>
 </template>
 
 <script>
@@ -19,6 +21,9 @@ export default {
 <style>
   .ticketContent{
     padding-top: 10px;
+  }
+  a{
+    display: block;
   }
 .ticketItem{
   border-bottom: 1px solid #F3F3F3;
@@ -33,11 +38,15 @@ export default {
   width:176px;
   height:132px;
   margin-right:29px;
+  border-radius: 8px;
 }
 .ticketItemCon{
   display: flex;
   flex-direction: column;
   width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .ticketItemCon h4{
   color:#333333;
@@ -45,12 +54,18 @@ export default {
   font-weight: 500;
   line-height: 40px;
   margin-bottom: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .ticketItemCon .ticketp{
   font-size: 24px;
   color:#999999;
   margin-bottom: 18px;
   line-height: 28px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
   .ticketItemCon .ticketp span{
     float: right;
