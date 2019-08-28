@@ -19,11 +19,13 @@
     <div class="tdsh">
       <div class="tdsheader">
         <span>商户</span>
+        <a :href="'tel:'+ticketDetail.shop_detail.contacts">
         <img src="../assets/images/call.png" />
+        </a>
       </div>
       <p>{{ticketDetail.shop_detail.shop_name}}</p>
-      <p class="tdshp"><img src="../assets/images/addressposition.png" /><span class="addressdeta">{{ticketDetail.shop_detail.address}}</span>
-<!--        <span class="juli">5.7km</span>-->
+      <p class="tdshp"><img src="../assets/images/addressposition.png" />
+        <a :href="'http://apis.map.qq.com/tools/poimarker?type=0&marker=coord:'+ticketDetail.shop_detail.lat+','+ticketDetail.shop_detail.lng+';title:'+ticketDetail.shop_detail.shop_name+';addr:'+ticketDetail.shop_detail.address+'&key=R5PBZ-4LMWW-3W3RQ-OGHPU-UGOQ7-EIFRN&referer=search'"><span class="addressdeta">{{ticketDetail.shop_detail.address}}</span></a>
       </p>
     </div>
     <div class="tdescription" v-if="ticketDetail&&ticketDetail.content">
@@ -69,6 +71,9 @@ export default {
 </script>
 
 <style scoped>
+  .tdsheader a{
+    display: inherit;
+  }
   .tdheader .topimg{
     width: 100%;
     height: auto;
@@ -91,6 +96,8 @@ export default {
   }
   .addressdeta{
     width: 100%;
+    color: #333333;
+    font-size:26px;
   }
   .tdshp  .juli{
     margin-left: 20px;
