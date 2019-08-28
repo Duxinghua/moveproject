@@ -1,6 +1,6 @@
 <template>
   <router-link class="avitem" :to="'/activitydetail?id='+avitem.activity_id">
-    <img :src="avitem.image" />
+    <img :src="avitem.image" v-lazy="avitem.image"/>
     <div class="avinfo">
       <span>{{avitem.title}}</span>
       <span>立即参加</span>
@@ -19,7 +19,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .avitem{
   display: flex;
   flex-direction: column;

@@ -10,6 +10,8 @@ import Activitylist from '../pages/activitylist.vue'
 import Activitydetail from '../pages/activitydetail.vue'
 import Ticket from '../pages/ticket.vue'
 import Ticketdetail from '../pages/ticketdetail.vue'
+import Ticketpay from '../pages/ticketpay.vue'
+import Ticketpaydetail from '../pages/ticketpaydetail.vue'
 import Sale from '../pages/sale.vue'
 import Join from '../pages/join.vue'
 import Mysy from '../pages/mysy.vue'
@@ -17,10 +19,10 @@ import Myaddress from '../pages/myaddress.vue'
 import AddressList from '../pages/addresslist.vue'
 import Mycenter from '../pages/mycenter.vue'
 import Company from '../pages/company.vue'
+import TickOrderList from '@/pages/tickOrderList'
 import Advantage from '../pages/advantage.vue'
 import Saledetail from '../pages/saledetail.vue'
 // import getSitem from '../utils/storage'
-// import Ticketpay from '../pages/ticketpay.vue'
 Vue.use(Router)
 
 const GetUrlParame = (parameName) => {
@@ -56,6 +58,9 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
+      meta: {
+        title: 'xbr'
+      },
       component: Home
     },
     {
@@ -76,22 +81,50 @@ const router = new Router({
     {
       path: '/activity',
       name: 'activity',
+      meta: {
+        title: '活动'
+      },
       component: Activitylist
     },
     {
       path: '/activitydetail',
       name: 'activitydetail',
+      meta: {
+        title: '活动详情'
+      },
       component: Activitydetail
     },
     {
       path: '/ticket',
       name: 'ticket',
+      meta: {
+        title: '门票'
+      },
       component: Ticket
     },
     {
       path: '/ticketdetail',
       name: 'ticketdetail',
+      meta: {
+        title: '门票详情'
+      },
       component: Ticketdetail
+    },
+    {
+      path: '/ticketpay',
+      name: 'ticketpay',
+      component: Ticketpay,
+      meta: {
+        title: '提交门票订单'
+      }
+    },
+    {
+      path: '/ticketpaydetail',
+      name: 'ticketpaydetail',
+      meta: {
+        title: '门票订单详情'
+      },
+      component: Ticketpaydetail
     },
     {
       path: '/sale',
@@ -129,6 +162,14 @@ const router = new Router({
       component: Company
     },
     {
+      path: '/tickOrderList',
+      name: 'tickOrderList',
+      meta: {
+        title: '门票订单'
+      },
+      component: TickOrderList
+    },
+    {
       path: '/advantage',
       name: 'advantage',
       component: Advantage
@@ -138,11 +179,6 @@ const router = new Router({
       name: 'saledetail',
       component: Saledetail
     }
-    // {
-    //   path: '/ticketpay',
-    //   name: 'ticketpay',
-    //   component: Ticketpay
-    // }
   ]
 })
 

@@ -8,6 +8,7 @@ import 'amfe-flexible/index.js'
 import VueScroller from 'vue-scroller'
 import { Swipe, SwipeItem, Tab, Tabs, Cell, CellGroup, Field, Checkbox, CheckboxGroup, RadioGroup, Radio, Toast, ActionSheet, Area, PullRefresh, List } from 'vant'
 import VueLazyLoad from 'vue-lazyload'
+import VueWechatTitle from 'vue-wechat-title'
 import 'vant/lib/index.css'
 import './assets/css/style.css'
 import './assets/css/other.css'
@@ -19,9 +20,9 @@ Vue.use(VueLazyLoad, {
   error: require('./assets/images/close.png'),
   loading: require('./assets/images/loading.png')
 })
+Vue.use(VueWechatTitle)
 Vue.use(PullRefresh).use(List)
 Vue.use(VueScroller)
-
 axios.interceptors.response.use(function (response) {
   return response
 }, function (error) {
