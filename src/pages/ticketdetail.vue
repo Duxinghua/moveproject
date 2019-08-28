@@ -26,14 +26,14 @@
 <!--        <span class="juli">5.7km</span>-->
       </p>
     </div>
-    <div class="tdescription">
+    <div class="tdescription" v-if="ticketDetail&&ticketDetail.content">
       <div class="tdesch">
         <span>详情</span>
       </div>
       <div class="tdescb" v-html="ticketDetail.content">
       </div>
     </div>
-    <Paybutton @pay="payClient"/>
+    <Paybutton :price="ticketDetail.price" v-if="ticketDetail&&ticketDetail.price" @pay="payClient"/>
   </div>
 </template>
 
@@ -68,7 +68,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .tdheader .topimg{
     width: 100%;
     height: auto;

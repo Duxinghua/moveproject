@@ -1,14 +1,14 @@
 <template>
-  <router-link  :to="'/ticketdetail?id='+item.goods_id">
-          <div class="ticketItem">
-            <img :src="item.goods_image" v-lazy="item.goods_image"/>
-            <div class="ticketItemCon">
-              <h4>{{item.goods_name}}</h4>
-              <p class="ticketp">{{item.description}}</p>
-              <p class="ticketd"><span>¥{{item.price}}</span><span >¥{{item.price_cost}}</span></p>
-              <span class="btn">立即购买</span>
-            </div>
-          </div>
+  <router-link :to="'/ticketdetail?id='+item.goods_id">
+    <div class="ticketItem">
+      <img :src="item.goods_image" v-lazy="item.goods_image"/>
+      <div class="ticketItemCon">
+        <h4>{{item.goods_name}}</h4>
+        <p class="ticketp">{{item.description}}</p>
+        <p class="ticketd"><span>¥{{item.price}}</span><span >¥{{item.price_cost}}</span></p>
+        <span class="btn">立即购买</span>
+      </div>
+    </div>
   </router-link>
 </template>
 
@@ -18,7 +18,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .ticketContent{
     padding-top: 10px;
   }

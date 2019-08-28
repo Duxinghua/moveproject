@@ -58,7 +58,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .activityinfodes{
     padding-bottom: 60px;
   }

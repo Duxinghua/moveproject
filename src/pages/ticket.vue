@@ -3,13 +3,13 @@
     <div class="activitycate">
       <span v-for="(item,index) in menuList" :key="index" :class="index==aIndex?'active':'' " @click="changetab(index)">{{item.name}}</span>
     </div>
-    <div class="ticketContent" v-if="avList.length!=0">
-      <ticketItem v-for="(item,index) in avList" :key="index" :item="item" />
+    <div class="ticketContent" v-if="list.length!=0">
+      <ticketItem v-for="(item,index) in list" :key="index" :item="item" />
       <div class="loadmore" v-if="hasMoreData">
         <img :src="loadUrl" alt="">
       </div>
     </div>
-    <NoData v-if="avList.length==0&&hasGetData"/>
+    <NoData v-if="list.length==0&&hasGetData"/>
   </div>
 </template>
 
@@ -32,7 +32,7 @@ export default {
       cate_id: 0,
       page: 1,
       page_size: 10,
-      avList: [],
+      list: [],
       loadUrl: require('@/assets/images/loading.png')
     }
   },
@@ -81,8 +81,8 @@ export default {
       const data = await ticketListApi(formdata)
       this.hasGetData = true
       if (data.code === 1) {
-        let {avList} = this
-        this.avList = [...avList, ...data.data.list]
+        let {list} = this
+        this.list = [...list, ...data.data.list]
 
         if (data.data.totalPage === this.page) {
           this.hasMoreData = false
@@ -101,7 +101,7 @@ export default {
       this.hasMoreData = false
       this.inBottom = false
       this.page = 1
-      this.avList = []
+      this.list = []
 
       this.ticketList()
     }
@@ -109,7 +109,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .ticket{
     padding-top: 88px;
   }
