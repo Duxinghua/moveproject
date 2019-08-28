@@ -19,7 +19,9 @@
     </router-link>
     <div class="item-btn" v-if="item.status==0">
       <div class="item-btn-close" @click="closeOrder">关闭订单</div>
-      <div class="item-btn-repay" @click="repay">立即支付</div>
+      <div class="item-btn-repay">
+        <router-link :to="'/ticketpay?id='+item.order_id">立即支付</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -32,21 +34,23 @@ export default {
       required: true
     }
   },
-  data(){
+  data () {
     return {
       statusList: {
         '0': '待付款',
         '1': '待核销',
-        '2': '已核销'
+        '10': '已核销'
       }
     }
   },
   methods: {
-    closeOrder(){
-      console.log('closeOrder')
-    },
-    repay(){
-      console.log('repay')
+    closeOrder () {
+      this.$dialog.confirm({
+        title: '提示',
+        message: '是否关闭订单'
+      }).then(() => {
+        console.log('11')
+      }).catch(() => {})
     }
   }
 }
@@ -137,8 +141,10 @@ export default {
       height:68px;
       line-height:68px;
       border-radius:6px;
-      color: #fff;
       background: #9C3FA2;
+      a{
+        color: #fff;
+      }
     }
   }
 }

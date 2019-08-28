@@ -1,28 +1,32 @@
 <template>
-  <div class="ticketdetail">
-    <div class="tdheader">
-      <img src="../assets/images/m1.png" alt="" class="topimg"/>
+  <div class="ticketdetail" v-if="detail">
+    <div class="tdheader" v-if="detail&&detail.goods">
+      <img :src="detail.goods.goods_image" alt="" class="topimg"/>
       <div class="tddes">
-        <h4>天空之城成人票+天空之境+往返索道票</h4>
-        <p class="tdshp"><img src="../assets/images/addressposition.png" /><span class="addressdeta">高新二路129号创意产业园3037号</span>
-          <a class="juli"></a>
+        <h4>{{detail.goods.goods_name}}</h4>
+        <p class="tdshp">
+          <a :href="'http://apis.map.qq.com/tools/poimarker?type=0&marker=coord:'+detail.shop.lat+','+detail.shop.lng+';title:'+detail.goods.goods_name+';addr:'+detail.shop.address+'&key=R5PBZ-4LMWW-3W3RQ-OGHPU-UGOQ7-EIFRN&referer=search'">
+            <img src="../assets/images/addressposition.png" />
+            <span class="addressdeta">{{detail.shop.address}}</span>
+          </a>
+          <a class="juli" :href="'tel:'+detail.mobile"></a>
         </p>
         <div class="detailinfo">
           <div class="contitem">
             <div class="contleft">使用日期</div>
-            <div class="contrigth pink">2019-08-12 周一</div>
+            <div class="contrigth pink">{{detail.create_time}}</div>
           </div>
           <div class="contitem">
             <div class="contleft">使用方法</div>
-            <div class="contrigth">换票入园，同时携带 [商家短信] 和 [身份证] 先换票再入园</div>
+            <div class="contrigth">{{detail.goods.remark}}</div>
           </div>
           <div class="contitem">
             <div class="contleft">截止时间</div>
-            <div class="contrigth">08:00-18:00</div>
+            <div class="contrigth">{{detail.shop.business_time}}</div>
           </div>
           <div class="contitem">
             <div class="contleft">营业时间</div>
-            <div class="contrigth">08:00-18:00</div>
+            <div class="contrigth">{{detail.shop.business_time}}</div>
           </div>
           <div class="contitem">
             <div class="contleft">核验方式</div>
@@ -30,7 +34,7 @@
           </div>
           <div class="contitem">
             <div class="contleft">购买数量</div>
-            <div class="contrigth">1张</div>
+            <div class="contrigth">{{detail.num}}张</div>
           </div>
         </div>
       </div>
@@ -39,21 +43,28 @@
         <div class="detailinfo">
           <div class="contitem">
             <div class="contleft">游玩人</div>
-            <div class="contrigth">啦啦啦 <br> 13578966987</div>
+            <div class="contrigth">{{detail.true_name}} <br> {{detail.mobile}}</div>
           </div>
           <div class="contitem">
             <div class="contleft">订单编号</div>
-            <div class="contrigth">123455678962145</div>
+            <div class="contrigth">{{detail.order_code}}</div>
           </div>
           <div class="contitem">
             <div class="contleft">购买数量</div>
-            <div class="contrigth">1张</div>
+            <div class="contrigth">{{detail.num}}张</div>
           </div>
           <div class="contitem">
             <div class="contleft">下单时间</div>
-            <div class="contrigth">2019-08-07 15:20:14</div>
+            <div class="contrigth">{{detail.create_time}}</div>
           </div>
         </div>
+      </div>
+      <div class="ticketdetail-bottom" v-if="detail&&detail.order_check.length!=0">
+        <h4>核销码</h4>
+        <p v-for="(item,index) in detail.order_check" :key="index">
+          <span>核销码</span>
+          <span :class="item.check_status==10?'through':''">{{item.check_number}}</span>
+        </p>
       </div>
     </div>
   </div>
@@ -61,13 +72,27 @@
 
 <script>
 import Paybutton from '../components/paybutton.vue'
+import {tickOrderDetailApi} from '@/api'
 export default {
   components: {
     Paybutton
   },
+  mounted () {
+    this.tickOrderDetail()
+  },
+  data () {
+    return {
+      detail: null
+    }
+  },
   methods: {
     payClient (e) {
       console.log(e)
+    },
+    async tickOrderDetail () {
+      let formdata = {order_id: this.$route.query.id}
+      const data = await tickOrderDetailApi(formdata)
+      this.detail = data.data
     }
   }
 
@@ -106,6 +131,7 @@ export default {
   .tdshp{
     padding-bottom: 24px;
     border-bottom: 1px solid #EEEEEE;
+    justify-content: space-between;
   }
   .tdshp  .juli{
     width: 48px;
@@ -116,6 +142,30 @@ export default {
   .ticketdetail{
     padding: 44px 30px 0;
     min-height: 100vh;
+    &-bottom{
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      background: white;
+      h4{
+        margin: 12px 0;
+        font-size: 34px;
+        padding-left: 30px;
+        font-weight: bold;
+      }
+      p{
+        color: #666;
+        font-size: 24px;
+        display: flex;
+        flex-wrap: nowrap;
+        padding-left: 30px;
+        span:last-child{
+          margin-left: 80px;
+        }
+        .through{
+          text-decoration: line-through;
+        }
+      }
+    }
   }
   .detailinfo{
     font-size: 24px;
