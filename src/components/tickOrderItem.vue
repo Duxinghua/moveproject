@@ -1,33 +1,52 @@
 <template>
-  <router-link class="item" :to="'/ticketpaydetail?id='+avitem.activity_id">
-    <div class="item-head">
-      <div class="item-head-title">2019年6月27号 11:11:11</div>
-      <div class="item-head-status">已核销</div>
-    </div>
-    <div class="item-content">
-      <div class="item-content-img"><img :src="avitem.image" /></div>
-      <div class="item-content-info">
-        <div class="item-content-info-title">天空之城成人票+天空之境+往返索道 票</div>
-        <div class="item-content-info-con">高新二路129号创意产业园3037号高新二 路29号创意产业园3037号</div>
+  <div class="item">
+    <router-link :to="'/ticketpaydetail?id='+item.order_id">
+      <div class="item-head">
+        <div class="item-head-title">{{item.create_time}}</div>
+        <div class="item-head-status">{{statusList[item.status]}}</div>
       </div>
+      <div class="item-content">
+        <div class="item-content-img"><img :src="item.goods_image" /></div>
+        <div class="item-content-info">
+          <div class="item-content-info-title">{{item.goods_name}}</div>
+          <div class="item-content-info-con">{{item.description}}</div>
+        </div>
+      </div>
+      <div class="item-bottom">
+        <div class="item-bottom-count">数量：{{item.count}}</div>
+        <div class="item-bottom-money">支付金额：<span>￥{{item.price_pay}}</span></div>
+      </div>
+    </router-link>
+    <div class="item-btn" v-if="item.status==0">
+      <div class="item-btn-close" @click="closeOrder">关闭订单</div>
+      <div class="item-btn-repay" @click="repay">立即支付</div>
     </div>
-    <div class="item-bottom">
-      <div class="item-bottom-count">数量：1</div>
-      <div class="item-bottom-money">支付金额：<span>￥298.00</span></div>
-    </div>
-    <div class="item-btn">
-      <div class="item-btn-close">关闭订单</div>
-      <div class="item-btn-repay">立即支付</div>
-    </div>
-  </router-link>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
-    avitem: {
+    item: {
       type: Object,
       required: true
+    }
+  },
+  data(){
+    return {
+      statusList: {
+        '0': '待付款',
+        '1': '待核销',
+        '2': '已核销'
+      }
+    }
+  },
+  methods: {
+    closeOrder(){
+      console.log('closeOrder')
+    },
+    repay(){
+      console.log('repay')
     }
   }
 }
