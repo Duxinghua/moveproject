@@ -2,13 +2,14 @@
     <div class="paybutton">
       <span>在线支付：</span>
       <span>¥{{price}}</span>
-<!--      <span class="button" @click="handlePay">立即预订</span>-->
-      <router-link class="button" to="/ticketpay">立即预订</router-link>
+     <span class="button" @click="handlePay">立即预订</span>
+      <!-- <router-link class="button" to="/ticketpay">立即预订</router-link> -->
     </div>
 </template>
 
 <script>
 export default {
+  name: 'pay',
   props: ['price'],
   methods: {
     handlePay () {

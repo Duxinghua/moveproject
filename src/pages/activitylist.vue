@@ -15,7 +15,7 @@
 <script>
 import Activity from '@/components/activity.vue'
 import Pagetab from '@/components/pagetab.vue'
-import {activityListApi, activityCateApi} from '@/api'
+import { activityListApi, activityCateApi } from '@/api'
 export default {
   components: {
     Activity,

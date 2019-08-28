@@ -1,26 +1,33 @@
 <template>
   <div class="footer">
-      <div class="menuitem">
-        <img src="../assets/images/home.png" alt="" />
+      <router-link class="menuitem" to="/">
+        <img :src="home === true ? require('../assets/images/homea.png') : require('../assets/images/home.png') " alt="" />
         <span>首页</span>
-      </div>
-      <div class="menuitem">
-        <img src="../assets/images/sale.png" alt="" />
-        <span><router-link to="/sale" >营销</router-link></span>
-      </div>
-      <div class="menuitem">
-        <img src="../assets/images/xbr.png" alt="" />
+      </router-link>
+
+        <router-link class="menuitem" to="/sale" >
+          <img :src="sale === true ? require('../assets/images/salea.png') : require('../assets/images/sale.png')" alt="" />
+          <span>营销</span>
+        </router-link>
+      <router-link class="menuitem" to="/company">
+        <img :src="xbr === true ? require('../assets/images/xbra.png') : require('../assets/images/xbr.png')" alt="" />
         <span>新宝瑞</span>
-      </div>
-      <div class="menuitem">
-        <img src="../assets/images/me.png" alt="" />
+      </router-link>
+      <router-link class="menuitem" to="/mycenter">
+        <img :src="me === true ? require('../assets/images/mea.png') : require('../assets/images/me.png')" alt="" />
         <span>我的</span>
-      </div>
+      </router-link>
   </div>
 </template>
 
 <script>
 export default {
+  props: ['home', 'sale', 'xbr', 'me'],
+  data () {
+    return {
+
+    }
+  }
 
 }
 </script>
@@ -55,6 +62,12 @@ export default {
   font-size: 22px;
   padding-top:4px;
   color:#999999;
+}
+.router-link-active span{
+  color: #FBE6FA
+}
+.router-link-exact-active span{
+  color:#fbe6fa
 }
 
 </style>

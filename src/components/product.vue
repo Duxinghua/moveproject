@@ -1,12 +1,12 @@
 <template>
   <div class="pritem">
-    <img class="pritemimg" :src="pitem.img" />
-    <p class="pr1">{{pitem.title}}</p>
-    <p class="pr2">{{pitem.des}}</p>
+    <img class="pritemimg" :src="pitem.goods_image" />
+    <p class="pr1">{{pitem.goods_name}}</p>
+    <p class="pr2">{{pitem.description}}</p>
     <div class="pcar">
-      <span>¥{{pitem.money1}}</span>
-      <span>¥{{pitem.money2}}</span>
-      <router-link to="/detail" ><img src="../assets/images/pcar.png" /></router-link>
+      <span>¥{{pitem.price}}</span>
+      <span>¥{{pitem.price_cost}}</span>
+      <router-link :to="'/detail?id='+pitem.goods_id"><img src="../assets/images/pcar.png" /></router-link>
 
     </div>
   </div>
@@ -28,6 +28,7 @@ export default {
   flex-direction: column;
   margin-right:22px;
   margin-bottom: 21px;
+  width:calc(50% - 22px)
 }
 .pritem:nth-child(2n){
   margin-right:0px !important;
@@ -43,11 +44,17 @@ export default {
   font-weight: 500;
   margin-top:21px;
   margin-bottom: 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .pr2{
   font-size:24px;
   color:#999999;
   font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .pcar{
   display: flex;

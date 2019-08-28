@@ -13,7 +13,7 @@
       </van-cell-group>
       <van-cell-group>
         <van-field
-          v-model="phone"
+          v-model="mobile"
           label="手机号"
           type="textarea"
           placeholder="请填写"
@@ -21,7 +21,7 @@
           autosize
         />
       </van-cell-group>
-      <div class="zonesel">
+      <div class="zonesel" @click="selectaddress">
         <van-cell-group class="zonesel-van">
           <van-field
             v-model="zone"
@@ -30,6 +30,8 @@
             placeholder="请填写"
             rows="1"
             autosize
+            disabled
+            @click="selectaddress"
           />
         </van-cell-group>
         <img class="addnext" src="../assets/images/addressnext.png" />
@@ -46,23 +48,157 @@
       </van-cell-group>
     </div>
     <div class="myaoptions">
-      <van-checkbox v-model="checked" checked-color="#9C3FA2">设为默认地址</van-checkbox>
+      <van-checkbox @change="selectCheck" v-model="checked" checked-color="#9C3FA2">设为默认地址</van-checkbox>
     </div>
-    <div class="mybtn">
+    <van-action-sheet v-model="show">
+        <van-area :area-list="areaList"  @confirm="onconfirm" @cancel="oncancel"/>
+    </van-action-sheet>
+    <div class="mybtn" @click="saveAddress">
       保存
     </div>
   </div>
 </template>
 
 <script>
+import getSitem from '@/utils/storage'
+import { mallAddressEdit, indexCityData, mallAddressAdd } from '@/api'
 export default {
   data () {
     return {
       username: '',
-      phone: '',
+      mobile: '',
       zone: '',
       address: '',
-      checked: true
+      checked: true,
+      area: '',
+      province: '',
+      city: '',
+      is_default: 1,
+      id: '',
+      mode: 0,
+      show: false,
+      areaList: []
+    }
+  },
+  methods: {
+    selectCheck (e) {
+      if (e) {
+        this.is_default = 1
+      } else {
+        this.is_default = 0
+      }
+    },
+    onconfirm (e) {
+      this.zone = e[0].name + e[1].name + e[2].name
+      this.province = e[0].code
+      this.city = e[1].code
+      this.area = e[2].code
+      this.show = false
+    },
+    oncancel () {
+      this.show = false
+    },
+    onSelect () {
+
+    },
+    selectaddress () {
+      this.show = true
+    },
+    saveAddress () {
+      console.log('saveadd')
+      this.mallAddressEditApi()
+    },
+    getToken () {
+      return getSitem.getStr('token')
+    },
+    async indexCityDataApi () {
+      const tokens = getSitem.getStr('token')
+      const data = {
+        token: tokens
+      }
+      const result = await indexCityData(data)
+      if (result.code === 1) {
+        this.areaList = result.data
+      }
+    },
+    async mallAddressEditApi () {
+      console.log(this.mode, 'mode')
+      const tokens = getSitem.getStr('token')
+      const data = {
+        username: this.username,
+        mobile: this.mobile,
+        province: this.province,
+        city: this.city,
+        area: this.area,
+        is_default: this.is_default,
+        id: this.id,
+        address: this.address,
+        token: tokens
+      }
+      if (!data.username) {
+        this.$toast.fail('请输入姓名')
+      }
+      if (!data.mobile) {
+        this.$toast.fail('请输入手机号')
+      }
+      if (!data.province) {
+        this.$toast.fail('请选择省份')
+      }
+      if (!data.city) {
+        this.$toast.fail('请选择城市')
+      }
+      if (!data.area) {
+        this.$toast.fail('请选择区域')
+      }
+      if (!data.address) {
+        this.$toast.fail('请输入地址')
+      }
+      if (this.mode === 1 + '') {
+        const result = await mallAddressEdit(data)
+        if (result.code === 1) {
+          this.$toast.success(result.msg)
+          this.$router.push({path: '/addresslist'})
+        } else {
+          this.$toast.fail(result.msg)
+        }
+      } else {
+        delete data.id
+        const result = await mallAddressAdd(data)
+        if (result.code === 1) {
+          this.$toast.success(result.msg)
+          this.$router.push({path: '/addresslist'})
+        } else {
+          this.$toast.fail(result.msg)
+        }
+      }
+    }
+  },
+  mounted () {
+    //  this.type = this.$route.qurey.type
+
+    // console.log(this.$toast.success('成功'))
+    this.indexCityDataApi()
+    this.mode = this.$route.query.mode
+    if (this.mode === 1 + '') {
+      this.username = this.$route.query.username
+      this.mobile = this.$route.query.mobile
+      this.zone = this.$route.query.province_name + this.$route.query.city_name + this.$route.query.area_name
+      this.address = this.$route.query.address
+      this.checked = this.$route.query.is_default === 1
+      this.area = this.$route.query.area
+      this.province = this.$route.query.province
+      this.city = this.$route.query.city
+      this.id = this.$route.query.id
+    } else if (this.mode === 2 + '') {
+      this.username = ''
+      this.mobile = ''
+      this.zone = ''
+      this.address = ''
+      this.checked = true
+      this.area = ''
+      this.province = ''
+      this.city = ''
+      this.id = ''
     }
   }
 

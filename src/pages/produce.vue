@@ -8,58 +8,27 @@
 <script>
 import Product from '../components/product.vue'
 import Pagetab from '../components/pagetab.vue'
+import { mallGoodsindex } from '@/api'
 export default {
   components: {
     Product,
     Pagetab
   },
+  mounted () {
+    this.mallGoodsindexApi()
+  },
+  methods: {
+    async mallGoodsindexApi () {
+      const result = await mallGoodsindex({})
+      console.log(result, 'result')
+      if (result.code === 1) {
+        this.prList = result.data.list
+      }
+    }
+  },
   data () {
     return {
-      prList: [
-        {
-          img: require('../assets/images/p1.png'),
-          title: '木质花香淡香水滚珠套盒',
-          des: '游走的嗅觉引力',
-          money1: '99',
-          money2: '129'
-        },
-        {
-          img: require('../assets/images/p1.png'),
-          title: '木质花香淡香水滚珠套盒',
-          des: '游走的嗅觉引力',
-          money1: '99',
-          money2: '129'
-        },
-        {
-          img: require('../assets/images/p1.png'),
-          title: '木质花香淡香水滚珠套盒',
-          des: '游走的嗅觉引力',
-          money1: '99',
-          money2: '129'
-        },
-        {
-          img: require('../assets/images/p1.png'),
-          title: '木质花香淡香水滚珠套盒',
-          des: '游走的嗅觉引力',
-          money1: '99',
-          money2: '129'
-        },
-        {
-          img: require('../assets/images/p1.png'),
-          title: '木质花香淡香水滚珠套盒',
-          des: '游走的嗅觉引力',
-          money1: '99',
-          money2: '129'
-        },
-        {
-          img: require('../assets/images/p1.png'),
-          title: '木质花香淡香水滚珠套盒',
-          des: '游走的嗅觉引力',
-          money1: '99',
-          money2: '129'
-        }
-      ]
-
+      prList: []
     }
   }
 

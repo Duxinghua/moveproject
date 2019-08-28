@@ -43,14 +43,14 @@
           <span class="myyqc" >邀请好友获得奖励金</span>
           <span class="myyqbtn">去邀请</span>
         </div>
-        <div class="myyqgitem">
+        <router-link class="myyqgitem" to="/addresslist">
           <img class="myyqic" src="../assets/images/ma.png" />
           <span class="myyqc">我的地址</span>
           <img class="myyqnext" src="../assets/images/addressnext.png" />
-        </div>
+        </router-link>
       </div>
     </div>
-    <Footer />
+    <Footer :xbr="false" :me="true" :sale="false" :home="false" />
   </div>
 </template>
 

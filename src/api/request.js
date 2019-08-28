@@ -1,5 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
+
 const post = function (url, data = null) {
   return new Promise((resolve, reject) => {
     axios({
@@ -13,11 +14,12 @@ const post = function (url, data = null) {
     })
   })
 }
-const get = function (url) {
+
+const get = function (url, data = null) {
   return new Promise((resolve, reject) => {
     axios({
       method: 'get',
-      url: url
+      url: url + '?token=' + data.token
     }).then((res) => {
       resolve(res.data)
     }).catch((err) => {

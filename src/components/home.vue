@@ -20,8 +20,8 @@
       <div class="hc" v-show="searchC">
         <div class="banner">
           <van-swipe :autoplay="3000" >
-            <van-swipe-item v-for="(image, index) in images" :key="index">
-              <img v-lazy="image" />
+            <van-swipe-item v-for="(item, index) in slideList" :key="index">
+              <a :href="item.url"><img v-lazy="item.image" /></a>
             </van-swipe-item>
           </van-swipe>
         </div>
@@ -52,25 +52,25 @@
           <span>最新优惠</span>
         </div>
         <div class="productcontent">
-          <Product v-for="(item,index) in prList" :key="index" :pitem="item"/>
+          <Product v-for="(item,index) in goodsList" :key="index" :pitem="item"/>
         </div>
       </div>
       <div class="productitem">
         <div class="headerline">
           <img src="../assets/images/hdico.png" />
-          <span>出团活动</span>
+          <span>出团门票</span>
         </div>
         <div class="productcontent">
-          <Product v-for="(item,index) in prList" :key="index" :pitem="item"/>
+          <Product v-for="(item,index) in ticketList" :key="index" :pitem="item"/>
         </div>
       </div>
       <div class="activity">
         <div class="headerline">
           <img src="../assets/images/nav.png" />
-          <span>最新优惠</span>
+          <span>最新活动</span>
         </div>
         <div class="activitycontent">
-            <Activity v-for="(item,index) in avList" :key="index" :avitem="item" />
+            <Activity v-for="(item,index) in activityList" :key="index" :avitem="item" />
         </div>
 
       </div>
@@ -80,7 +80,7 @@
           <span>往期活动</span>
         </div>
         <div class="activitycontent">
-            <Activity v-for="(item,index) in avList" :key="index" :avitem="item" />
+            <Activity v-for="(item,index) in historyList" :key="index" :avitem="item" />
         </div>
 
       </div>
@@ -114,7 +114,7 @@
         </div>
       </div>
     </div>
-    <Footer />
+    <Footer :home="true" :me="false" :xbr="false" :sale="false"/>
   </div>
 </template>
 
@@ -122,6 +122,7 @@
 import Product from './product.vue'
 import Activity from './activity.vue'
 import Footer from './footer.vue'
+import {indexInfo, indexHistoryList} from '@/api'
 export default {
   name: 'home',
   data () {
@@ -132,56 +133,48 @@ export default {
       searchC: true,
       changeValue: false,
       type: '活动',
-      images: [
-        'https://img.yzcdn.cn/vant/apple-1.jpg',
-        'https://img.yzcdn.cn/vant/apple-2.jpg'
-      ],
+      slideList: [],
       searchList: [
 
       ],
-      avList: [
-        {
-          img: require('../assets/images/av1.png'),
-          title: '韩辰医疗美容鼻模海选'
-        },
-        {
-          img: require('../assets/images/av1.png'),
-          title: '韩辰医疗美容鼻模海选'
-        }
-      ],
-      prList: [
-        {
-          img: require('../assets/images/p1.png'),
-          title: '木质花香淡香水滚珠套盒',
-          des: '游走的嗅觉引力',
-          money1: '99',
-          money2: '129'
-        },
-        {
-          img: require('../assets/images/p1.png'),
-          title: '木质花香淡香水滚珠套盒',
-          des: '游走的嗅觉引力',
-          money1: '99',
-          money2: '129'
-        },
-        {
-          img: require('../assets/images/p1.png'),
-          title: '木质花香淡香水滚珠套盒',
-          des: '游走的嗅觉引力',
-          money1: '99',
-          money2: '129'
-        },
-        {
-          img: require('../assets/images/p1.png'),
-          title: '木质花香淡香水滚珠套盒',
-          des: '游走的嗅觉引力',
-          money1: '99',
-          money2: '129'
-        }
-      ]
+      avList: [],
+      goodsList: [],
+      ticketList: [],
+      activityList: [],
+      historyList: [],
+      recommend: 1,
+      page: 1,
+      pageSize: 10
     }
   },
   methods: {
+    async indexInfoapi () {
+      const result = await indexInfo({})
+      console.log(result)
+      if (result.code === 1) {
+        if (result.data.slideList > 3) {
+          this.slideList = result.data.slideList.slice(0, 2)
+        } else {
+          this.slideList = result.data.slideList
+        }
+        this.goodsList = result.data.goodsList
+        this.ticketList = result.data.ticketList
+        this.activityList = result.data.activityList
+        this.historyList = result.data.list
+      }
+    },
+    async indexHistoryListapi () {
+      const data = {
+        recommend: this.recommend,
+        pageSize: this.pageSize,
+        page: this.page
+      }
+      const result = await indexHistoryList(data)
+      console.log(result, 'historyapi')
+      if (result.code === 1) {
+        this.historyList = result.data.list
+      }
+    },
     changetap () {
       this.changeValue = true
     },
@@ -202,6 +195,10 @@ export default {
       this.searchC = true
     }
 
+  },
+  mounted () {
+    this.indexInfoapi()
+    this.indexHistoryListapi()
   },
   components: {
     Product,

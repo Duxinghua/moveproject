@@ -1,24 +1,38 @@
 <template>
   <div class="join">
-    <span class="joinspan">联系我们</span>
+    <span class="joinspan">{{detail.post_title}}</span>
     <img src="../assets/images/joinad.png" alt="" />
-    <div class="joininfo">
-      <img src="../assets/images/logoad.png" alt="" />
-      <div class="joininfop">
-        <p>联系人：张建华 </p>
-        <p>Tel：159-2645-1755</p>
-        <p>Add：武汉光谷总部国际1栋911室</p>
-      </div>
+    <!-- class="joininfo" -->
+    <div  v-html="detail.post_content">
     </div>
     <Footer />
   </div>
 </template>
 
 <script>
+import {articleAboutus} from '@/api'
 import Footer from '../components/footer.vue'
 export default {
+  data () {
+    return {
+      type: 3,
+      detail: {}
+    }
+  },
   components: {
     Footer
+  },
+  methods: {
+    async articleAboutusApi () {
+      const data = {type: this.type}
+      const result = await articleAboutus(data)
+      if (result.code === 1) {
+        this.detail = result.data
+      }
+    }
+  },
+  mounted () {
+    this.articleAboutusApi()
   }
 
 }
