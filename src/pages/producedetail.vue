@@ -2,13 +2,13 @@
   <div calss="prdetail">
     <div class="productdetail">
       <div class="prheader">
-        <img class="prbanner" src="../assets/images/detail.png"  />
+        <img class="prbanner" :src="detail.goods_image"  />
         <div class="prdes">
-          <p>无损风味 超即溶精品咖啡（24颗入）</p>
-          <p>8月2日-8月7日，买2盒赠滤泡杯</p>
+          <p>{{detail.goods_name}}</p>
+          <p>{{detail.description}}</p>
           <div class="moneyShare">
-            <span>¥118</span>
-            <span>¥700</span>
+            <span>¥{{detail.price}}</span>
+            <span>¥{{detail.price_cost}}</span>
             <div class="sharebutton">
               <img src="../assets/images/share.png" />
               <span>分享赚佣金</span>
@@ -21,26 +21,46 @@
         <div class="prdetaion">
           <span class="prdetaiontitle">详情</span>
         </div>
-        <div class="prdetaioncontent">
+        <div class="prdetaioncontent" v-html="detail.content">
         </div>
       </div>
     </div>
-    <Paytab :price="195" @pay="handlepay" />
-    <Pagetab />
+    <Paytab :price="detail.price" @pay="handlepay" />
   </div>
 </template>
 
 <script>
-import Pagetab from '../components/pagetab.vue'
+// import Pagetab from '../components/pagetab.vue'
 import Paytab from '../components/paybutton.vue'
+import { mallGoodDetail } from '@/api'
 export default {
+  data () {
+    return {
+      detail: {
+        goods_image: null
+      },
+      goods_id: null
+    }
+  },
+  mounted () {
+    this.mallGoodDetailApi()
+  },
   components: {
-    Pagetab,
     Paytab
   },
   methods: {
+    async mallGoodDetailApi () {
+      const data = {
+        id: this.$route.query.id
+      }
+      const result = await mallGoodDetail(data)
+      if (result.code === 1) {
+        this.detail = result.data
+        this.goods_id = result.data.goods_id
+      }
+    },
     handlepay (e) {
-      this.$router.push({path: 'payorder'})
+      this.$router.push({path: 'payorder', query: {goods_id: this.goods_id}})
     }
   }
 }

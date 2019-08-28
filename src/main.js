@@ -5,23 +5,24 @@ import App from './App'
 import router from './router'
 import axios from 'axios'
 import 'amfe-flexible/index.js'
-import { Swipe, SwipeItem, Tab, Tabs, Cell, CellGroup, Field, Checkbox, CheckboxGroup } from 'vant'
+import VueScroller from 'vue-scroller'
+import { Swipe, SwipeItem, Tab, Tabs, Cell, CellGroup, Field, Checkbox, CheckboxGroup, RadioGroup, Radio, Toast, ActionSheet, Area, PullRefresh, List } from 'vant'
 import VueLazyLoad from 'vue-lazyload'
 import VueWechatTitle from 'vue-wechat-title'
 import 'vant/lib/index.css'
 import './assets/css/style.css'
-import './assets/css/sale.css'
 import './assets/css/other.css'
 import './assets/css/minireset.min.css'
 
 Vue.config.productionTip = false
-Vue.use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Cell).use(CellGroup).use(Field).use(Checkbox).use(CheckboxGroup)
+Vue.use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Cell).use(CellGroup).use(Field).use(Checkbox).use(CheckboxGroup).use(RadioGroup).use(Radio).use(Toast).use(ActionSheet).use(Area)
 Vue.use(VueLazyLoad, {
   error: require('./assets/images/close.png'),
   loading: require('./assets/images/loading.png')
 })
 Vue.use(VueWechatTitle)
-
+Vue.use(PullRefresh).use(List)
+Vue.use(VueScroller)
 axios.interceptors.response.use(function (response) {
   return response
 }, function (error) {

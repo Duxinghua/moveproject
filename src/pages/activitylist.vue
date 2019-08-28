@@ -121,7 +121,7 @@ export default {
   height:100vh;
   &-content{
     background:white;
-    display: felx;
+    display: flex;
     flex-direction: column;
     padding-top: 88px;
     &-tab{

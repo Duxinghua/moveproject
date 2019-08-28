@@ -1,25 +1,43 @@
 <template>
             <div class="saleItems">
-              <div class="siitemheader">
-                <img class="avater" :src="item.avater" alt="" />
-                <div class="siiteminfo">
-                  <p class="p1">{{item.username}}</p>
-                  <p class="p2">抖音号：{{item.noid}} </p>
-                  <p class="p3"><span class="sp1">{{item.num1}}</span>粉丝<span class="sp2">{{item.num2}}</span>获赞</p>
+               <router-link  :to="'/saledetail?id='+items.celebrity_id">
+                <div class="siitemheader">
+                  <img class="avater" :src="items.head_image" alt="" />
+                  <div class="siiteminfo">
+                    <p class="p1">{{items.user_name}}</p>
+                    <p class="p2">{{names}}号：{{items.account}} </p>
+                    <p class="p3"><span class="sp1">{{items.funs}}</span>粉丝<span class="sp2">{{items.likes}}</span>获赞</p>
+                  </div>
+                  <img class="smore" src="../assets/images/more.png" alt="" />
                 </div>
-                <img class="smore" src="../assets/images/more.png" alt="" />
-              </div>
-              <div class="siitembody">
-                <img :src="item.img1" alt="">
-                <img :src="item.img1" alt="">
-                <img :src="item.img1" alt="">
-              </div>
+                <div class="siitembody">
+                  <img :src="imgitem.url" alt="" v-for="(imgitem, index) in autoImgs"  :key="index">
+                </div>
+               </router-link>
           </div>
 </template>
 
 <script>
 export default {
-  props: ['item']
+  props: ['items', 'names'],
+  data () {
+    return {
+      imgs: this.items.photos
+    }
+  },
+  computed: {
+    autoImgs () {
+      if (this.imgs.length > 3) {
+        var arr = this.imgs.slice(0, 2)
+        return arr
+      } else {
+        return this.imgs
+      }
+    }
+  },
+  mouted () {
+
+  }
 }
 </script>
 
@@ -37,6 +55,7 @@ export default {
   width:98px;
   height:98px;
   margin-right:29px;
+  border-radius: 50%;
 }
 .siiteminfo{
   display: flex;

@@ -1,21 +1,23 @@
 <template>
-            <div class="wbItem">
-              <div class="wbimg">
-                <img  class="wbimg-avater" :src="item.avater" alt="" />
-                <img class="wbimg-v" src="../assets/images/v.png" alt="" />
-              </div>
-              <div class="wbcontent">
-                <p class="wbname">{{item.username}}</p>
-                <p class="wbdes">{{item.des}}</p>
-                <p class="wbfs"><span class="wbfsnum">{{item.num1}}</span>关注<span class="wbfsnum">{{item.num2}}</span>粉丝</p>
-              </div>
-              <img class="wb-more" src="../assets/images/more.png" />
-            </div>
+
+               <router-link class="wbItem" :to="'/saledetail?id='+items.celebrity_id">
+                  <div class="wbimg">
+                    <img  class="wbimg-avater" :src="items.head_image" alt="" />
+                    <img class="wbimg-v" src="../assets/images/v.png" alt="" />
+                  </div>
+                  <div class="wbcontent">
+                    <p class="wbname">{{items.user_name}}</p>
+                    <p class="wbdes">{{items.description}}</p>
+                    <p class="wbfs"><span class="wbfsnum">{{items.likes}}</span>关注<span class="wbfsnum">{{items.funs}}</span>粉丝</p>
+                  </div>
+                  <img class="wb-more" src="../assets/images/more.png" />
+               </router-link>
+
 </template>
 
 <script>
 export default {
-  props: ['item']
+  props: ['items', 'names']
 }
 </script>
 
@@ -33,6 +35,7 @@ export default {
 .wbimg-avater{
   width:134px;
   height:134px;
+  border-radius: 50%;
 }
 .wbimg{
   width:134px;
