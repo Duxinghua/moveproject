@@ -45,7 +45,6 @@
         </div>
       </div>
     </div>
-    <router-link to="/tickOrderList">测试去门票订单列表</router-link>
     <div class="container" v-show="searchC">
       <div class="productitem">
         <div class="headerline">
