@@ -1,10 +1,10 @@
 <template>
-  <div class="activityList">
-    <div class="activitycontent">
-      <div class="activitycate">
+  <div class="activitylist">
+    <div class="activitylist-content">
+      <div class="activitylist-content-tab">
         <span v-for="(item,index) in menuList" :key="index" :class="index==aIndex?'active':'' " @click="changetab(index)">{{item.name}}</span>
       </div>
-      <div class="activityitem" v-if="avList.length!=0">
+      <div class="activitylist-content-list" v-if="avList.length!=0">
         <Activity v-for="(item,index) in avList" :key="index" :avitem="item" />
         <div class="loadmore" v-if="hasMoreData">
           <img :src="loadUrl" alt="">
@@ -113,12 +113,56 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-  .loadmore{
-    img{
-      display: block;
-      width: 52px;
-      height: 55px;
-      margin: 0 auto;
+.activitylist{
+  display: flex;
+  flex-direction: column;
+  background:#F3F3F3;
+  width:100%;
+  height:100vh;
+  &-content{
+    background:white;
+    display: felx;
+    flex-direction: column;
+    padding-top: 88px;
+    &-tab{
+      height:88px;
+      font-size:26px;
+      color:#999999;
+      border-top:1px solid #f3f3f3;
+      border-bottom: 1px solid #f3f3f3;
+      padding-left:32px;
+      padding-right:32px;
+      overflow-y: hidden;
+      overflow-x: auto;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      background-color: #fff;
+      white-space:nowrap;
+      span{
+        margin-right:39px;
+        line-height: 32px;
+        padding:26px 0;
+        display: inline-block;
+      }
+      .active{
+        color:#8C3B92;
+        border-bottom:3px solid #8C3B92;
+      }
+    }
+    &-list{
+      display: flex;
+      flex-direction: column;
+      padding:32px;
+      .loadmore{
+        img{
+          display: block;
+          width: 52px;
+          height: 55px;
+          margin: 0 auto;
+        }
+      }
     }
   }
+}
 </style>
