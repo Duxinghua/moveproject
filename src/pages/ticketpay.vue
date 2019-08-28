@@ -1,10 +1,10 @@
 <template>
-  <div class="activitydetail">
+  <div class="activitydetail" v-if="ticketDetail">
     <div class="activityheader">
       <div class="accontenty">
-        <p>韩辰医疗美容鼻模海选</p>
+        <p>{{ticketDetail.goods_name}}</p>
         <p class="syyouxi">使用有效期</p>
-        <p class="tdshp"><span class="addressdeta1">高新二路129号创意产业园3037号</span> <span class="pricetick">¥8888</span></p>
+        <p class="tdshp"><span class="addressdeta1">{{ticketDetail.end_time}}</span> <span class="pricetick">¥{{ticketDetail.price}}</span></p>
         <p class="goumai">
           <span class="goumaisl">购买数量</span>
         <span class="minus"><i class="row"></i></span>
@@ -20,6 +20,10 @@
           <label for="cstname">姓名</label>
           <input id="cstname" type="text" placeholder="必填，输入证件上的姓名">
         </p>
+        <p class="info"  v-if="ticketDetail">
+          <label for="csttype">证件号</label>
+          <input maxlength="11" id="csttype" type="text" placeholder="必填，输入联系人证件号">
+        </p>
         <p class="info">
           <label for="csttel">手机号</label>
           <input maxlength="11" id="csttel" type="text" placeholder="必填，输入联系人手机号">
@@ -31,14 +35,28 @@
 </template>
 
 <script>
+import {ticketPaylApi} from '@/api'
 import Paybutton from '../components/paybutton.vue'
 export default {
   components: {
     Paybutton
   },
+  mounted () {
+    this.getTicketDetail()
+  },
   methods: {
     payClient (e) {
       console.log(e)
+    },
+    async getTicketDetail () {
+      let formdata = {goods_id: this.$route.query.id}
+      // let token=setStr("token")
+      let token = 'b9a0bf511d1522999f74c78feb898d97f18d4de1f5e20828c1f9cc2ea7dd8e0d'
+      formdata.token = token
+      const data = await ticketPaylApi(formdata)
+      if (data.code === 1) {
+        this.ticketDetail = data.data
+      }
     }
   }
 }
@@ -166,6 +184,7 @@ export default {
           .text{
             text-align: center;
             width: 80px;
+            border: none;
           }
         }
         .info{

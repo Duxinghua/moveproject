@@ -81,7 +81,10 @@ export default new Router({
     {
       path: '/ticketpay',
       name: 'ticketpay',
-      component: Ticketpay
+      component: Ticketpay,
+      meta: {
+        title: '提交门票订单'
+      }
     },
     {
       path: '/ticketpaydetail',

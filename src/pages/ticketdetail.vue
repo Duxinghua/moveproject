@@ -35,29 +35,26 @@
       <div class="tdescb" v-html="ticketDetail.content">
       </div>
     </div>
-    <Paybutton :price="ticketDetail.price" v-if="ticketDetail&&ticketDetail.price" @pay="payClient"/>
+    <div class="paybutton">
+      <span>在线支付：</span>
+      <span>¥{{ticketDetail.price}}</span>
+      <router-link class="button" :to="'/ticketpay?id='+ticketDetail.goods_id">立即预订</router-link>
+    </div>
   </div>
 </template>
 
 <script>
 import {ticketDetailApi} from '@/api'
-import Paybutton from '../components/paybutton.vue'
 export default {
   data () {
     return {
       ticketDetail: null
     }
   },
-  components: {
-    Paybutton
-  },
   mounted () {
     this.getTicketDetail()
   },
   methods: {
-    payClient (e) {
-      console.log(e)
-    },
     async getTicketDetail () {
       let formdata = {goods_id: this.$route.query.id}
       const data = await ticketDetailApi(formdata)
@@ -114,6 +111,7 @@ export default {
     line-height: 40px;
     margin-bottom: 34px;
     width: 100%;
+    overflow-x: hidden;
   }
   .ticketdetail{
     padding-bottom: 98px;
@@ -129,5 +127,38 @@ export default {
   .tdescb img{
     width: 100% !important;
   }
+  .paybutton{
+    padding-right:32px;
+    padding-left:32px;
+    display: flex;
+    height:98px;
+    width:100%;
+    flex-direction: row;
+    justify-content:space-between;
+    align-items: center;
+    position:fixed;
+    z-index: 101;
+    bottom: 0;
+    left:0;
+    color:#333333;
+    font-size: 26px;
+    background:white;
+    box-shadow:0px 4px 9px 0px rgba(217,217,217,0.21);
+  }
 
+  .paybutton span:nth-child(2){
+    flex:1 1 auto;
+    color:#E52B2B;
+    font-size: 32px;
+    font-weight: bold;
+  }
+  .paybutton .button{
+    background:#943D93;
+    padding:17px 51px;
+    border-radius: 8px;
+    color:white;
+    font-size: 28px;
+    line-height: 40px;
+    text-align: center;
+  }
 </style>
