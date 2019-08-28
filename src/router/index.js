@@ -26,6 +26,9 @@ export default new Router({
     {
       path: '/',
       name: 'home',
+      meta: {
+        title: 'xbr'
+      },
       component: Home
     },
     {
@@ -46,21 +49,33 @@ export default new Router({
     {
       path: '/activity',
       name: 'activity',
+      meta: {
+        title: '活动'
+      },
       component: Activitylist
     },
     {
       path: '/activitydetail',
       name: 'activitydetail',
+      meta: {
+        title: '活动详情'
+      },
       component: Activitydetail
     },
     {
       path: '/ticket',
       name: 'ticket',
+      meta: {
+        title: '门票'
+      },
       component: Ticket
     },
     {
       path: '/ticketdetail',
       name: 'ticketdetail',
+      meta: {
+        title: '门票详情'
+      },
       component: Ticketdetail
     },
     {
@@ -71,6 +86,9 @@ export default new Router({
     {
       path: '/ticketpaydetail',
       name: 'ticketpaydetail',
+      meta: {
+        title: '门票订单详情'
+      },
       component: Ticketpaydetail
     },
     {
@@ -111,6 +129,9 @@ export default new Router({
     {
       path: '/tickOrderList',
       name: 'tickOrderList',
+      meta: {
+        title: '门票订单'
+      },
       component: TickOrderList
     }
     // {

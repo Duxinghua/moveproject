@@ -7,6 +7,7 @@ import axios from 'axios'
 import 'amfe-flexible/index.js'
 import { Swipe, SwipeItem, Tab, Tabs, Cell, CellGroup, Field, Checkbox, CheckboxGroup } from 'vant'
 import VueLazyLoad from 'vue-lazyload'
+import VueWechatTitle from 'vue-wechat-title'
 import 'vant/lib/index.css'
 import './assets/css/style.css'
 import './assets/css/sale.css'
@@ -19,6 +20,7 @@ Vue.use(VueLazyLoad, {
   error: require('./assets/images/close.png'),
   loading: require('./assets/images/loading.png')
 })
+Vue.use(VueWechatTitle)
 
 axios.interceptors.response.use(function (response) {
   return response

@@ -1,5 +1,5 @@
 <template>
-  <router-link class="item" :to="'/activitydetail?id='+avitem.activity_id">
+  <router-link class="item" :to="'/ticketpaydetail?id='+avitem.activity_id">
     <div class="item-head">
       <div class="item-head-title">2019年6月27号 11:11:11</div>
       <div class="item-head-status">已核销</div>
