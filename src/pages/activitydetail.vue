@@ -78,7 +78,7 @@ export default {
   margin-bottom: 0;
   padding-bottom: 0;
   border-bottom: 1px solid #F3F3F3;
-  line-height: 72px;
+  line-height: 200px;
 }
 .activityditem:last-child{
   border-bottom: none;
