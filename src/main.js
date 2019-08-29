@@ -23,10 +23,23 @@ Vue.use(VueLazyLoad, {
 Vue.use(VueWechatTitle)
 Vue.use(PullRefresh).use(List)
 Vue.use(VueScroller)
-axios.interceptors.response.use(function (response) {
+
+axios.interceptors.request.use(config => {
+  Toast.loading({
+    mask: true,
+    duration: 0,
+    message: '加载中...'
+  })
+  return config
+}, error => {
+  Toast.clear()
+  return Promise.reject(error)
+})
+axios.interceptors.response.use(response => {
+  Toast.clear()
   return response
 }, function (error) {
-  // Toast('提示', '加载超时')
+  Toast.clear()
   return Promise.reject(error.response.data)
 })
 

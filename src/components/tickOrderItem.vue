@@ -19,14 +19,13 @@
     </router-link>
     <div class="item-btn" v-if="item.status==0">
       <div class="item-btn-close" @click="closeOrder">关闭订单</div>
-      <div class="item-btn-repay">
-        <router-link :to="'/ticketpay?id='+item.order_id">立即支付</router-link>
-      </div>
+      <div class="item-btn-repay" @click="repay">立即支付</div>
     </div>
   </div>
 </template>
 
 <script>
+import {closeOrderApi, keepPayApi} from '@/api'
 export default {
   props: {
     item: {
@@ -44,14 +43,60 @@ export default {
     }
   },
   methods: {
+    onBridgeReady () {
+      WeixinJSBridge.invoke(
+        // 'getBrandWCPayRequest', {
+        //   'appId': data.appId, // 公众号名称，由商户传入
+        //   'timeStamp': data.timeStamp, // 时间戳，自1970年以来的秒数
+        //   'nonceStr': data.nonceStr, // 随机串
+        //   'package': data.package,
+        //   'signType': data.signType, // 微信签名方式：
+        //   'paySign': data.paySign // 微信签名
+        // },
+        'getBrandWCPayRequest', this.wxpay,
+        function (res) {
+          console.log(res)
+          if (res.err_msg === 'get_brand_wcpay_request:ok') {
+            // 使用以上方式判断前端返回,微信团队郑重提示：
+            // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+          }
+        })
+    },
     closeOrder () {
       this.$dialog.confirm({
         title: '提示',
         message: '是否关闭订单'
       }).then(() => {
-        console.log('11')
+        console.log(1111)
+        let formdata = {order_id: this.item.order_id}
+        closeOrderApi(formdata).then(data=>{
+          this.$toast({message: data.msg, duration: 2000})
+        })
       }).catch(() => {})
-    }
+    },
+    repay () {
+      this.keepPay()
+    },
+    async keepPay () {
+      let formdata = {order_id: this.item.order_id}
+      const result = await keepPayApi(formdata)
+      if (result.code === 1) {
+        console.log(result)
+        if (typeof WeixinJSBridge === 'undefined') {
+          if (document.addEventListener) {
+            document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
+          } else if (document.attachEvent) {
+            document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady)
+            document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
+          }
+        } else {
+          this.wxpay = result.data.wxpay
+          this.onBridgeReady()
+        }
+      } else {
+        this.$toast({message: result.msg, duration: 2000})
+      }
+    },
   }
 }
 </script>
