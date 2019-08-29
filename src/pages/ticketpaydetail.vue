@@ -5,24 +5,20 @@
       <div class="tddes">
         <h4>{{detail.goods.goods_name}}</h4>
         <p class="tdshp">
-          <a :href="'http://apis.map.qq.com/tools/poimarker?type=0&marker=coord:'+detail.shop.lat+','+detail.shop.lng+';title:'+detail.goods.goods_name+';addr:'+detail.shop.address+'&key=R5PBZ-4LMWW-3W3RQ-OGHPU-UGOQ7-EIFRN&referer=search'">
+          <a :href="`http://apis.map.qq.com/tools/poimarker?type=0&marker=coord:${detail.shop.lat},${detail.shop.lng};title:${detail.goods.goods_name};addr:${detail.shop.address}&key=R5PBZ-4LMWW-3W3RQ-OGHPU-UGOQ7-EIFRN&referer=search`">
             <img src="../assets/images/addressposition.png" />
             <span class="addressdeta">{{detail.shop.address}}</span>
           </a>
-          <a class="juli" :href="'tel:'+detail.mobile"></a>
+          <a class="juli" :href="`tel:${detail.mobile}`"></a>
         </p>
         <div class="detailinfo">
-          <div class="contitem">
-            <div class="contleft">使用日期</div>
-            <div class="contrigth pink">{{detail.create_time}}</div>
-          </div>
           <div class="contitem">
             <div class="contleft">使用方法</div>
             <div class="contrigth">{{detail.goods.remark}}</div>
           </div>
           <div class="contitem">
             <div class="contleft">截止时间</div>
-            <div class="contrigth">{{detail.shop.business_time}}</div>
+            <div class="contrigth">{{detail.goods.end_time}}</div>
           </div>
           <div class="contitem">
             <div class="contleft">营业时间</div>
