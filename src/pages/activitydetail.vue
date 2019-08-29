@@ -59,6 +59,9 @@ export default {
 </script>
 
 <style scoped>
+  .activitydetail{
+    display: block;
+  }
   .activityinfodes{
     padding-bottom: 60px;
   }
@@ -78,7 +81,7 @@ export default {
   margin-bottom: 0;
   padding-bottom: 0;
   border-bottom: 1px solid #F3F3F3;
-  line-height: 200px;
+  line-height:60px;
 }
 .activityditem:last-child{
   border-bottom: none;
