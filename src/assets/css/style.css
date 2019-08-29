@@ -788,3 +788,4 @@
   background:white;
   padding:28px 32px;
 }
+::-webkit-scrollbar {display:none}

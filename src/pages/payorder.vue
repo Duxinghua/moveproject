@@ -105,6 +105,7 @@ export default {
       const result = await mallOrderBuy(data)
       if (result.code === 1) {
         console.log(result)
+        this.wxpay = result.data.wxpay
         if (typeof WeixinJSBridge === 'undefined') {
           if (document.addEventListener) {
             document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
@@ -113,7 +114,6 @@ export default {
             document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
           }
         } else {
-          this.wxpay = result.data.wxpay
           this.onBridgeReady()
         }
       } else {
@@ -133,6 +133,10 @@ export default {
       }
     },
     handlepay (e) {
+      if (this.buyview.address.username) {
+        this.$toast({message: '请先新增收货信息', duration: 2000})
+        this.$router.push({path: '/addresslist'})
+      }
       this.mallOrderBuyApi()
     },
     add () {

@@ -3,7 +3,7 @@
     <span class="joinspan">{{detail.post_title}}</span>
     <img src="../assets/images/joinad.png" alt="" />
     <!-- class="joininfo" -->
-    <div  v-html="detail.post_content">
+    <div style="font-size: initial;" v-html="detail.post_content">
     </div>
     <Footer />
   </div>

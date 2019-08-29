@@ -2,7 +2,7 @@
   <div class="addresslist">
     <van-radio-group v-model="radio" @change="changeRadio">
 
-    <div class="addressItem" v-for="(item, index) in addlist" :key="index">
+    <div class="addressItem addressfix" v-for="(item, index) in addlist" :key="index">
       <div class="username">
         <span>{{item.username}}</span>
         <span>{{item.mobile}}</span>

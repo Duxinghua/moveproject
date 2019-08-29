@@ -152,7 +152,7 @@ export default {
       }
       const result = await celebrity(data)
       if (result.code === 1) {
-        if (this.active < 14) {
+        if (this.active < 13) {
           console.log('startpage')
           this.itemdata = this.itemdata.concat(result.data.list)
           this.totalPage = result.data.totalPage
@@ -166,21 +166,21 @@ export default {
   },
   computed: {
     autoSaleitem () {
-      if (this.active < 14) {
+      if (this.active < 13) {
         return true
       } else {
         return false
       }
     },
     autoWbitem () {
-      if (this.active > 13) {
+      if (this.active > 12) {
         return true
       } else {
         return false
       }
     },
     autoClass () {
-      if (this.active < 14) {
+      if (this.active < 13) {
         return {
           saleitems: true
         }

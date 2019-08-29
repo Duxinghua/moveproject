@@ -50,7 +50,7 @@
     <div class="myaoptions">
       <van-checkbox @change="selectCheck" v-model="checked" checked-color="#9C3FA2">设为默认地址</van-checkbox>
     </div>
-    <van-action-sheet v-model="show">
+    <van-action-sheet v-model="show" style="font-size: initial">
         <van-area :area-list="areaList"  @confirm="onconfirm" @cancel="oncancel"/>
     </van-action-sheet>
     <div class="mybtn" @click="saveAddress">
@@ -205,35 +205,39 @@ export default {
 }
 </script>
 
-<style>
-.van-cell__title{
+<style >
+.myaddress .van-cell__title{
   font-size:32px;
   color:#666666;
-}
-.van-field__label{
-  width:20%;
-  padding:20px 0;
-}
-.van-cell__value{
-  width:80%;
-  padding:20px 0
-}
-.van-field__control{
-  text-align: right;
-}
-.van-checkbox{
-  flex-direction: row-reverse;
-  width:100%;
-}
-.van-checkbox__icon--round .van-icon{
-  border-radius: 0%;
-}
-.van-checkbox__label{
-  font-size: 28px;
-  color:#333333;
-  width:95%;
-}
-.van-checkbox__icon{
-  width:5%;
-}
+  }
+.myaddress .van-picker-column{
+    font-size: 32px;
+  }
+.myaddress .van-field__label{
+    width:35% !important;
+    padding:20px 0;
+  }
+.myaddress .van-cell__value{
+    width:65% !important;
+    padding:20px 0
+  }
+ .myaddress .van-field__control,.myaddress .van-field__control{
+    text-align: right !important;
+  }
+ .myaddress .van-checkbox{
+    flex-direction: row-reverse;
+    width:100%;
+  }
+ .myaddress .van-checkbox__icon--round .van-icon{
+    border-radius: 0%;
+  }
+ .myaddress .van-checkbox__label{
+    font-size: 28px;
+    color:#333333;
+    width:95%;
+  }
+ .myaddress .van-checkbox__icon{
+    width:5%;
+  }
+
 </style>

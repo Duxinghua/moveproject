@@ -45,7 +45,6 @@ export default {
 <style scoped>
 .saledetail{
   background:white;
-  height:100vh;
   display: flex;
   flex-direction: column;
 }
@@ -53,8 +52,8 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+  align-items: center;
   padding:44px;
-  height:222px;
   background:linear-gradient(169deg,rgba(151,62,147,1),rgba(62,38,139,1));
 }
 .saledheader img{

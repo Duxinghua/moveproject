@@ -15,11 +15,11 @@ const post = function (url, data = null) {
   })
 }
 
-const get = function (url, data = null) {
+const get = function (url) {
   return new Promise((resolve, reject) => {
     axios({
       method: 'get',
-      url: url + '?token=' + data.token
+      url: url
     }).then((res) => {
       resolve(res.data)
     }).catch((err) => {

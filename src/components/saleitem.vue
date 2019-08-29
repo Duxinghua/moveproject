@@ -5,7 +5,7 @@
                   <img class="avater" :src="items.head_image" alt="" />
                   <div class="siiteminfo">
                     <p class="p1">{{items.user_name}}</p>
-                    <p class="p2">{{names}}号：{{items.account}} </p>
+                    <p class="p2">{{names}}{{items.account}} </p>
                     <p class="p3"><span class="sp1">{{items.funs}}</span>粉丝<span class="sp2">{{items.likes}}</span>获赞</p>
                   </div>
                   <img class="smore" src="../assets/images/more.png" alt="" />

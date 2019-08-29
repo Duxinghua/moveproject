@@ -22,6 +22,9 @@ import Company from '../pages/company.vue'
 import TickOrderList from '@/pages/tickOrderList'
 import Advantage from '../pages/advantage.vue'
 import Saledetail from '../pages/saledetail.vue'
+import ProductOrderList from '@/pages/ProductOrderList.vue'
+import Productpaydetail from '@/pages/productpaydetail.vue'
+import Invite from '@/pages/invite.vue'
 // import getSitem from '../utils/storage'
 Vue.use(Router)
 
@@ -59,7 +62,7 @@ const router = new Router({
       path: '/',
       name: 'home',
       meta: {
-        title: 'xbr'
+        title: '新宝瑞'
       },
       component: Home
     },
@@ -178,6 +181,30 @@ const router = new Router({
       path: '/saledetail',
       name: 'saledetail',
       component: Saledetail
+    },
+    {
+      path: '/productorderlist',
+      name: 'ProductOrderList',
+      component: ProductOrderList,
+      meta: {
+        title: '产品订单'
+      }
+    },
+    {
+      path: '/productpaydetail',
+      name: 'productpaydetail',
+      component: Productpaydetail,
+      meta: {
+        title: '订单详情'
+      }
+    },
+    {
+      path: '/invite',
+      name: 'invite',
+      component: Invite,
+      meta: {
+        title: '我的邀请'
+      }
     }
   ]
 })

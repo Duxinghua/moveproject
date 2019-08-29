@@ -3,9 +3,9 @@
     <div class="mysyheader">
       <div class="mysyl">
         <span class="mysys1">可提现金额</span>
-        <span class="mysys2">￥5000.00</span>
+        <span class="mysys2">0.00</span>
       </div>
-      <button class="button">申请提现</button>
+      <button class="button" @click="txclick">申请提现</button>
     </div>
       <van-tabs v-model="active" swipeable>
       <van-tab v-for="index in itemlist" :title="index" :key="index">
@@ -22,7 +22,9 @@
             <span class="sritemr">
               +￥{{item.money}}
             </span>
+
           </div>
+            <Nodata />
         </div>
       </van-tab>
     </van-tabs>
@@ -30,7 +32,19 @@
 </template>
 
 <script>
+import Nodata from '@/components/nodata.vue'
 export default {
+  methods: {
+    txclick () {
+      this.$toast.fail('可提现金额为0')
+    }
+  },
+  components: {
+    Nodata
+  },
+  computed: {
+
+  },
   data () {
     return {
       active: 0,
@@ -39,56 +53,56 @@ export default {
         '提现明细'
       ],
       txitemList: [
-        {
-          time: '2019-08-08 12:20:00',
-          money: '20.00'
-        },
-        {
-          time: '2019-08-08 12:20:00',
-          money: '20.00'
-        },
-        {
-          time: '2019-08-08 12:20:00',
-          money: '20.00'
-        },
-        {
-          time: '2019-08-08 12:20:00',
-          money: '20.00'
-        },
-        {
-          time: '2019-08-08 12:20:00',
-          money: '20.00'
-        },
-        {
-          time: '2019-08-08 12:20:00',
-          money: '20.00'
-        },
-        {
-          time: '2019-08-08 12:20:00',
-          money: '20.00'
-        }
+        // {
+        //   time: '2019-08-08 12:20:00',
+        //   money: '20.00'
+        // },
+        // {
+        //   time: '2019-08-08 12:20:00',
+        //   money: '20.00'
+        // },
+        // {
+        //   time: '2019-08-08 12:20:00',
+        //   money: '20.00'
+        // },
+        // {
+        //   time: '2019-08-08 12:20:00',
+        //   money: '20.00'
+        // },
+        // {
+        //   time: '2019-08-08 12:20:00',
+        //   money: '20.00'
+        // },
+        // {
+        //   time: '2019-08-08 12:20:00',
+        //   money: '20.00'
+        // },
+        // {
+        //   time: '2019-08-08 12:20:00',
+        //   money: '20.00'
+        // }
       ],
       syitemList: [
-        {
-          time: '2019-08-03 12:21:25',
-          des: '您邀请好友人数达到10人，平台奖励佣金 文字过多就换行',
-          money: '100000.00'
-        },
-        {
-          time: '2019-08-03 12:21:25',
-          des: '您邀请好友人数达到10人，平台奖励佣金 文字过多就换行',
-          money: '100000.00'
-        },
-        {
-          time: '2019-08-03 12:21:25',
-          des: '您邀请好友人数达到10人，平台奖励佣金 文字过多就换行',
-          money: '100000.00'
-        },
-        {
-          time: '2019-08-03 12:21:25',
-          des: '您邀请好友人数达到10人，平台奖励佣金 文字过多就换行',
-          money: '100000.00'
-        }
+        // {
+        //   time: '2019-08-03 12:21:25',
+        //   des: '您邀请好友人数达到10人，平台奖励佣金 文字过多就换行',
+        //   money: '100000.00'
+        // },
+        // {
+        //   time: '2019-08-03 12:21:25',
+        //   des: '您邀请好友人数达到10人，平台奖励佣金 文字过多就换行',
+        //   money: '100000.00'
+        // },
+        // {
+        //   time: '2019-08-03 12:21:25',
+        //   des: '您邀请好友人数达到10人，平台奖励佣金 文字过多就换行',
+        //   money: '100000.00'
+        // },
+        // {
+        //   time: '2019-08-03 12:21:25',
+        //   des: '您邀请好友人数达到10人，平台奖励佣金 文字过多就换行',
+        //   money: '100000.00'
+        // }
       ]
     }
   }
