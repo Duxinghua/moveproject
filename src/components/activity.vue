@@ -21,8 +21,7 @@ export default {
 
 <style scoped>
 .avitem{
-  display: flex;
-  flex-direction: column;
+  display: block;
   width:100%;
   margin-bottom: 46px;
 }

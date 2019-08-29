@@ -1,34 +1,102 @@
 <template>
-  <router-link class="item" :to="'/ticketpaydetail?id='+avitem.activity_id">
-    <div class="item-head">
-      <div class="item-head-title">2019年6月27号 11:11:11</div>
-      <div class="item-head-status">已核销</div>
-    </div>
-    <div class="item-content">
-      <div class="item-content-img"><img :src="avitem.image" /></div>
-      <div class="item-content-info">
-        <div class="item-content-info-title">天空之城成人票+天空之境+往返索道 票</div>
-        <div class="item-content-info-con">高新二路129号创意产业园3037号高新二 路29号创意产业园3037号</div>
+  <div class="item">
+    <router-link :to="'/ticketpaydetail?id='+item.order_id">
+      <div class="item-head">
+        <div class="item-head-title">{{item.create_time}}</div>
+        <div class="item-head-status">{{statusList[item.status]}}</div>
       </div>
+      <div class="item-content">
+        <div class="item-content-img"><img :src="item.goods_image" /></div>
+        <div class="item-content-info">
+          <div class="item-content-info-title">{{item.goods_name}}</div>
+          <div class="item-content-info-con">{{item.description}}</div>
+        </div>
+      </div>
+      <div class="item-bottom">
+        <div class="item-bottom-count">数量：{{item.count}}</div>
+        <div class="item-bottom-money">支付金额：<span>￥{{item.price_pay}}</span></div>
+      </div>
+    </router-link>
+    <div class="item-btn" v-if="item.status==0">
+      <div class="item-btn-close" @click="closeOrder">关闭订单</div>
+      <div class="item-btn-repay" @click="repay">立即支付</div>
     </div>
-    <div class="item-bottom">
-      <div class="item-bottom-count">数量：1</div>
-      <div class="item-bottom-money">支付金额：<span>￥298.00</span></div>
-    </div>
-    <div class="item-btn">
-      <div class="item-btn-close">关闭订单</div>
-      <div class="item-btn-repay">立即支付</div>
-    </div>
-  </router-link>
+  </div>
 </template>
 
 <script>
+import {closeOrderApi, keepPayApi} from '@/api'
 export default {
   props: {
-    avitem: {
+    item: {
       type: Object,
       required: true
     }
+  },
+  data () {
+    return {
+      statusList: {
+        '0': '待付款',
+        '1': '待核销',
+        '10': '已核销'
+      }
+    }
+  },
+  methods: {
+    onBridgeReady () {
+      WeixinJSBridge.invoke(
+        // 'getBrandWCPayRequest', {
+        //   'appId': data.appId, // 公众号名称，由商户传入
+        //   'timeStamp': data.timeStamp, // 时间戳，自1970年以来的秒数
+        //   'nonceStr': data.nonceStr, // 随机串
+        //   'package': data.package,
+        //   'signType': data.signType, // 微信签名方式：
+        //   'paySign': data.paySign // 微信签名
+        // },
+        'getBrandWCPayRequest', this.wxpay,
+        function (res) {
+          console.log(res)
+          if (res.err_msg === 'get_brand_wcpay_request:ok') {
+            // 使用以上方式判断前端返回,微信团队郑重提示：
+            // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+          }
+        })
+    },
+    closeOrder () {
+      this.$dialog.confirm({
+        title: '提示',
+        message: '是否关闭订单'
+      }).then(() => {
+        console.log(1111)
+        let formdata = {order_id: this.item.order_id}
+        closeOrderApi(formdata).then(data=>{
+          this.$toast({message: data.msg, duration: 2000})
+        })
+      }).catch(() => {})
+    },
+    repay () {
+      this.keepPay()
+    },
+    async keepPay () {
+      let formdata = {order_id: this.item.order_id}
+      const result = await keepPayApi(formdata)
+      if (result.code === 1) {
+        console.log(result)
+        if (typeof WeixinJSBridge === 'undefined') {
+          if (document.addEventListener) {
+            document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
+          } else if (document.attachEvent) {
+            document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady)
+            document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
+          }
+        } else {
+          this.wxpay = result.data.wxpay
+          this.onBridgeReady()
+        }
+      } else {
+        this.$toast({message: result.msg, duration: 2000})
+      }
+    },
   }
 }
 </script>
@@ -118,8 +186,10 @@ export default {
       height:68px;
       line-height:68px;
       border-radius:6px;
-      color: #fff;
       background: #9C3FA2;
+      a{
+        color: #fff;
+      }
     }
   }
 }

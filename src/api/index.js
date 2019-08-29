@@ -28,3 +28,8 @@ export const orderList = (data) => get(`/mall/order/orderList?status=${data.stat
 export const mallOrderKeepPay = (data) => post('/mall/order/keepPay', data)
 export const mallOrderOrderDetail = (data) => post('/mall/order/orderDetail', data)
 export const mallCloseOrder = (data) => post('/mall/order/closeOrder', data)
+export const tickOrderLisApi = (data) => post('/mall/ticket_order/orderList', data)
+export const mallticketOrderBuy = (data) => post('/mall/ticket_order/buy', data)
+export const tickOrderDetailApi = (data) => post('/mall/ticket_order/orderDetail', data)
+export const closeOrderApi = (data) => post('/mall/order/closeOrder', data)
+export const keepPayApi = (data) => post('/mall/order/keepPay', data)
