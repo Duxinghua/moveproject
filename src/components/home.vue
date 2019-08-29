@@ -61,7 +61,7 @@
           <span>出团门票</span>
         </div>
         <div class="productcontent">
-          <Product v-for="(item,index) in ticketList" :key="index" :pitem="item"/>
+          <Menbiao v-for="(item,index) in ticketList" :key="index" :pitem="item"/>
         </div>
       </div>
       <div class="activity">
@@ -120,6 +120,7 @@
 
 <script>
 import Product from './product.vue'
+import Menbiao from './menbiao.vue'
 import Activity from './activity.vue'
 import Footer from './footer.vue'
 import {indexInfo, indexHistoryList} from '@/api'
@@ -203,7 +204,8 @@ export default {
   components: {
     Product,
     Activity,
-    Footer
+    Footer,
+    Menbiao
   }
 }
 </script>

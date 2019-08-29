@@ -74,17 +74,31 @@ export default {
       }
       const result = await mallOrderKeepPay(data)
       if (result.code === 1) {
-        this.wxpay = result.data.wxpay
-        if (typeof WeixinJSBridge === 'undefined') {
-          if (document.addEventListener) {
-            document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
-          } else if (document.attachEvent) {
-            document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady)
-            document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
-          }
-        } else {
+
+        var p = new Promise((resolve, reject) => {
+          console.log(2)
+           this.wxpay = result.data.wxpay
+           setTimeout(()=>{
+             console.log(1)
+              resolve()
+           },2000)
+
+        })
+
+        p.then(()=>{
+          alert(this.wxpay)
+          if (typeof WeixinJSBridge === 'undefined') {
+            if (document.addEventListener) {
+              document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
+            } else if (document.attachEvent) {
+              document.attachEvent('WeixinJSBridgeReady', this.onBridgeReady)
+              document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
+            }
+          } else {
           this.onBridgeReady()
-        }
+          }
+
+        })
       } else {
         this.$toast({message: result.msg, duration: 2000})
       }
