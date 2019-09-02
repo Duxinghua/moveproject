@@ -12,8 +12,7 @@
             </ul>
           </div>
           <div class="ico"></div>
-          <input type="text" v-model.lazy="searchValue" @change="changeEvent" @input="inputEvent" placeholder="街道口魔方艺术馆营销活动" >
-          <div class="close"></div>
+          <input type="text" v-model.lazy="searchValue" @change="changeEvent" @input="inputEvent" placeholder="街道口魔方艺术馆营销活动" @click="clickInput" >
         </div>
          <div class="button" v-if="inputValue" @click="searchCancel">取消</div>
       </div>
@@ -21,27 +20,27 @@
         <div class="banner">
           <van-swipe :autoplay="3000" >
             <van-swipe-item v-for="(item, index) in slideList" :key="index">
-              <a :href="item.url"><img v-lazy="item.image" /></a>
+              <a :href="item.url"><img class="banner-radius" :src="item.image" /></a>
             </van-swipe-item>
           </van-swipe>
         </div>
         <div class="topmenu">
-          <div class="mitem">
+          <router-link  class="mitem" to="/activity" >
             <img src="../assets/images/hd.png" />
-            <span><router-link to="/activity" >活动</router-link></span>
-          </div>
-          <div class="mitem">
+            <span>活动</span>
+          </router-link>
+          <router-link class="mitem" to="/ticket">
             <img src="../assets/images/mp.png" />
-            <span><router-link to="/ticket" >门票</router-link></span>
-          </div>
-          <div class="mitem">
+            <span>门票</span>
+          </router-link>
+          <router-link class="mitem"  to="/produce">
             <img src="../assets/images/sp.png" />
-            <span><router-link to="/produce" >产品</router-link></span>
-          </div>
-          <div class="mitem">
+            <span>产品</span>
+          </router-link>
+          <router-link class="mitem" to="/join">
             <img src="../assets/images/hz.png" />
-            <span><router-link to="/join" >合作</router-link></span>
-          </div>
+            <span>俱乐部</span>
+          </router-link>
         </div>
       </div>
     </div>
@@ -49,7 +48,7 @@
       <div class="productitem">
         <div class="headerline">
           <img src="../assets/images/yh.png" />
-          <span>最新优惠</span>
+          <span>优惠产品</span>
         </div>
         <div class="productcontent">
           <Product v-for="(item,index) in goodsList" :key="index" :pitem="item"/>
@@ -58,7 +57,7 @@
       <div class="productitem">
         <div class="headerline">
           <img src="../assets/images/hdico.png" />
-          <span>出团门票</span>
+          <span>特惠门票</span>
         </div>
         <div class="productcontent">
           <Menbiao v-for="(item,index) in ticketList" :key="index" :pitem="item"/>
@@ -81,6 +80,9 @@
         </div>
         <div class="activitycontent">
             <Activity v-for="(item,index) in historyList" :key="index" :avitem="item" />
+            <div class="loadmore" v-if="hasMoreData">
+              <img :src="loadUrl" alt="">
+            </div>
         </div>
 
       </div>
@@ -124,6 +126,7 @@ import Menbiao from './menbiao.vue'
 import Activity from './activity.vue'
 import Footer from './footer.vue'
 import {indexInfo, indexHistoryList} from '@/api'
+
 export default {
   name: 'home',
   data () {
@@ -145,10 +148,31 @@ export default {
       historyList: [],
       recommend: 1,
       page: 1,
-      pageSize: 10
+      pageSize: 10,
+      hasMoreData: false,
+      loadUrl: require('@/assets/images/loading.png')
     }
   },
   methods: {
+    clickInput () {
+      this.$router.push({path: '/search'})
+    },
+    scrollfunction () {
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      if (scrollHeight <= (scrollTop + windowHeight)) {
+        if (!this.inBottom && this.hasMoreData) {
+          console.log('加载更多')
+          this.page++
+          this.inBottom = true
+          this.hasMoreData = false
+          this.indexHistoryListapi()
+        }
+      } else {
+        this.inBottom = false
+      }
+    },
     async indexInfoapi () {
       const result = await indexInfo({})
       console.log(result)
@@ -161,7 +185,7 @@ export default {
         this.goodsList = result.data.goodsList
         this.ticketList = result.data.ticketList
         this.activityList = result.data.activityList
-        this.historyList = result.data.list
+        // this.historyList = result.data.list
       }
     },
     async indexHistoryListapi () {
@@ -174,10 +198,15 @@ export default {
       console.log(result, 'historyapi')
       if (result.code === 1) {
         this.historyList = result.data.list
+        if (result.data.totalPage === this.page) {
+          this.hasMoreData = false
+        } else {
+          this.hasMoreData = true
+        }
       }
     },
     changetap () {
-      this.changeValue = true
+      // this.changeValue = true
     },
     changeli (arg) {
       this.type = arg
@@ -185,15 +214,16 @@ export default {
     },
     changeEvent (e) {
       console.log(e)
-      this.searchC = false
+      // this.searchC = false
     },
     inputEvent (e) {
-      this.inputValue = true
+      console.log(e)
+      // this.inputValue = true
     },
     searchCancel (e) {
-      this.inputValue = false
-      this.changeValue = false
-      this.searchC = true
+      // this.inputValue = false
+      // this.changeValue = false
+      // this.searchC = true
     }
 
   },
@@ -211,6 +241,11 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
+<style>
+.loadmore img{
+    display: block;
+    width: 52px;
+    height: 55px;
+    margin: 0 auto;
+}
 </style>

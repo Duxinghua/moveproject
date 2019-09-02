@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import getSitem from '@/utils/storage'
-import {loginByCode} from '@/api'
+import {loginByCode, userFriend} from '@/api'
 import Router from 'vue-router'
 import Home from '@/components/home'
 import Produce from '../pages/produce.vue'
@@ -25,6 +25,11 @@ import Saledetail from '../pages/saledetail.vue'
 import ProductOrderList from '@/pages/ProductOrderList.vue'
 import Productpaydetail from '@/pages/productpaydetail.vue'
 import Invite from '@/pages/invite.vue'
+import Shopdetail from '@/pages/shopdetail.vue'
+import Search from '@/pages/search.vue'
+import Myteam from '@/pages/myteam.vue'
+import Toshare from '@/pages/toshare.vue'
+import Tixian from '@/pages/tixian.vue'
 // import getSitem from '../utils/storage'
 Vue.use(Router)
 
@@ -47,6 +52,16 @@ const getToken = async (data) => {
   console.log('result', '请求token')
   if (result.code === 1) {
     getSitem.setStr('token', result.data.token)
+    if (getSitem.getStr('pudd')) {
+      let data = {
+        token: result.data.token,
+        pudd: getSitem.getStr('pudd')
+      }
+      const re = await userFriend(data)
+      if (re.code === 1) {
+        getSitem.remove('pudd')
+      }
+    }
   } else {
     console.log(JSON.stringify(result), 'error')
   }
@@ -69,17 +84,26 @@ const router = new Router({
     {
       path: '/produce',
       name: 'product',
-      component: Produce
+      component: Produce,
+      meta: {
+        title: '产品'
+      }
     },
     {
       path: '/detail',
       name: 'detail',
-      component: Detail
+      component: Detail,
+      meta: {
+        title: '产品详情'
+      }
     },
     {
       path: '/payorder',
       name: 'payorder',
-      component: Payorder
+      component: Payorder,
+      meta: {
+        title: '提交订单'
+      }
     },
     {
       path: '/activity',
@@ -132,37 +156,58 @@ const router = new Router({
     {
       path: '/sale',
       name: 'sale',
-      component: Sale
+      component: Sale,
+      meta: {
+        title: '营销'
+      }
     },
     {
       path: '/join',
       name: 'join',
-      component: Join
+      component: Join,
+      meta: {
+        title: '联系我们'
+      }
     },
     {
       path: '/mysy',
       name: 'mysy',
-      component: Mysy
+      component: Mysy,
+      meta: {
+        title: '我的收益'
+      }
     },
     {
       path: '/myaddress',
       name: 'myaddress',
-      component: Myaddress
+      component: Myaddress,
+      meta: {
+        title: '新增收货地址'
+      }
     },
     {
       path: '/addresslist',
       name: 'addresslsit',
-      component: AddressList
+      component: AddressList,
+      meta: {
+        title: '收货地址'
+      }
     },
     {
       path: '/mycenter',
       name: 'mycenter',
-      component: Mycenter
+      component: Mycenter,
+      meta: {
+        title: '个人中心'
+      }
     },
     {
       path: '/company',
       name: 'company',
-      component: Company
+      component: Company,
+      meta: {
+        title: '公司介绍'
+      }
     },
     {
       path: '/tickOrderList',
@@ -175,12 +220,18 @@ const router = new Router({
     {
       path: '/advantage',
       name: 'advantage',
-      component: Advantage
+      component: Advantage,
+      meta: {
+        title: '合作优势'
+      }
     },
     {
       path: '/saledetail',
       name: 'saledetail',
-      component: Saledetail
+      component: Saledetail,
+      meta: {
+        title: '详情介绍'
+      }
     },
     {
       path: '/productorderlist',
@@ -203,14 +254,56 @@ const router = new Router({
       name: 'invite',
       component: Invite,
       meta: {
+        title: '邀请'
+      }
+    },
+    {
+      path: '/shopdetail',
+      name: 'shopdetail',
+      component: Shopdetail,
+      meta: {
+        title: '商户介绍'
+      }
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: Search,
+      meta: {
+        title: '搜索'
+      }
+    },
+    {
+      path: '/myteam',
+      name: 'myteam',
+      component: Myteam,
+      meta: {
         title: '我的邀请'
+      }
+    },
+    {
+      path: '/toshare',
+      name: 'toshare',
+      component: Toshare,
+      meta: {
+        title: '邀请'
+      }
+    },
+    {
+      path: '/tixian',
+      name: 'tixian',
+      component: Tixian,
+      meta: {
+        title: '提现'
       }
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  // console.log('to', to, 'from', from)
+  const agent = navigator.userAgent
+  const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+  console.log(to.fullPath, 'tofullpaty')
   var localurl = window.location.href
   console.log(localurl, 'localurl')
   var goback = encodeURIComponent(localurl)
@@ -238,7 +331,13 @@ router.beforeEach((to, from, next) => {
       code: code
     }
     getToken(data)
-    next()
+    if (isiOS && to.path !== location.pathname) {
+      // 此处不可使用location.replace
+      location.assign(to.fullPath)
+    } else {
+      next()
+    }
+    // next()
   }
 })
 

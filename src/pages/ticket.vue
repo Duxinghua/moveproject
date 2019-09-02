@@ -1,10 +1,19 @@
 <template>
-  <div class="ticket">
-    <div class="activitycate">
-      <span v-for="(item,index) in menuList" :key="index" :class="index==aIndex?'active':'' " @click="changetab(index)">{{item.name}}</span>
+  <div class="ticket ">
+    <div class="ticket-header">
+      <div class="banner ticket-banner">
+          <van-swipe :autoplay="3000" >
+              <van-swipe-item v-for="(item, index) in slideList" :key="index">
+                <a :href="item.url"><img class="banner-radius" :src="item.image" /></a>
+              </van-swipe-item>
+            </van-swipe>
+      </div>
+      <div class="activitycate activitycate-banner">
+        <span v-for="(item,index) in menuList" :key="index" :class="index==aIndex?'active':'' " @click="changetab(index)">{{item.name}}</span>
+      </div>
     </div>
     <div class="ticketContent" v-if="list.length!=0">
-      <ticketItem v-for="(item,index) in list" :key="index" :item="item" />
+      <Menbiao v-for="(item,index) in list" :key="index" :pitem="item" />
       <div class="loadmore" v-if="hasMoreData">
         <img :src="loadUrl" alt="">
       </div>
@@ -16,11 +25,13 @@
 <script>
 import ticketItem from '../components/ticketItem.vue'
 import NoData from '@/components/nodata.vue'
-import {ticketListApi, ticketCateApi} from '@/api'
+import Menbiao from '@/components/menbiao.vue'
+import {ticketListApi, ticketCateApi, indexInfo} from '@/api'
 export default {
   components: {
     ticketItem,
-    NoData
+    NoData,
+    Menbiao
   },
   data () {
     return {
@@ -33,10 +44,12 @@ export default {
       page: 1,
       page_size: 10,
       list: [],
-      loadUrl: require('@/assets/images/loading.png')
+      loadUrl: require('@/assets/images/loading.png'),
+      slideList: []
     }
   },
   mounted () {
+    this.indexInfoapi()
     this.ticketCate()
     this.$nextTick(() => {
       window.addEventListener('scroll', this.scrollfunction, false)
@@ -46,6 +59,17 @@ export default {
     window.removeEventListener('scroll', this.scrollfunction, false)
   },
   methods: {
+    async indexInfoapi () {
+      const result = await indexInfo({})
+      console.log(result)
+      if (result.code === 1) {
+        if (result.data.slideList > 3) {
+          this.slideList = result.data.slideList.slice(0, 2)
+        } else {
+          this.slideList = result.data.slideList
+        }
+      }
+    },
     scrollfunction () {
       let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
@@ -111,7 +135,24 @@ export default {
 
 <style scoped>
   .ticket{
-    padding-top: 88px;
+    /* padding-top: 88px; */
+    /* padding-right:32px;
+    padding-left:32px; */
+    display: flex;
+    flex-direction: column
+  }
+  .ticket-banner{
+    padding-right:32px;
+    padding-left:32px;
+  }
+  .ticket-header{
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    background:white;
   }
   .loadmore img{
     display: block;

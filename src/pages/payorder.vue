@@ -2,14 +2,16 @@
   <div class="payprorder">
     <div class="addressItem">
       <img src="../assets/images/addresstop.png" />
-      <div class="addresscontent">
+          <router-link :to="'/addresslist?good_url=1&goods_id='+goods_id" class="addresscontent">
         <img class="a1" src="../assets/images/addressposition.png" />
-        <div class="addressinfo">
+        <div class="addressinfo" v-if="buyview.address.username">
           <p><span class="addresspan">收货人：{{buyview.address.username}}</span><span>{{buyview.address.mobile}}</span></p>
           <p class="">{{buyview.address.province_name}}{{buyview.address.city_name}}{{buyview.address.area_name}}{{buyview.address.address}}</p>
         </div>
+        <p class="addressTips" v-if="!buyview.address.username">请点击新增收货地址</p>
         <img class="a2" src="../assets/images/addressnext.png" />
-      </div>
+        </router-link>
+
     </div>
     <div class="productorder">
       <div class="productoinfo">
@@ -43,6 +45,7 @@ import Pagetab from '../components/pagetab.vue'
 import Paytab from '../components/paybutton.vue'
 import { mallOrderBuyView, mallOrderBuy } from '@/api'
 import getSitem from '@/utils/storage'
+import config from '@/utils/config'
 const BigNumber = require('bignumber.js')
 export default {
   data () {
@@ -89,16 +92,21 @@ export default {
         'getBrandWCPayRequest', this.wxpay,
         function (res) {
           console.log(res)
-          if (res.err_msg === 'get_brand_wcpay_request:ok') {
+          // window.location.href = 'https://www.baidu.com'
+          if (new String(res.err_msg).trim() === 'get_brand_wcpay_request:ok') {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+            // this.$router.push({path: '/productorderlist'})
+            window.location.href = config.baseurl + '/productorderlist'
+          } else {
+            window.location.href = config.baseurl + '/productorderlist'
           }
         })
     },
     async mallOrderBuyApi () {
       const data = {
         goods_id: this.goods_id,
-        address_id: this.goods_id,
+        address_id: this.address_id,
         num: this.buyview.num,
         token: getSitem.getStr('token')
       }
@@ -128,13 +136,13 @@ export default {
       const result = await mallOrderBuyView(data)
       if (result.code === 1) {
         this.buyview = result.data
-        this.address_id = result.data.address.address_id
+        this.address_id = result.data.address.id
         console.log(this.buyview, 'buyview')
       }
     },
     handlepay (e) {
-      if (this.buyview.address.username) {
-        this.$toast({message: '请先新增收货信息', duration: 2000})
+      if (!this.buyview.address.username) {
+        this.$toast({message: '请先新增收货信息,然后重新下单', duration: 3000})
         this.$router.push({path: '/addresslist'})
       }
       this.mallOrderBuyApi()
@@ -153,6 +161,10 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .addressTips{
+    font-size: 30px;
+    font-weight: bold;
+    color:#000;
+  }
 </style>

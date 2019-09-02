@@ -1,21 +1,21 @@
 <template>
   <div class="footer">
       <router-link class="menuitem" to="/">
-        <img :src="home === true ? require('../assets/images/homea.png') : require('../assets/images/home.png') " alt="" />
-        <span>首页</span>
-      </router-link>
-
-        <router-link class="menuitem" to="/sale" >
-          <img :src="sale === true ? require('../assets/images/salea.png') : require('../assets/images/sale.png')" alt="" />
-          <span>营销</span>
-        </router-link>
-      <router-link class="menuitem" to="/company">
-        <img :src="xbr === true ? require('../assets/images/xbra.png') : require('../assets/images/xbr.png')" alt="" />
+        <img :src="home === true ? require('../assets/images/xbra.png') : require('../assets/images/xbr.png') " alt="" />
         <span>新宝瑞</span>
       </router-link>
+
+        <router-link class="menuitem" to="/activity" >
+          <img :src="sale === true ? require('../assets/images/homea.png') : require('../assets/images/home.png')" alt="" />
+          <span>活动</span>
+        </router-link>
+      <!-- <router-link class="menuitem" to="/company">
+        <img :src="xbr === true ? require('../assets/images/xbra.png') : require('../assets/images/xbr.png')" alt="" />
+        <span>介绍</span>
+      </router-link> -->
       <router-link class="menuitem" to="/mycenter">
         <img :src="me === true ? require('../assets/images/mea.png') : require('../assets/images/me.png')" alt="" />
-        <span>我的</span>
+        <span>个人中心</span>
       </router-link>
   </div>
 </template>
@@ -49,7 +49,7 @@ export default {
 .footer .menuitem{
   display: flex;
   flex-direction: column;
-  width:25%;
+  width:33.33%;
   height:100%;
   justify-content: center;
   align-items: center;

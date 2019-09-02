@@ -1,13 +1,13 @@
 <template>
   <div class="mycenter">
     <div class="mycHeader">
-      <img class="myavater" src="../assets/images/mc1.png" />
-      <span class="myusername">会员August、</span>
+      <img class="myavater" :src="detail.avatar"  v-lazy="detail.avatar"/>
+      <span class="myusername">{{detail.user_nickname}}</span>
       <router-link class="myjr" to="/mysy">
           <!-- <img class="myjrb" src="../assets/images/tsb.png" /> -->
-          <p class="p1">00.00</p>
+          <p class="p1">{{detail.brokerage}}</p>
           <p class="p2">可提现</p>
-          <p class="p3"><span>累计总额00.00元</span><span>已提现00.00元</span></p>
+          <p class="p3"><span>累计总额{{detail.brokerage_history}}元</span><span>已提现{{detail.tixian}}元</span></p>
       </router-link>
 
     </div>
@@ -25,16 +25,16 @@
           </router-link>
         </div>
       </div>
-      <div class="myyq">
-        <img src="../assets/images/yq.png" />
-      </div>
+      <a class="myyq" :href="adinfo.url">
+        <img :src="adinfo.image" v-lazy="adinfo.image"/>
+      </a>
       <div class="myyqg">
-        <router-link class="myyqgitem" to="/invite">
+        <router-link class="myyqgitem" to="/myteam">
           <img class="myyqic" src="../assets/images/yj.png" />
           <span class="myyqc" >邀请好友获得奖励金</span>
           <span class="myyqbtn">去邀请</span>
         </router-link>
-        <router-link class="myyqgitem" to="/addresslist">
+        <router-link class="myyqgitem" to="/addresslist?flag=true">
           <img class="myyqic" src="../assets/images/ma.png" />
           <span class="myyqc">我的地址</span>
           <img class="myyqnext" src="../assets/images/addressnext.png" />
@@ -47,9 +47,31 @@
 
 <script>
 import Footer from '../components/footer.vue'
+import {userIndex} from '@/api'
 export default {
+  data () {
+    return {
+      detail: {},
+      adinfo: {
+        url: '/index.html',
+        image: require('../assets/images/yq.png')
+      }
+    }
+  },
+  mounted () {
+    this.userIndexApi()
+  },
   components: {
     Footer
+  },
+  methods: {
+    async userIndexApi () {
+      const result = await userIndex({})
+      if (result.code === 1) {
+        this.detail = result.data.user
+        this.adinfo = result.data.slideList[0]
+      }
+    }
   }
 }
 </script>
@@ -74,6 +96,7 @@ export default {
 .myavater{
   width:120px;
   height:120px;
+  border-radius: 50%;
   margin-top:35px;
 }
 .myusername{
@@ -185,6 +208,10 @@ export default {
 .myyq{
   display: flex;
   margin-top:20px;
+}
+.myyq img{
+  width:690px;
+  height:130px;
 }
 .myyqg{
   margin-top:20px;

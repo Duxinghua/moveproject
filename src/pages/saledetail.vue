@@ -85,7 +85,7 @@ export default {
   width:190px;
   height:48px;
   background:rgba(255,255,255,0);
-  border:1px solid rgba(255, 255, 255, 1);
+  border:1px solid white;
   opacity:0.28;
   border-radius:24px;
   color:white;
@@ -102,6 +102,11 @@ export default {
 .saledec{
   /* font-size: 26px;
   color:#333; */
+  font-size: initial;
+}
+.saledec img{
+  width: 100% !important;
+  height:auto !important;
 }
 
 </style>

@@ -1,15 +1,16 @@
 <template>
-  <div class="pritem">
-    <img class="pritemimg" :src="pitem.goods_image" />
+
+  <router-link  class="pritem" :to="'/detail?id='+pitem.goods_id">
+    <img class="pritemimg" :src="pitem.goods_image"   v-lazy="pitem.goods_image"/>
     <p class="pr1">{{pitem.goods_name}}</p>
     <p class="pr2">{{pitem.description}}</p>
     <div class="pcar">
       <span>¥{{pitem.price}}</span>
       <span>¥{{pitem.price_cost}}</span>
-      <router-link :to="'/detail?id='+pitem.goods_id"><img src="../assets/images/pcar.png" /></router-link>
+      <img src="../assets/images/pcar.png" />
 
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script>
@@ -22,13 +23,16 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .pritem{
   display: flex;
   flex-direction: column;
-  margin-right:22px;
+  margin-right:10px;
   margin-bottom: 21px;
-  width:calc(50% - 22px)
+  height:396px;
+  background:white;
+  width:calc(50% - 10px);
+  border-radius:8px;
 }
 .pritem:nth-child(2n){
   margin-right:0px !important;
@@ -37,13 +41,15 @@ export default {
 .pritemimg{
   width:331px;
   height:253px;
+  border-radius: 8px 8px 0 0;
 }
 .pr1{
   color:#333333;
   font-size: 26px;
   font-weight: 500;
-  margin-top:21px;
-  margin-bottom: 9px;
+  margin-top:10px;
+  padding-left:10px;
+  padding-right:10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -55,6 +61,8 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-left:10px;
+  padding-right:10px;
 }
 .pcar{
   display: flex;
@@ -64,11 +72,12 @@ export default {
   align-items: center;
   height:50px;
   margin:auto 0;
+  padding-left:10px;
+  padding-right:10px;
 }
 .pcar span:first-child{
   color:#E52B2B;
   font-size: 30px;
-  font-weight: bold;
   margin-right:10px;
 }
 .pcar span:nth-child(2){

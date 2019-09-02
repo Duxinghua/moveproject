@@ -2,7 +2,7 @@
     <div class="paybutton">
       <span>在线支付：</span>
       <span>¥{{price}}</span>
-     <span class="button" @click="handlePay">立即预订</span>
+     <span class="button" @click="handlePay">立即购买</span>
       <!-- <router-link class="button" to="/ticketpay">立即预订</router-link> -->
     </div>
 </template>
@@ -34,7 +34,7 @@ export default {
   bottom: 0;
   left:0;
   color:#333333;
-  font-size: 26px;
+  font-size: 24px;
   background:white;
   box-shadow:0px 4px 9px 0px rgba(217,217,217,0.21);
 }
@@ -42,8 +42,8 @@ export default {
 .paybutton span:nth-child(2){
   flex:1 1 auto;
   color:#E52B2B;
-  font-size: 32px;
-  font-weight: bold;
+  font-size: 34px;
+  /* font-weight: bold; */
 }
 .paybutton .button{
   background:#943D93;

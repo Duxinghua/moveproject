@@ -147,6 +147,8 @@ export default {
       }
       .active{
         color:#8C3B92;
+        font-size:30px !important;
+        // font-weight: bold;
         border-bottom:3px solid #8C3B92;
       }
     }

@@ -78,7 +78,7 @@ export default {
 .ticketd span:nth-child(1){
   font-size: 30px;
   color:#E52B2B;
-  font-weight: bold;
+  /* font-weight: bold; */
   margin-right:15px;
 }
 .ticketd span:nth-child(2){

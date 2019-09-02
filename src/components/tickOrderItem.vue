@@ -69,7 +69,7 @@ export default {
       }).then(() => {
         console.log(1111)
         let formdata = {order_id: this.item.order_id}
-        closeOrderApi(formdata).then(data=>{
+        closeOrderApi(formdata).then(data => {
           this.$toast({message: data.msg, duration: 2000})
         })
       }).catch(() => {})
@@ -96,7 +96,7 @@ export default {
       } else {
         this.$toast({message: result.msg, duration: 2000})
       }
-    },
+    }
   }
 }
 </script>
@@ -187,6 +187,7 @@ export default {
       line-height:68px;
       border-radius:6px;
       background: #9C3FA2;
+      color: #fff;
       a{
         color: #fff;
       }

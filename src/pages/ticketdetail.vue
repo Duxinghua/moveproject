@@ -18,12 +18,14 @@
     </div>
     <div class="tdsh">
       <div class="tdsheader">
+        <router-link :to="'/shopdetail?id='+ticketDetail.goods_id">
         <span>商户</span>
+        </router-link>
         <a :href="'tel:'+ticketDetail.shop_detail.contacts">
         <img src="../assets/images/call.png" />
         </a>
       </div>
-      <p>{{ticketDetail.shop_detail.shop_name}}</p>
+     <router-link :to="'/shopdetail?id='+ticketDetail.goods_id">  <p>{{ticketDetail.shop_detail.shop_name}} </p> </router-link>
       <p class="tdshp"><img src="../assets/images/addressposition.png" />
         <a :href="'http://apis.map.qq.com/tools/poimarker?type=0&marker=coord:'+ticketDetail.shop_detail.lat+','+ticketDetail.shop_detail.lng+';title:'+ticketDetail.shop_detail.shop_name+';addr:'+ticketDetail.shop_detail.address+'&key=R5PBZ-4LMWW-3W3RQ-OGHPU-UGOQ7-EIFRN&referer=search'"><span class="addressdeta">{{ticketDetail.shop_detail.address}}</span></a>
       </p>
@@ -38,20 +40,26 @@
     <div class="paybutton">
       <span>在线支付：</span>
       <span>¥{{ticketDetail.price}}</span>
-      <router-link class="button" :to="'/ticketpay?id='+ticketDetail.goods_id">立即预订</router-link>
+      <router-link class="button" :to="'/ticketpay?id='+ticketDetail.goods_id">立即购买</router-link>
     </div>
+    <Sharepagestyle :sharePageStyle="sharePageStyle" @close="showshareclose"/>
   </div>
 </template>
 
 <script>
+import Sharepagestyle from '../components/showSharePage.vue'
 import {ticketDetailApi, weixinGetShare} from '@/api'
 export default {
+  components: {
+    Sharepagestyle
+  },
   data () {
     return {
       ticketDetail: null,
       goods_id: null,
-      appid:'wx505f185e9f5fcf57',
-      wxpay:null
+      appid: 'wx505f185e9f5fcf57',
+      wxpay: {},
+      sharePageStyle: false
     }
   },
   mounted () {
@@ -59,16 +67,15 @@ export default {
     this.weixinGetShareApi()
   },
   methods: {
-    shareClick(){
-      console.log('ss')
-      const data = {
-        img: 'https://xinbr.qixiuu.com/upload/default/logo.png'
-      }
-
+    showshareclose () {
+      this.sharePageStyle = false
     },
-    wxs(wxpay) {
+    shareClick () {
+      this.sharePageStyle = true
+    },
+    wxs (wxpay) {
       wx.config({
-        debug: true,
+        debug: false,
         appId: wxpay.appId,
         timestamp: wxpay.timestamp,
         nonceStr: wxpay.nonceStr,
@@ -78,10 +85,10 @@ export default {
           'onMenuShareTimeline',
           'onMenuShareAppMessage'
         ]
-      });
+      })
       wx.error(function (res) {
-        console.log('error',res)
-      });
+        console.log('error', res)
+      })
       // 在这里调用 API
       wx.ready(function () {
         wx.checkJsApi({
@@ -91,11 +98,11 @@ export default {
             'onMenuShareAppMessage'
           ],
           success: function (res) {
-            //alert(JSON.stringify(res));
+            // alert(JSON.stringify(res));
           }
-        });
+        })
 
-        //点击分享到朋友圈
+        // 点击分享到朋友圈
         wx.onMenuShareTimeline({
           title: '无人茶社邀您喝好茶！', // 分享标题
           desc: '邀您喝好茶、邀您体验无人值守！', // 分享描述
@@ -103,21 +110,20 @@ export default {
           imgUrl: wxpay.logo, // 分享图标
           trigger: function (res) {
             // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
-            alert('用户点击分享到朋友圈');
+            alert('用户点击分享到朋友圈')
           },
           success: function () {
             // 用户确认分享后执行的回调函数
-            alert('分享成功');
-
+            alert('分享成功')
           },
           cancel: function () {
             // 用户取消分享后执行的回调函数
-            alert('分享取消');
+            alert('分享取消')
           },
           fail: function (res) {
-            alert(JSON.stringify(res));
+            alert(JSON.stringify(res))
           }
-        });
+        })
         wx.onMenuShareAppMessage({
           title: '无人茶社邀您喝好茶！', // 分享标题
           desc: '邀您喝好茶、邀您体验无人值守！', // 分享描述
@@ -134,9 +140,8 @@ export default {
             // 用户取消分享后执行的回调函数
             // alert('分享取消');
           }
-        });
+        })
       })
-
     },
     async weixinGetShareApi () {
       const data = {
@@ -144,7 +149,7 @@ export default {
         current_url: location.href
       }
       const result = await weixinGetShare(data)
-      if(result.code === 1){
+      if (result.code === 1) {
         this.wxpay = result.data
         this.wxs(result.data)
       }
@@ -178,7 +183,7 @@ export default {
   }
   .tdpfl span:nth-child(2){
     color: #E52B2B;
-    font-weight: bold;
+    /* font-weight: bold; */
   }
   .tdpfl span:nth-child(3){
     text-decoration: line-through;
@@ -200,13 +205,18 @@ export default {
     margin-bottom: 15px;
   }
   .tdescb{
-    font-size: 24px;
+    /* font-size: 24px;
     color: #333333;
     text-align: left;
     line-height: 40px;
     margin-bottom: 34px;
     width: 100%;
-    overflow-x: hidden;
+    overflow-x: hidden; */
+    font-size: initial;
+  }
+  .tdescb img{
+    width:100% !important;
+    height:auto !important;
   }
   .ticketdetail{
     padding-bottom: 98px;
@@ -236,7 +246,7 @@ export default {
     bottom: 0;
     left:0;
     color:#333333;
-    font-size: 26px;
+    font-size: 24px;
     background:white;
     box-shadow:0px 4px 9px 0px rgba(217,217,217,0.21);
   }
@@ -244,8 +254,8 @@ export default {
   .paybutton span:nth-child(2){
     flex:1 1 auto;
     color:#E52B2B;
-    font-size: 32px;
-    font-weight: bold;
+    font-size: 34px;
+    /* font-weight: bold; */
   }
   .paybutton .button{
     background:#943D93;

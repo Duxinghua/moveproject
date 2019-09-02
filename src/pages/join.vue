@@ -1,11 +1,11 @@
 <template>
   <div class="join">
     <span class="joinspan">{{detail.post_title}}</span>
-    <img src="../assets/images/joinad.png" alt="" />
+    <!-- <img src="../assets/images/joinad.png" alt="" /> -->
     <!-- class="joininfo" -->
-    <div style="font-size: initial;" v-html="detail.post_content">
+    <div class="joincontent" style="font-size: initial;" v-html="detail.post_content">
     </div>
-    <Footer />
+    <!-- <Footer /> -->
   </div>
 </template>
 

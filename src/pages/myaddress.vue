@@ -5,7 +5,7 @@
         <van-field
           v-model="username"
           label="收货人"
-          type="textarea"
+          type="text"
           placeholder="请填写"
           rows="1"
           autosize
@@ -15,40 +15,42 @@
         <van-field
           v-model="mobile"
           label="手机号"
-          type="textarea"
+          type="text"
           placeholder="请填写"
           rows="1"
           autosize
         />
       </van-cell-group>
       <div class="zonesel" @click="selectaddress">
-        <van-cell-group class="zonesel-van">
+        <van-cell-group class="zonesel-van"    @click="selectaddress">
           <van-field
             v-model="zone"
             label="所在地区"
-            type="textarea"
-            placeholder="请填写"
+            type="text"
+            placeholder="请选择"
             rows="1"
-            autosize
-            disabled
+            readonly
             @click="selectaddress"
           />
         </van-cell-group>
+
         <img class="addnext" src="../assets/images/addressnext.png" />
       </div>
-      <van-cell-group>
-        <van-field
-          v-model="address"
-          label="详细地址"
-          type="textarea"
-          placeholder="请填写，如街道、楼栋、单元等等"
-          rows="1"
-          autosize
-        />
-      </van-cell-group>
+      <div class="myaddressxiaoxi">
+        <van-cell-group>
+          <van-field
+            v-model="address"
+            label="详细地址"
+            type="textarea"
+            placeholder="请填写，如街道、楼栋、单元等等"
+            rows="1"
+            autosize
+          />
+        </van-cell-group>
+      </div>
     </div>
     <div class="myaoptions">
-      <van-checkbox @change="selectCheck" v-model="checked" checked-color="#9C3FA2">设为默认地址</van-checkbox>
+      <van-checkbox @change="selectCheck" v-model="checked" checked-color="#9C3FA2" icon-size="16">设为默认地址</van-checkbox>
     </div>
     <van-action-sheet v-model="show" style="font-size: initial">
         <van-area :area-list="areaList"  @confirm="onconfirm" @cancel="oncancel"/>
@@ -77,7 +79,11 @@ export default {
       id: '',
       mode: 0,
       show: false,
-      areaList: []
+      areaList: [],
+      goods_id: false,
+      good_url: false,
+      add_url: false,
+      flag: false
     }
   },
   methods: {
@@ -157,7 +163,13 @@ export default {
         const result = await mallAddressEdit(data)
         if (result.code === 1) {
           this.$toast.success(result.msg)
-          this.$router.push({path: '/addresslist'})
+          // this.$router.push({path: '/addresslist'})
+          // console.log(this.goods_id,"goods_id")
+          if (this.goods_id) {
+            this.$router.push({path: '/addresslist', query: {goods_id: this.goods_id, good_url: this.good_url, add_url: true}})
+          } else {
+            this.$router.push({path: '/addresslist'})
+          }
         } else {
           this.$toast.fail(result.msg)
         }
@@ -166,7 +178,13 @@ export default {
         const result = await mallAddressAdd(data)
         if (result.code === 1) {
           this.$toast.success(result.msg)
-          this.$router.push({path: '/addresslist'})
+          // this.$router.push({path: '/addresslist'})
+
+          if (this.goods_id) {
+            this.$router.push({path: '/addresslist', query: {goods_id: this.goods_id, good_url: this.good_url, add_url: true}})
+          } else {
+            this.$router.push({path: '/addresslist'})
+          }
         } else {
           this.$toast.fail(result.msg)
         }
@@ -175,7 +193,12 @@ export default {
   },
   mounted () {
     //  this.type = this.$route.qurey.type
-
+    this.goods_id = this.$route.query.goods_id
+    console.log(this.goods_id, 'ids')
+    this.good_url = this.$route.query.good_url
+    if (this.$route.query.flag) {
+      this.flag = this.$route.query.flag
+    }
     // console.log(this.$toast.success('成功'))
     this.indexCityDataApi()
     this.mode = this.$route.query.mode
@@ -184,7 +207,7 @@ export default {
       this.mobile = this.$route.query.mobile
       this.zone = this.$route.query.province_name + this.$route.query.city_name + this.$route.query.area_name
       this.address = this.$route.query.address
-      this.checked = this.$route.query.is_default === 1
+      this.checked = this.$route.query.is_default === 1 + ''
       this.area = this.$route.query.area
       this.province = this.$route.query.province
       this.city = this.$route.query.city
@@ -215,8 +238,13 @@ export default {
   }
 .myaddress .van-field__label{
     width:35% !important;
-    padding:20px 0;
+    display: flex;
+    align-items: center;
   }
+.myaddress .van-field__body input{
+  height:40px!important;
+  font-size:28px;
+}
 .myaddress .van-cell__value{
     width:65% !important;
     padding:20px 0
@@ -237,7 +265,20 @@ export default {
     width:95%;
   }
  .myaddress .van-checkbox__icon{
-    width:5%;
+    /* width:5%; */
   }
-
+ .myaddressxiaoxi .van-field{
+   padding-top: 15px!important;
+   display: flex;
+   flex-direction: column;
+   width:100% !important;
+ }
+ .myaddressxiaoxi .van-cell__value{
+   width:100% !important;
+ }
+ .myaddressxiaoxi .van-field__control{
+   padding-top:5px;
+   height:60px !important;
+   font-size:28px;
+ }
 </style>

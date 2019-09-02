@@ -1,7 +1,7 @@
 <template>
   <div class="activitydetail">
     <div class="activityheader" v-if="activeDetail">
-      <img class="acbanner" :src="activeDetail.image" alt="">
+      <img class="acbanner" :src="activeDetail.image"  v-lazy="activeDetail.image" alt="">
       <div class="accontenty">
         <p>{{activeDetail.title}}</p>
         <div class="activityditem">
@@ -27,7 +27,7 @@
       <div class="aids" v-html="activeDetail.content">
 
       </div>
-      <span class="aidsb">报名请加入社区群，群号：L54120013</span>
+      <!-- <span class="aidsb">报名请加入社区群，群号：L54120013</span> -->
     </div>
   </div>
 </template>
@@ -87,10 +87,15 @@ export default {
   border-bottom: none;
 }
 .aids{
-  font-size: 24px;
+  /* font-size: 24px;
   color: #333333;
   text-align: left;
   line-height: 40px;
-  margin-bottom: 34px;
+  margin-bottom: 34px; */
+  font-size: initial
+}
+.aids img{
+  width:100% !important;
+  height:auto !important;
 }
 </style>

@@ -182,7 +182,7 @@
 }
 .zonesel .addnext{
   width:10px;
-  height:18px;
+  height:18px
 }
 .zonesel-van{
   width:95%
@@ -268,4 +268,11 @@
   padding-left:32px;
   padding-right:32px;
   padding-bottom: 98px;
+}
+.mycomContent img,.joincontent img{
+  width:100% !important;
+  height:auto !important;
+}
+.myaoptions .van-icon-success{
+  margin-right:20px;
 }

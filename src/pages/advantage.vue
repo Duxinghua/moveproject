@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-    <div class="advc" v-html="detail.post_content">
+    <div class="advantage-content" style="font-size:initial" v-html="detail.post_content">
       <!-- <span class="advch">高校合作顶部企业</span>
       <div class="advcc">
         武汉新宝瑞文化传媒有限公司 是一家专注于企业定 制场景营销、网红营销、短视频营销代运营、社群营销、 新媒体营销一体化的成长性服
@@ -50,6 +50,34 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .advcontent{
+    display: flex;
+    flex-direction: row;
+    width:100%;
+  }
+  .advantage{
+    padding-left:32px;
+    padding-right:32px;
+  }
+  .advitem{
+  width:33.33%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.advitem img{
+  width:120px;
+  height:120px;
+  margin-bottom: 30px;
+}
+.advitem span{
+  color:#333333;
+  font-size:26px;
+}
+.advantage-content img{
+  width:100% !important;
+  height:auto !important;
+}
 </style>

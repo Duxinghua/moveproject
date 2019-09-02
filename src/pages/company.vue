@@ -8,7 +8,7 @@
 
       </div>
     </div>
-    <Footer :xbr="true" :me="false" :sale="false" :home="false" />
+    <!-- <Footer :xbr="true" :me="false" :sale="false" :home="false" /> -->
   </div>
 </template>
 
@@ -45,6 +45,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.mycomContent img{
+  width:100% !important;
+  height:auto !important;
+}
 
 </style>

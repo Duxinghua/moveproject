@@ -20,7 +20,7 @@
           <label for="cstname">姓名</label>
           <input v-model="true_name" id="cstname" type="text" placeholder="必填，输入证件上的姓名">
         </p>
-        <p class="info"  v-if="ticketDetail.identity==2">
+        <p class="info"  v-if="ticketDetail.identity === 2">
           <label for="csttype">证件号</label>
           <input v-model="idcard" id="csttype" type="text" placeholder="必填，输入联系人证件号">
         </p>
@@ -37,6 +37,7 @@
 <script>
 import {ticketPaylApi, mallticketOrderBuy} from '@/api'
 import getSitem from '@/utils/storage'
+import config from '@/utils/config'
 import Paybutton from '../components/paybutton.vue'
 const BigNumber = require('bignumber.js')
 export default {
@@ -80,22 +81,26 @@ export default {
         'getBrandWCPayRequest', this.wxpay,
         function (res) {
           console.log(res)
-          if (res.err_msg === 'get_brand_wcpay_request:ok') {
+          if (new String(res.err_msg).trim() === 'get_brand_wcpay_request:ok') {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+            window.location.href = config.baseurl + '/tickOrderList'
+          } else {
+            window.location.href = config.baseurl + '/tickOrderList'
           }
         })
     },
     async getTicketDetail () {
       let formdata = {goods_id: this.$route.query.id}
-      let token = getSitem.getStr('token') ? getSitem.getStr('token') : 'b9a0bf511d1522999f74c78feb898d97f18d4de1f5e20828c1f9cc2ea7dd8e0d'
+      let token = getSitem.getStr('token')
       formdata.token = token
       const data = await ticketPaylApi(formdata)
       if (data.code === 1) {
+        console.log(data.data.identity)
         this.ticketDetail = data.data
         this.price = data.data.price
         this.goods_id = data.data.goods_id
-        this.identity=data.data.identity
+        this.identity = data.data.identity
       }
     },
     async mallOrderBuyApi () {
@@ -123,7 +128,7 @@ export default {
             document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
           }
         } else {
-          this.wxpay = result.data.wxpay
+          this.wxpay = result.data
           this.onBridgeReady()
         }
       } else {

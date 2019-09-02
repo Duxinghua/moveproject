@@ -74,18 +74,16 @@ export default {
       }
       const result = await mallOrderKeepPay(data)
       if (result.code === 1) {
-
         var p = new Promise((resolve, reject) => {
           console.log(2)
-           this.wxpay = result.data.wxpay
-           setTimeout(()=>{
-             console.log(1)
-              resolve()
-           },2000)
-
+          this.wxpay = result.data.wxpay
+          setTimeout(() => {
+            console.log(1)
+            resolve()
+          }, 2000)
         })
 
-        p.then(()=>{
+        p.then(() => {
           alert(this.wxpay)
           if (typeof WeixinJSBridge === 'undefined') {
             if (document.addEventListener) {
@@ -95,9 +93,8 @@ export default {
               document.attachEvent('onWeixinJSBridgeReady', this.onBridgeReady)
             }
           } else {
-          this.onBridgeReady()
+            this.onBridgeReady()
           }
-
         })
       } else {
         this.$toast({message: result.msg, duration: 2000})

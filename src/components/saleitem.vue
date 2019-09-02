@@ -2,16 +2,18 @@
             <div class="saleItems">
                <router-link  :to="'/saledetail?id='+items.celebrity_id">
                 <div class="siitemheader">
-                  <img class="avater" :src="items.head_image" alt="" />
+                  <img class="avater" :src="items.head_image" v-lazy="items.head_image" alt="" />
                   <div class="siiteminfo">
                     <p class="p1">{{items.user_name}}</p>
-                    <p class="p2">{{names}}{{items.account}} </p>
+                    <p class="p2">{{names}}号:{{items.account}} </p>
                     <p class="p3"><span class="sp1">{{items.funs}}</span>粉丝<span class="sp2">{{items.likes}}</span>获赞</p>
                   </div>
                   <img class="smore" src="../assets/images/more.png" alt="" />
                 </div>
                 <div class="siitembody">
-                  <img :src="imgitem.url" alt="" v-for="(imgitem, index) in autoImgs"  :key="index">
+                  <div class="siitemimg" v-for="(imgitem, index) in autoImgs"  :key="index" >
+                    <img :src="imgitem.url" v-lazy="imgitem.url" alt="">
+                  </div>
                 </div>
                </router-link>
           </div>
@@ -27,8 +29,9 @@ export default {
   },
   computed: {
     autoImgs () {
+      console.log(this.items)
       if (this.imgs.length > 3) {
-        var arr = this.imgs.slice(0, 2)
+        var arr = this.imgs.slice(0, 3)
         return arr
       } else {
         return this.imgs
@@ -41,19 +44,19 @@ export default {
 }
 </script>
 
-<style>
+<style >
 .saleItems{
   border-bottom: 1px solid #f3f3f3;
 }
 .siitemheader{
-  padding:32px 0;
+  padding:30px 0;
   display: flex;
   flex-direction: row;
   align-items: center;
 }
 .siitemheader .avater{
-  width:98px;
-  height:98px;
+  width:118px;
+  height:118px;
   margin-right:29px;
   border-radius: 50%;
 }
@@ -87,8 +90,8 @@ export default {
   color:#913C92;
 }
 .siitemheader .smore{
-  width:52px;
-  height:52px;
+  width:60px;
+  height:60px;
   cursor: pointer;
 }
 .siitembody{
@@ -96,10 +99,19 @@ export default {
   justify-content:space-between;
   flex-direction: row;
   padding-bottom: 20px;
+  width:100%;
 }
-.siitembody img{
-  width:220px;
+.siitemimg{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:33.33%;
   height:224px;
+}
+.siitembody .siitemimg img{
+  width:90%;
+  height:90%;
+  border-radius: 8px;
 }
 
 </style>

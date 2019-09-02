@@ -2,7 +2,7 @@
 
                <router-link class="wbItem" :to="'/saledetail?id='+items.celebrity_id">
                   <div class="wbimg">
-                    <img  class="wbimg-avater" :src="items.head_image" alt="" />
+                    <img  class="wbimg-avater" :src="items.head_image"  v-lazy="items.head_image" alt="" />
                     <img class="wbimg-v" src="../assets/images/v.png" alt="" />
                   </div>
                   <div class="wbcontent">
@@ -61,8 +61,8 @@ export default {
   margin-bottom: 15px;
 }
 .wb-more{
-  width:52px;
-  height:52px;
+  width:60px;
+  height:60px;
 }
 .wbdes{
   color:#666666;

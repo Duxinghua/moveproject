@@ -1,67 +1,58 @@
 <template>
-  <div calss="prdetail">
-    <div class="productdetail">
-      <div class="prheader">
-        <img class="prbanner" :src="detail.goods_image" v-lazy="detail.goods_image" />
-        <div class="prdes">
-          <p>{{detail.goods_name}}</p>
-          <p>{{detail.description}}</p>
-          <div class="moneyShare">
-            <span>¥{{detail.price}}</span>
-            <span>¥{{detail.price_cost}}</span>
-            <div class="sharebutton" @click="shareClick">
-              <img src="../assets/images/share.png" />
-              <span>分享赚佣金</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-      <div class="prcontent">
-        <div class="prdetaion">
-          <span class="prdetaiontitle">详情</span>
-        </div>
-        <div class="prdetaioncontent" v-html="detail.content">
-        </div>
-      </div>
+  <div class="invite">
+    <div class="inviteitem">
+      <img :src="detail.fx_qrcode_img" v-lazy="detail.fx_qrcode_img" class="wxcode"/>
+      <p>分享二维码邀请好友</p>
     </div>
-    <!-- <div class="sharePageStyle" v-if="sharePageStyle" @click="showshareclose">
-      <img src="../assets/images/sharewxico.png" alt="">
-    </div> -->
+    <p class="share_p">{{detail.share_desc}}</p>
+    <div class="invitebutton"  @click="shareClick">
+      分享好友
+    </div>
     <Sharepagestyle :sharePageStyle="sharePageStyle" @close="showshareclose"/>
-    <Paytab :price="detail.price" @pay="handlepay" />
+
   </div>
+
 </template>
 
 <script>
 import Sharepagestyle from '../components/showSharePage.vue'
-import Paytab from '../components/paybutton.vue'
-import { mallGoodDetail, weixinGetShare } from '@/api'
-import getSitem from '@/utils/storage'
+import {weixinGetShare, userToshare, getShareType} from '@/api'
 import config from '@/utils/config'
 export default {
   data () {
     return {
-      detail: {
-        goods_image: null
-      },
-      goods_id: null,
-      appid: 'wx505f185e9f5fcf57',
-      wxpay: {},
-      sharePageStyle: false
+      sharePageStyle: false,
+      detail: {},
+      wxpay: {
+
+      }
     }
   },
-  create () {
-
-  },
-  mounted () {
-    this.mallGoodDetailApi()
-  },
   components: {
-    Paytab,
     Sharepagestyle
   },
+  mounted () {
+    this.userToshareApi()
+  },
   methods: {
+    async getShareTypeApi () {
+      const data = {
+        appid: config.appid
+      }
+      const result = await getShareType(data)
+      if (result.code === 1) {
+        this.wxpay = result.data
+        this.wxs(result.data)
+      }
+    },
+    async userToshareApi () {
+      const result = await userToshare({})
+      if (result.code === 1) {
+        this.detail = result.data
+        // this.weixinGetShareApi()
+        this.getShareTypeApi()
+      }
+    },
     showshareclose () {
       this.sharePageStyle = false
     },
@@ -99,11 +90,10 @@ export default {
         })
 
         // 点击分享到朋友圈
-        //that.baseurl + '/detail?id=' + encodeURIComponent(that.goods_id)
         wx.onMenuShareTimeline({
-          title: detail.goods_name, // 分享标题
-          desc: detail.description, // 分享描述
-          link: that.baseurl + '/detail?id=' + encodeURIComponent(that.goods_id), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          title: '邀请好友，一起赚钱', // 分享标题
+          desc: that.detail.share_desc, // 分享描述
+          link: config.baseurl + '/invite?openid=' + encodeURIComponent(that.detail.openid), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: wxpay.logo, // 分享图标
           trigger: function (res) {
             // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
@@ -122,9 +112,9 @@ export default {
           }
         })
         wx.onMenuShareAppMessage({
-          title: detail.goods_name, // 分享标题
-          desc: detail.description, // 分享描述
-          link: that.baseurl + '/detail?id=' + encodeURIComponent(that.goods_id), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          title: '邀请好友，一起赚钱', // 分享标题
+          desc: that.detail.share_desc, // 分享描述
+          link: config.baseurl + '/invite?openid=' + encodeURIComponent(that.detail.openid), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: wxpay.logo, // 分享图标
           type: 'link', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
@@ -142,7 +132,7 @@ export default {
     },
     async weixinGetShareApi () {
       const data = {
-        appid: this.appid,
+        appid: config.appid,
         current_url: location.href
       }
       const result = await weixinGetShare(data)
@@ -150,32 +140,65 @@ export default {
         this.wxpay = result.data
         this.wxs(result.data)
       }
-    },
-    async mallGoodDetailApi () {
-      const data = {
-        id: this.$route.query.id,
-        token: getSitem.getStr('token')
-      }
-      const result = await mallGoodDetail(data)
-      if (result.code === 1) {
-        this.detail = result.data
-        this.goods_id = result.data.goods_id
-        this.weixinGetShareApi()
-      }
-    },
-    handlepay (e) {
-      this.$router.push({path: 'payorder', query: {goods_id: this.goods_id}})
     }
   }
+
 }
 </script>
 
 <style scoped>
-.prdetaioncontent{
-  font-size: initial
+.share_p{
+  color:#333;
+  font-size: 26px;
+  position: fixed;
+  top: calc(50% + 428px/2 + 50px);
+  width:90%;
 }
-.prdetaioncontent img{
-  width:100% !important;
-  height:auto !important;
+.invitebutton{
+  position: fixed;
+  bottom: 0;
+  left:0;
+  width:100%;
+  height:98px;
+  background:#9C3FA2;
+  text-align: center;
+  line-height: 98px;
+  font-size: 36px;
+  color:white;
+  cursor: pointer;
+}
+.invite{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background:url('../assets/images/invitebackground.png');
+  background-size: 100% 100%;
+  width:100vw;
+  height:100vh;
+}
+.inviteitem{
+    position: fixed;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    width:448px;
+    height:428px;
+    background:url('../assets/images/inviteitem.png');
+    background-size:100% 100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.inviteitem .wxcode{
+  margin-top:36px;
+  width:227px;
+  height:225px;
+}
+.inviteitem p {
+  font-size:23px;
+  margin-top:36px;
+  color:#666
 }
 </style>

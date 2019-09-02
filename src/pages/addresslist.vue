@@ -11,8 +11,8 @@
         {{item.province_name}}{{item.city_name}}{{item.area_name}}{{item.address}}
       </div>
       <div class="adrfun">
-        <van-radio :name="item.id" checked-color="#9C3FA2" class="adrfunheight">设为默认</van-radio>
-        <router-link class="adredit" :to="'/myaddress?mode=1&username='+item.username+'&mobile='+item.mobile+'&province_name='+item.province_name+'&city_name='+item.city_name+'&area_name='+item.area_name+'&address='+item.address+'&province='+item.province+'&city='+item.city+'&area='+item.area+'&is_default='+item.is_default+'&id='+item.id">
+        <van-radio @click="clickRadio(item.id)" :name="item.id" checked-color="#9C3FA2" class="adrfunheight">设为默认</van-radio>
+        <router-link class="adredit" :to="'/myaddress?mode=1&username='+item.username+'&mobile='+item.mobile+'&province_name='+item.province_name+'&city_name='+item.city_name+'&area_name='+item.area_name+'&address='+item.address+'&province='+item.province+'&city='+item.city+'&area='+item.area+'&is_default='+item.is_default+'&id='+item.id+autoArg">
           <img src="../assets/images/edit.png" />
           <span>编辑</span>
         </router-link>
@@ -24,21 +24,33 @@
     </div>
 
     </van-radio-group>
-    <router-link class="mybtn" to="/myaddress?mode=2">
+    <div class="mybtn" @click="clickToadd">
       新增收货地址
-    </router-link>
+    </div>
   </div>
 </template>
 
 <script>
 import getSitem from '@/utils/storage'
-import {mallAddressIndex, mallAddressDel} from '@/api'
+import {mallAddressIndex, mallAddressDel, mallAddressEdit} from '@/api'
 export default {
   data () {
     return {
       checked: false,
       addlist: [],
-      radio: 0
+      radio: 0,
+      goods_id: false,
+      good_url: 0,
+      flag: false
+    }
+  },
+  watch: {
+    add_url (val) {
+      if (val) {
+        if (this.goods_id && this.good_url) {
+          this.$router.push({path: '/payorder', query: {goods_id: this.goods_id}})
+        }
+      }
     }
   },
   computed: {
@@ -54,17 +66,80 @@ export default {
     //     return 0
     //   }
     // }
+    autoArg () {
+      if (this.goods_id) {
+        return '&goods_id=' + $route.query.goods_id + '&good_url=' + $route.query.good_url
+      } else {
+        return ''
+      }
+    }
   },
   mounted () {
+    // getSitem.remove('goods_id')
+    if (this.$route.query.flag) {
+      this.flag = this.$route.query.flag
+      getSitem.setStr('flag', this.$route.query.flag)
+    }
+    if (this.$route.query.add_url) {
+      this.add_url = this.$route.query.add_url
+    }
+    if (this.$route.query.goods_id) {
+      this.goods_id = this.$route.query.goods_id
+    }
+    if (this.$route.query.good_url) {
+      this.good_url = this.$route.query.good_url
+    }
+    getSitem.setStr('goods_id', this.goods_id)
+    getSitem.setStr('goods_url', this.goods_url)
     this.mallAddressIndexApi()
   },
   methods: {
+    /// myaddress?mode=2
+    async mallAddressEditApi (data) {
+      const result = await mallAddressEdit(data)
+      if (result.code === 1) {
+        this.$toast.success(result.msg)
+        if (this.goods_id && this.good_url) {
+          // this.$router.push({path:'/payorder',query:{goods_id:this.goods_id}})
+          this.add_url = true
+        } else {
+          this.mallAddressIndexApi()
+        }
+      }
+    },
+    clickToadd (e) {
+      if (this.goods_id) {
+        this.$router.push({path: '/myaddress', query: {mode: 2, goods_id: this.goods_id, good_url: this.good_url}})
+      } else {
+        this.$router.push({path: '/myaddress', query: {mode: 2, flag: this.flag}})
+      }
+    },
     changeRadio (e) {
-      console.log(e)
+      // var id = e
+      // var data = {}
+      // this.addlist.map((item) => {
+      //   if(item.id === id){
+      //     data = item
+      //   }
+      // })
+      // data.is_default = 1
+      // // this.mallAddressEditApi(data)
+
+    },
+    clickRadio (e) {
+      var id = e
+      var data = {}
+      this.addlist.map((item) => {
+        if (item.id === id) {
+          data = item
+        }
+      })
+      data.is_default = 1
+      this.mallAddressEditApi(data)
     },
     async mallAddressIndexApi () {
       const data = {
-        token: getSitem.getStr('token') ? getSitem.getStr('token') : 'b9a0bf511d1522999f74c78feb898d97f18d4de1f5e20828c1f9cc2ea7dd8e0d'
+        token: getSitem.getStr('token')
       }
       console.log(data, 'data')
       const result = await mallAddressIndex(data)
@@ -75,7 +150,6 @@ export default {
             this.radio = data.id
           }
         })
-        getSitem.setObj('address', result.data)
       }
     },
     async mallAddressDelApi (e) {

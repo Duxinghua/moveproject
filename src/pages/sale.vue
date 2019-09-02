@@ -1,38 +1,40 @@
 <template>
   <div class="sales">
-    <div class="saless-h">
+    <div :class="autosalessh">
       <div class="saleheader">
-        <div class="saitem">
+        <div class="saitem" @click="saleTab(7)">
           <img src="../assets/images/woman.png" alt="" />
-          <span>模特展示</span>
+          <span :class="{activeTabs: current === 7}">网红</span>
         </div>
-        <div class="saitem">
+        <div class="saitem" @click="saleTab(8)">
           <img src="../assets/images/live.png" alt="" />
-          <span>直播展示</span>
+          <span :class="{activeTabs: current === 8 }">模特</span>
         </div>
-        <div class="saitem">
+        <div class="saitem" @click="saleTab(9)">
           <img src="../assets/images/media.png" alt="" />
-          <span>新媒体</span>
+          <span :class="{activeTabs: current === 9 }">新媒体</span>
         </div>
       </div>
-      <div class="sales-v">
+      <div class="sales-v" v-if="current === 9">
         <van-tabs v-model="active" swipeable @click="onClick">
           <van-tab v-for="(item,index) in itemlist" :title="item.name" :key="index" :name="item.id">
           </van-tab>
         </van-tabs>
       </div>
     </div>
-    <div class="salecontent">
+    <div :class="autoContentClass">
 
           <div :class="autoClass" id="salescontent">
-            <Saleitem   :items="items" :key="index" v-for="(items,index) in itemdata" v-if="autoSaleitem"/>
+            <Saleitem  :names="names" :items="items" :key="index" v-for="(items,index) in itemdata" v-if="autoSaleitem"/>
 
-            <Wbitem  :items="items" :key="index" v-for="(items,index) in itemdatas"  v-if="autoWbitem"/>
-
+            <Wbitem  :names="names" :items="items" :key="index" v-for="(items,index) in itemdatas"  v-if="autoWbitem"/>
+            <div class="loadmore" v-if="hasMoreData">
+                <img :src="loadUrl" alt="">
+            </div>
           </div>
 
     </div>
-    <Footer :home="false" :xbr="false" :sale="true" :me="false" />
+    <!-- <Footer :home="false" :xbr="false" :sale="true" :me="false" /> -->
   </div>
 </template>
 
@@ -48,8 +50,45 @@ export default {
   mounted () {
     this.celebrityApi()
     this.newsCateApi()
+    this.$nextTick(() => {
+      window.addEventListener('scroll', this.scrollfunction, false)
+    })
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.scrollfunction, false)
   },
   methods: {
+    saleTab (arg) {
+      this.itemdata = []
+      this.itemdatas = []
+      this.current = arg
+      if (arg !== 9) {
+        this.active = arg
+        this.names = '账'
+      }
+      if (this.current === 9) {
+        this.active = 10
+        this.names = '抖音'
+      }
+      this.celebrityApi()
+    },
+    scrollfunction () {
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      if (scrollHeight <= (scrollTop + windowHeight)) {
+        if (!this.inBottom && this.hasMoreData) {
+          console.log('加载更多')
+          this.page++
+          this.inBottom = true
+          this.hasMoreData = false
+          this.celebrityApi()
+        }
+      } else {
+        console.log(1111)
+        this.inBottom = false
+      }
+    },
     infinite: function () {
 
     },
@@ -135,6 +174,9 @@ export default {
     onClick (name, title) {
       console.log(name, title)
       this.itemdata = []
+      this.itemdatas = []
+      this.page = 1
+      this.names = title
       this.celebrityApi()
     },
     async newsCateApi () {
@@ -158,13 +200,33 @@ export default {
           this.totalPage = result.data.totalPage
         } else {
           this.itemdatas = this.itemdatas.concat(result.data.list)
-          this.totalPage = result.totalPage
-          console.log(this.itemdata, 'data')
+          this.totalPage = result.data.totalPage
+          console.log(this.itemdatas, 'data')
+        }
+        if (result.data.totalPage === this.page) {
+          this.hasMoreData = false
+        } else {
+          this.hasMoreData = true
         }
       }
     }
   },
   computed: {
+    autosalessh () {
+      if (this.current === 7) {
+        return {
+          'saless-hmz': true
+        }
+      } else if (this.current === 8) {
+        return {
+          'saless-hmz': true
+        }
+      } else if (this.current === 9) {
+        return {
+          'saless-h': true
+        }
+      }
+    },
     autoSaleitem () {
       if (this.active < 13) {
         return true
@@ -189,6 +251,21 @@ export default {
           wbitems: true
         }
       }
+    },
+    autoContentClass () {
+      if (this.current === 7) {
+        return {
+          salecontentmz: true
+        }
+      } else if (this.current === 8) {
+        return {
+          salecontentmz: true
+        }
+      } else if (this.current === 9) {
+        return {
+          salecontent: true
+        }
+      }
     }
   },
   components: {
@@ -198,9 +275,11 @@ export default {
   },
   data () {
     return {
+      current: 9,
       active: 10,
+      names: '抖音',
       page: 1,
-      page_size: 3, // 每页显示多少条
+      page_size: 10, // 每页显示多少条
       totalPage: '', // 总页数
       itemlist: [],
       itemdata: [],
@@ -211,13 +290,19 @@ export default {
       isLoading: false, // 控制下拉刷新的加载动画
       items: 20,
       data: [],
-      busy: false
+      busy: false,
+      loadUrl: require('@/assets/images/loading.png'),
+      hasMoreData: false
+
     }
   }
 }
 </script>
 
 <style>
+.activeTabs{
+  color:#913C92 !important;
+}
 .sales{
   display: flex;
   flex-direction: column;
@@ -235,6 +320,17 @@ export default {
   flex-direction: column;
   background:#f3f3f3;
 }
+.saless-hmz{
+  position: fixed;
+  z-index:110;
+  left:0;
+  top:0;
+  width:100%;
+  height:90px;
+  display: flex;
+  flex-direction: column;
+  background:#f3f3f3;
+}
 .saleheader{
   display: flex;
   flex-direction: row;
@@ -244,7 +340,6 @@ export default {
   padding:26px 0;
   background:white;
   height:93px;
-
 }
 .saleheader .saitem{
   width:33.33%;
@@ -267,6 +362,11 @@ export default {
 .salecontent{
   width:100%;
   margin-top:183px;
+  margin-bottom: 98px;
+}
+.salecontentmz{
+  width:100%;
+  margin-top:100px;
   margin-bottom: 98px;
 }
 .saleitems{
@@ -299,6 +399,7 @@ export default {
 }
 .sales-v .van-tab--active{
   color:#923D93;
+  font-size:30px!important;
 }
 .sales-v .van-tab{
   font-size:26px;
@@ -307,7 +408,13 @@ export default {
   justify-content: center;
 }
 .sales-v .van-ellipsis{
-  font-size:26px;
   padding:0 !important;
 }
+.loadmore img{
+          display: block;
+          width: 52px;
+          height: 55px;
+          margin: 0 auto;
+}
+
 </style>
