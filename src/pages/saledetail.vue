@@ -1,7 +1,7 @@
 <template>
   <div class="saledetail">
     <div class="saledheader">
-      <img :src="detail.head_image" />
+      <img v-lazy="detail.head_image" />
       <div class="saledright">
         <p>{{detail.user_name}}</p>
         <p>{{detail.description}}</p>

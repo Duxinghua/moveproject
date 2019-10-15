@@ -15,7 +15,7 @@
     </div>
     <div class="productorder">
       <div class="productoinfo">
-        <img  :src="buyview.goods_image" />
+        <img  v-lazy="buyview.goods_image" />
         <div class="productodes">
             <p>{{buyview.goods_name}}</p>
             <p>¥{{buyview.price}}</p>

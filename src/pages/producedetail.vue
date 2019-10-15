@@ -2,7 +2,8 @@
   <div calss="prdetail">
     <div class="productdetail">
       <div class="prheader">
-        <img class="prbanner" :src="detail.goods_image" v-lazy="detail.goods_image"/>
+        <!-- :src="detail.goods_image" -->
+        <img class="prbanner"  v-lazy="detail.goods_image"/>
         <div class="prdes">
           <p>{{detail.goods_name}}</p>
           <p>{{detail.description}}</p>

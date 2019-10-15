@@ -1,7 +1,7 @@
 <template>
   <div class="ticketdetail">
     <div class="tdheader">
-      <img :src="detail.goods.goods_image" alt="" class="topimg"/>
+      <img v-lazy="detail.goods.goods_image" alt="" class="topimg"/>
       <div class="tddes">
         <h4>{{detail.goods.goods_name}}</h4>
         <p class="tdshp"><span class="addressdeta">{{detail.goods.description}}</span>

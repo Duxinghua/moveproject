@@ -6,7 +6,8 @@
     </div>
     <div class="inviteitem">
       <!-- <p class="pitemstitle">长按识别 立即体验</p> -->
-      <img :src="detail.fx_qrcode_img" v-lazy="detail.fx_qrcode_img"  class="wxcode"/>
+      <!-- :src="detail.fx_qrcode_img" -->
+      <img  v-lazy="detail.fx_qrcode_img"  class="wxcode"/>
       <p class="pitemss">分享二维码邀请好友</p>
     </div>
     <!-- <div class="invitebutton"  @click="shareClick">

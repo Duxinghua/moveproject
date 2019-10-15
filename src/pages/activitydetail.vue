@@ -1,7 +1,8 @@
 <template>
   <div class="activitydetail">
     <div class="activityheader" v-if="activeDetail">
-      <img class="" mode="aspectFit" :src="activeDetail.image"  v-lazy="activeDetail.image" alt="">
+      <!-- :src="activeDetail.image" -->
+      <img class="" mode="aspectFit"   v-lazy="activeDetail.image" alt="">
       <div class="accontenty">
         <p>{{activeDetail.title}}</p>
         <div class="activityditem">

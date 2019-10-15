@@ -1,7 +1,8 @@
 <template>
   <div class="mycenter">
     <div class="mycHeader">
-      <img class="myavater" :src="detail.avatar" v-lazy="detail.avatar"/>
+      <!-- :src="detail.avatar" -->
+      <img class="myavater"  v-lazy="detail.avatar"/>
       <span class="myusername">{{detail.user_nickname}}</span>
       <router-link class="myjr" to="/mysy">
           <!-- <img class="myjrb" src="../assets/images/tsb.png" /> -->
@@ -27,7 +28,8 @@
       </div>
       <!-- :href="adinfo.url" -->
       <a class="myyq" :href="adinfo.url">
-        <img :src="adinfo.image" v-lazy="adinfo.image"/>
+        <!-- :src="adinfo.image" -->
+        <img  v-lazy="adinfo.image"/>
       </a>
       <div class="myyqg">
         <router-link class="myyqgitem" to="/myteam">

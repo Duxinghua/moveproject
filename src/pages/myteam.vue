@@ -2,7 +2,8 @@
   <div class="toshare">
     <div class="toshareContent">
       <div class="toshareitem" v-for="(item, index) in teamList" :key="index">
-          <img :src="item.avatar" v-lazy="item.avatar" alt="">
+        <!-- :src="item.avatar" -->
+          <img  v-lazy="item.avatar" alt="">
           <span>{{item.user_nickname}}</span>
           <span>{{item.create_time_desc}}</span>
       </div>

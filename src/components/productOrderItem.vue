@@ -6,7 +6,7 @@
       <div class="item-head-status">{{statusName[avitem.status]}}</div>
     </div>
     <div class="item-content">
-      <div class="item-content-img"><img :src="avitem.goods_image" /></div>
+      <div class="item-content-img"><img v-lazy="avitem.goods_image" /></div>
       <div class="item-content-info">
         <div class="item-content-info-title">{{avitem.goods_name}}</div>
         <div class="item-content-info-con">{{avitem.description}}</div>

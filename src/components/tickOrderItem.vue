@@ -6,7 +6,7 @@
         <div class="item-head-status">{{statusList[item.status]}}</div>
       </div>
       <div class="item-content">
-        <div class="item-content-img"><img :src="item.goods_image" /></div>
+        <div class="item-content-img"><img v-lazy="item.goods_image" /></div>
         <div class="item-content-info">
           <div class="item-content-info-title">{{item.goods_name}}</div>
           <div class="item-content-info-con">{{item.description}}</div>
