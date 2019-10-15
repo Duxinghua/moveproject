@@ -1,6 +1,9 @@
 <template>
   <div id="app">
+
+  <keep-alive include="Sale">
     <router-view v-wechat-title='$route.meta.title' />
+  </keep-alive>
   </div>
 </template>
 

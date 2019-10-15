@@ -2,17 +2,20 @@
             <div class="saleItems">
                <router-link  :to="'/saledetail?id='+items.celebrity_id">
                 <div class="siitemheader">
-                  <img class="avater" :src="items.head_image" v-lazy="items.head_image" alt="" />
+                  <!-- :src="items.head_image" -->
+                  <img class="avater"  v-lazy="items.head_image" alt="" />
                   <div class="siiteminfo">
                     <p class="p1">{{items.user_name}}</p>
                     <p class="p2">{{names}}号:{{items.account}} </p>
-                    <p class="p3"><span class="sp1">{{items.funs}}</span>粉丝<span class="sp2">{{items.likes}}</span>获赞</p>
+                    <!-- <p class="p3"><span class="sp1">{{items.funs}}</span>粉丝<span class="sp2">{{items.likes}}</span>获赞</p> -->
+                    <p class="p3">{{items.excerpt}}</p>
                   </div>
                   <img class="smore" src="../assets/images/more.png" alt="" />
                 </div>
                 <div class="siitembody">
                   <div class="siitemimg" v-for="(imgitem, index) in autoImgs"  :key="index" >
-                    <img :src="imgitem.url" v-lazy="imgitem.url" alt="">
+                    <!-- :src="imgitem.url" -->
+                    <img  v-lazy="imgitem.url" alt="">
                   </div>
                 </div>
                </router-link>
@@ -65,7 +68,7 @@ export default {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  flex: 1 1 auto;
+  flex:1;
 }
 .siiteminfo .p1{
   font-size: 30px;
@@ -76,10 +79,19 @@ export default {
   font-size:24px;
   color:#666666;
   margin-bottom: 7px;
+  width:450px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 .siiteminfo .p3{
   font-size: 26px;
-  color:#999999;
+  color:#913C92;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient: vertical;
 }
 .siiteminfo .p3 .sp1{
   margin-right:12px;

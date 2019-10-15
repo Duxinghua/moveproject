@@ -1,15 +1,25 @@
 <template>
   <div class="nodata">
     <img :src="imgurl" alt="">
-    <p>暂无数据</p>
+    <p>{{autotips}}</p>
   </div>
 </template>
 
 <script>
 export default {
+  props: ['message'],
   data () {
     return {
       imgurl: require('@/assets/images/nodata.png')
+    }
+  },
+  computed: {
+    autotips () {
+      if (!this.message) {
+        return '暂无数据'
+      } else {
+        return this.message
+      }
     }
   },
   mounted () {

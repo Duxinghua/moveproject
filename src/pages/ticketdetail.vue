@@ -1,5 +1,5 @@
 <template>
-  <div class="ticketdetail" v-if="ticketDetail">
+  <div class="ticketdetail mbcontent" v-if="ticketDetail">
     <div class="tdheader">
       <img :src="ticketDetail.goods_image" v-lazy="ticketDetail.goods_image" alt="" class="topimg"/>
       <div class="tddes">
@@ -49,6 +49,8 @@
 <script>
 import Sharepagestyle from '../components/showSharePage.vue'
 import {ticketDetailApi, weixinGetShare} from '@/api'
+import getSitem from '@/utils/storage'
+import config from '@/utils/config'
 export default {
   components: {
     Sharepagestyle
@@ -59,12 +61,19 @@ export default {
       goods_id: null,
       appid: 'wx505f185e9f5fcf57',
       wxpay: {},
-      sharePageStyle: false
+      sharePageStyle: false,
+      id: ''
     }
   },
   mounted () {
+    this.id = this.$route.query.id
     this.getTicketDetail()
-    this.weixinGetShareApi()
+    if (this.$route.query.openid) {
+      getSitem.setStr('pudd', this.$route.query.openid)
+    }
+  },
+  created () {
+    // window.location.href = location.href.split('#')[0] + '#' + location.href.split('#')[1]
   },
   methods: {
     showshareclose () {
@@ -73,7 +82,10 @@ export default {
     shareClick () {
       this.sharePageStyle = true
     },
-    wxs (wxpay) {
+    wxs (wxpay, goods_name, decoration, image) {
+      let shareurl = config.baseurl + '/ticketdetail?id=' + this.id + '&openid=' + this.ticketDetail.openid
+      console.log(wxpay, goods_name, decoration)
+      console.log(shareurl)
       wx.config({
         debug: false,
         appId: wxpay.appId,
@@ -104,10 +116,10 @@ export default {
 
         // 点击分享到朋友圈
         wx.onMenuShareTimeline({
-          title: '无人茶社邀您喝好茶！', // 分享标题
-          desc: '邀您喝好茶、邀您体验无人值守！', // 分享描述
-          link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: wxpay.logo, // 分享图标
+          title: goods_name, // 分享标题
+          desc: decoration, // 分享描述
+          link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: image, // 分享图标
           trigger: function (res) {
             // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
             alert('用户点击分享到朋友圈')
@@ -125,10 +137,10 @@ export default {
           }
         })
         wx.onMenuShareAppMessage({
-          title: '无人茶社邀您喝好茶！', // 分享标题
-          desc: '邀您喝好茶、邀您体验无人值守！', // 分享描述
-          link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: wxpay.logo, // 分享图标
+          title: goods_name, // 分享标题
+          desc: decoration, // 分享描述
+          link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          imgUrl: image, // 分享图标
           type: 'link', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
           success: function () {
@@ -143,15 +155,21 @@ export default {
         })
       })
     },
-    async weixinGetShareApi () {
+    async weixinGetShareApi (goods_name, description, image) {
       const data = {
         appid: this.appid,
         current_url: location.href
       }
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      if (isiOS) {
+        // data.current_url = getSitem.getStr('iosurl')
+        data.current_url = config.shareurls
+      }
       const result = await weixinGetShare(data)
       if (result.code === 1) {
         this.wxpay = result.data
-        this.wxs(result.data)
+        this.wxs(result.data, goods_name, description, image)
       }
     },
     async getTicketDetail () {
@@ -160,6 +178,7 @@ export default {
       if (data.code === 1) {
         this.ticketDetail = data.data
         this.goods_id = data.data.goods_id
+        this.weixinGetShareApi(data.data.goods_name, data.data.description, data.data.goods_image)
       }
     }
   }
@@ -171,6 +190,10 @@ export default {
   .tdsheader a{
     display: inherit;
   }
+  .tdheader,.tddes,.tdsh{
+    width:100% !important;
+  }
+
   .tdheader .topimg{
     width: 100%;
     height: auto;
@@ -204,6 +227,10 @@ export default {
     padding-top: 24px;
     margin-bottom: 15px;
   }
+  .tdescription img{
+    width:100% !important;
+    height:auto !important;
+  }
   .tdescb{
     /* font-size: 24px;
     color: #333333;
@@ -218,8 +245,12 @@ export default {
     width:100% !important;
     height:auto !important;
   }
-  .ticketdetail{
+  .mbcontent{
     padding-bottom: 98px;
+    display: flex;
+    flex-direction: column;
+    width:750px;
+    background: #F3F3F3;
   }
   .tdesch{
     border-bottom: 1px solid #F3F3F3;

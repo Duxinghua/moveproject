@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="orderlist-content-list" v-if="list.length!=0">
-        <TickOrderItem v-for="(item,index) in list" :key="index" :item="item" />
+        <TickOrderItem v-for="(item,index) in list" :key="index" :item="item" @listrefresh="listrefresh" />
         <div class="loadmore" v-if="hasMoreData">
           <img :src="loadUrl" alt="">
         </div>
@@ -22,6 +22,7 @@ import TickOrderItem from '@/components/tickOrderItem.vue'
 import NoData from '@/components/nodata.vue'
 import {tickOrderLisApi} from '@/api'
 import getSitem from '@/utils/storage'
+import Bus from '@/utils/bus'
 export default {
   components: {
     TickOrderItem,
@@ -46,6 +47,12 @@ export default {
     }
   },
   mounted () {
+    var vm = this
+    Bus.$on('refreshs', () => {
+      vm.page = 1
+      vm.list = []
+      vm.orderLis()
+    }),
     this.orderLis()
     this.$nextTick(() => {
       window.addEventListener('scroll', this.scrollfunction, false)
@@ -55,6 +62,11 @@ export default {
     window.removeEventListener('scroll', this.scrollfunction, false)
   },
   methods: {
+    listrefresh () {
+      this.page = 1
+      this.list = []
+      this.orderLis()
+    },
     scrollfunction () {
       let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
@@ -73,7 +85,7 @@ export default {
     },
     async orderLis () {
       let status = this.menuList[this.aIndex].status
-      let token = getSitem.getStr('token') || 'b9a0bf511d1522999f74c78feb898d97f18d4de1f5e20828c1f9cc2ea7dd8e0d'
+      let token = getSitem.getStr('token')
       let formdata = {status, token, page: this.page, page_size: this.page_size}
       const data = await tickOrderLisApi(formdata)
       this.hasGetData = true
@@ -93,7 +105,6 @@ export default {
         return
       }
       this.aIndex = index
-      this.list = []
       this.hasGetData = false
       this.hasMoreData = false
       this.inBottom = false

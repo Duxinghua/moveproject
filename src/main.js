@@ -18,7 +18,14 @@ Vue.config.productionTip = false
 Vue.use(Swipe).use(SwipeItem).use(Tab).use(Tabs).use(Cell).use(CellGroup).use(Field).use(Checkbox).use(CheckboxGroup).use(RadioGroup).use(Radio).use(Toast).use(ActionSheet).use(Area)
 Vue.use(VueLazyLoad, {
   preLoad: 1.3,
-  loading: require('@/assets/images/loading.gif')
+  listenEvents: ['scroll'],
+  loading: require('@/assets/images/loading.gif'),
+  // set observer to true
+  observer: true,
+  observerOptions: {
+    rootMargin: '0px',
+    threshold: 0.1
+  }
 })
 Vue.use(VueWechatTitle)
 Vue.use(PullRefresh).use(List)
@@ -26,21 +33,24 @@ Vue.use(VueScroller)
 Vue.use(DropdownMenu).use(DropdownItem)
 
 axios.interceptors.request.use(config => {
-  Toast.loading({
-    mask: true,
-    duration: 0,
-    message: '加载中...'
-  })
+  if (process.env.NODE_ENV === 'production') {
+    config.baseURL = process.env.API_HOST
+  }
+  // Toast.loading({
+  //   mask: true,
+  //   duration: 0,
+  //   message: '加载中...'
+  // })
   return config
 }, error => {
-  Toast.clear()
+  // Toast.clear()
   return Promise.reject(error)
 })
 axios.interceptors.response.use(response => {
-  Toast.clear()
+  // Toast.clear()
   return response
 }, function (error) {
-  Toast.clear()
+  // Toast.clear()
   return Promise.reject(error.response.data)
 })
 

@@ -3,11 +3,13 @@
     <div class="activityheader">
       <div class="accontenty">
         <p>{{ticketDetail.goods_name}}</p>
-        <p class="syyouxi">使用有效期</p>
+        <div class="syyouxi">
+          使用有效期
+        </div>
         <p class="tdshp"><span class="addressdeta1">{{ticketDetail.end_time}}</span> <span class="pricetick">¥{{ticketDetail.price}}</span></p>
         <p class="goumai">
           <span class="goumaisl">购买数量</span>
-        <span @click="minusnum()" class="minus"><i class="row"></i></span>
+        <span @click="minusnum()" class="minu"><i class="row"></i></span>
           <span class="shownum">{{number}}</span>
         <span  @click="addnum()" class="plus" ><i class="row"></i><i class="col"></i></span>
         </p>
@@ -15,14 +17,14 @@
     </div>
     <div class="activityheader">
       <div class="accontenty">
-        <p>游客信息 <span class="tip">需填<i>1</i>位，用于入园身份证</span> </p>
+        <p>游客信息 <span class="tips">需填<i>1</i>位，用于入园身份证</span> </p>
         <p class="info">
           <label for="cstname">姓名</label>
           <input v-model="true_name" id="cstname" type="text" placeholder="必填，输入证件上的姓名">
         </p>
-        <p class="info"  v-if="ticketDetail.identity === 2">
-          <label for="csttype">证件号</label>
-          <input v-model="idcard" id="csttype" type="text" placeholder="必填，输入联系人证件号">
+        <p class="info"  v-if="ticketDetail.identity === 1">
+          <label for="csttype">身份证</label>
+          <input v-model="idcard" id="csttype" type="text" placeholder="必填，输入联系人身份证号">
         </p>
         <p class="info">
           <label for="csttel">手机号</label>
@@ -60,6 +62,10 @@ export default {
   },
   mounted () {
     this.getTicketDetail()
+    this.$nextTick(() => {
+      let bodycolors = document.documentElement || document.body
+      bodycolors.style.background = '#f3f3f3'
+    })
   },
   computed: {
     orderMoney () {
@@ -117,8 +123,14 @@ export default {
         if (!this.checkCard(this.idcard)) { return }
       }
       if (!this.checkTel(this.mobile)) { return }
+      this.$toast.loading({
+        mask: true,
+        duration: 0,
+        message: '加载中...'
+      })
       const result = await mallticketOrderBuy(data)
       if (result.code === 1) {
+        this.$toast.clear()
         console.log(result)
         if (typeof WeixinJSBridge === 'undefined') {
           if (document.addEventListener) {
@@ -132,6 +144,7 @@ export default {
           this.onBridgeReady()
         }
       } else {
+        this.$toast.clear()
         this.$toast({message: result.msg, duration: 2000})
       }
     },
@@ -182,12 +195,12 @@ export default {
       .accontenty{
         padding-bottom: 12px;
         p{
-          line-height: 44px;
+          // line-height: 44px;
           padding: 22px 0 22px 0;
           margin-bottom: 0;
           border-bottom: 1px solid #F3F3F3;
           width: 100%;
-          .tip{
+          .tips{
             margin-left: 24px;
             font-size: 24px;
             color: #666666;
@@ -260,7 +273,7 @@ export default {
             -webkit-align-items: center;
             align-items: center;
           }
-          .minus,.plus,.shownum{
+          .minu,.plus,.shownum{
             position: relative;
             max-width: 40px;
             min-width: 40px;
@@ -303,8 +316,8 @@ export default {
           }
         }
         .info{
-          padding: 17px 0;
-          line-height:40px;
+          // padding: 17px 0;
+          // line-height:40px;
           label{
             font-size: 26px;
             color: #666666;
@@ -312,9 +325,9 @@ export default {
             display: inline-block;
           }
           input{
-            line-height: 40px;
+            line-height: 60px !important;
             border: none;
-            height: 40px;
+            height: 60px !important;
           }
           ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
             color: #C1C1C1;

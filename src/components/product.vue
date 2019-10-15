@@ -1,7 +1,8 @@
 <template>
 
   <router-link  class="pritem" :to="'/detail?id='+pitem.goods_id">
-    <img class="pritemimg" :src="pitem.goods_image"   v-lazy="pitem.goods_image"/>
+  <!-- :src="pitem.goods_image" -->
+    <img class="pritemimg"   v-lazy="pitem.goods_image"/>
     <p class="pr1">{{pitem.goods_name}}</p>
     <p class="pr2">{{pitem.description}}</p>
     <div class="pcar">

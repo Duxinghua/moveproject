@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-  <div class="productList">
+  <div class="productList productListR">
     <Product v-for="(item,index) in prList" :key="index" :pitem="item"/>
   </div>
    <Footer :home="false" :me="false" :xbr="false" :sale="false"/>
@@ -45,8 +45,33 @@ export default {
   mounted () {
     this.mallGoodsindexApi()
     this.indexInfoapi()
+    this.$nextTick(() => {
+      window.addEventListener('scroll', this.scrollfunction, false)
+      let bodycolors = document.documentElement || document.body
+      bodycolors.style.background = '#f3f3f3'
+    })
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.scrollfunction, false)
   },
   methods: {
+    scrollfunction () {
+      let topHeight = document.getElementsByClassName('produce-banner')[0].clientHeight
+      let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
+      let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
+      if (scrollHeight - topHeight <= (scrollTop + windowHeight)) {
+        if (!this.inBottom && this.hasMoreData) {
+          console.log('加载更多')
+          this.page++
+          this.inBottom = true
+          this.hasMoreData = false
+          this.mallGoodsindexApi()
+        }
+      } else {
+        this.inBottom = false
+      }
+    },
     clickInput () {
       this.$router.push({path: '/search'})
     },
@@ -66,10 +91,19 @@ export default {
 
     },
     async mallGoodsindexApi () {
-      const result = await mallGoodsindex({})
+      const data = {page: this.page, page_size: this.page_size}
+      this.hasGetData = true
+      const result = await mallGoodsindex(data)
       console.log(result, 'result')
       if (result.code === 1) {
-        this.prList = result.data.list
+        let {prList} = this
+        this.prList = [...prList, ...result.data.list]
+
+        if (result.data.totalPage === this.page) {
+          this.hasMoreData = false
+        } else {
+          this.hasMoreData = true
+        }
       }
     },
     async indexInfoapi () {
@@ -92,7 +126,12 @@ export default {
       searchC: true,
       changeValue: false,
       type: '活动',
-      slideList: []
+      slideList: [],
+      page: 1,
+      page_size: 10,
+      hasGetData: false,
+      hasMoreData: false,
+      inBottom: false
     }
   }
 
@@ -102,5 +141,12 @@ export default {
 <style scoped>
 .produce-banner{
   padding-bottom: 0px !important;
+  position: fixed;
+  top: 0;
+  left:0;
+  width:100%;
+}
+.productListR{
+  margin-top: 440px;
 }
 </style>

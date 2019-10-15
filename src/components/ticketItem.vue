@@ -1,7 +1,8 @@
 <template>
   <router-link :to="'/ticketdetail?id='+item.goods_id">
     <div class="ticketItem">
-      <img :src="item.goods_image" v-lazy="item.goods_image"/>
+      <!-- :src="item.goods_image" -->
+      <img  v-lazy="item.goods_image"/>
       <div class="ticketItemCon">
         <h4>{{item.goods_name}}</h4>
         <p class="ticketp">{{item.description}}</p>

@@ -9,7 +9,7 @@
       <div class="item-content-img"><img :src="avitem.goods_image" /></div>
       <div class="item-content-info">
         <div class="item-content-info-title">{{avitem.goods_name}}</div>
-        <div class="item-content-info-con">高新二路129号创意产业园3037号高新二 路29号创意产业园3037号</div>
+        <div class="item-content-info-con">{{avitem.description}}</div>
       </div>
     </div>
     <div class="item-bottom">
@@ -18,21 +18,25 @@
     </div>
     </router-link>
     <div class="item-btn">
-      <div @click="clickOrder" class="item-btn-close" v-if="avitem.status !== 99">关闭订单</div>
+      <div @click="clickOrder" class="item-btn-close" v-if="avitem.status === 0">关闭订单</div>
       <div @click="keepPay" class="item-btn-repay" v-if="avitem.status === 0">立即支付</div>
-      <div class="item-btn-delivery" v-if="avitem.status === 2">确认收货</div>
+      <div @click="receives" class="item-btn-delivery" v-if="avitem.status === 2">确认收货</div>
     </div>
   </div>
 </template>
 
 <script>
-import {mallOrderKeepPay, mallCloseOrder} from '@/api'
+import {mallOrderKeepPay, mallCloseOrder, receiveOrder} from '@/api'
 import getSitem from '@/utils/storage'
+import config from '@/utils/config'
+import Bus from '@/utils/bus'
 export default {
   methods: {
+    receives () {
+      this.receiveOrderApi()
+    },
     clickOrder () {
       this.mallCloseOrderApi()
-      this.$emit('listrefresh')
     },
     keepPay () {
       this.mallOrderKeepPayApi()
@@ -50,12 +54,28 @@ export default {
         // },
         'getBrandWCPayRequest', this.wxpay,
         function (res) {
-          console.log(res)
           if (res.err_msg === 'get_brand_wcpay_request:ok') {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+            // this.$router.push({path: '/productorderlist'})
+
+            Bus.$emit('refreshs')
+
+          } else {
+            Bus.$emit('refreshs')
           }
         })
+    },
+    async receiveOrderApi () {
+      const data = {
+        order_id: this.avitem.order_id,
+        token: getSitem.getStr('token')
+      }
+      const result = await receiveOrder(data)
+      if (result.code === 1) {
+        this.$toast({message: result.msg, duration: 2000})
+        this.$emit('listrefresh')
+      }
     },
     async mallCloseOrderApi () {
       const data = {
@@ -65,6 +85,7 @@ export default {
       const result = await mallCloseOrder(data)
       if (result.code === 1) {
         this.$toast({message: result.msg, duration: 2000})
+        this.$emit('listrefresh')
       }
     },
     async mallOrderKeepPayApi () {
@@ -72,10 +93,14 @@ export default {
         order_id: this.avitem.order_id,
         token: getSitem.getStr('token')
       }
+      this.$toast.loading({
+        mask: true,
+        duration: 0,
+        message: '加载中...'
+      })
       const result = await mallOrderKeepPay(data)
       if (result.code === 1) {
         var p = new Promise((resolve, reject) => {
-          console.log(2)
           this.wxpay = result.data.wxpay
           setTimeout(() => {
             console.log(1)
@@ -84,7 +109,7 @@ export default {
         })
 
         p.then(() => {
-          alert(this.wxpay)
+          this.$toast.clear()
           if (typeof WeixinJSBridge === 'undefined') {
             if (document.addEventListener) {
               document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
@@ -97,6 +122,7 @@ export default {
           }
         })
       } else {
+        this.$toast.clear()
         this.$toast({message: result.msg, duration: 2000})
       }
     }
@@ -109,7 +135,8 @@ export default {
         2: '待收货',
         99: '已关闭'
       },
-      wxpay: {}
+      wxpay: {},
+      keepflush: false
     }
   },
   props: {
@@ -120,6 +147,13 @@ export default {
   },
   computed: {
 
+  },
+  watch: {
+    keepflush (n, o) {
+      if (n === true) {
+        this.$emit('listrefresh')
+      }
+    }
   }
 }
 </script>

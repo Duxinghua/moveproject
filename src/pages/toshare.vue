@@ -1,7 +1,7 @@
 <template>
   <div class="invite">
     <div class="inviteitem">
-      <img :src="detail.fx_qrcode_img" v-lazy="detail.fx_qrcode_img" class="wxcode"/>
+      <img :src="detail.fx_qrcode_img" class="wxcode"/>
       <p>分享二维码邀请好友</p>
     </div>
     <p class="share_p">{{detail.share_desc}}</p>
@@ -17,6 +17,7 @@
 <script>
 import Sharepagestyle from '../components/showSharePage.vue'
 import {weixinGetShare, userToshare, getShareType} from '@/api'
+import getSitem from '@/utils/storage'
 import config from '@/utils/config'
 export default {
   data () {
@@ -32,6 +33,7 @@ export default {
     Sharepagestyle
   },
   mounted () {
+    // alert(location.href)
     this.userToshareApi()
   },
   methods: {
@@ -49,8 +51,8 @@ export default {
       const result = await userToshare({})
       if (result.code === 1) {
         this.detail = result.data
-        // this.weixinGetShareApi()
-        this.getShareTypeApi()
+        this.weixinGetShareApi(result.data)
+        // this.getShareTypeApi()
       }
     },
     showshareclose () {
@@ -59,8 +61,9 @@ export default {
     shareClick () {
       this.sharePageStyle = true
     },
-    wxs (wxpay) {
+    wxs (wxpay, detail) {
       let that = this
+      let shareUrl = config.baseurl + '/invite?openid=' + this.detail.openid
       wx.config({
         debug: false,
         appId: wxpay.appId,
@@ -92,8 +95,8 @@ export default {
         // 点击分享到朋友圈
         wx.onMenuShareTimeline({
           title: '邀请好友，一起赚钱', // 分享标题
-          desc: that.detail.share_desc, // 分享描述
-          link: config.baseurl + '/invite?openid=' + encodeURIComponent(that.detail.openid), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          desc: detail.share_desc, // 分享描述
+          link: config.gourl + encodeURIComponent(shareUrl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: wxpay.logo, // 分享图标
           trigger: function (res) {
             // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
@@ -113,8 +116,8 @@ export default {
         })
         wx.onMenuShareAppMessage({
           title: '邀请好友，一起赚钱', // 分享标题
-          desc: that.detail.share_desc, // 分享描述
-          link: config.baseurl + '/invite?openid=' + encodeURIComponent(that.detail.openid), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+          desc: detail.share_desc, // 分享描述
+          link: config.gourl + encodeURIComponent(shareUrl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
           imgUrl: wxpay.logo, // 分享图标
           type: 'link', // 分享类型,music、video或link，不填默认为link
           dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
@@ -130,15 +133,20 @@ export default {
         })
       })
     },
-    async weixinGetShareApi () {
+    async weixinGetShareApi (detail) {
       const data = {
         appid: config.appid,
         current_url: location.href
       }
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      if (isiOS) {
+        data.current_url = config.shareurls
+      }
       const result = await weixinGetShare(data)
       if (result.code === 1) {
         this.wxpay = result.data
-        this.wxs(result.data)
+        this.wxs(result.data, detail)
       }
     }
   }

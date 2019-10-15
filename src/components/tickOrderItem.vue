@@ -26,6 +26,8 @@
 
 <script>
 import {closeOrderApi, keepPayApi} from '@/api'
+import config from '@/utils/config'
+import Bus from '@/utils/bus'
 export default {
   props: {
     item: {
@@ -56,9 +58,13 @@ export default {
         'getBrandWCPayRequest', this.wxpay,
         function (res) {
           console.log(res)
+          console.log(res)
           if (res.err_msg === 'get_brand_wcpay_request:ok') {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+             Bus.$emit('refreshs')
+          } else {
+             Bus.$emit('refreshs')
           }
         })
     },
@@ -67,10 +73,11 @@ export default {
         title: '提示',
         message: '是否关闭订单'
       }).then(() => {
-        console.log(1111)
         let formdata = {order_id: this.item.order_id}
         closeOrderApi(formdata).then(data => {
           this.$toast({message: data.msg, duration: 2000})
+          console.log('111')
+          this.$emit('listrefresh')
         })
       }).catch(() => {})
     },
@@ -78,10 +85,16 @@ export default {
       this.keepPay()
     },
     async keepPay () {
+      this.$toast.loading({
+        mask: true,
+        duration: 0,
+        message: '加载中...'
+      })
       let formdata = {order_id: this.item.order_id}
       const result = await keepPayApi(formdata)
       if (result.code === 1) {
         console.log(result)
+        this.$toast.clear()
         if (typeof WeixinJSBridge === 'undefined') {
           if (document.addEventListener) {
             document.addEventListener('WeixinJSBridgeReady', this.onBridgeReady, false)
@@ -92,8 +105,10 @@ export default {
         } else {
           this.wxpay = result.data.wxpay
           this.onBridgeReady()
+          this.$emit('listrefresh')
         }
       } else {
+        this.$toast.clear()
         this.$toast({message: result.msg, duration: 2000})
       }
     }

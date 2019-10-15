@@ -19,7 +19,7 @@
       </div>
       <Wbitem v-for="(item,index) in dataList" :items="item" :key="index" v-if="value1 === 3" />
       <Activity v-for="(item,index) in dataList" :avitem="item" :key="index" v-if="value1 === 1" />
-      <div class="loadmore" v-if="hasMoreData">
+      <div class="loadmore" v-if="false">
           <img :src="loadUrl" alt="">
       </div>
       <NoData v-if="dataList.length==0"/>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import {ticketListApi, activityListApi, mallGoodsindex, celebrity, mallGoodsSearch} from '@/api'
+import {ticketListApi, activityListApi, celebrity, mallGoodsSearch} from '@/api'
 import Wbitem from '@/components/wbitem.vue'
 import NoData from '@/components/nodata.vue'
 import Produce from '@/components/product.vue'
@@ -97,7 +97,7 @@ export default {
         page: this.page,
         page_size: this.page_size
       }
-      const result = await celebrity({data})
+      const result = await celebrity(data)
       this.hasGetData = true
       if (result.code === 1) {
         this.dataList = this.dataList.concat(result.data.list)
@@ -105,7 +105,11 @@ export default {
         if (result.data.totalPage === this.page) {
           this.hasMoreData = false
         } else {
-          this.hasMoreData = true
+          if (this.dataList.length === 0) {
+            this.hasMoreData = false
+          } else {
+            this.hasMoreData = true
+          }
         }
       }
     },
@@ -123,7 +127,11 @@ export default {
         if (result.data.totalPage === this.page) {
           this.hasMoreData = false
         } else {
-          this.hasMoreData = true
+          if (this.dataList.length === 0) {
+            this.hasMoreData = false
+          } else {
+            this.hasMoreData = true
+          }
         }
       }
     },
@@ -141,7 +149,11 @@ export default {
         if (result.data.totalPage === this.page) {
           this.hasMoreData = false
         } else {
-          this.hasMoreData = true
+          if (this.dataList.length === 0) {
+            this.hasMoreData = false
+          } else {
+            this.hasMoreData = true
+          }
         }
       }
     },
@@ -154,7 +166,6 @@ export default {
       const result = await activityListApi(data)
       this.hasGetData = true
       if (result.code === 1) {
-        this.dataList = result.data.list
         this.dataList = this.dataList.concat(result.data.list)
         console.log(this.dataList)
         if (result.data.totalPage === this.page) {
@@ -164,6 +175,8 @@ export default {
         }
         if (this.dataList.length === 0) {
           this.hasMoreData = false
+        } else {
+          this.hasMoreData = true
         }
       }
     },
@@ -208,7 +221,7 @@ export default {
         { text: '产品', value: 0 },
         { text: '活动', value: 1 },
         { text: '门票', value: 2 },
-        { text: '网红', value: 3 }
+        { text: '渠道', value: 3 }
       ],
       dataList: [],
       page: 1,

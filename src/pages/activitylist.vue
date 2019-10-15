@@ -42,6 +42,8 @@ export default {
     this.activityCate()
     this.$nextTick(() => {
       window.addEventListener('scroll', this.scrollfunction, false)
+      let bodycolors = document.documentElement || document.body
+      bodycolors.style.background = '#ffffff'
     })
   },
   destroyed () {

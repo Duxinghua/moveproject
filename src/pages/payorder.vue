@@ -2,7 +2,7 @@
   <div class="payprorder">
     <div class="addressItem">
       <img src="../assets/images/addresstop.png" />
-          <router-link :to="'/addresslist?good_url=1&goods_id='+goods_id" class="addresscontent">
+          <div @click="addAddress" class="addresscontent">
         <img class="a1" src="../assets/images/addressposition.png" />
         <div class="addressinfo" v-if="buyview.address.username">
           <p><span class="addresspan">收货人：{{buyview.address.username}}</span><span>{{buyview.address.mobile}}</span></p>
@@ -10,7 +10,7 @@
         </div>
         <p class="addressTips" v-if="!buyview.address.username">请点击新增收货地址</p>
         <img class="a2" src="../assets/images/addressnext.png" />
-        </router-link>
+        </div>
 
     </div>
     <div class="productorder">
@@ -79,6 +79,12 @@ export default {
     console.log(c.toFixed())
   },
   methods: {
+    // :to="'/addresslist?good_url=1&goods_id='+goods_id"
+    addAddress () {
+      getSitem.setStr('goods_id', this.goods_id)
+      getSitem.setStr('buy_add', 1)
+      this.$router.push({path: '/addresslist'})
+    },
     onBridgeReady () {
       WeixinJSBridge.invoke(
         // 'getBrandWCPayRequest', {
@@ -110,8 +116,14 @@ export default {
         num: this.buyview.num,
         token: getSitem.getStr('token')
       }
+      this.$toast.loading({
+        mask: true,
+        duration: 0,
+        message: '加载中...'
+      })
       const result = await mallOrderBuy(data)
       if (result.code === 1) {
+        this.$toast.clear()
         console.log(result)
         this.wxpay = result.data.wxpay
         if (typeof WeixinJSBridge === 'undefined') {
@@ -125,6 +137,7 @@ export default {
           this.onBridgeReady()
         }
       } else {
+        this.$toast.clear()
         this.$toast({message: result.msg, duration: 2000})
       }
     },

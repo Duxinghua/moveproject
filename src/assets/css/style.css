@@ -353,7 +353,7 @@
   font-size: 30px;
   color:#333333;
   font-weight: 500;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 .prdes p:nth-child(2){
   font-size: 24px;
@@ -582,10 +582,10 @@
   /*flex-direction: row;*/
   /*justify-content: flex-start;*/
   /*align-items: center;*/
-  height:88px;
+  height:92px;
   font-size:26px;
   color:#999999;
-  border-top:1px solid #f3f3f3;
+  /* border-top:1px solid #f3f3f3; */
   border-bottom: 1px solid #f3f3f3;
   padding-left:32px;
   padding-right:32px;
@@ -622,7 +622,7 @@
   flex-direction: column;
   width:100%;
   background:#f3f3f3;
-  height:100vh;
+  /* height:100vh; */
 }
 .activityheader{
   display: flex;
@@ -659,6 +659,11 @@
   height:27px;
   margin-right: 25px;
 }
+.views{
+  width:32px !important;
+  height:32px !important;
+  margin-right:21px !important;
+}
 .activityditem span{
   font-size: 26px;
 }
@@ -680,7 +685,7 @@
   display: flex;
   font-size: 30px;
   height: 30px;
-  width:120px;
+  width:fit-content;
   border-bottom: 14px solid #FBE6FA;
   margin-bottom: 40px;
   padding-bottom: 24px;
@@ -842,4 +847,27 @@
 }
 .myaddressxiaoxi .van-field__label{
   padding-top:20px !important;
+}
+.tdescription img{
+  width:100% !important;
+  height:auto !important;
+}
+.sdetail img{
+  width:100% ;
+  height:auto;
+}
+img[lazy="loading"]{
+  transform: scale(0.2);
+  /* opacity: 0; */
+  /* zoom:0.2 */
+}
+img[lazy="loaded"]{
+  /* opacity:1;
+  transition:opacity .5s */
+}
+/* //bug */
+.clickimg{
+  width:100%;
+  overflow: hidden;
+  overflow-x: auto;
 }

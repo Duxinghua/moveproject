@@ -1,23 +1,32 @@
 <template>
 
-               <router-link class="wbItem" :to="'/saledetail?id='+items.celebrity_id">
+               <!-- <router-link class="wbItem" :to="'/saledetail?id='+items.celebrity_id"> -->
+                <div class="wbItem" @click="godetail">
                   <div class="wbimg">
-                    <img  class="wbimg-avater" :src="items.head_image"  v-lazy="items.head_image" alt="" />
+                    <!-- :src="items.head_image"  -->
+                    <img  class="wbimg-avater"  v-lazy="items.head_image" alt="" />
                     <img class="wbimg-v" src="../assets/images/v.png" alt="" />
                   </div>
                   <div class="wbcontent">
                     <p class="wbname">{{items.user_name}}</p>
                     <p class="wbdes">{{items.description}}</p>
-                    <p class="wbfs"><span class="wbfsnum">{{items.likes}}</span>关注<span class="wbfsnum">{{items.funs}}</span>粉丝</p>
+                    <!-- <p class="wbfs"><span class="wbfsnum">{{items.likes}}</span>关注<span class="wbfsnum">{{items.funs}}</span>粉丝</p> -->
+                    <p class="wbfs">{{items.excerpt}}</p>
                   </div>
                   <img class="wb-more" src="../assets/images/more.png" />
-               </router-link>
+                </div>
+               <!-- </router-link> -->
 
 </template>
 
 <script>
 export default {
-  props: ['items', 'names']
+  props: ['items', 'names'],
+  methods:{
+    godetail(){
+      this.$router.push({path: '/saledetail', query: {id: this.items.celebrity_id}})
+    }
+  }
 }
 </script>
 
@@ -53,7 +62,7 @@ export default {
 .wbcontent{
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 1;
 }
 .wbname{
   color:#333333;
@@ -68,10 +77,19 @@ export default {
   color:#666666;
   font-size: 26px;
   margin-bottom: 15px;
+  width:400px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 .wbfs{
   font-size: 24px;
-  color:#999999;
+  color:#913C92;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient: vertical;
 }
 .wbfsnum{
   font-size: 26px;

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+    <script src="https://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+    <title>新宝瑞</title>
+    <style>
+      /*! minireset.css v0.0.5 | MIT License | github.com/jgthms/minireset.css */html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,video{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}
+
+#app{
+  max-width: 750px;
+  height:100%;
+}
+.invitebutton{
+  position: fixed;
+  bottom: 0;
+  left:0;
+  width:100%;
+  height:98px;
+  background:#9C3FA2;
+  text-align: center;
+  line-height: 98px;
+  font-size: 36px;
+  color:white;
+  cursor: pointer;
+}
+.invite{
+  background:url('./image/invitebackground.png');
+  background-size: contain;
+  background-color: #F3EDFB;
+  background-repeat: no-repeat;
+  width:100%;
+  height:100%;
+}
+.inviteitem{
+    position: fixed;
+    top: 50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    width:270px;
+    height:270px;
+    padding:60px;
+    background:url('./image/inviteitem.png') no-repeat;
+    background-size:100% 100%;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.inviteitem .wxcode{
+  margin-top:20%;
+  width:100%;
+  height:100%;
+}
+.inviteitem p {
+  font-size:16px;
+  margin-top:36px;
+  color:#666
+}
+</style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="invite">
+        <div class="inviteitem">
+          <img src="./image/1565085355.png"  class="wxcode"/>
+          <p>分享二维码邀请好友</p>
+        </div>
+
+      </div>
+
+    </div>
+    <script type="text/javascript">
+      $(function(){
+        var heightBodhy = document.documentElement.clientHeight
+        var widthbody = document.documentElement.clientWidth
+        $("#app").css({"height":heightBodhy+"px","width":widthbody+"px"})
+      })
+    </script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 <template>
   <div class="mycenter">
     <div class="mycHeader">
-      <img class="myavater" :src="detail.avatar"  v-lazy="detail.avatar"/>
+      <img class="myavater" :src="detail.avatar" v-lazy="detail.avatar"/>
       <span class="myusername">{{detail.user_nickname}}</span>
       <router-link class="myjr" to="/mysy">
           <!-- <img class="myjrb" src="../assets/images/tsb.png" /> -->
@@ -25,6 +25,7 @@
           </router-link>
         </div>
       </div>
+      <!-- :href="adinfo.url" -->
       <a class="myyq" :href="adinfo.url">
         <img :src="adinfo.image" v-lazy="adinfo.image"/>
       </a>
@@ -34,11 +35,11 @@
           <span class="myyqc" >邀请好友获得奖励金</span>
           <span class="myyqbtn">去邀请</span>
         </router-link>
-        <router-link class="myyqgitem" to="/addresslist?flag=true">
+        <div class="myyqgitem" @click="myCenter">
           <img class="myyqic" src="../assets/images/ma.png" />
           <span class="myyqc">我的地址</span>
           <img class="myyqnext" src="../assets/images/addressnext.png" />
-        </router-link>
+        </div>
       </div>
     </div>
     <Footer :xbr="false" :me="true" :sale="false" :home="false" />
@@ -47,15 +48,13 @@
 
 <script>
 import Footer from '../components/footer.vue'
+import getSitem from '@/utils/storage'
 import {userIndex} from '@/api'
 export default {
   data () {
     return {
       detail: {},
-      adinfo: {
-        url: '/index.html',
-        image: require('../assets/images/yq.png')
-      }
+      adinfo: {}
     }
   },
   mounted () {
@@ -65,6 +64,12 @@ export default {
     Footer
   },
   methods: {
+    myCenter () {
+      // to="/addresslist?flag=true"
+      // 删除商品
+      getSitem.remove('goods_id')
+      this.$router.push({path: '/addresslist', query: {flag: true}})
+    },
     async userIndexApi () {
       const result = await userIndex({})
       if (result.code === 1) {

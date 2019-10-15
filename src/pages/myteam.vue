@@ -6,7 +6,7 @@
           <span>{{item.user_nickname}}</span>
           <span>{{item.create_time_desc}}</span>
       </div>
-      <NoData v-if="teamList.length==0&&hasGetData"/>
+      <NoData v-if="teamList.length==0&&hasGetData" message="暂无邀请好友"/>
     </div>
     <Sharepagestyle :sharePageStyle="sharePageStyle" @close="showshareclose"/>
     <div class="tosharebut" @click="shareClick">
@@ -31,7 +31,7 @@ export default {
   data () {
     return {
       page: 1,
-      page_size: 8,
+      page_size: 10,
       totalPage: 0,
       teamList: [],
       hasMoreData: false,
@@ -42,76 +42,6 @@ export default {
     }
   },
   methods: {
-    wxs (wxpay) {
-      wx.config({
-        debug: false,
-        appId: wxpay.appId,
-        timestamp: wxpay.timestamp,
-        nonceStr: wxpay.nonceStr,
-        signature: wxpay.signature,
-        jsApiList: [
-          'checkJsApi',
-          'onMenuShareTimeline',
-          'onMenuShareAppMessage'
-        ]
-      })
-      wx.error(function (res) {
-        console.log('error', res)
-      })
-      // 在这里调用 API
-      wx.ready(function () {
-        wx.checkJsApi({
-          jsApiList: [
-            'checkJsApi',
-            'onMenuShareTimeline',
-            'onMenuShareAppMessage'
-          ],
-          success: function (res) {
-            // alert(JSON.stringify(res));
-          }
-        })
-
-        // 点击分享到朋友圈
-        wx.onMenuShareTimeline({
-          title: detail.goods_name, // 分享标题
-          desc: detail.description, // 分享描述
-          link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: wxpay.logo, // 分享图标
-          trigger: function (res) {
-            // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
-            alert('用户点击分享到朋友圈')
-          },
-          success: function () {
-            // 用户确认分享后执行的回调函数
-            alert('分享成功')
-          },
-          cancel: function () {
-            // 用户取消分享后执行的回调函数
-            alert('分享取消')
-          },
-          fail: function (res) {
-            alert(JSON.stringify(res))
-          }
-        })
-        wx.onMenuShareAppMessage({
-          title: detail.goods_name, // 分享标题
-          desc: detail.description, // 分享描述
-          link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: wxpay.logo, // 分享图标
-          type: 'link', // 分享类型,music、video或link，不填默认为link
-          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-          success: function () {
-            // 用户确认分享后执行的回调函数
-            // alert('分享成功');
-
-          },
-          cancel: function () {
-            // 用户取消分享后执行的回调函数
-            // alert('分享取消');
-          }
-        })
-      })
-    },
     shareClick () {
       // this.sharePageStyle = true
       this.$router.push({path: '/toshare'})
@@ -154,6 +84,7 @@ export default {
         page_size: this.page_size
       }
       const result = await userMyteam(data)
+      this.hasGetData = true
       if (result.code === 1) {
         this.teamList = this.teamList.concat(result.data.list)
         this.totalPage = result.data.totalPage

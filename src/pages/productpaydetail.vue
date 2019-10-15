@@ -5,7 +5,7 @@
       <div class="tddes">
         <h4>{{detail.goods.goods_name}}</h4>
         <p class="tdshp"><span class="addressdeta">{{detail.goods.description}}</span>
-          <a class="juli"></a>
+          <a class="juli" :href="`tel:${detail.shop_mobile}`"></a>
         </p>
         <div class="detailinfo">
           <div class="contitem">

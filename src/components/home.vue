@@ -37,7 +37,7 @@
             <img src="../assets/images/sp.png" />
             <span>产品</span>
           </router-link>
-          <router-link class="mitem" to="/join">
+          <router-link class="mitem" to="/club">
             <img src="../assets/images/hz.png" />
             <span>俱乐部</span>
           </router-link>
@@ -154,6 +154,9 @@ export default {
     }
   },
   methods: {
+    clear () {
+      localStorage.clear()
+    },
     clickInput () {
       this.$router.push({path: '/search'})
     },
@@ -201,7 +204,12 @@ export default {
         if (result.data.totalPage === this.page) {
           this.hasMoreData = false
         } else {
-          this.hasMoreData = true
+          if(this.historyList.length === 0){
+            this.hasMoreData = false
+          }else{
+            this.hasMoreData = true
+          }
+
         }
       }
     },

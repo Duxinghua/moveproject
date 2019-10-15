@@ -111,7 +111,6 @@ export default {
       this.show = true
     },
     saveAddress () {
-      console.log('saveadd')
       this.mallAddressEditApi()
     },
     getToken () {
@@ -165,8 +164,8 @@ export default {
           this.$toast.success(result.msg)
           // this.$router.push({path: '/addresslist'})
           // console.log(this.goods_id,"goods_id")
-          if (this.goods_id) {
-            this.$router.push({path: '/addresslist', query: {goods_id: this.goods_id, good_url: this.good_url, add_url: true}})
+          if (getSitem.getStr('buy_add') === 1 + '' && getSitem.getStr('goods_id')) {
+            this.$router.push({path: '/payorder', query: {goods_id: getSitem.getStr('goods_id')}})
           } else {
             this.$router.push({path: '/addresslist'})
           }
@@ -180,8 +179,8 @@ export default {
           this.$toast.success(result.msg)
           // this.$router.push({path: '/addresslist'})
 
-          if (this.goods_id) {
-            this.$router.push({path: '/addresslist', query: {goods_id: this.goods_id, good_url: this.good_url, add_url: true}})
+          if (getSitem.getStr('buy_add') === 1 + '' && getSitem.getStr('goods_id')) {
+            this.$router.push({path: '/payorder', query: {goods_id: getSitem.getStr('goods_id')}})
           } else {
             this.$router.push({path: '/addresslist'})
           }
@@ -229,6 +228,10 @@ export default {
 </script>
 
 <style >
+.myaddress .van-picker__confirm, .myaddress .van-picker__cancel{
+  font-size: 32px;
+  color:#666666
+}
 .myaddress .van-cell__title{
   font-size:32px;
   color:#666666;
@@ -241,13 +244,23 @@ export default {
     display: flex;
     align-items: center;
   }
+.myaddress .van-field__label span{
+    display: flex;
+    height:100%;
+    justify-content: center;
+    align-items: center;
+}
 .myaddress .van-field__body input{
-  height:40px!important;
+  height:88px;
+  line-height: 88px;
   font-size:28px;
+}
+.myaddress .van-field__body textarea{
+  height:90px !important;
 }
 .myaddress .van-cell__value{
     width:65% !important;
-    padding:20px 0
+    height:88px;
   }
  .myaddress .van-field__control,.myaddress .van-field__control{
     text-align: right !important;

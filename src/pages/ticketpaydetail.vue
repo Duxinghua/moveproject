@@ -9,7 +9,7 @@
             <img src="../assets/images/addressposition.png" />
             <span class="addressdeta">{{detail.shop.address}}</span>
           </a>
-          <a class="juli" :href="`tel:${detail.mobile}`"></a>
+          <a class="juli" :href="`tel:${detail.shop.contacts}`"></a>
         </p>
         <div class="detailinfo">
           <div class="contitem">
@@ -59,7 +59,7 @@
         <h4>核销码</h4>
         <p v-for="(item,index) in detail.order_check" :key="index">
           <span>核销码</span>
-          <span :class="item.check_status==10?'through':''">{{item.check_number}}</span>
+          <span :class="item.check_status==2?'through':''">{{item.check_number}}</span>
         </p>
       </div>
     </div>

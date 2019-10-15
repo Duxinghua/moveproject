@@ -8,7 +8,7 @@
       </div>
       <div class="orderlist-content-list" v-if="list.length!=0">
         <ProductOrderItem v-for="(item,index) in list" :key="index" :avitem="item" @listrefresh="listrefresh"/>
-        <div class="loadmore" v-if="hasMoreData">
+        <div class="loadmore" v-if="false">
           <img :src="loadUrl" alt="">
         </div>
       </div>
@@ -20,6 +20,7 @@
 <script>
 import ProductOrderItem from '@/components/productOrderItem.vue'
 import getSitem from '@/utils/storage'
+import Bus from '@/utils/bus'
 import NoData from '@/components/nodata.vue'
 import {orderList} from '@/api'
 export default {
@@ -47,6 +48,12 @@ export default {
     }
   },
   mounted () {
+    var vm = this
+    Bus.$on('refreshs', () => {
+      vm.page = 1
+      vm.list = []
+      vm.orderListApi()
+    }),
     this.orderListApi()
     this.$nextTick(() => {
       window.addEventListener('scroll', this.scrollfunction, false)
@@ -57,7 +64,10 @@ export default {
   },
   methods: {
     listrefresh () {
+      this.page = 1
+      this.list = []
       this.orderListApi()
+
     },
     scrollfunction () {
       let scrollTop = document.documentElement.scrollTop || document.body.scrollTop

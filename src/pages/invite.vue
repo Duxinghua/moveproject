@@ -1,8 +1,13 @@
 <template>
   <div class="invite">
+    <div class="invtebackground">
+    </div>
+    <div class="fontin">
+    </div>
     <div class="inviteitem">
+      <!-- <p class="pitemstitle">长按识别 立即体验</p> -->
       <img :src="detail.fx_qrcode_img" v-lazy="detail.fx_qrcode_img"  class="wxcode"/>
-      <p>分享二维码邀请好友</p>
+      <p class="pitemss">分享二维码邀请好友</p>
     </div>
     <!-- <div class="invitebutton"  @click="shareClick">
       分享好友
@@ -23,17 +28,18 @@ export default {
       sharePageStyle: false,
       openid: null,
       detail: {
-
+        // fx_qrcode_img: ''
       }
     }
   },
   components: {
     Sharepagestyle
   },
+  created () {
+    // window.location.href = location.href.split('#')[0] + '#' + location.href.split('#')[1]
+  },
   mounted () {
     this.openid = this.$route.query.openid
-    // this.weixinGetShareApi()
-
     this.userShareApi()
   },
   methods: {
@@ -52,87 +58,6 @@ export default {
     },
     shareClick () {
       this.sharePageStyle = true
-    },
-    wxs (wxpay) {
-      wx.config({
-        debug: false,
-        appId: wxpay.appId,
-        timestamp: wxpay.timestamp,
-        nonceStr: wxpay.nonceStr,
-        signature: wxpay.signature,
-        jsApiList: [
-          'checkJsApi',
-          'onMenuShareTimeline',
-          'onMenuShareAppMessage'
-        ]
-      })
-      wx.error(function (res) {
-        console.log('error', res)
-      })
-      // 在这里调用 API
-      wx.ready(function () {
-        wx.checkJsApi({
-          jsApiList: [
-            'checkJsApi',
-            'onMenuShareTimeline',
-            'onMenuShareAppMessage'
-          ],
-          success: function (res) {
-            // alert(JSON.stringify(res));
-          }
-        })
-
-        // 点击分享到朋友圈
-        wx.onMenuShareTimeline({
-          title: '无人茶社邀您喝好茶！', // 分享标题
-          desc: '邀您喝好茶、邀您体验无人值守！', // 分享描述
-          link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: wxpay.logo, // 分享图标
-          trigger: function (res) {
-            // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
-            alert('用户点击分享到朋友圈')
-          },
-          success: function () {
-            // 用户确认分享后执行的回调函数
-            alert('分享成功')
-          },
-          cancel: function () {
-            // 用户取消分享后执行的回调函数
-            alert('分享取消')
-          },
-          fail: function (res) {
-            alert(JSON.stringify(res))
-          }
-        })
-        wx.onMenuShareAppMessage({
-          title: '无人茶社邀您喝好茶！', // 分享标题
-          desc: '邀您喝好茶、邀您体验无人值守！', // 分享描述
-          link: location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-          imgUrl: wxpay.logo, // 分享图标
-          type: 'link', // 分享类型,music、video或link，不填默认为link
-          dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-          success: function () {
-            // 用户确认分享后执行的回调函数
-            // alert('分享成功');
-
-          },
-          cancel: function () {
-            // 用户取消分享后执行的回调函数
-            // alert('分享取消');
-          }
-        })
-      })
-    },
-    async weixinGetShareApi () {
-      const data = {
-        appid: this.appid,
-        current_url: location.href
-      }
-      const result = await weixinGetShare(data)
-      if (result.code === 1) {
-        this.wxpay = result.data
-        this.wxs(result.data)
-      }
     }
   }
 
@@ -140,6 +65,25 @@ export default {
 </script>
 
 <style scoped>
+.invtebackground{
+  position: fixed;
+  left:0;
+  top:0;
+  background:url('../assets/images/in.png');
+  background-size: 100% 100%;
+  width:750px;
+  height:586px;
+}
+.fontin{
+  position: fixed;
+  left:50%;
+  top:59px;
+  background: url('../assets/images/fontin.png');
+  background-size: 100% 100%;
+  height:108px;
+  width:288px;
+  transform: translateX(-50%)
+}
 .invitebutton{
   position: fixed;
   bottom: 0;
@@ -158,8 +102,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background:url('../assets/images/invitebackground.png');
-  background-size: 100% 100%;
+  background-color:#F3EDFB;
   width:100vw;
   height:100vh;
 }
@@ -169,8 +112,8 @@ export default {
     left:50%;
     transform: translate(-50%,-50%);
     width:448px;
-    height:428px;
-    background:url('../assets/images/inviteitem.png');
+    height:441px;
+    background:url('../assets/images/inviteitemin.png');
     background-size:100% 100%;
     display:flex;
     flex-direction: column;
@@ -182,9 +125,29 @@ export default {
   width:227px;
   height:225px;
 }
-.inviteitem p {
+.inviteitem span{
+  font-size:29px;
+  font-weight: bold;
+  color:white;
+}
+.inviteitem .pitemss {
   font-size:23px;
   margin-top:36px;
   color:#666
+}
+.inviteitem .pitemstitle{
+  /* position: absolute;
+  top:0px;
+  font-size:29px;
+  font-weight: bold;
+  height:58px;
+  line-height: 58px;
+  display:inline-block; */
+  /* flex-direction: row;
+  justify-items: center;
+  align-items: center; */
+  /* color:white;
+  text-align: center;
+  margin:0 auto; */
 }
 </style>

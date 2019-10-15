@@ -30,6 +30,8 @@ import Search from '@/pages/search.vue'
 import Myteam from '@/pages/myteam.vue'
 import Toshare from '@/pages/toshare.vue'
 import Tixian from '@/pages/tixian.vue'
+import Club from '@/pages/club.vue'
+import Wctx from '@/pages/wctx.vue'
 // import getSitem from '../utils/storage'
 Vue.use(Router)
 
@@ -47,22 +49,43 @@ const GetUrlParame = (parameName) => {
   }
 }
 
-const getToken = async (data) => {
+const getToken = async (data, url) => {
+  // alert('gettoken')
   const result = await loginByCode(data)
   console.log('result', '请求token')
+  // alert('getToken请求开启')
+  getSitem.setStr('open', true)
   if (result.code === 1) {
+    // alert('getToken请求成功')
+    // alert(JSON.stringify(result))
     getSitem.setStr('token', result.data.token)
+    if (getSitem.getStr('open')) {
+      location.reload()
+    } else {
+      getSitem.setStr('open', false)
+    }
+    // alert(getSitem.getStr('pudd'))
+    // alert(getSitem.getStr('token'))
     if (getSitem.getStr('pudd')) {
+      if (!getSitem.getStr('token')) {
+        // alert('token you')
+        return
+      }
       let data = {
-        token: result.data.token,
+        token: getSitem.getStr('token'),
         pudd: getSitem.getStr('pudd')
       }
       const re = await userFriend(data)
       if (re.code === 1) {
+        // alert('userFriend')
         getSitem.remove('pudd')
+      } else {
+        // alert(JSON.stringify(re.msg))
       }
     }
   } else {
+    // alert('getToken请求失败')
+    // alert(JSON.stringify(result))
     console.log(JSON.stringify(result), 'error')
   }
   // var goback = GetUrlParame('state')
@@ -73,14 +96,6 @@ const getToken = async (data) => {
 
 const router = new Router({
   routes: [
-    {
-      path: '/',
-      name: 'home',
-      meta: {
-        title: '新宝瑞'
-      },
-      component: Home
-    },
     {
       path: '/produce',
       name: 'product',
@@ -296,6 +311,30 @@ const router = new Router({
       meta: {
         title: '提现'
       }
+    },
+    {
+      path: '/',
+      name: 'home',
+      meta: {
+        title: '新宝瑞'
+      },
+      component: Home
+    },
+    {
+      path: '/club',
+      name: 'club',
+      meta: {
+        title: '俱乐部'
+      },
+      component: Club
+    },
+    {
+      path: '/wctx',
+      name: 'wctx',
+      meta: {
+        title: '完成提现'
+      },
+      component: Wctx
     }
   ]
 })
@@ -303,6 +342,9 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   const agent = navigator.userAgent
   const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+  if (isiOS) {
+    getSitem.setStr('iosurl', location.href)
+  }
   console.log(to.fullPath, 'tofullpaty')
   var localurl = window.location.href
   console.log(localurl, 'localurl')
@@ -311,7 +353,7 @@ router.beforeEach((to, from, next) => {
   console.log(code, 'code')
   console.log(window.location.href)
   var appid = 'wx505f185e9f5fcf57'
-  var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + goback + '&response_type=code&scope=snsapi_userinfo&state=' + goback + '#wechat_redirect'
+  var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + goback + '&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect'
   console.log('当前url', url)
   console.log('获取code码')
   console.log(getSitem.getStr('token'))
@@ -322,22 +364,24 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       console.log(getSitem.getStr('token'), 'token')
+      console.log('222')
       next()
     }
   } else {
     console.log('已拿到code', code)
+    console.log('111')
     var data = {
       appid: appid,
       code: code
     }
-    getToken(data)
-    if (isiOS && to.path !== location.pathname) {
-      // 此处不可使用location.replace
-      location.assign(to.fullPath)
-    } else {
-      next()
-    }
-    // next()
+    getToken(data, goback)
+    // if (isiOS && to.path !== location.pathname) {
+    //   // 此处不可使用location.replace
+    //   location.assign(to.fullPath)
+    // } else {
+    //   next()
+    // }
+    next()
   }
 })
 

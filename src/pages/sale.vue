@@ -4,22 +4,26 @@
       <div class="saleheader">
         <div class="saitem" @click="saleTab(7)">
           <img src="../assets/images/woman.png" alt="" />
-          <span :class="{activeTabs: current === 7}">网红</span>
+          <span :class="{activeTabs: current === 7}">直播带货</span>
         </div>
         <div class="saitem" @click="saleTab(8)">
           <img src="../assets/images/live.png" alt="" />
-          <span :class="{activeTabs: current === 8 }">模特</span>
+          <span :class="{activeTabs: current === 8 }">广告模特</span>
         </div>
         <div class="saitem" @click="saleTab(9)">
           <img src="../assets/images/media.png" alt="" />
-          <span :class="{activeTabs: current === 9 }">新媒体</span>
+          <span :class="{activeTabs: current === 9 }">新媒体宣传</span>
         </div>
       </div>
-      <div class="sales-v" v-if="current === 9">
-        <van-tabs v-model="active" swipeable @click="onClick">
-          <van-tab v-for="(item,index) in itemlist" :title="item.name" :key="index" :name="item.id">
+      <!-- <div class="sales-v" v-if="current === 9">
+        <van-tabs v-model="active" swipeable @click="onClick" ref="vtab" >
+          <van-tab  v-for="(item,index) in itemlist" :title="item.name" :key="index" :name="item.id" >
           </van-tab>
         </van-tabs>
+      </div> -->
+      <!--  -->
+      <div class="activitycate sale-v" v-if="current === 9">
+        <span v-for="(item,index) in itemlist" :key="index" :class="index==aIndex?'active':'' " @click="changetab(index,item.id,item.name)">{{item.name}}</span>
       </div>
     </div>
     <div :class="autoContentClass">
@@ -28,7 +32,7 @@
             <Saleitem  :names="names" :items="items" :key="index" v-for="(items,index) in itemdata" v-if="autoSaleitem"/>
 
             <Wbitem  :names="names" :items="items" :key="index" v-for="(items,index) in itemdatas"  v-if="autoWbitem"/>
-            <div class="loadmore" v-if="hasMoreData">
+            <div class="loadmore" v-if="false">
                 <img :src="loadUrl" alt="">
             </div>
           </div>
@@ -43,14 +47,30 @@ import Saleitem from '../components/saleitem.vue'
 import Wbitem from '../components/wbitem.vue'
 import Footer from '../components/footer.vue'
 import {newsCate, celebrity} from '@/api'
+import getSitem from '@/utils/storage'
 export default {
   created () {
     window.addEventListener('scroll', this.onScroll)
   },
   mounted () {
-    this.celebrityApi()
-    this.newsCateApi()
+
+     this.active = parseInt(getSitem.getStr('active')) || 10
+    // getSitem.setStr('current',9)
+    // getSitem.setStr('active',10)
+
     this.$nextTick(() => {
+      this.active = parseInt(getSitem.getStr('active')) || 10
+      console.log(getSitem.getStr('active'),'active')
+      console.log(this.active)
+      this.current = parseInt(getSitem.getStr('current')) || 9
+      if(this.current != 9){
+        this.active = this.current
+        this.names = '账'
+      }
+      this.newsCateApi()
+      this.celebrityApi()
+
+      this.aIndex = getSitem.getStr('aIndex') || 0
       window.addEventListener('scroll', this.scrollfunction, false)
     })
   },
@@ -58,17 +78,30 @@ export default {
     window.removeEventListener('scroll', this.scrollfunction, false)
   },
   methods: {
+    tabClick(e){
+      console.log(e,'change');
+    },
     saleTab (arg) {
       this.itemdata = []
       this.itemdatas = []
+      this.page = 1
+      this.hasGetData = false
+      this.hasMoreData = false
+      this.inBottom = false
       this.current = arg
-      if (arg !== 9) {
+      getSitem.setStr('current', arg)
+      if (arg === 7 || arg === 8) {
         this.active = arg
         this.names = '账'
-      }
-      if (this.current === 9) {
-        this.active = 10
-        this.names = '抖音'
+      }else{
+        this.active = getSitem.getStr('active') || 10
+        getSitem.setStr('active', this.active)
+        this.aIndex = getSitem.getStr('aIndex') || 0
+        this.itemlist.map((item)=>{
+          if(item.id == this.active){
+            this.names = item.name
+          }
+        })
       }
       this.celebrityApi()
     },
@@ -76,7 +109,7 @@ export default {
       let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       let windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       let scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight
-      if (scrollHeight <= (scrollTop + windowHeight)) {
+      if ((scrollHeight - 181) <= (scrollTop + windowHeight)) {
         if (!this.inBottom && this.hasMoreData) {
           console.log('加载更多')
           this.page++
@@ -105,49 +138,6 @@ export default {
         this.busy = false
       }, 1000)
     },
-    /*
-    onScroll () {
-      console.log('start')
-      // 可滚动容器的高度
-      let innerHeight = document.querySelector('#app').clientHeight
-      // 屏幕尺寸高度
-      let outerHeight = document.documentElement.clientHeight
-      // 可滚动容器超出当前窗口显示范围的高度
-      let scrollTop = document.documentElement.scrollTop
-      // scrollTop在页面为滚动时为0，开始滚动后，慢慢增加，滚动到页面底部时，出现innerHeight < (outerHeight + scrollTop)的情况，严格来讲，是接近底部。
-      console.log(innerHeight + ' ' + outerHeight + ' ' + scrollTop)
-      if (innerHeight < (outerHeight + scrollTop)) {
-        // 加载更多操作
-        console.log('loadmore')
-
-        console.log(this.page,'page')
-        this.page++
-        if(this.page > this.totalPage){
-          return
-        }
-        this.celebrityApi()
-
-      }else{
-        console.log('loadless')
-      }
-    },
-    */
-    // onLoad () {
-    //   async () => {
-    //     const data = {
-    //       cate_id: this.active,
-    //       page: this.page + 1,
-    //       page_size: this.page_size
-    //     }
-    //     const result = await celebrity(data)
-    //     console.log('onload')
-    //     if (result.code === 1) {
-    //       this.totalPage = result.data.totalPage
-    //       this.itemdatas = result.data.list
-    //       this.isLoading = false
-    //     }
-    //   }
-    // },
     onRefresh () {
       this.init() // 加载数据
     },
@@ -172,18 +162,33 @@ export default {
       }
     },
     onClick (name, title) {
-      console.log(name, title)
+      getSitem.setStr('active', name)
+      console.log(this.active,'active')
       this.itemdata = []
       this.itemdatas = []
       this.page = 1
       this.names = title
       this.celebrityApi()
     },
+    changetab(index,id,name){
+      this.aIndex = index
+      getSitem.setStr('aIndex', index)
+      getSitem.setStr('active', id)
+      this.active = id
+      this.itemdata = []
+      this.itemdatas = []
+      this.page = 1
+      this.names = name
+      this.celebrityApi()
+    },
     async newsCateApi () {
       const result = await newsCate({})
       if (result.code === 1) {
         this.itemlist = result.data
-        this.active = result.data[0].id
+        console.log(getSitem.getStr('active'),'active')
+        this.active = getSitem.getStr('active') || result.data[0].id
+        console.log(this.active,'aactive')
+        // this.active = result.data[0].id
       }
     },
     async celebrityApi () {
@@ -206,7 +211,11 @@ export default {
         if (result.data.totalPage === this.page) {
           this.hasMoreData = false
         } else {
-          this.hasMoreData = true
+          if (this.itemdatas.length === 0) {
+            this.hasMoreData = false
+          } else {
+            this.hasMoreData = true
+          }
         }
       }
     }
@@ -276,6 +285,7 @@ export default {
   data () {
     return {
       current: 9,
+      aIndex:0,
       active: 10,
       names: '抖音',
       page: 1,
@@ -362,12 +372,12 @@ export default {
 .salecontent{
   width:100%;
   margin-top:183px;
-  margin-bottom: 98px;
+  /* margin-bottom: 98px; */
 }
 .salecontentmz{
   width:100%;
   margin-top:100px;
-  margin-bottom: 98px;
+  /* margin-bottom: 98px; */
 }
 .saleitems{
   padding:0px 32px;
@@ -377,6 +387,9 @@ export default {
 .wbitems{
  padding:32px;
  background:#f3f3f3;
+}
+.sale-v{
+  margin-top:103px;
 }
 .sales-v{
   margin-top:10px;

@@ -18,7 +18,9 @@
         <img :src="loadUrl" alt="">
       </div>
     </div>
+    <div class="nodataContent">
     <NoData v-if="list.length==0&&hasGetData"/>
+    </div>
   </div>
 </template>
 
@@ -54,6 +56,8 @@ export default {
     this.$nextTick(() => {
       window.addEventListener('scroll', this.scrollfunction, false)
     })
+    let bodycolors = document.documentElement || document.body
+    bodycolors.style.background = '#f3f3f3'
   },
   destroyed () {
     window.removeEventListener('scroll', this.scrollfunction, false)
@@ -159,6 +163,12 @@ export default {
     width: 52px;
     height: 55px;
     margin: 0 auto;
+  }
+  .nodataContent{
+    display: flex;
+  }
+  .nodataContent .nodata{
+    top: calc((100vh - 345px - 88px));
   }
 
 </style>
