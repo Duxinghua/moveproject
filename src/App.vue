@@ -1,9 +1,8 @@
 <template>
   <div id="app">
-
-  <keep-alive include="Sale">
-    <router-view v-wechat-title='$route.meta.title' />
-  </keep-alive>
+    <!-- <keep-alive> -->
+      <router-view v-wechat-title='$route.meta.title' />
+    <!-- </keep-alive> -->
   </div>
 </template>
 
@@ -15,8 +14,8 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  /* font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale; */
 }
 </style>

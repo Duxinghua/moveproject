@@ -1,0 +1,14 @@
+#home-teacher-carousel .el-carousel__container,#home-banner-carousel .el-carousel__container,#home-video-carousel .el-carousel__container{
+  height:100% !important;
+}
+#home-banner-carousel .el-carousel__button{
+  width:13px;
+  height:13px;
+  border-radius: 50%;
+  background:#fff;
+  opacity:1;
+}
+#home-banner-carousel .el-carousel__indicator.is-active button {
+  opacity: 1;
+  background:#E3D29C;
+}
