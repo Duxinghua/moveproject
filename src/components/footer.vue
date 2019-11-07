@@ -5,7 +5,7 @@
         <span :class="{active:mrt}">名人堂</span>
       </router-link>
 
-        <router-link class="menuitem" to="/activity" >
+        <router-link class="menuitem" to="/huaban" >
           <img :src="hb === true ? require('../assets/images/hbico-a.png') : require('../assets/images/hbico.png')" alt="" />
           <span :class="{active:hb}">花伴</span>
         </router-link>
@@ -91,13 +91,7 @@ export default {
   color:#999999;
 }
 .footer .active{
-  color: #738965
-}
-.router-link-active span{
-  color: #738965 !important;
-}
-.router-link-exact-active span{
-  color:#738965
+  color: #738965!important;
 }
 
 </style>

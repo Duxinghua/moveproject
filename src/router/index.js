@@ -3,6 +3,7 @@ import Vue from 'vue'
 // import {loginByCode, userFriend} from '@/api'
 import Router from 'vue-router'
 import Home from '@/pages/home'
+import Huaban from '@/pages/huaban'
 import Test from '@/pages/test'
 
 Vue.use(Router)
@@ -74,6 +75,14 @@ const router = new Router({
       component: Home,
       meta: {
         title: '有梦不晚'
+      }
+    },
+    {
+      path: '/huaban',
+      name: 'Huaban',
+      component: Huaban,
+      meta: {
+        title: '花伴'
       }
     },
     {
