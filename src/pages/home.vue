@@ -3,59 +3,82 @@
     <div class="home-top">
       <img class="home-top-search" src="../assets/images/search.png" alt="">
       <ul class="home-top-list">
-        <li class="active">推荐</li>
-        <li>名师</li>
+        <li :class="{active:current == 0}" @click="menuHandler(0)">推荐</li>
+        <li :class="{active:current == 1}" @click="menuHandler(1)">名师</li>
       </ul>
     </div>
-    <div class="home-banner">
-          <el-carousel :autoplay="true" :interval="5000" id="home-banner-carousel">
-            <el-carousel-item v-for="(item, index) in slideList" :key="index">
-              <a :href="item.url"><img class="home-banner-item" :src="item.image" /></a>
-            </el-carousel-item>
-          </el-carousel>
-    </div>
-    <div class="home-course">
-      <TitleItem title="线下课程" />
-      <div class="home-course-content">
-        <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" />
+    <div class="home-tj-content" v-if="pageType == 0">
+      <div class="home-banner">
+            <el-carousel :autoplay="true" :interval="5000" id="home-banner-carousel">
+              <el-carousel-item v-for="(item, index) in slideList" :key="index">
+                <a :href="item.url"><img class="home-banner-item" :src="item.image" /></a>
+              </el-carousel-item>
+            </el-carousel>
       </div>
-      <MoreText moreText="更多课程" />
-    </div>
-    <div class="home-teacher">
-       <TitleItem title="名师推荐" />
-       <el-carousel :autoplay="true" :interval="4000" indicator-position="none" id="home-teacher-carousel" arrow="always">
-        <el-carousel-item  v-for="item in schoolList" :key="item.id">
-          <div class="home-teacher-item" >
-            <img  :src="item.img" alt="">
-            <div class="teacherinfo">
-              <span class="teacher-name">{{item.name}}</span>
-              <span class="teacher-des">{{item.des}}</span>
-              <div class="teacher-btn">
-                <span>详情</span>
-                <img src="../assets/images/teachersq.png" alt="">
+      <div class="home-course">
+        <TitleItem title="线下课程" />
+        <div class="home-course-content">
+          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" />
+        </div>
+        <MoreText moreText="更多课程" />
+      </div>
+      <div class="home-teacher">
+        <TitleItem title="名师推荐" />
+        <el-carousel :autoplay="true" :interval="4000" indicator-position="none" id="home-teacher-carousel" arrow="always">
+          <el-carousel-item  v-for="item in schoolList" :key="item.id">
+            <div class="home-teacher-item" >
+              <img  :src="item.img" alt="">
+              <div class="teacherinfo">
+                <span class="teacher-name">{{item.name}}</span>
+                <span class="teacher-des">{{item.des}}</span>
+                <div class="teacher-btn">
+                  <span>详情</span>
+                  <img src="../assets/images/teachersq.png" alt="">
+                </div>
               </div>
             </div>
-          </div>
-        </el-carousel-item>
-      </el-carousel>
-      <MoreText moreText="更多名师" />
-    </div>
-    <div class="home-course home-onlinecourse">
-      <TitleItem title="线上课程" />
-      <div class="home-course-content">
-        <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" />
+          </el-carousel-item>
+        </el-carousel>
+        <MoreText moreText="更多名师" />
       </div>
-      <MoreText moreText="更多课程" />
+      <div class="home-course home-onlinecourse">
+        <TitleItem title="线上课程" />
+        <div class="home-course-content">
+          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" />
+        </div>
+        <MoreText moreText="更多课程" />
 
+      </div>
+      <div class="home-video">
+        <TitleItem title="直播约课" />
+        <el-carousel indicator-position="none" :interval="4000" type="card" id="home-video-carousel" @change="cardChange">
+          <el-carousel-item v-for="item in 6" :key="item">
+            <img  class="home-video-img" src="../assets/images/video1.png" />
+          </el-carousel-item>
+        </el-carousel>
+        <div class="home-video-course">
+          <span class="videoTitle">花艺课中式传统插花</span>
+          <div class="videoDes">
+            <img class="videoAvatar" src="../assets/images/video-avatar.png" />
+            <span class="videoPerson">Kate sapdiek</span>
+          </div>
+        </div>
+        <MoreText moreText="更多直播" />
+      </div>
     </div>
-    <div class="home-video">
-      <TitleItem title="直播约课" />
-      <el-carousel :interval="4000" type="card" id="home-video-carousel">
-        <el-carousel-item v-for="item in 6" :key="item">
-          <img src="../assets/images/video1.png" />
-        </el-carousel-item>
-      </el-carousel>
+    <div class="home-ms-content" v-if="pageType == 1">
+       <div class="home-mingshi">
+         <div class="home-mingshi-item">
+           <img src="../assets/images/mingshi.png" alt="">
+           <div class="home-mingshi-item-des">
+             <span>柯杏林</span>
+             <p>知音花艺协会副会长兼秘书长;知音文创大使 知音杯中国传统插花艺术金奖…</p>
+             <MoreText moreText="了解更多" />
+           </div>
+         </div>
+       </div>
     </div>
+    <Footer :mrt="true" />
   </div>
 </template>
 
@@ -63,13 +86,13 @@
 import TitleItem from '@/components/titleItem.vue'
 import MoreText from '@/components/moreItem.vue'
 import CourceItem from '@/components/courceItem.vue'
+import Footer from '@/components/footer.vue'
 // import ApiModel from '@/api'
 
 export default {
   name: 'Home',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       slideList: [
         {
           url: 'https://www.baidu.com',
@@ -130,10 +153,18 @@ export default {
           des: '知音花艺协会副会长兼秘书长; 中国传统插花中国传统插花中国传统插花中国传统插花'
         }
       ],
-      current: 0
+      current: 0,
+      pageType: 0
     }
   },
   methods: {
+    menuHandler (index) {
+      this.current = index
+      this.pageType = index
+    },
+    cardChange (index) {
+      console.log(index, 'cardindex')
+    },
     onChange (index) {
       this.current = index
     },
@@ -151,7 +182,8 @@ export default {
   components: {
     TitleItem,
     MoreText,
-    CourceItem
+    CourceItem,
+    Footer
   }
 }
 </script>
@@ -165,7 +197,7 @@ export default {
   margin-bottom: 26px;
 }
 #home-video-carousel{
-  height:428px !important
+  height:calc(425px * 1.2) !important
 }
 .home{
   display: flex;
@@ -174,7 +206,7 @@ export default {
   background:#FBF8F4;
   &-top{
     width:100%;
-    height:82px;
+    height:98px;
     background:#6D8260;
     display: flex;
     flex-direction: row;
@@ -182,6 +214,10 @@ export default {
     padding-left:30px;
     padding-right:30px;
     box-sizing: border-box;
+    position: fixed;
+    top:0;
+    left:0;
+    z-index:99999;
     &-search{
       width:42px;
       height:42px;
@@ -324,6 +360,49 @@ export default {
     box-sizing: border-box;
     padding-left:26px;
     padding-right:26px;
+    padding-bottom: 126px;
+    &-img{
+      width:calc(319px * 1.2);
+      height:calc(425px * 1.2);
+      margin-right:0px !important;
+    }
+    &-course{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top:33px;
+      margin-bottom:33px;
+      .videoTitle{
+        font-size:30px;
+        color:#333;
+      }
+      .videoDes{
+        display: flex;
+        flex-direction: row;
+        margin-top:22px;
+        .videoAvatar{
+          width:38px;
+          height:38px;
+          margin-right:12px;
+        }
+        .videoPerson{
+          font-size:26px;
+          color:#898C87;
+        }
+      }
+    }
+  }
+  &-mingshi{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
   }
 }
+.home-tj-content,.home-ms-content{
+  display: flex;
+  flex-direction: column;
+  margin-top:98px;
+}
+
 </style>

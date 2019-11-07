@@ -1,4 +1,7 @@
-#home-teacher-carousel .el-carousel__container,#home-banner-carousel .el-carousel__container,#home-video-carousel .el-carousel__container{
+#home-teacher-carousel .el-carousel__container,#home-banner-carousel .el-carousel__container{
+  height:100% !important;
+}
+#home-video-carousel .el-carousel__container{
   height:100% !important;
 }
 #home-banner-carousel .el-carousel__button{

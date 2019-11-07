@@ -1,28 +1,54 @@
 <template>
   <div class="footer">
       <router-link class="menuitem" to="/">
-        <img :src="home === true ? require('../assets/images/xbra.png') : require('../assets/images/xbr.png') " alt="" />
-        <span>新宝瑞</span>
+        <img :src="mrt === true ? require('../assets/images/mrico-a.png') : require('../assets/images/mrico.png') " alt="" />
+        <span :class="{active:mrt}">名人堂</span>
       </router-link>
 
         <router-link class="menuitem" to="/activity" >
-          <img :src="sale === true ? require('../assets/images/homea.png') : require('../assets/images/home.png')" alt="" />
-          <span>活动</span>
+          <img :src="hb === true ? require('../assets/images/hbico-a.png') : require('../assets/images/hbico.png')" alt="" />
+          <span :class="{active:hb}">花伴</span>
         </router-link>
-      <!-- <router-link class="menuitem" to="/company">
-        <img :src="xbr === true ? require('../assets/images/xbra.png') : require('../assets/images/xbr.png')" alt="" />
-        <span>介绍</span>
-      </router-link> -->
+      <router-link class="menuitem" to="/company">
+        <img :src="zb === true ? require('../assets/images/zbico-a.png') : require('../assets/images/zbico.png')" alt="" />
+        <span :class="{active:zb}">直播</span>
+      </router-link>
+      <router-link class="menuitem" to="/company">
+        <img :src="sc === true ? require('../assets/images/scico-a.png') : require('../assets/images/scico.png')" alt="" />
+        <span :class="{active:sc}">商城</span>
+      </router-link>
       <router-link class="menuitem" to="/mycenter">
-        <img :src="me === true ? require('../assets/images/mea.png') : require('../assets/images/me.png')" alt="" />
-        <span>个人中心</span>
+        <img :src="wd === true ? require('../assets/images/wdico-a.png') : require('../assets/images/wdico.png')" alt="" />
+        <span :class="{active:wd}">我的</span>
       </router-link>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['home', 'sale', 'xbr', 'me'],
+  name: 'Footer',
+  props: {
+    mrt: {
+      type: Boolean,
+      default: false
+    },
+    hb: {
+      type: Boolean,
+      default: false
+    },
+    zb: {
+      type: Boolean,
+      default: false
+    },
+    sc: {
+      type: Boolean,
+      default: false
+    },
+    wd: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
 
@@ -32,7 +58,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .footer{
   position: fixed;
   width:100%;
@@ -45,6 +71,7 @@ export default {
   justify-content: center;
   align-items: center;
   box-shadow:0px 0px 7px 0px rgba(0, 0, 0, 0.08);
+  z-index: 999999;
 }
 .footer .menuitem{
   display: flex;
@@ -63,11 +90,14 @@ export default {
   padding-top:4px;
   color:#999999;
 }
+.footer .active{
+  color: #738965
+}
 .router-link-active span{
-  color: #FBE6FA
+  color: #738965 !important;
 }
 .router-link-exact-active span{
-  color:#fbe6fa
+  color:#738965
 }
 
 </style>
