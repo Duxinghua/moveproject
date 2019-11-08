@@ -26,8 +26,9 @@ export default {
         height:18px;
       }
       span{
-        font-size: 36px;
-        color:#333;
+        font-size: 36px !important;
+        color:#333 !important;
+        font-weight: 500 !important;
         padding-left:15px;
         padding-right:15px;
       }

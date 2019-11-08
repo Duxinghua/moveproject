@@ -1,7 +1,4 @@
-#home-teacher-carousel .el-carousel__container,#home-banner-carousel .el-carousel__container{
-  height:100% !important;
-}
-#home-video-carousel .el-carousel__container{
+#home-teacher-carousel .el-carousel__container,#home-banner-carousel .el-carousel__container,#home-video-carousel .el-carousel__container,#huabantz-banner .el-carousel__container{
   height:100% !important;
 }
 #home-banner-carousel .el-carousel__button{
@@ -15,3 +12,17 @@
   opacity: 1;
   background:#E3D29C;
 }
+#huabantz-banner .el-carousel__button{
+  width:13px;
+  height:13px;
+  border-radius: 50%;
+  margin-top:13px;
+  margin-bottom: 13px;
+  background:#e3e3e3;
+  opacity:1;
+}
+#huabantz-banner .el-carousel__indicator.is-active button {
+  opacity: 1;
+  background:#F3D995;
+}
+

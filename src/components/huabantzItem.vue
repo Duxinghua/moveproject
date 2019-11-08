@@ -1,0 +1,97 @@
+<template>
+  <div class="huaban-tz-item" @click="huabantzHandler(item.id)">
+          <div class="tzleft">
+            <img src="../assets/images/huabanmsg.png" alt="">
+            <span>{{item.num}}</span>
+          </div>
+          <div class="tzcenter">
+            <span class="tztitle cleartext">{{item.title}}</span>
+            <div class="tzcdes">
+              <img class="tzavatar" :src="item.avatar" alt="">
+              <div class="tzcinfo">
+              <span>{{item.name}}</span>
+              <span>{{item.timer}}</span>
+              </div>
+            </div>
+          </div>
+          <img class="tzright" :src="item.image" alt="">
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'HuabantzItem',
+  props: {
+    item: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    huabantzHandler (index) {
+      this.$router.push({name: 'HuabanTzDetail', params: {id: index}})
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.huaban-tz-item{
+      display: flex;
+      flex-direction: row;
+      color:#333;
+      margin-bottom: 25px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid #F3F3F3;
+      .tzleft{
+        display: flex;
+        flex-direction: column;
+        font-size: 26px;
+        margin-right:26px;
+        img{
+          width:40px;
+          height:34px;
+          margin-bottom: 16px;
+        }
+      }
+      .tzcenter{
+        display: flex;
+        flex-direction: column;
+        width:64%;
+        .tztitle{
+          font-size: 30px;
+          line-height: 36px;
+          width:calc(100% - 26px);
+        }
+        .tzcdes{
+          display: flex;
+          flex-direction: row;
+          color:#999999;
+          font-size: 24px;
+          margin-top: 16px;
+          .tzavatar{
+            width:40px;
+            height:40px;
+            margin-right:16px;
+          }
+          .tzcinfo{
+            display: flex;
+            width:calc(100% - 72px);
+            justify-content: space-between;
+            span{
+              width:calc(50% - 26px);
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              margin-right:26px;
+            }
+          }
+        }
+      }
+      .tzright{
+        width:169px;
+        height:118px;
+        border-radius: 8px;
+      }
+}
+</style>

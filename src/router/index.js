@@ -4,6 +4,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/pages/home'
 import Huaban from '@/pages/huaban'
+import HuabanGroupDetail from '@/pages/huabanGroupDetail'
+import HuabanTzDetail from '@/pages/huabanTzDetail'
 import Test from '@/pages/test'
 
 Vue.use(Router)
@@ -83,6 +85,22 @@ const router = new Router({
       component: Huaban,
       meta: {
         title: '花伴'
+      }
+    },
+    {
+      path: '/huabangroupdetail',
+      name: 'HuabanGroupDetail',
+      component: HuabanGroupDetail,
+      meta: {
+        title: '花伴小组详情'
+      }
+    },
+    {
+      path: '/huabantzdetail',
+      name: 'HuabanTzDetail',
+      component: HuabanTzDetail,
+      meta: {
+        title: '花伴贴子详情'
       }
     },
     {
