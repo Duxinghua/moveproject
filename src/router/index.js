@@ -6,6 +6,10 @@ import Home from '@/pages/home'
 import Huaban from '@/pages/huaban'
 import HuabanGroupDetail from '@/pages/huabanGroupDetail'
 import HuabanTzDetail from '@/pages/huabanTzDetail'
+import HuabanGroupList from '@/pages/huabanGroupList'
+import HuabanJoinGroup from '@/pages/huabanJoinGroup'
+import HuabanTzfp from '@/pages/huabanTzfp'
+import HuabanSearch from '@/pages/huabanSearch'
 import Test from '@/pages/test'
 
 Vue.use(Router)
@@ -92,7 +96,7 @@ const router = new Router({
       name: 'HuabanGroupDetail',
       component: HuabanGroupDetail,
       meta: {
-        title: '花伴小组详情'
+        title: '小组详情'
       }
     },
     {
@@ -100,7 +104,39 @@ const router = new Router({
       name: 'HuabanTzDetail',
       component: HuabanTzDetail,
       meta: {
-        title: '花伴贴子详情'
+        title: '贴子详情'
+      }
+    },
+    {
+      path: '/huabangrouplist',
+      name: 'HuabanGroupList',
+      component: HuabanGroupList,
+      meta: {
+        title: '社区小组'
+      }
+    },
+    {
+      path: '/huabanjoingroup',
+      name: 'HuabanJoinGroup',
+      component: HuabanJoinGroup,
+      meta: {
+        title: '加入社区小组'
+      }
+    },
+    {
+      path: '/huabantzfp',
+      name: 'HuabanTzfp',
+      component: HuabanTzfp,
+      meta: {
+        title: '发布贴子'
+      }
+    },
+    {
+      path: '/huabansearch',
+      name: 'HuabanSearch',
+      component: HuabanSearch,
+      meta: {
+        title: '花伴搜索'
       }
     },
     {

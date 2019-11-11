@@ -41,8 +41,15 @@
               <span>华见笑了</span>
               <span>很喜欢，做的不错，构图很有心意</span>
           </div>
+          <div class="pl-item">
+              <span>华见笑了</span>
+              <span>很喜欢，做的不错，构图很有心意</span>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="huabantz-commit">
+      <input type="text" class="huabantz-commit-input">
     </div>
   </div>
 </template>
@@ -224,12 +231,15 @@ export default {
       .plnum{
         color:#995258;
         font-size:26px;
+        padding-bottom: 20px;
       }
       .plcontent{
         display: flex;
         flex-direction: column;
         .pl-item{
           font-size:26px;
+          line-height:50px;
+          height:50px;
           color:#333;
           span:nth-child(1){
             font-weight: bold;
@@ -241,6 +251,20 @@ export default {
         }
       }
     }
+  }
+  &-commit{
+    display: flex;
+    flex-direction: column;
+    height:500px;
+    &-input{
+      width:700px;
+      height:88px;
+      background:rgba(242,239,234,1);
+      border-radius:44px;
+      border:none;
+      margin:0 auto;
+    }
+
   }
 }
 </style>
