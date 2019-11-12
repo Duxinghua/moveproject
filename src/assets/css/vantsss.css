@@ -1,0 +1,27 @@
+.myEdit .van-picker__toolbar{
+  height:84px!important;
+  line-height:84px!important;
+}
+.myEdit .van-picker__confirm{
+  font-size: 30px !important;
+  color:#6D8160 !important;
+}
+.myEdit .van-picker__cancel{
+  color:#666666 !important;
+  font-size: 30px !important;
+}
+/* .myEdit .grender{
+  display: flex;
+  flex-direction: column;
+}
+.myEdit .grender-item{
+  height:98px;
+  line-height: 98px;
+  font-size: 38px;
+  text-align: center;
+  color:#333;
+  border-bottom: 2px solid #F3F3F3;
+}
+.myEdit .grender-item:nth-child(2){
+  border-bottom: 15px solid #f3f3f3;
+} */

@@ -10,6 +10,9 @@ import HuabanGroupList from '@/pages/huabanGroupList'
 import HuabanJoinGroup from '@/pages/huabanJoinGroup'
 import HuabanTzfp from '@/pages/huabanTzfp'
 import HuabanSearch from '@/pages/huabanSearch'
+import HuabanUserInfo from '@/pages/huabanUserInfo'
+import MyEdit from '@/pages/myEdit'
+import My from '@/pages/my'
 import Test from '@/pages/test'
 
 Vue.use(Router)
@@ -137,6 +140,30 @@ const router = new Router({
       component: HuabanSearch,
       meta: {
         title: '花伴搜索'
+      }
+    },
+    {
+      path: '/huabanuserinfo',
+      name: 'HuabanUserInfo',
+      component: HuabanUserInfo,
+      meta: {
+        title: '用户信息'
+      }
+    },
+    {
+      path: '/my',
+      name: 'My',
+      component: My,
+      meta: {
+        title: '我的'
+      }
+    },
+    {
+      path: '/s',
+      name: 'MyEdit',
+      component: MyEdit,
+      meta: {
+        title: '我的'
       }
     },
     {

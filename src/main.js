@@ -6,14 +6,15 @@ import router from './router'
 import axios from 'axios'
 import 'amfe-flexible/index.js'
 import VueScroller from 'vue-scroller'
-import { Swipe, SwipeItem, Tab, Tabs, Cell, CellGroup, Field, Checkbox, CheckboxGroup, RadioGroup, Radio, Toast, ActionSheet, Area, PullRefresh, List, DropdownMenu, DropdownItem } from 'vant'
+import { Swipe, SwipeItem, Tab, Tabs, Cell, CellGroup, Field, Checkbox, CheckboxGroup, RadioGroup, Radio, Toast, ActionSheet, Area, PullRefresh, List, DropdownMenu, DropdownItem, DatetimePicker, Popup } from 'vant'
 import ElementUI from 'element-ui'
 import VueLazyLoad from 'vue-lazyload'
 import VueWechatTitle from 'vue-wechat-title'
 import 'vant/lib/index.css'
 import 'element-ui/lib/theme-chalk/index.css'
-import './assets/css/element.css'
 import './assets/css/minireset.min.css'
+import './assets/css/element.css'
+import './assets/css/vantsss.css'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
@@ -33,6 +34,7 @@ Vue.use(VueWechatTitle)
 Vue.use(PullRefresh).use(List)
 Vue.use(VueScroller)
 Vue.use(DropdownMenu).use(DropdownItem)
+Vue.use(DatetimePicker).use(Popup)
 
 axios.interceptors.request.use(config => {
   if (process.env.NODE_ENV === 'production') {

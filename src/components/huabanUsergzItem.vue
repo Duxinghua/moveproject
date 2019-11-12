@@ -1,5 +1,5 @@
 <template>
-  <div class="huabanUserItem">
+  <div class="huabanUserItem" @click="userInfoHandler">
             <img class="avatar" :src="item.avatar" alt="">
             <div class="huabanUserItem-center">
                 <span class="user">{{item.username}}</span>
@@ -40,6 +40,11 @@ export default {
   data () {
     return {
 
+    }
+  },
+  methods: {
+    userInfoHandler () {
+      this.$router.push({name: 'HuabanUserInfo'})
     }
   }
 }

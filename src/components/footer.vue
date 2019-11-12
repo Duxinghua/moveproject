@@ -17,7 +17,7 @@
         <img :src="sc === true ? require('../assets/images/scico-a.png') : require('../assets/images/scico.png')" alt="" />
         <span :class="{active:sc}">商城</span>
       </router-link>
-      <router-link class="menuitem" to="/mycenter">
+      <router-link class="menuitem" to="/my">
         <img :src="wd === true ? require('../assets/images/wdico-a.png') : require('../assets/images/wdico.png')" alt="" />
         <span :class="{active:wd}">我的</span>
       </router-link>
