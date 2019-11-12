@@ -155,6 +155,9 @@ export default {
     },
     editHandler () {
       this.$router.push({name: 'MyEdit'})
+    },
+    likeClickHandler () {
+      this.$router.push({name: 'MyGz'})
     }
   },
   components: {

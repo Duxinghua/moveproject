@@ -12,10 +12,7 @@
     <div class="myModify-name">
       <span>个人简介</span>
       <span>有意思的简介会吸引更多关注~</span>
-
       <textarea placeholder="走最多的路，看最好的风景，读最好的书~"/>
-
-
     </div>
     <div class="myModify-btn">
       确认修改

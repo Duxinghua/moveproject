@@ -11,7 +11,11 @@ export default {
   name: 'MyGz',
   data () {
     return {
+      gzList: [
+        {
 
+        }
+      ]
     }
   },
   components: {
