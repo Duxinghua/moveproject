@@ -10,7 +10,7 @@
   color:#666666 !important;
   font-size: 30px !important;
 }
-/* .myEdit .grender{
+.myEdit .grender{
   display: flex;
   flex-direction: column;
 }
@@ -24,4 +24,7 @@
 }
 .myEdit .grender-item:nth-child(2){
   border-bottom: 15px solid #f3f3f3;
-} */
+}
+.myEdit .grender-item:last-child{
+  border-bottom: none;
+}

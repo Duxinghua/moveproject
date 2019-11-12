@@ -33,7 +33,7 @@
     </div>
     <!-- 时间 -->
     <van-popup
-      v-model="genderShow"
+      v-model="dateShow"
       closeable
       overlay
       round
@@ -55,7 +55,6 @@
       overlay
       round
       position="bottom"
-      class="my-van-popup"
     >
     <div class="grender">
       <div class="grender-item">
@@ -63,6 +62,9 @@
       </div>
       <div class="grender-item">
       女
+      </div>
+      <div class="grender-item">
+      取消
       </div>
     </div>
     </van-popup>
@@ -75,15 +77,12 @@ export default {
   data () {
     return {
       dateShow: false,
-      genderShow: true,
+      genderShow: false,
       currentDate: new Date()
     }
   },
   methods: {
     imgUploadHandler () {
-
-    },
-    infoEditHandler (arg) {
 
     },
     formatter (type, value) {
@@ -110,6 +109,9 @@ export default {
     },
     dateCancelHandler () {
       console.log(this.currentDate)
+    },
+    infoEditHandler () {
+      this.$router.push({name: 'MyModify'})
     }
   }
 

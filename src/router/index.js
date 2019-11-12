@@ -12,6 +12,8 @@ import HuabanTzfp from '@/pages/huabanTzfp'
 import HuabanSearch from '@/pages/huabanSearch'
 import HuabanUserInfo from '@/pages/huabanUserInfo'
 import MyEdit from '@/pages/myEdit'
+import MyModify from '@/pages/myModify'
+import MyGz from '@/pages/myGz'
 import My from '@/pages/my'
 import Test from '@/pages/test'
 
@@ -159,11 +161,27 @@ const router = new Router({
       }
     },
     {
-      path: '/s',
+      path: '/myedit',
       name: 'MyEdit',
       component: MyEdit,
       meta: {
         title: '我的'
+      }
+    },
+    {
+      path: '/mymodify',
+      name: 'MyModify',
+      component: MyModify,
+      meta: {
+        title: '修改资料'
+      }
+    },
+    {
+      path: '/mygz',
+      name: 'MyGz',
+      component: MyGz,
+      meta: {
+        title: '我的关注'
       }
     },
     {

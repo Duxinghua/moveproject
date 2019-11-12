@@ -14,7 +14,7 @@ import 'vant/lib/index.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/minireset.min.css'
 import './assets/css/element.css'
-import './assets/css/vantsss.css'
+import './assets/css/fixvant.css'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)

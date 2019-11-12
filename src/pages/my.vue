@@ -18,19 +18,19 @@
         </div>
       </div>
       <div class="my-header-tab">
-        <div class="tabitem">
+        <div class="tabitem" @click="likeClickHandler('gz')">
           <span>1256</span>
           <span>我的关注</span>
         </div>
-        <div class="tabitem">
+        <div class="tabitem" @click="likeClickHandler('xf')">
           <span>384</span>
           <span>学分</span>
         </div>
-        <div class="tabitem">
+        <div class="tabitem" @click="likeClickHandler('fs')">
           <span>79</span>
           <span>粉丝</span>
         </div>
-        <div class="tabitem">
+        <div class="tabitem" @click="likeClickHandler('bx')">
           <span>642</span>
           <span>被喜欢</span>
         </div>
