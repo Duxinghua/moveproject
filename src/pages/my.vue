@@ -51,7 +51,7 @@
           <img src="../assets/images/mt.png" alt="">
           <span>我的帖子</span>
         </div>
-        <div class="oitem">
+        <div class="oitem" @click="likeClickHandler('fx')">
           <img src="../assets/images/mf.png" alt="">
           <span>我的分销</span>
         </div>
@@ -156,8 +156,26 @@ export default {
     editHandler () {
       this.$router.push({name: 'MyEdit'})
     },
-    likeClickHandler () {
-      this.$router.push({name: 'MyGz'})
+    likeClickHandler (arg) {
+      var Links
+      switch (arg) {
+        case 'gz':
+          Links = 'MyGz'
+          break
+        case 'xf':
+          Links = 'MyXf'
+          break
+        case 'fs':
+          Links = 'MyFs'
+          break
+        case 'bx':
+          Links = 'MyBx'
+          break
+        case 'fx':
+          Links = 'MyFx'
+          break
+      }
+      this.$router.push({name: Links})
     }
   },
   components: {

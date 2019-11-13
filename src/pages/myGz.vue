@@ -1,6 +1,7 @@
 <template>
   <div class="mygz">
-    <NoData />
+    <HuabanUsergzItem v-for="(item, index) in gzList" :item="item" :key="index" :types="gzType"/>
+    <NoData v-if="gzList.length === 0"/>
   </div>
 </template>
 
@@ -13,9 +14,17 @@ export default {
     return {
       gzList: [
         {
-
+          avatar: require('../assets/images/people.png'),
+          username: '花田喜事Hebe',
+          userinfo: '美国花艺设计学院教授会导师'
+        },
+        {
+          avatar: require('../assets/images/people.png'),
+          username: '花田喜事Hebe',
+          userinfo: '美国花艺设计学院教授会导师'
         }
-      ]
+      ],
+      gzType: true
     }
   },
   components: {

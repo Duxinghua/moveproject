@@ -1,28 +1,11 @@
 <template>
-  <div :class="autoBorder" @click="userInfoHandler">
+  <div class="huabanUserItem huabanUserBottom" @click="userInfoHandler">
             <img class="avatar" :src="item.avatar" alt="">
             <div class="huabanUserItem-center">
-                <span class="user">{{item.username}}</span>
-                <span class="userinfo">{{item.userinfo}}</span>
-                 <div class="usergz" v-if="!types">
-                   <span>关注</span>
-                   <span>{{item.gznum}}</span>
-                 </div>
+                <span class="user">{{item.des}}</span>
+                <span class="userinfo">{{item.date}}</span>
             </div>
-            <div :class="autoBack">
-              <div v-if="!types">
-                <span class="gz" v-if="item.isGz">已关注</span>
-                <div class="nogz" v-else >
-                  <img src="../assets/images/gzico.png" alt="" >
-                  <span>关注</span>
-                </div>
-              </div>
-              <div v-else>
-                <div class="nogz">
-                  <span>已关注</span>
-                </div>
-              </div>
-            </div>
+            <img class="huabandz" :src="item.image"/>
     </div>
 </template>
 
@@ -45,12 +28,6 @@ export default {
         'huabanUserItem-btn': true,
         'nogzbackground': !this.item.isGz,
         'gzbackground': !!this.item.isGz
-      }
-    },
-    autoBorder () {
-      return {
-        'huabanUserItem': true,
-        'huabanUserBottom': this.types
       }
     }
   },
@@ -83,7 +60,7 @@ export default {
         margin-right:25px;
       }
       &-center{
-        width:336px;
+        width:368px;
         display: flex;
         flex-direction: column;
         margin-right:25px;
@@ -153,12 +130,17 @@ export default {
         background:transparent;
         border:2px solid #CDA871;
       }
+      .huabandz{
+        width:171px;
+        height:125px;
+        border-radius:12px;
+      }
   }
   .huabanUserBottom{
     border-bottom: 2px solid #f3f3f3;
     padding:35px 0px;
     .huabanUserItem-center{
-      width:362px;
+      width:368px;
     }
   }
 </style>

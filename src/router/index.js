@@ -13,8 +13,15 @@ import HuabanSearch from '@/pages/huabanSearch'
 import HuabanUserInfo from '@/pages/huabanUserInfo'
 import MyEdit from '@/pages/myEdit'
 import MyModify from '@/pages/myModify'
+import MyBx from '@/pages/myBx'
+import MyFs from '@/pages/myFs'
 import MyGz from '@/pages/myGz'
+import MyXf from '@/pages/myXf'
+import MyFx from '@/pages/myFx'
+import MyTx from '@/pages/myTx'
+import MyYq from '@/pages/myYq'
 import My from '@/pages/my'
+import Login from '@/pages/login'
 import Test from '@/pages/test'
 
 Vue.use(Router)
@@ -182,6 +189,62 @@ const router = new Router({
       component: MyGz,
       meta: {
         title: '我的关注'
+      }
+    },
+    {
+      path: '/myxf',
+      name: 'MyXf',
+      component: MyXf,
+      meta: {
+        title: '我的学会'
+      }
+    },
+    {
+      path: '/myfs',
+      name: 'MyFs',
+      component: MyFs,
+      meta: {
+        title: '我的粉丝'
+      }
+    },
+    {
+      path: '/mybx',
+      name: 'MyBx',
+      component: MyBx,
+      meta: {
+        title: '被喜欢'
+      }
+    },
+    {
+      path: '/myfx',
+      name: 'MyFx',
+      component: MyFx,
+      meta: {
+        title: '我的分销'
+      }
+    },
+    {
+      path: '/mytx',
+      name: 'MyTx',
+      component: MyTx,
+      meta: {
+        title: '我的提现'
+      }
+    },
+    {
+      path: '/myyq',
+      name: 'MyYq',
+      component: MyYq,
+      meta: {
+        title: '我的邀请'
+      }
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login,
+      meta: {
+        title: '登录'
       }
     },
     {
