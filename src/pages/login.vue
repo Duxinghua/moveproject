@@ -34,7 +34,7 @@ export default {
       timeFlag: true,
       timer: null,
       timerText: '获取验证码',
-      yx:true,
+      yx: true
     }
   },
   methods: {
@@ -44,26 +44,26 @@ export default {
     sendClickHandler () {
       if (this.timeFlag) {
         this.timeFlag = false
-        this.timer = setInterval(()=>{
-          if(this.time === 0){
+        this.timer = setInterval(() => {
+          if (this.time === 0) {
             clearInterval(this.timer)
             this.time = 60
             this.timer = null
             this.timeFlag = true
             this.timerText = '获取验证码'
-          }else{
-            this.time --
-            this.timerText = this.time+'s'
+          } else {
+            this.time--
+            this.timerText = this.time + 's'
           }
-        },1000)
+        }, 1000)
       }
     }
   },
-  destroyed(){
-      clearInterval(this.timer)
-      this.time = 60
-      this.timer = null
-      this.timeFlag = true
+  destroyed () {
+    clearInterval(this.timer)
+    this.time = 60
+    this.timer = null
+    this.timeFlag = true
   }
 
 }

@@ -19,6 +19,7 @@ import MyGz from '@/pages/myGz'
 import MyXf from '@/pages/myXf'
 import MyFx from '@/pages/myFx'
 import MyTx from '@/pages/myTx'
+import MyXq from '@/pages/myXq'
 import MyYq from '@/pages/myYq'
 import My from '@/pages/my'
 import Login from '@/pages/login'
@@ -237,6 +238,14 @@ const router = new Router({
       component: MyYq,
       meta: {
         title: '我的邀请'
+      }
+    },
+    {
+      path: '/myXq',
+      name: 'MyXq',
+      component: MyXq,
+      meta: {
+        title: '消息中心'
       }
     },
     {

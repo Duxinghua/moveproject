@@ -5,7 +5,11 @@
     <div class="myYq-wrap">
       <div class="content">
         <span>长按识别 立即体验</span>
+        <img src="../assets/images/yqwxcode.png" alt="" />
       </div>
+    </div>
+    <div class="myYq-btn">
+      分享邀请好友
     </div>
   </div>
 </template>
@@ -53,8 +57,30 @@ export default {
         justify-content: center;
         align-items: center;
         font-size: 29px;
+        color:white;
+      }
+      img{
+        width:262px;
+        height:260px;
+        margin-top:64px;
+        margin-left:93px
       }
     }
+  }
+  &-btn{
+    background:#718464;
+    width:683px;
+    height:88px;
+    border-radius: 44px;
+    color:#F3D995;
+    text-align: center;
+    line-height: 88px;
+    font-size:36px;
+    position: fixed;
+    left:50%;
+    top:80%;
+    transform: translateX(-50%)
+
   }
 }
 

@@ -62,11 +62,11 @@
         <img src="../assets/images/myy.png" alt="" />
         <span>我的预约记录</span>
       </div>
-      <div class="mlitem">
+      <div class="mlitem" @click="likeClickHandler('xq')">
         <img src="../assets/images/mym.png" alt="" />
         <span>消息中心</span>
       </div>
-      <div class="mlitem">
+      <div class="mlitem" @click="likeClickHandler('yq')">
         <img src="../assets/images/myf.png" alt="" />
         <span>邀请注册</span>
       </div>
@@ -173,6 +173,12 @@ export default {
           break
         case 'fx':
           Links = 'MyFx'
+          break
+        case 'yq':
+          Links = 'MyYq'
+          break
+        case 'xq':
+          Links = 'MyXq'
           break
       }
       this.$router.push({name: Links})
