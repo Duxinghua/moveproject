@@ -3,6 +3,9 @@ import Vue from 'vue'
 // import {loginByCode, userFriend} from '@/api'
 import Router from 'vue-router'
 import Home from '@/pages/home'
+import TeacherDetail from '@/pages/teacherDetail'
+import OffCourseDetail from '@/pages/offCourseDetail'
+import OnlineCourseDetail from '@/pages/onlineCourseDetail'
 import Huaban from '@/pages/huaban'
 import HuabanGroupDetail from '@/pages/huabanGroupDetail'
 import HuabanTzDetail from '@/pages/huabanTzDetail'
@@ -77,6 +80,30 @@ const router = new Router({
       component: Home,
       meta: {
         title: '有梦不晚'
+      }
+    },
+    {
+      path: '/offcoursedetail',
+      name: 'OffCourseDetail',
+      component: OffCourseDetail,
+      meta: {
+        title: '线下课程'
+      }
+    },
+    {
+      path: '/onlineCourseDetail',
+      name: 'OnlineCourseDetail',
+      component: OnlineCourseDetail,
+      meta: {
+        title: '线上课程'
+      }
+    },
+    {
+      path: '/teacherDetail',
+      name: 'TeacherDetail',
+      component: TeacherDetail,
+      meta: {
+        title: '名师详情'
       }
     },
     {

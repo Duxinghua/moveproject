@@ -1,5 +1,5 @@
 <template>
-    <div class="home-course-content-item">
+    <div class="home-course-content-item" @click="offDetailHandler(item.id)">
           <img class="course-img" :src="item.img" alt="">
           <span>{{item.title}}</span>
           <div class="course-people">
@@ -16,6 +16,11 @@ export default {
     item: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    offDetailHandler (index) {
+      this.$router.push({path: '/offcoursedetail', query: {id: index}})
     }
   }
 }
