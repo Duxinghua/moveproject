@@ -2,7 +2,7 @@
   <div class="myEdit">
     <div class="avatar">
       <img src="../assets/images/avatar.png" alt="">
-      <img src="../assets/images/apic.png" alt="" @click="imgUploadHandler">
+      <img style="display:none" src="../assets/images/apic.png" alt="" @click="imgUploadHandler">
     </div>
     <div class="info">
       <div class="infoItem" @click="infoEditHandler('nickname')">

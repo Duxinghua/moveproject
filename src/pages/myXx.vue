@@ -6,7 +6,7 @@
         <span class="s1">{{item.t1}}</span>
         <span :class="autoCss">{{item.t2}}</span>
       </div>
-      <img class="down" :src="!item.upFlag ? require('../assets/images/xxdown.png') : require('../assets/images/xxup.png')" alt="" @click="zkClickHandler">
+      <img class="down" :src="item.upFlag ? require('../assets/images/xxup.png') : require('../assets/images/xxdown.png')" alt="" @click="zkClickHandler(item.id)">
     </div>
   </div>
 </template>
@@ -14,29 +14,35 @@
 <script>
 import NoData from '@/components/nodata'
 export default {
-  name: 'MyXq',
+  name: 'MyXx',
   data () {
     return {
       upFlag: false,
       xqList: [
         {
-        t1: '系统消息',
-        t2: '恭喜你注册成为VIP会员，您将获取的积分奖 励会按时发到您的个人账户，有问题请及时联 系我们的客服电话400-52842000',
-        upFlag: false
+          id: 1,
+          t1: '系统消息',
+          t2: '恭喜你注册成为VIP会员，您将获取的积分奖 励会按时发到您的个人账户，有问题请及时联 系我们的客服电话400-52842000',
+          upFlag: false
         }
 
       ]
     }
   },
   methods: {
-    zkClickHandler () {
+    zkClickHandler (e) {
       this.upFlag = !this.upFlag
+      this.xqList.map((item) => {
+        if (item.id === e) {
+          item.upFlag = !item.upFlag
+        }
+      })
     }
   },
   components: {
     NoData
   },
-  computed:{
+  computed: {
     autoCss () {
       return {
         s2: true,

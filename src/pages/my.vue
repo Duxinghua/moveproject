@@ -2,12 +2,12 @@
   <div class="my">
     <div class="my-header">
       <div class="my-header-info">
-        <img class="avatar" src="../assets/images/people.png" alt="">
+        <img class="avatar" :src="userInfo.avatar ? userInfo.avatar : require('../assets/images/people.png')" alt="">
         <div class="myInfos">
           <div class="myInfos-wrap">
             <div class="des">
-              <span>朝花夕拾xixi</span>
-              <span>美学对后世的启迪如雨润万物</span>
+              <span>{{userInfo.nickname}}</span>
+              <span>{{userInfo.bio}}</span>
             </div>
             <div class="qd" @click="qdClickHandler">
               <img src="../assets/images/jf.png" alt="">
@@ -47,7 +47,7 @@
           <img src="../assets/images/kz.png" alt="">
           <span>课程订单</span>
         </div>
-        <div class="oitem">
+        <div class="oitem" @click="likeClickHandler('tz')">
           <img src="../assets/images/mt.png" alt="">
           <span>我的帖子</span>
         </div>
@@ -58,11 +58,11 @@
       </div>
     </div>
     <div class="my-list">
-      <div class="mlitem">
+      <div class="mlitem" @click="likeClickHandler('yy')">
         <img src="../assets/images/myy.png" alt="" />
         <span>我的预约记录</span>
       </div>
-      <div class="mlitem" @click="likeClickHandler('xq')">
+      <div class="mlitem" @click="likeClickHandler('xx')">
         <img src="../assets/images/mym.png" alt="" />
         <span>消息中心</span>
       </div>
@@ -70,11 +70,11 @@
         <img src="../assets/images/myf.png" alt="" />
         <span>邀请注册</span>
       </div>
-      <div class="mlitem">
+      <div class="mlitem" @click="likeClickHandler('ab')">
         <img src="../assets/images/myg.png" alt="" />
         <span>关于我们</span>
       </div>
-      <div class="mlitem">
+      <div class="mlitem" @click="likeClickHandler('pl')">
         <img src="../assets/images/myp.png" alt="" />
         <span>我的评论</span>
       </div>
@@ -111,6 +111,7 @@
 
 <script>
 import Footer from '@/components/footer.vue'
+import Api from '@/api/index'
 export default {
   name: 'My',
   data () {
@@ -143,8 +144,20 @@ export default {
           check: false
         }
       ],
-      qdShow: false
+      qdShow: false,
+      userInfo: {
+      }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    console.log('log start')
+    Api.userIndex().then((result)=>{
+      if(result.code === 1) {
+        this.userInfo = result.data
+      }
+    })
+    console.log(to, from, next)
+    next()
   },
   methods: {
     qdClickHandler () {
@@ -157,6 +170,7 @@ export default {
       this.$router.push({name: 'MyEdit'})
     },
     likeClickHandler (arg) {
+      console.log(arg, 'arg')
       var Links
       switch (arg) {
         case 'gz':
@@ -177,9 +191,20 @@ export default {
         case 'yq':
           Links = 'MyYq'
           break
-        case 'xq':
-          Links = 'MyXq'
+        case 'xx':
+          Links = 'MyXx'
           break
+        case 'yy':
+          Links = 'MyYy'
+          break
+        case 'tz':
+          Links = 'MyTz'
+          break
+        case 'pl':
+          Links = 'MyPl'
+          break
+        case 'ab':
+          Links = 'About'
       }
       this.$router.push({name: Links})
     }

@@ -22,9 +22,9 @@
   color:#333;
   border-bottom: 2px solid #F3F3F3;
 }
-.myEdit .grender-item:nth-child(2){
+.myEdit .grender-item:nth-child(2),.myTz .grender-item:nth-child(1){
   border-bottom: 15px solid #f3f3f3;
 }
-.myEdit .grender-item:last-child{
+.myEdit .grender-item:last-child,.myTz .grender-item:last-child{
   border-bottom: none;
 }

@@ -93,10 +93,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#huabantz-banner{
-  height:602px !important;
-  padding-bottom: 50px;
-}
+// #huabantz-banner{
+//   height:602px !important;
+//   padding-bottom: 50px;
+// }
 
 .huabantz{
   background:#FBF8F4;

@@ -15,8 +15,23 @@
 </template>
 
 <script>
+import Api from '@/api/index'
 export default {
+  data () {
+    return {
 
+    }
+  },
+  beforeRouteEnter (to, from, next) {
+    console.log('log start')
+    Api.userQrcode().then((result)=>{
+      if(result.code === 1) {
+        console.log(result)
+      }
+    })
+    console.log(to, from, next)
+    next()
+  }
 }
 </script>
 
