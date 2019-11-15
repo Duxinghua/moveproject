@@ -184,7 +184,7 @@ export default {
   },
   mounted () {
     // document.getElementById('el-carousel').style.height = this.bannerHeight + 'px';
-    console.log(this.$refs.teacherItem)
+    // console.log(this.$refs.teacherItem)
     console.log(this.$api, 'api')
   },
   components: {

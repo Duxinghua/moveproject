@@ -35,15 +35,16 @@ export default {
   data () {
     return {
       current: 0,
-      xflist: [
-        {
-          type: 1,
-          des: '完善个人资料',
-          date: '2019.10.11 15:28',
-          num: 30
-        }
-      ]
+      xflist: []
     }
+  },
+  mounted () {
+    this.$api.userFans().then((result) => {
+      console.log(result)
+      if (result.code === 1) {
+        this.xflist = result.data.data
+      }
+    })
   },
   methods: {
     tabClickHandler (e) {

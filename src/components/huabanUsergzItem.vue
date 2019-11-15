@@ -1,9 +1,9 @@
 <template>
-  <div :class="autoBorder" @click="userInfoHandler">
-            <img class="avatar" :src="item.avatar" alt="">
-            <div class="huabanUserItem-center">
-                <span class="user">{{item.username}}</span>
-                <span class="userinfo">{{item.userinfo}}</span>
+  <div :class="autoBorder" >
+            <img class="avatar" :src="item.avatar" alt="" @click="userInfoHandler">
+            <div class="huabanUserItem-center" @click="userInfoHandler">
+                <span class="user">{{item.nickname}}</span>
+                <span class="userinfo">{{item.bio}}</span>
                  <div class="usergz" v-if="!types">
                    <span>关注</span>
                    <span>{{item.gznum}}</span>
@@ -18,7 +18,7 @@
                 </div>
               </div>
               <div v-else>
-                <div class="nogz">
+                <div class="nogz" @click="cancelHandler(item.id)">
                   <span>已关注</span>
                 </div>
               </div>
@@ -60,6 +60,9 @@ export default {
     }
   },
   methods: {
+    cancelHandler (id) {
+      this.$emit('cancelGz', id)
+    },
     userInfoHandler () {
       this.$router.push({name: 'HuabanUserInfo'})
     }

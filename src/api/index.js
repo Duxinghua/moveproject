@@ -72,6 +72,26 @@ const server = {
   // 个人资料 /api/user/info
   userInfo (data) {
     return post('user/info', data)
+  },
+  // 编辑资料 /api/user/edit
+  userEdit (data) {
+    return post('user/edit', data)
+  },
+  // 我的关注 /api/user/follow
+  userFollow (data) {
+    return post('user/follow', data)
+  },
+  // 关注 /api/user/saveFollow
+  userSaveFollow (data) {
+    return post('user/saveFollow', data)
+  },
+  // 我的粉丝 /api/user/fans
+  userFans (data) {
+    return post('user/fans', data)
+  },
+  //  粉丝（取消粉丝） /api/user/saveFans
+  userSaveFans (data) {
+    return post('user/saveFans', data)
   }
 
 }

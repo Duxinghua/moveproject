@@ -257,7 +257,7 @@ const router = new Router({
       name: 'MyXf',
       component: MyXf,
       meta: {
-        title: '我的学会'
+        title: '我的学分'
       }
     },
     {

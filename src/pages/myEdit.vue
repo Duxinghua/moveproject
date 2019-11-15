@@ -2,33 +2,33 @@
   <div class="myEdit">
     <div class="avatar">
       <img src="../assets/images/avatar.png" alt="">
-      <img style="display:none" src="../assets/images/apic.png" alt="" @click="imgUploadHandler">
+      <img style="display:none" :src="userInfo.avatar ? userInfo.avatar :require('../assets/images/apic.png')" alt="" @click="imgUploadHandler">
     </div>
     <div class="info">
-      <div class="infoItem" @click="infoEditHandler('nickname')">
+      <div class="infoItem" >
         <span>呢称</span>
-        <span>花田喜事HEBE</span>
-        <img src="../assets/images/fx.png" alt="">
+        <span>{{userInfo.nickname}}</span>
+        <!-- <img src="../assets/images/fx.png" alt=""> -->
       </div>
       <div class="infoItem" @click="infoEditHandler('bio')">
         <span>简介</span>
         <span>去设置</span>
         <img src="../assets/images/fx.png" alt="">
       </div>
-      <div class="infoItem" @click="infoEditHandler('gender')">
+      <div class="infoItem" >
         <span>性别</span>
-        <span>女</span>
-        <img src="../assets/images/fx.png" alt="">
+        <span>{{userInfo.gender}}</span>
+        <img src="../assets/images/fx.png" alt="" style="display:none">
       </div>
-      <div class="infoItem"  @click="infoEditHandler('birthday')">
+      <div class="infoItem" >
         <span>生日</span>
-        <span>1997-08-09</span>
-        <img src="../assets/images/fx.png" alt="">
+        <span>{{userInfo.birthday}}</span>
+        <img src="../assets/images/fx.png" alt="" style="display:none">
       </div>
-      <div class="infoItem" @click="infoEditHandler('city')" style="display:none">
+      <div class="infoItem" >
         <span>城市</span>
-        <span>湖北 武汉</span>
-        <img src="../assets/images/fx.png" alt="">
+        <span>城市</span>
+        <img src="../assets/images/fx.png" alt=""  style="display:none">
       </div>
     </div>
     <!-- 时间 -->
@@ -78,7 +78,23 @@ export default {
     return {
       dateShow: false,
       genderShow: false,
-      currentDate: new Date()
+      currentDate: new Date(),
+      userInfo: {}
+    }
+  },
+  mounted () {
+    this.$api.userInfo().then((result) => {
+      console.log(result)
+      if (result.code === 1) {
+        this.userInfo = result.data
+      }
+    })
+  },
+  computed: {
+    autoCity (item) {
+      if (item) {
+        return (item + '').replace('/,/', ' ')
+      }
     }
   },
   methods: {

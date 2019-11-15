@@ -15,6 +15,7 @@ axios.interceptors.request.use(
     if (process.env.NODE_ENV === 'production') {
       config.baseURL = process.env.API_HOST
     }
+    console.log(config, 'config')
     return config
   },
   error => {
@@ -109,6 +110,7 @@ export function post (url, data = {}, type) {
       headers: { 'Content-Type': 'multipart/form-data' }
     }
   }
+  console.log(data)
   return new Promise((resolve, reject) => {
     axios.post(url, data, config)
       .then(response => {

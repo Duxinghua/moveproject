@@ -1,6 +1,6 @@
 <template>
   <div class="mygz">
-    <HuabanUsergzItem v-for="(item, index) in gzList" :item="item" :key="index" :types="gzType"/>
+    <HuabanUsergzItem v-for="(item, index) in gzList" :item="item" :key="index" :types="gzType" @cancelGz="cancelHandler"/>
     <NoData v-if="gzList.length === 0"/>
   </div>
 </template>
@@ -13,18 +13,40 @@ export default {
   data () {
     return {
       gzList: [
-        {
-          avatar: require('../assets/images/people.png'),
-          username: '花田喜事Hebe',
-          userinfo: '美国花艺设计学院教授会导师'
-        },
-        {
-          avatar: require('../assets/images/people.png'),
-          username: '花田喜事Hebe',
-          userinfo: '美国花艺设计学院教授会导师'
-        }
       ],
-      gzType: true
+      gzType: true,
+      page: 1,
+      pageSize: 10
+
+    }
+  },
+  mounted () {
+    this.$api.userFollow({page: this.page, pageSize: this.pageSize}).then((result) => {
+      if (result.code === 1) {
+        var list = []
+        result.data.data.map((item) => {
+          if (!item.avatar) {
+            item.avatar = require('../assets/images/people.png')
+          }
+          list.push(item)
+        })
+        this.gzList = list
+      }
+    })
+  },
+  methods: {
+    cancelHandler (id) {
+      console.log(id, 'id')
+      this.$api.userSaveFollow({user_id: id}).then((result) => {
+        if (result.code === 1) {
+          this.$message({
+            message: result.msg,
+            type: 'success'
+          })
+        } else {
+          this.$message.error(result.msg)
+        }
+      })
     }
   },
   components: {

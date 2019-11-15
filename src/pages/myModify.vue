@@ -1,6 +1,6 @@
 <template>
   <div class="myModify">
-    <div class="myModify-name">
+    <div class="myModify-name" style="display:none">
       <span>修改昵称</span>
       <span>1-15个字，起个响亮的名字~</span>
       <div class="input-wrap">
@@ -12,9 +12,9 @@
     <div class="myModify-name">
       <span>个人简介</span>
       <span>有意思的简介会吸引更多关注~</span>
-      <textarea placeholder="走最多的路，看最好的风景，读最好的书~"/>
+      <textarea v-model="textArea" placeholder="走最多的路，看最好的风景，读最好的书~"/>
     </div>
-    <div class="myModify-btn">
+    <div class="myModify-btn" @click="userEdit">
       确认修改
     </div>
   </div>
@@ -25,9 +25,27 @@ export default {
   name: 'MyModify',
   data () {
     return {
-
+      textArea: null
     }
+  },
+  methods: {
+    userEdit () {
+      if (!this.textArea) {
+        this.$dialog.alert({
+          message: '请输入简介'
+        })
+      }
+      this.$api.userEdit({bio: this.textArea}).then((result) => {
+        if (result.code === 1) {
+          this.$router.push({name: 'MyEdit'})
+        }
+      })
+    }
+  },
+  mounted () {
+
   }
+
 }
 </script>
 

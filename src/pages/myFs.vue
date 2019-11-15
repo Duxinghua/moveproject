@@ -33,6 +33,13 @@ export default {
   components: {
     NoData,
     HuabanUsergzItem
+  },
+  mounted () {
+    this.$api.userFans().then((result) => {
+      if (result.code === 1) {
+
+      }
+    })
   }
 }
 </script>
