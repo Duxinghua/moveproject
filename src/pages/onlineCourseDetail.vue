@@ -35,7 +35,17 @@
         </div>
       </div>
       <div class="ondetail-flower-content" v-if="pageType == 1">
-        22222
+        <div class="ondetail-flowers">
+          <div class="ondetail-flowers-item" v-for="item in flowerList" :key="item.id">
+            <img :src="item.img" alt="">
+            <p>{{item.name}}</p>
+            <div>
+              <span>气味浓度：{{item.des.smell}}</span>
+              <span>温度要求{{item.des.wet}}</span>
+              <span>养护难度：{{item.des.difficult}}</span>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="ondetail-task-content" v-if="pageType == 2">
         333333
@@ -92,6 +102,98 @@ export default {
           img: require('../assets/images/onlineworks.png'),
           title: '残荷听雨',
           des: '杏林 2019.1020'
+        }
+      ],
+      flowerList: [
+        {
+          id: 1,
+          img: require('../assets/images/flowers.png'),
+          name: '小苍蓝',
+          des: {
+            smell: '无味',
+            wet: '30%',
+            difficult: '易'
+          }
+        },
+        {
+          id: 2,
+          img: require('../assets/images/flowers.png'),
+          name: '小苍蓝',
+          des: {
+            smell: '无味',
+            wet: '30%',
+            difficult: '易'
+          }
+        },
+        {
+          id: 3,
+          img: require('../assets/images/flowers.png'),
+          name: '小苍蓝',
+          des: {
+            smell: '无味',
+            wet: '30%',
+            difficult: '易'
+          }
+        },
+        {
+          id: 4,
+          img: require('../assets/images/flowers.png'),
+          name: '花毛莨',
+          des: {
+            smell: '无味',
+            wet: '30%',
+            difficult: '易'
+          }
+        },
+        {
+          id: 5,
+          img: require('../assets/images/flowers.png'),
+          name: '绣球',
+          des: {
+            smell: '无味',
+            wet: '30%',
+            difficult: '易'
+          }
+        },
+        {
+          id: 6,
+          img: require('../assets/images/flowers.png'),
+          name: '小苍蓝',
+          des: {
+            smell: '无味',
+            wet: '30%',
+            difficult: '易'
+          }
+        },
+        {
+          id: 7,
+          img: require('../assets/images/flowers.png'),
+          name: '花毛莨',
+          des: {
+            smell: '无味',
+            wet: '30%',
+            difficult: '易'
+          }
+        },
+        {
+          id: 8,
+          img: require('../assets/images/flowers.png'),
+          name: '小苍蓝',
+          des: {
+            smell: '无味',
+            wet: '30%',
+            difficult: '易'
+          }
+        },
+        {
+          id: 9,
+          img: require('../assets/images/flowers.png'),
+          name: '绣球',
+          des: {
+            smell: '无味',
+            wet: '30%',
+            difficult: '易'
+          }
         }
       ],
       current: 0,
@@ -224,6 +326,51 @@ export default {
         padding-left: 24px;
         padding-right: 24px;
       }
+    }
+  }
+  &-flowers{
+    width: 100%;
+    padding: 45px 24px 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    &-item{
+      display: flex;
+      flex-direction: column;
+      width: 216px;
+      margin-right: 26px;
+      margin-bottom: 37px;
+      img{
+        width: 216px;
+        height: 287px;
+      }
+      p{
+        width:100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 30px;
+        color:#333;
+        line-height: 36px;
+        margin-top: 18px;
+      }
+      div{
+        height: 87px;
+        margin-top: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+      div span {
+        font-size: 24px;
+        color: #999999;
+        line-height: 32px;
+      }
+    }
+    &-item:nth-child(3n){
+        margin-right:0px !important;
     }
   }
 }

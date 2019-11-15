@@ -78,9 +78,9 @@ export default {
   data () {
     return {
       msgItem: {
-        img: '',
-        name: '',
-        msg: ''
+        img: require('../assets/images/people.png'),
+        name: '柯杏林',
+        msg: '知音花艺协会副会长兼秘书长; 中国传统插花中国传统插花中国传统插花中国传统插花'
       },
       planList: [
         {
@@ -111,9 +111,9 @@ export default {
     }
   },
   mounted () {
-    this.msgItem.img = this.$route.query.img
-    this.msgItem.name = this.$route.query.name
-    this.msgItem.des = this.$route.query.des
+    // this.msgItem.img = this.$route.query.img
+    // this.msgItem.name = this.$route.query.name
+    // this.msgItem.des = this.$route.query.des
     console.log(this.$route.query.id)
   },
   components: {

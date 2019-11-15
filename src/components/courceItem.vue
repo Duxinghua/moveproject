@@ -1,5 +1,5 @@
 <template>
-    <div class="home-course-content-item" @click="offDetailHandler(item.id)">
+    <div class="home-course-content-item" @click="courseDetailHandler(item.id)">
           <img class="course-img" :src="item.img" alt="">
           <span>{{item.title}}</span>
           <div class="course-people">
@@ -16,11 +16,20 @@ export default {
     item: {
       type: Object,
       required: true
+    },
+    onlineDetail: {
+      type: String,
+      required: true
+    },
+    offlineDetail: {
+      type: String,
+      required: true
     }
   },
   methods: {
-    offDetailHandler (index) {
-      this.$router.push({path: '/offcoursedetail', query: {id: index}})
+    courseDetailHandler (index) {
+      this.$router.push({path: this.onlineDetail, query: {id: index}})
+      this.$router.push({path: this.offlineDetail, query: {id: index}})
     }
   }
 }

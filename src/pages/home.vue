@@ -18,7 +18,7 @@
       <div class="home-course">
         <TitleItem title="线下课程" />
         <div class="home-course-content">
-          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" />
+          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" offlineDetail="/offcoursedetail"/>
         </div>
         <MoreText moreText="更多课程" />
       </div>
@@ -44,7 +44,7 @@
       <div class="home-course home-onlinecourse">
         <TitleItem title="线上课程" />
         <div class="home-course-content">
-          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" />
+          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" onlineDetail="/onlineCourseDetail"/>
         </div>
         <MoreText moreText="更多课程" />
 
