@@ -1,5 +1,5 @@
 <template>
-    <div class="home-course-more">
+    <div class="home-course-more" @click="moreClickHandler">
         <img src="../assets/images/moreleft.png" alt="">
         <span>{{moreText}}</span>
         <img src="../assets/images/moreright.png" alt="">
@@ -9,7 +9,14 @@
 <script>
 export default {
   name: 'MoreItem',
-  props: ['moreText']
+  props: ['moreText', 'moreName'],
+  methods: {
+    moreClickHandler () {
+      this.$router.push({
+        name: this.moreName
+      })
+    }
+  }
 }
 </script>
 

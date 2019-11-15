@@ -9,17 +9,17 @@ import ElementUI from 'element-ui'
 import VueWechatTitle from 'vue-wechat-title'
 import 'vant/lib/index.css'
 import 'element-ui/lib/theme-chalk/index.css'
-import './assets/css/element.css'
 import './assets/css/minireset.min.css'
 import store from './store'
 
-
+import './assets/css/element.css'
+import './assets/css/fixvant.css'
 import api from '@/api/index'
 
 Vue.prototype.$api = api
 
-
 Vue.config.productionTip = false
+
 Vue.use(ElementUI)
 
 Vue.use(VueWechatTitle)

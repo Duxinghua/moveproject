@@ -1,29 +1,29 @@
 import axios from 'axios'
 import qs from 'qs'
 
-
-axios.defaults.timeout = 20000;
+axios.defaults.timeout = 20000
 // axios.defaults.baseURL = 'https://youmeng.qixiuu.com/api'; //填写域名
-axios.defaults.baseURL = '/api'; //填写域名
+axios.defaults.baseURL = '/api' // 填写域名
 
-//http request 拦截器
+if (process.env.NODE_ENV === 'production') {
+  axios.defaults.baseURL = process.env.API_HOST
+}
+// http request 拦截器
 axios.interceptors.request.use(
   config => {
-    // const accessToken = localStorage.getItem('accessToken');
     config.headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
-      token:'027bb3dd-7d14-4ef8-969f-2011a7c116fa'
+      token: localStorage.getItem('token')
     }
-    config.data = qs.stringify(config.data);
-
-    return config;
+    config.data = qs.stringify(config.data)
+    return config
   },
   error => {
-    return Promise.reject(error);
+    return Promise.reject(error)
   }
-);
+)
 
-//响应拦截器即异常处理
+// 响应拦截器即异常处理
 axios.interceptors.response.use(response => {
   return response
 }, err => {
@@ -75,7 +75,6 @@ axios.interceptors.response.use(response => {
   }
   return Promise.resolve(err.response)
 })
-
 
 /**
  * 封装get方法

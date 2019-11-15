@@ -21,7 +21,7 @@
             <span>{{item.text}}</span>
           </div>
         </div>
-        <MoreText moreText="更多" />
+        <MoreText moreText="更多" moreName="HuabanGroupList"/>
       </div>
     </div>
     <div class="huaban-tz">
