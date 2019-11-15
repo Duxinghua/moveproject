@@ -18,7 +18,7 @@
       <div class="home-course">
         <TitleItem title="线下课程" />
         <div class="home-course-content">
-          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" />
+          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" offlineDetail="/offcoursedetail"/>
         </div>
         <MoreText moreText="更多课程" />
       </div>
@@ -32,7 +32,7 @@
                 <span class="teacher-name">{{item.name}}</span>
                 <span class="teacher-des">{{item.des}}</span>
                 <div class="teacher-btn">
-                  <span>详情</span>
+                  <span @click="teacherInfoHandle(item)">详情</span>
                   <img src="../assets/images/teachersq.png" alt="">
                 </div>
               </div>
@@ -44,7 +44,7 @@
       <div class="home-course home-onlinecourse">
         <TitleItem title="线上课程" />
         <div class="home-course-content">
-          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" />
+          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" onlineDetail="/onlineCourseDetail"/>
         </div>
         <MoreText moreText="更多课程" />
 
@@ -68,12 +68,12 @@
     </div>
     <div class="home-ms-content" v-if="pageType == 1">
        <div class="home-mingshi">
-         <div class="home-mingshi-item">
-           <img src="../assets/images/mingshi.png" alt="">
+         <div class="home-mingshi-item" v-for="item in schoolList" :key="item.id">
+           <img :src="item.img" alt="">
            <div class="home-mingshi-item-des">
-             <span>柯杏林</span>
-             <p>知音花艺协会副会长兼秘书长;知音文创大使 知音杯中国传统插花艺术金奖…</p>
-             <MoreText moreText="了解更多" />
+             <span class="teacher-name">{{item.name}}</span>
+             <p class="teacher-des">{{item.des}}</p>
+             <MoreText class="moretext" moreText="了解更多" />
            </div>
          </div>
        </div>
@@ -109,24 +109,28 @@ export default {
       ],
       courceList: [
         {
+          id: 1,
           img: require('../assets/images/courseimg.png'),
           title: '花艺课中式传统插花',
           avater: require('../assets/images/people.png'),
           name: 'Kate sapdiek'
         },
         {
+          id: 2,
           img: require('../assets/images/courseimg.png'),
           title: '花艺课中式传统插花',
           avater: require('../assets/images/people.png'),
           name: 'Kate sapdiek'
         },
         {
+          id: 3,
           img: require('../assets/images/courseimg.png'),
           title: '花艺课中式传统插花',
           avater: require('../assets/images/people.png'),
           name: 'Kate sapdiek'
         },
         {
+          id: 4,
           img: require('../assets/images/courseimg.png'),
           title: '花艺课中式传统插花',
           avater: require('../assets/images/people.png'),
@@ -143,8 +147,8 @@ export default {
         {
           id: 1,
           img: require('../assets/images/teacher.png'),
-          name: '柯杏林',
-          des: '知音花艺协会副会长兼秘书长; 中国传统插花中国传统插花中国传统插花中国传统插花'
+          name: '陈进',
+          des: '中国插花协会理事；湖北省花木盆景协会插花分会副秘书长；知音插花协会副会长知音插花协会副会长'
         },
         {
           id: 2,
@@ -173,6 +177,9 @@ export default {
     },
     clickInput () {
       this.$router.push({path: '/search'})
+    },
+    teacherInfoHandle (index) {
+      this.$router.push({path: '/teacherDetail', query: {index}})
     }
   },
   mounted () {
@@ -398,6 +405,50 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    margin-top: 13px;
+    background:#FBF8F4;
+    min-height: 1284px;
+    &-item{
+      display: flex;
+      flex-direction: row;
+      width: 95%;
+      padding: 28px 0;
+      margin: 0 auto;
+      border-bottom: 1px solid #ECF2E9;
+      justify-content: center;
+      align-items: center;
+      img{
+        width:162px;
+        height:212px;
+        margin-right:28px;
+      }
+      &-des{
+        display: flex;
+        flex-direction: column;
+        width:calc(95% - 28px - 162px);
+        .teacher-name{
+          font-size: 32px;
+          color:#333;
+          font-weight: 500;
+        }
+        .teacher-des{
+          width:100%;
+          font-size: 26px;
+          color:#898C87;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          line-height:36px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+          margin-top: 16px;
+        }
+        .moretext {
+          margin-top: 20px;
+          justify-content: left;
+        }
+      }
+    }
   }
 }
 .home-tj-content,.home-ms-content{
