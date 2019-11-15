@@ -71,7 +71,7 @@ export default {
   justify-content: center;
   align-items: center;
   box-shadow:0px 0px 7px 0px rgba(0, 0, 0, 0.08);
-  z-index: 999999;
+  z-index: 1000;
 }
 .footer .menuitem{
   display: flex;

@@ -24,8 +24,8 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     console.log('log start')
-    Api.userQrcode().then((result)=>{
-      if(result.code === 1) {
+    Api.userQrcode().then((result) => {
+      if (result.code === 1) {
         console.log(result)
       }
     })

@@ -60,6 +60,18 @@ const server = {
   // 获取二维码
   userQrcode (data) {
     return post('/user/qrcode', data)
+  },
+  // 签到列表 /api/user/signLists
+  userSignLists (data) {
+    return post('user/signLists', data)
+  },
+  //  签到 /api/user/saveSign
+  userSaveSign (data) {
+    return post('user/saveSign', data)
+  },
+  // 个人资料 /api/user/info
+  userInfo (data) {
+    return post('user/info', data)
   }
 
 }

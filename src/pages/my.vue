@@ -19,19 +19,19 @@
       </div>
       <div class="my-header-tab">
         <div class="tabitem" @click="likeClickHandler('gz')">
-          <span>1256</span>
+          <span>{{userInfo.follow}}</span>
           <span>我的关注</span>
         </div>
         <div class="tabitem" @click="likeClickHandler('xf')">
-          <span>384</span>
+          <span>{{userInfo.score}}</span>
           <span>学分</span>
         </div>
         <div class="tabitem" @click="likeClickHandler('fs')">
-          <span>79</span>
+          <span>{{userInfo.fans}}</span>
           <span>粉丝</span>
         </div>
         <div class="tabitem" @click="likeClickHandler('bx')">
-          <span>642</span>
+          <span>{{userInfo.by_follow}}</span>
           <span>被喜欢</span>
         </div>
       </div>
@@ -99,7 +99,7 @@
             </div>
 
           </div>
-          <div class="btn">
+          <div class="btn" @click="qdFuClickHandler">
             已经连续签到2天
           </div>
         </div>
@@ -111,7 +111,6 @@
 
 <script>
 import Footer from '@/components/footer.vue'
-import Api from '@/api/index'
 export default {
   name: 'My',
   data () {
@@ -145,21 +144,45 @@ export default {
         }
       ],
       qdShow: false,
-      userInfo: {
-      }
+      userInfo: {},
+      userSignList: [],
+      qdText: '立即签到'
     }
   },
   beforeRouteEnter (to, from, next) {
     console.log('log start')
-    Api.userIndex().then((result)=>{
-      if(result.code === 1) {
-        this.userInfo = result.data
-      }
-    })
+
     console.log(to, from, next)
     next()
   },
+  mounted () {
+    this.$api.userIndex().then((result) => {
+      if (result.code === 1) {
+        this.userInfo = result.data
+      }
+    })
+    this.$api.userSignLists().then((result) => {
+      console.log(result)
+      if (result.code === 1) {
+        this.userSignList = result.msg
+      }
+    })
+  },
   methods: {
+    qdFuClickHandler () {
+      this.$api.userSaveSign().then((result) => {
+        if (result.cdoe === 1) {
+          // this.qdText
+          this.$dialog.alert({
+            message: result.msg
+          })
+        } else {
+          this.$dialog.alert({
+            message: result.msg
+          })
+        }
+      })
+    },
     qdClickHandler () {
       this.qdShow = true
     },
@@ -387,7 +410,7 @@ export default {
       position: fixed;
       left:0;
       top:0;
-      z-index: 1000000;
+      z-index: 1200;
       background:rgba(1,1,1,0.6);
       width:100%;
       height:100%;
@@ -401,7 +424,7 @@ export default {
       height:642px;
       background:white;
       border-radius: 18px;
-      z-index: 1000001;
+      z-index: 1201;
       &-h{
         height:93px;
         width:100%;

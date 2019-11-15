@@ -11,7 +11,7 @@ module.exports = ({ file }) => {
 	return {
 		plugins: [
 			px2rem({ remUnit: remUnit }),
-			AutoPrefixer({ browsers: ["last 20 versions", "android >= 4.0"] })
+      AutoPrefixer({ browsers: ["last 20 versions", "android >= 4.0"] })
 
 		]
 	};
