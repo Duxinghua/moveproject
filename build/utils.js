@@ -32,7 +32,7 @@ exports.cssLoaders = function (options) {
   const px2remLoader = {
     loader: 'px2rem-loader',
     options: {
-      remUnit: 75
+      remUnit: 75,
     }
   }
 
@@ -64,7 +64,8 @@ exports.cssLoaders = function (options) {
 
   // https://vue-loader.vuejs.org/en/configurations/extract-css.html
   return {
-    css: generateLoaders(),
+    // css: generateLoaders(),
+    css: generateLoaders('postcss'),
     postcss: generateLoaders(),
     less: generateLoaders('less'),
     sass: generateLoaders('sass', { indentedSyntax: true }),

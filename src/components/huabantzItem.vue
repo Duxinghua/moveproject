@@ -42,7 +42,7 @@ export default {
       color:#333;
       margin-bottom: 25px;
       padding-bottom: 25px;
-      border-bottom: 1px solid #F3F3F3;
+      border-bottom: 1Px solid #F3F3F3;
       .tzleft{
         display: flex;
         flex-direction: column;

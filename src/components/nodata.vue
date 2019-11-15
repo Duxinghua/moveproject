@@ -47,7 +47,8 @@ export default {
     p{
       margin-top: 20px;
       text-align: center;
-      font-size: 24px;
+      font-size: 30px;
+      color: #999999;
     }
   }
 </style>

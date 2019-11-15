@@ -13,7 +13,7 @@
         <img :src="zb === true ? require('../assets/images/zbico-a.png') : require('../assets/images/zbico.png')" alt="" />
         <span :class="{active:zb}">直播</span>
       </router-link>
-      <router-link class="menuitem" to="/company">
+      <router-link class="menuitem" to="/shopHome">
         <img :src="sc === true ? require('../assets/images/scico-a.png') : require('../assets/images/scico.png')" alt="" />
         <span :class="{active:sc}">商城</span>
       </router-link>

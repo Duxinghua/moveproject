@@ -69,7 +69,25 @@ const getToken = async (data, url) => {
   // window.location.href = url
 }
 */
+
+//路由切换时 页面位置
+const scrollBehavior = (to, from, savedPosition) => {
+  if (savedPosition) {
+    return savedPosition
+  } else {
+    const position = {}
+    if (to.hash) {
+      position.selector = to.hash
+    }
+    if (!to.matched.some(m => m.meta.keepAlive)) {
+      position.x = 0
+      position.y = 0
+    }
+    return position
+  }
+}
 const router = new Router({
+  scrollBehavior,
   routes: [
     {
       path: '/',
@@ -101,6 +119,79 @@ const router = new Router({
       component: HuabanTzDetail,
       meta: {
         title: '花伴贴子详情'
+      }
+    },
+    {
+      path: '/shopHome',
+      name: 'shopHome',
+      component: () => import('@/pages/shopHome'),
+      meta: {
+        title: '有梦花居',
+        keepAlive: true,
+      }
+    },
+    {
+      path: '/goodsDetails',
+      name: 'goodsDetails',
+      component: () => import('@/pages/goodsDetails'),
+      meta: {
+        title: '有梦不晚'
+      }
+    },
+    {
+      path: '/searchGoods',
+      name: 'searchGoods',
+      component: () => import('@/pages/searchGoods'),
+      meta: {
+        title: '搜索'
+      }
+    },
+    {
+      path: '/submitOrder',
+      name: 'submitOrder',
+      component: () => import('@/pages/submitOrder'),
+      meta: {
+        title: '订单'
+      }
+    },
+    {
+      path: '/addressList',
+      name: 'addressList',
+      component: () => import('@/pages/addressList'),
+      meta: {
+        title: '收货地址'
+      }
+    },
+    {
+      path: '/editAddress',
+      name: 'editAddress',
+      component: () => import('@/pages/editAddress'),
+      meta: {
+        title: '新增地址'
+      }
+    },
+    {
+      path: '/shop',
+      name: 'shop',
+      component: () => import('@/pages/shop'),
+      meta: {
+        title: '购物车'
+      }
+    }, 
+    {
+      path: '/allGroup',
+      name: 'allGroup',
+      component: () => import('@/pages/allGroup'),
+      meta: {
+        title: '全部拼团'
+      }
+    },
+    {
+      path: '/groupDetails',
+      name: 'groupDetails',
+      component: () => import('@/pages/groupDetails'),
+      meta: {
+        title: '拼团详情'
       }
     },
     {
