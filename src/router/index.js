@@ -3,9 +3,12 @@ import Vue from 'vue'
 // import Api from '@/api/index'
 import Router from 'vue-router'
 import Home from '@/pages/home'
+import HomeSearch from '@/pages/homeSearch'
 import TeacherDetail from '@/pages/teacherDetail'
+import OffCourseList from '@/pages/offCourseList'
 import OffCourseDetail from '@/pages/offCourseDetail'
 import OnlineCourseDetail from '@/pages/onlineCourseDetail'
+import OnlineCourseList from '@/pages/onlineCourseList'
 import Huaban from '@/pages/huaban'
 import HuabanGroupDetail from '@/pages/huabanGroupDetail'
 import HuabanTzDetail from '@/pages/huabanTzDetail'
@@ -150,6 +153,14 @@ const router = new Router({
       }
     },
     {
+      path: '/homeSearch',
+      name: 'HomeSearch',
+      component: HomeSearch,
+      meta: {
+        title: '有梦不晚'
+      }
+    },
+    {
       path: '/offcoursedetail',
       name: 'OffCourseDetail',
       component: OffCourseDetail,
@@ -158,9 +169,25 @@ const router = new Router({
       }
     },
     {
+      path: '/offcourselist',
+      name: 'OffCourseList',
+      component: OffCourseList,
+      meta: {
+        title: '线下课程'
+      }
+    },
+    {
       path: '/onlineCourseDetail',
       name: 'OnlineCourseDetail',
       component: OnlineCourseDetail,
+      meta: {
+        title: '线上课程'
+      }
+    },
+    {
+      path: '/onlinecourselist',
+      name: 'OnlineCourseList',
+      component: OnlineCourseList,
       meta: {
         title: '线上课程'
       }
