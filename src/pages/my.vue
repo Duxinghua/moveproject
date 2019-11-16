@@ -173,13 +173,9 @@ export default {
       this.$api.userSaveSign().then((result) => {
         if (result.cdoe === 1) {
           // this.qdText
-          this.$dialog.alert({
-            message: result.msg
-          })
+          this.$toast(result.msg)
         } else {
-          this.$dialog.alert({
-            message: result.msg
-          })
+          this.$toast(result.msg)
         }
       })
     },

@@ -37,7 +37,7 @@ export default {
   mounted () {
     this.$api.userFans().then((result) => {
       if (result.code === 1) {
-
+        this.fsList = result.data.data
       }
     })
   }

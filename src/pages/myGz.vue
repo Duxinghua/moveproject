@@ -39,12 +39,9 @@ export default {
       console.log(id, 'id')
       this.$api.userSaveFollow({user_id: id}).then((result) => {
         if (result.code === 1) {
-          this.$message({
-            message: result.msg,
-            type: 'success'
-          })
+          this.$toast(result.msg)
         } else {
-          this.$message.error(result.msg)
+          this.$toast(result.msg)
         }
       })
     }

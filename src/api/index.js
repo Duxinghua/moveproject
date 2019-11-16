@@ -9,7 +9,7 @@ const server = {
 		return post('/auth/login', data);
 	},
 	/**
-	 * 
+	 *
 	 */
 	getDefaultStruct(data) {
 		return post('/imageRecognition/getDefaultStruct', data);
@@ -153,7 +153,19 @@ const server = {
 	//  粉丝（取消粉丝） /api/user/saveFans
 	userSaveFans(data) {
 		return post('user/saveFans', data)
-	}
+  },
+  // 学分 /api/user/pointsRecords
+  userPointsRecords(data) {
+    return post('user/pointsRecords', data)
+  },
+  // 用户列表 /api/user/lists
+  userLists(data) {
+    return post('user/lists', data)
+  },
+  // 消息列表 /api/user/messages
+  userMessage(data){
+    return post('user/messages', data)
+  }
 }
 
 export default server;

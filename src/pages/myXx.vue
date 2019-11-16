@@ -29,6 +29,14 @@ export default {
       ]
     }
   },
+  mounted() {
+    this.$api.userMessage().then((result)=>{
+      console.log(result)
+      if (result.code === 1) {
+        this.xqList = result.data.data
+      }
+    })
+  },
   methods: {
     zkClickHandler (e) {
       this.upFlag = !this.upFlag
