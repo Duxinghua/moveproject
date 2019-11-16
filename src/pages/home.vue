@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="home-top">
-      <img class="home-top-search" src="../assets/images/search.png" alt="">
+      <img class="home-top-search" src="../assets/images/search.png" @click="searchHandle()" alt="">
       <ul class="home-top-list">
         <li :class="{active:current == 0}" @click="menuHandler(0)">推荐</li>
         <li :class="{active:current == 1}" @click="menuHandler(1)">名师</li>
@@ -20,7 +20,7 @@
         <div class="home-course-content">
           <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" offlineDetail="/offcoursedetail"/>
         </div>
-        <MoreText moreText="更多课程" />
+        <MoreText moreText="更多课程" moreOffCourse="OffCourseList" />
       </div>
       <div class="home-teacher">
         <TitleItem title="名师推荐" />
@@ -46,7 +46,7 @@
         <div class="home-course-content">
           <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" onlineDetail="/onlineCourseDetail"/>
         </div>
-        <MoreText moreText="更多课程" />
+        <MoreText moreText="更多课程" moreOnlineCourse="OnlineCourseList"/>
 
       </div>
       <div class="home-video">
@@ -180,6 +180,9 @@ export default {
     },
     teacherInfoHandle (index) {
       this.$router.push({path: '/teacherDetail', query: {index}})
+    },
+    searchHandle () {
+      this.$router.push({name: 'HomeSearch'})
     }
   },
   mounted () {

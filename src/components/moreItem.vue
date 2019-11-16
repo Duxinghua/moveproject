@@ -9,11 +9,17 @@
 <script>
 export default {
   name: 'MoreItem',
-  props: ['moreText', 'moreName'],
+  props: ['moreText', 'moreName', 'moreOffCourse', 'moreOnlineCourse'],
   methods: {
     moreClickHandler () {
       this.$router.push({
         name: this.moreName
+      })
+      this.$router.push({
+        name: this.moreOffCourse
+      })
+      this.$router.push({
+        name: this.moreOnlineCourse
       })
     }
   }
