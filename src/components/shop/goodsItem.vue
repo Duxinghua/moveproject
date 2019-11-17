@@ -21,26 +21,26 @@
 
 <script>
 export default {
-    data() {
-        return {
-        }
-    },
-    props:{
-        goodsData:{
-            type:Object,
-            default:{}
-        }
-    },
-    methods:{
-        onLinkDetails(goodsId){
-            this.$router.push({
-                path:'/goodsDetails',
-                query:{
-                    goodsId
-                }
-            })
-        }
+  data () {
+    return {
     }
+  },
+  props: {
+    goodsData: {
+      type: Object,
+      default: {}
+    }
+  },
+  methods: {
+    onLinkDetails (goodsId) {
+      this.$router.push({
+        path: '/goodsDetails',
+        query: {
+          goodsId
+        }
+      })
+    }
+  }
 }
 </script>
 

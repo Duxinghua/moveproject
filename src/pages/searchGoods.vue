@@ -34,72 +34,72 @@ import GoodsItem from '@/components/shop/goodsItem'
 import NoData from '@/components/nodata'
 
 export default {
-    data() {
-        return {
-            goodsList: [],
-            loading: false,
-            finished: false,
-            current:1,
-            keywordValue:'',
-            keyword:""
-        }
-    },
-    components: {
-        GoodsItem,
-        NoData
-    },
-    mounted(){
-        // this.getGoodsList();
-    },
-    methods:{
-        getGoodsList(){
-            const param = {
-                page:this.current,
-                pageSize:10,
-                keyword:this.keyword
-            }
-            this.$toast.loading({
-                duration:0,
-                message: '加载中...',
-                forbidClick: true
-            });
-            this.$api.goodsList(param).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    this.loading = false;
-                    if(this.goodsList.length == 0){
-                        //第一次加载
-                        this.goodsList = res.data.data || [];
-                        this.total = res.data.total;
-                    }else if(this.goodsList.length < this.total){
-                        //加载更多
-                        this.goodsList = this.goodsList.concat(res.data.data);
-                    }
-                    if(this.goodsList.length >= this.total){
-                        // 全部加载完成
-                        this.finished = true;
-                    }
-                }
-            })
-        },
-        onLoad() {
-            if(this.goodsList.length < this.total){
-                this.current++;
-                this.getGoodsList()
-            }
-        },
-        onCancel(){
-            this.$router.push('/shopHome')
-        },
-        onSearch(){
-            this.keyword = this.keywordValue;
-            this.goodsList = [];
-            this.current = 1;
-            this.finished = false;
-            this.getGoodsList()
-            this.$refs.searchInput.blur();
-        }
+  data () {
+    return {
+      goodsList: [],
+      loading: false,
+      finished: false,
+      current: 1,
+      keywordValue: '',
+      keyword: ''
     }
+  },
+  components: {
+    GoodsItem,
+    NoData
+  },
+  mounted () {
+    // this.getGoodsList();
+  },
+  methods: {
+    getGoodsList () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        keyword: this.keyword
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.goodsList(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+          if (this.goodsList.length == 0) {
+            // 第一次加载
+            this.goodsList = res.data.data || []
+            this.total = res.data.total
+          } else if (this.goodsList.length < this.total) {
+            // 加载更多
+            this.goodsList = this.goodsList.concat(res.data.data)
+          }
+          if (this.goodsList.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.goodsList.length < this.total) {
+        this.current++
+        this.getGoodsList()
+      }
+    },
+    onCancel () {
+      this.$router.push('/shopHome')
+    },
+    onSearch () {
+      this.keyword = this.keywordValue
+      this.goodsList = []
+      this.current = 1
+      this.finished = false
+      this.getGoodsList()
+      this.$refs.searchInput.blur()
+    }
+  }
 }
 </script>
 

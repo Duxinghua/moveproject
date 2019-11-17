@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     huabantzHandler (index) {
-      this.$router.push({name: 'HuabanTzDetail', params: {id: index}})
+      this.$router.push({name: 'HuabanTzDetail', query: {id: 1}})
     }
   }
 }

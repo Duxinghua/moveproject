@@ -5,7 +5,7 @@
       <div class="cardInfo">
         <div class="cardInfo-c">
           <span>账户余额</span>
-          <span>3521.12</span>
+          <span>{{userInfo.money}}</span>
           <span @click="linkClickHandler">提现</span>
         </div>
       </div>
@@ -58,6 +58,7 @@ export default {
   data () {
     return {
       current: 0,
+      userInfo: {},
       xflist: [
         {
           avatar: require('../assets/images/people.png'),
@@ -117,12 +118,22 @@ export default {
       ]
     }
   },
+  mounted () {
+    this.getuserIndex()
+  },
   methods: {
+    getuserIndex () {
+    this.$api.userIndex().then((result) => {
+      if (result.code === 1) {
+        this.userInfo = result.data
+      }
+    })
+    },
     tabClickHandler (e) {
       this.current = e
     },
     linkClickHandler () {
-      this.$router.push({name: 'MyTx'})
+      this.$router.push({name: 'MyTx',params: {money: this.userInfo.money}})
     }
   },
   computed: {

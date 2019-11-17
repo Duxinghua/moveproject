@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     huabangdHandler () {
-      this.$router.push({name: 'HuabanJoinGroup'})
+      this.$router.push({name: 'HuabanJoinGroup',params:{id:1}})
     }
   }
 }

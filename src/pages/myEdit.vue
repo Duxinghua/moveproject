@@ -12,7 +12,7 @@
       </div>
       <div class="infoItem" @click="infoEditHandler('bio')">
         <span>简介</span>
-        <span>去设置</span>
+        <span>{{userInfo.bio ? userInfo.bio : '去设置'}}</span>
         <img src="../assets/images/fx.png" alt="">
       </div>
       <div class="infoItem" >
@@ -25,7 +25,7 @@
         <span>{{userInfo.birthday}}</span>
         <img src="../assets/images/fx.png" alt="" style="display:none">
       </div>
-      <div class="infoItem" >
+      <div class="infoItem" style="display:none">
         <span>城市</span>
         <span>城市</span>
         <img src="../assets/images/fx.png" alt=""  style="display:none">
@@ -127,7 +127,7 @@ export default {
       console.log(this.currentDate)
     },
     infoEditHandler () {
-      this.$router.push({name: 'MyModify'})
+      this.$router.push({name: 'MyModify', params: {bio: this.userInfo ? this.userInfo.bio : null}})
     }
   }
 

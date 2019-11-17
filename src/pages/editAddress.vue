@@ -55,122 +55,122 @@
 </template>
 
 <script>
-import AreaList from '@/utils/area';
-import { Notify } from 'vant';
+import AreaList from '@/utils/area'
+import { Notify } from 'vant'
 
 export default {
-    data() {
-        return {
-            isDisable:false,
-            showAreaPopup:false,
-            name:'',
-            mobile:'',
-            areaText:'',
-            areaList:AreaList,
-            areaListData:[],
-            address:'',
-            addressId:0,
-            addressValue:'',
-            isDefault:false
-        }
-    },
-    mounted(){
-        const {id} = this.$route.query;
-        if(id){
-            this.addressId = id;
-            this.getAddress(id)
-        }else{
-            this.addressId = 0;
-        }
-    },
-    methods:{
-        getAddress(id){
-            this.$api.address({id}).then((res) => {
-                if(res.code == 1){
-                    const data = res.data;
-                    this.name = data.user_name;
-                    this.mobile = data.mobile;
-                    this.areaText = data.address_name;
-                    this.address = data.address;
-                    const addressName = data.address_name.split('/');
-                    this.areaListData.push({code:data.province,name:addressName[0]})
-                    this.areaListData.push({code:data.city,name:addressName[1]})
-                    this.areaListData.push({code:data.area,name:addressName[2]})
-                    this.addressValue = data.area;
-                    this.isDefault = data.is_default == 1 ? true : false
-                }
-            })
-        },
-        saveAddress(){
-            if(!this.name){
-                Notify({ type: 'danger', message: '请输入收货人' });
-                return false
-            }
-            if(!this.mobile){
-                Notify({ type: 'danger', message: '请输入手机号码' });
-                return false
-            }
-            if(!(/^1[3456789]\d{9}$/.test(this.mobile))){
-                Notify({ type: 'danger', message: '请输入正确手机格式' });
-                return false
-            }
-            if(this.areaListData.length != 3){
-                Notify({ type: 'danger', message: '请选择所在地区' });
-                return false
-            }
-            if(!this.address){
-                Notify({ type: 'danger', message: '请输入详细地址' });
-                return false
-            }
-            const param = {
-                id:this.addressId,
-                user_name:this.name,
-                mobile:this.mobile,
-                province:this.areaListData[0].code,
-                city:this.areaListData[1].code,
-                area:this.areaListData[2].code,
-                address_name:this.areaText,
-                address:this.address,
-                is_default:this.isDisable ? 1 : 0
-            }
-            const _this = this;
-            this.isDisable = true
-            this.$api.saveAddress(param).then((res) => {
-                this.isDisable = false
-                if(res.code == 1){
-                    this.$toast({
-                        type:'success',
-                        message:res.msg,
-                        onClose(){
-                            _this.$router.back(-1)
-                        }
-                    });
-                }else{
-                    Notify({ type: 'danger', message: res.msg });
-                }
-            })
-        },
-        onShowArea(){
-            this.showAreaPopup = true;
-        },
-        onCancelArea(){
-            this.showAreaPopup = false;
-        },
-        onAreaConfirm(values){
-            values = values.filter(value => !!value);
-            if (values.some(value => !value.code)) {
-                Toast('请选择地区');
-                return;
-            }
-            let areaText = []
-            values.forEach((item) => {
-                areaText.push(item.name)
-            })
-            this.areaListData = values;
-            this.areaText = areaText.join('/');
-            this.showAreaPopup = false;
-        }
+  data () {
+    return {
+      isDisable: false,
+      showAreaPopup: false,
+      name: '',
+      mobile: '',
+      areaText: '',
+      areaList: AreaList,
+      areaListData: [],
+      address: '',
+      addressId: 0,
+      addressValue: '',
+      isDefault: false
     }
+  },
+  mounted () {
+    const {id} = this.$route.query
+    if (id) {
+      this.addressId = id
+      this.getAddress(id)
+    } else {
+      this.addressId = 0
+    }
+  },
+  methods: {
+    getAddress (id) {
+      this.$api.address({id}).then((res) => {
+        if (res.code == 1) {
+          const data = res.data
+          this.name = data.user_name
+          this.mobile = data.mobile
+          this.areaText = data.address_name
+          this.address = data.address
+          const addressName = data.address_name.split('/')
+          this.areaListData.push({code: data.province, name: addressName[0]})
+          this.areaListData.push({code: data.city, name: addressName[1]})
+          this.areaListData.push({code: data.area, name: addressName[2]})
+          this.addressValue = data.area
+          this.isDefault = data.is_default == 1
+        }
+      })
+    },
+    saveAddress () {
+      if (!this.name) {
+        Notify({ type: 'danger', message: '请输入收货人' })
+        return false
+      }
+      if (!this.mobile) {
+        Notify({ type: 'danger', message: '请输入手机号码' })
+        return false
+      }
+      if (!(/^1[3456789]\d{9}$/.test(this.mobile))) {
+        Notify({ type: 'danger', message: '请输入正确手机格式' })
+        return false
+      }
+      if (this.areaListData.length != 3) {
+        Notify({ type: 'danger', message: '请选择所在地区' })
+        return false
+      }
+      if (!this.address) {
+        Notify({ type: 'danger', message: '请输入详细地址' })
+        return false
+      }
+      const param = {
+        id: this.addressId,
+        user_name: this.name,
+        mobile: this.mobile,
+        province: this.areaListData[0].code,
+        city: this.areaListData[1].code,
+        area: this.areaListData[2].code,
+        address_name: this.areaText,
+        address: this.address,
+        is_default: this.isDisable ? 1 : 0
+      }
+      const _this = this
+      this.isDisable = true
+      this.$api.saveAddress(param).then((res) => {
+        this.isDisable = false
+        if (res.code == 1) {
+          this.$toast({
+            type: 'success',
+            message: res.msg,
+            onClose () {
+              _this.$router.back(-1)
+            }
+          })
+        } else {
+          Notify({ type: 'danger', message: res.msg })
+        }
+      })
+    },
+    onShowArea () {
+      this.showAreaPopup = true
+    },
+    onCancelArea () {
+      this.showAreaPopup = false
+    },
+    onAreaConfirm (values) {
+      values = values.filter(value => !!value)
+      if (values.some(value => !value.code)) {
+        Toast('请选择地区')
+        return
+      }
+      let areaText = []
+      values.forEach((item) => {
+        areaText.push(item.name)
+      })
+      this.areaListData = values
+      this.areaText = areaText.join('/')
+      this.showAreaPopup = false
+    }
+  }
 }
 </script>
 
@@ -231,7 +231,7 @@ export default {
                 }
             }
         }
-        
+
     }
 
     .submit{

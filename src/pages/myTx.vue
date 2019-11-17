@@ -25,7 +25,7 @@
           <span>¥</span>
         </div>
         <div class="tip-wrap">
-          可提现金额¥3512.21
+          可提现金额¥{{money}}
         </div>
       </div>
     </div>
@@ -40,13 +40,17 @@ export default {
   name: 'MyTx',
   data () {
     return {
-      current: 0
+      current: 0,
+      money: '0'
     }
   },
   methods: {
     MenuClickHandler (e) {
       this.current = e
     }
+  },
+  mounted () {
+    this.money = this.$route.params.money
   }
 }
 </script>
@@ -128,6 +132,10 @@ export default {
         input{
           width: 100%;
           padding-left:54px;
+          position: absolute;
+          transform: translateY(-50%);
+          left:5px;
+          top:50%;
         }
       }
       .tip-wrap{

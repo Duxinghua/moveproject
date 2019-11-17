@@ -21,27 +21,27 @@
 
 <script>
 export default {
-    data() {
-        return {
-            time: 30 * 60 * 60 * 1000
-        }
-    },
-    props:{
-        groupData:{
-            type:Object,
-            default:{}
-        }
-    },
-    methods:{
-        onLook(){
-            this.$router.push({
-                path:'/groupDetails',
-                query:{
-                    id:this.groupData.t_id
-                }
-            })
-        }
+  data () {
+    return {
+      time: 30 * 60 * 60 * 1000
     }
+  },
+  props: {
+    groupData: {
+      type: Object,
+      default: {}
+    }
+  },
+  methods: {
+    onLook () {
+      this.$router.push({
+        path: '/groupDetails',
+        query: {
+          id: this.groupData.t_id
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -95,7 +95,7 @@ export default {
                     height: 42px;
                 }
             }
-            
+
         }
         span{
             margin-left: 20px;

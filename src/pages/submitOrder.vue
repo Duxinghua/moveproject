@@ -57,45 +57,45 @@
 
 <script>
 export default {
-    data() {
-        return {
-            num:1,
-            radio:"2",
-            checked:false,
-            address:{}
-        }
-    },
-    mounted(){
-        this.getAddressList();
-    },
-    methods:{
-        onLinkAddress(){
-            this.$router.push('/addressList')
-        },
-        onBuy(){
-            if(!this.address.mobile){
-                this.$toast('请填写收货地址')
-                return false
-            }
-            this.$router.push('/shop')
-        },
-        toggle(){
-            this.$refs.checkboxes.toggle();
-        },
-        getAddressList(){
-            const param = {
-                page:1,
-                pageSize:100
-            }
-            this.$api.addressList(param).then((res) => {
-                if(res.code == 1){
-                    if(res.data.data.length > 0){
-                        this.address = res.data.data[0];
-                    }
-                }
-            })
-        },
+  data () {
+    return {
+      num: 1,
+      radio: '2',
+      checked: false,
+      address: {}
     }
+  },
+  mounted () {
+    this.getAddressList()
+  },
+  methods: {
+    onLinkAddress () {
+      this.$router.push('/addressList')
+    },
+    onBuy () {
+      if (!this.address.mobile) {
+        this.$toast('请填写收货地址')
+        return false
+      }
+      this.$router.push('/shop')
+    },
+    toggle () {
+      this.$refs.checkboxes.toggle()
+    },
+    getAddressList () {
+      const param = {
+        page: 1,
+        pageSize: 100
+      }
+      this.$api.addressList(param).then((res) => {
+        if (res.code == 1) {
+          if (res.data.data.length > 0) {
+            this.address = res.data.data[0]
+          }
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -257,7 +257,7 @@ export default {
                         font-size: 28px;
                     }
                 }
-                
+
             }
         }
 

@@ -27,11 +27,11 @@
           <span>学分</span>
         </div>
         <div class="tabitem" @click="likeClickHandler('fs')">
-          <span>{{userInfo.fans}}</span>
+          <span>{{userInfo.by_follow}}</span>
           <span>粉丝</span>
         </div>
         <div class="tabitem" @click="likeClickHandler('bx')">
-          <span>{{userInfo.by_follow}}</span>
+          <span>{{userInfo.likes}}</span>
           <span>被喜欢</span>
         </div>
       </div>
@@ -39,11 +39,11 @@
         <img src="../assets/images/myad.png" alt="">
       </div>
       <div class="my-header-oc">
-        <div class="oitem">
+        <div class="oitem" @click="likeClickHandler('st')">
           <img src="../assets/images/sp.png" alt="">
           <span>商品订单</span>
         </div>
-        <div class="oitem">
+        <div class="oitem" @click="likeClickHandler('zt')">
           <img src="../assets/images/kz.png" alt="">
           <span>课程订单</span>
         </div>
@@ -99,8 +99,8 @@
             </div>
 
           </div>
-          <div class="btn" @click="qdFuClickHandler">
-            已经连续签到2天
+          <div :class="{btn:true,qdbtn:qdcontrol}" @click="qdFuClickHandler">
+            {{qdText}}
           </div>
         </div>
       </div>
@@ -118,11 +118,11 @@ export default {
       qdList: [
         {
           num: 1,
-          check: true
+          check: false
         },
         {
           num: 2,
-          check: true
+          check: false
         },
         {
           num: 3,
@@ -139,23 +139,28 @@ export default {
           check: false
         },
         {
-          num: 6,
+          num: 7,
           check: false
         }
       ],
       qdShow: false,
       userInfo: {},
       userSignList: [],
-      qdText: '立即签到'
+      qdText: '立即签到',
+      currentDate: '',
+      qdcontrol: false // 今天是否签到
     }
   },
   beforeRouteEnter (to, from, next) {
-    console.log('log start')
-
     console.log(to, from, next)
     next()
   },
   mounted () {
+    var date = new Date()
+    var getyear = date.getFullYear()
+    var getmonth = date.getMonth() + 1
+    var getday = date.getDate()
+    this.currentDate = getyear + '-' + getmonth + '-' + getday
     this.$api.userIndex().then((result) => {
       if (result.code === 1) {
         this.userInfo = result.data
@@ -164,7 +169,29 @@ export default {
     this.$api.userSignLists().then((result) => {
       console.log(result)
       if (result.code === 1) {
-        this.userSignList = result.msg
+        var list = []
+        result.data.map((item) => {
+          console.log(item)
+          list.push({
+            num: item.days,
+            check: true
+          })
+          if (this.currentDate == item.sign_time_text) {
+            console.log(this.currentDate, '1')
+            this.qdcontrol = true
+            this.qdText = '已经连续签到' + result.data.length + '天'
+          }
+        })
+        var fix = []
+        for (var i = 1, l = 7; i < l; i++) {
+          if (!list[i]) {
+            fix.push({
+              num: i + 1,
+              check: false
+            })
+          }
+        }
+        this.qdList = list.reverse().concat(fix)
       }
     })
   },
@@ -224,6 +251,13 @@ export default {
           break
         case 'ab':
           Links = 'About'
+          break
+        case 'st':
+          Links = 'OrderList'
+          break
+        case 'zt':
+          Links = 'CourseOrderList'
+          break
       }
       this.$router.push({name: Links})
     }
@@ -491,6 +525,18 @@ export default {
           border:2px solid rgba(205, 168, 113, 1);
           border-radius:41px;
           color:#CDA871;
+          font-size: 30px;
+          line-height: 82px;
+          text-align: center;
+          margin:25px auto;
+        }
+        .qdbtn{
+          width:469px;
+          height:82px;
+          background:#CDA871;
+          border:2px solid rgba(205, 168, 113, 1);
+          border-radius:41px;
+          color:white;
           font-size: 30px;
           line-height: 82px;
           text-align: center;

@@ -14,6 +14,10 @@ import HuabanJoinGroup from '@/pages/huabanJoinGroup'
 import HuabanTzfp from '@/pages/huabanTzfp'
 import HuabanSearch from '@/pages/huabanSearch'
 import HuabanUserInfo from '@/pages/huabanUserInfo'
+import OrderList from '@/pages/orderlist'
+import OrderDetail from '@/pages/OrderDetail'
+import CourseOrderList from '@/pages/courseOrderList'
+import CourseOrderDetail from '@/pages/courseOrderDetail'
 import MyEdit from '@/pages/myEdit'
 import MyModify from '@/pages/myModify'
 import MyBx from '@/pages/myBx'
@@ -122,7 +126,7 @@ const getToken = async (data, url) => {
 }
 */
 
-//路由切换时 页面位置
+// 路由切换时 页面位置
 const scrollBehavior = (to, from, savedPosition) => {
   if (savedPosition) {
     return savedPosition
@@ -358,6 +362,38 @@ const router = new Router({
       }
     },
     {
+      path: '/orderlist',
+      name: 'OrderList',
+      component: OrderList,
+      meta: {
+        title: '商品订单'
+      }
+    },
+    {
+      path: '/orderdetail',
+      name: 'OrderDetail',
+      component: OrderDetail,
+      meta: {
+        title: '商品订单详情'
+      }
+    },
+    {
+      path: '/courseorderlist',
+      name: 'CourseOrderList',
+      component: CourseOrderList,
+      meta: {
+        title: '课程订单'
+      }
+    },
+    {
+      path: '/courseorderdetail',
+      name: 'CourseOrderDetail',
+      component: CourseOrderDetail,
+      meta: {
+        title: '商品订单详情'
+      }
+    },
+    {
       path: '/login',
       name: 'Login',
       component: Login,
@@ -371,7 +407,7 @@ const router = new Router({
       component: () => import('@/pages/shopHome'),
       meta: {
         title: '有梦花居',
-        keepAlive: true,
+        keepAlive: true
       }
     },
     {
@@ -421,7 +457,7 @@ const router = new Router({
       meta: {
         title: '购物车'
       }
-    }, 
+    },
     {
       path: '/allGroup',
       name: 'allGroup',

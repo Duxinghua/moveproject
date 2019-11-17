@@ -25,7 +25,7 @@
       <TitleItem title="贴子讨论" />
       <div class="huabangd-tzdl-wrap">
        <HuabantzItem v-for="(item,index) in huabantzlist" :key="index" :item="item" />
-        <div class="tzdl-btn">
+        <div class="tzdl-btn" @click="fptzClickHandler">
           <img src="../assets/images/jiahaoico.png" class="jiahaoico" alt="">
           <span>发表话题</span>
         </div>
@@ -83,8 +83,20 @@ export default {
 
     }
   },
+  methods: {
+    fptzClickHandler () {
+      this.$router.push({name: 'HuabanTzfp',params:{id:1}})
+
+    }
+  },
   mounted () {
     console.log(this.$route.params.id)
+    this.$api.groupIndex({id: this.$route.params.id}).then((result) => {
+      console.log(result,'tz')
+      if (result.code === 1) {
+        console.log(result)
+      }
+    })
   },
   beforeRouteEnter (to, from, next) {
     console.log('log start')

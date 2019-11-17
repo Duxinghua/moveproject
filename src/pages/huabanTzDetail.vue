@@ -1,35 +1,36 @@
 <template>
   <div class="huabantz">
     <div class="huabantz-top">
-      <img class="avatar" src="../assets/images/people.png" alt="">
+      <img class="avatar" :src="user.avatar ? user.avatar : require('../assets/images/people.png')" alt="">
       <div class="userdes">
-        <span>朝花夕拾xixi</span>
-        <span>10小时前</span>
+        <span>{{user.nickname}}</span>
+        <span>{{user.logintime}}小时前</span>
       </div>
-      <div class="gzbtn">
+      <div class="gzbtn" v-if="user.amity == 0" @click="gzClickHandler(user.id)">
         <img src="../assets/images/gzico.png" alt="">
         <span>关注</span>
       </div>
+      <span class="gz" v-else  @click="gzClickHandler(user.id)">已关注</span>
     </div>
     <div class="huabantz-banner">
       <el-carousel id="huabantz-banner" indicator-position="outside" @change="changeTab">
-        <el-carousel-item v-for="item in bannerList" :key="item.id">
-          <img class="huabantzimg" :src="item.image" alt="">
+        <el-carousel-item v-for="(item,index) in tzDetail.images" :key="index">
+          <img class="huabantzimg" :src="item" alt="">
         </el-carousel-item>
       </el-carousel>
-      <span class="huabantzind">{{(index+1)+"/"+bannerList.length}}</span>
+      <span class="huabantzind">{{(index+1)+"/"+bannerLength}}</span>
     </div>
     <div class="huabantz-detail">
       <div class="huabantz-detail-content">
         <div class="des">
-          <span class="destitle">传统中式花道基础构图方式道基础构图方式道基础构图方式道基础构图方式道基础构图方式</span>
+          <span class="destitle">{{tzDetail.title}}</span>
           <div class="desico">
-            <img src="../assets/images/gzxico.png" alt="">
+            <img src="../assets/images/gzxico.png" alt="" @click="dzClickHandler">
             <img src="../assets/images/shareico.png" alt="">
           </div>
         </div>
         <div class="info">
-          相邻的花与花之间一定要注意面向的面不能出现平行线~
+         {{tzDetail.content}}
         </div>
       </div>
       <div class="huabantz-detail-pl">
@@ -49,7 +50,7 @@
       </div>
     </div>
     <div class="huabantz-commit">
-      <input type="text" class="huabantz-commit-input">
+      <input type="text" v-model="content" class="huabantz-commit-input" placeholder="喜欢就评论…" @keyup.enter="submit">
     </div>
   </div>
 </template>
@@ -59,7 +60,9 @@ export default {
   name: 'HuabanTzDetail',
   data () {
     return {
+      id:'',
       index: 1,
+      user: {},
       bannerList: [
         {
           id: 1,
@@ -77,15 +80,73 @@ export default {
           id: 4,
           image: require('../assets/images/770552.png')
         }
-      ]
+      ],
+      tzDetail:{},
+      bannerLength:0,
+      content:''
     }
   },
   mounted () {
-    console.log(this.$route.params.id)
+    this.id = this.$route.query.id
+    this.getGzdetail()
   },
   methods: {
+    getGzdetail () {
+      this.$api.tzPosts({id:this.id}).then((res)=>{
+      if(res.code === 1) {
+        this.user = res.data.user
+        this.user.logintime =  this.timers(res.data.user.logintime)
+        this.tzDetail = res.data
+        this.bannerLength = res.data.images.length
+      }
+
+
+    })
+    },
     changeTab (e) {
       this.index = e
+    },
+    timers (timer) {
+      return parseInt((new Date().getTime() - (timer*1000))/3600/1000)
+    },
+    gzClickHandler (id) {
+      console.log(id)
+      this.$api.userSaveFollow({user_id:id}).then((res)=>{
+        if(res.code === 1){
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              this.getGzdetail()
+            }
+          })
+        }
+      })
+    },
+    dzClickHandler () {
+      this.$api.postsSaveLike({gp_id:this.tzDetail.gp_id,gp_user_id:this.tzDetail.user_id}).then((res)=>{
+        console.log(res)
+      })
+    },
+    submit () {
+      if(!this.content){
+        this.$toast('请输入评论')
+        return
+      }
+      var params = {
+        gp_id: this.tzDetail.gp_id,
+        content: this.content
+      }
+      this.$api.postsCommentsSave(params).then((res)=>{
+        if(res.code === 1) {
+          this.$toast({
+            message:res.msg,
+            onClose:()=>{
+              this.content = ''
+            }
+          })
+
+        }
+      })
     }
   }
 
@@ -114,6 +175,7 @@ export default {
       width:73px;
       height:73px;
       margin-right: 20px;
+      border-radius: 50%;
     }
     .userdes{
       flex:1;
@@ -135,8 +197,8 @@ export default {
     .gzbtn{
       width:170px;
       height:58px;
-      background:rgba(255,255,255,0);
-      border:2px solid rgba(205, 168, 113, 1);
+      background:#6D8160;
+      // border:2px solid rgba(205, 168, 113, 1);
       border-radius:28px;
       display: flex;
       justify-content: center;
@@ -148,6 +210,19 @@ export default {
         width:34px;
         height:30px;
       }
+    }
+    .gz{
+      width:170px;
+      height:58px;
+      background:white;
+      border:2px solid rgba(205, 168, 113, 1);
+      border-radius:28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      font-size: 30px;
+      color:#CDA871;
     }
   }
   &-banner{
@@ -263,6 +338,9 @@ export default {
       border-radius:44px;
       border:none;
       margin:0 auto;
+      padding: 0 50px;
+      color:#666;
+      font-size: 26px;
     }
 
   }

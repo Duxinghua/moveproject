@@ -5,7 +5,7 @@
       <textarea placeholder="请输入帖子内容…"  class="huabanTzfp-top-textarea"/>
       <span>添加图片（0/3）</span>
       <div class="huabanTzfp-top-uploads">
-        <div class="uploadimgs-wrap">
+        <div class="uploadimgs-wrap" >
           <img src="../assets/images/uploadimg.png" class="uploadimgs" alt="">
           <img src="../assets/images/uploadcloses.png" class="uploadclose" alt="">
         </div>
@@ -13,7 +13,7 @@
           <img src="../assets/images/uploadimg.png" class="uploadimgs" alt="">
           <img src="../assets/images/uploadcloses.png" class="uploadclose" alt="">
         </div>
-        <div class="uploadimgs-wrap uploadborder">
+        <div class="uploadimgs-wrap uploadborder" @click="uploadImages">
           <img src="../assets/images/uploadmores.png" class="uplaodmores" alt="" />
         </div>
       </div>
@@ -28,6 +28,61 @@ export default {
   data () {
     return {
 
+    }
+  },
+  mounted () {
+    this.$api.userGetSignPackage().then((res)=>{
+      if(res.code === 1){
+        var wxpay = res.data
+        this.$wx.config({
+          debug: true,
+          appId: wxpay.appId,
+          timestamp: wxpay.timestamp,
+          nonceStr: wxpay.nonceStr,
+          signature: wxpay.signature,
+          jsApiList: [
+            'checkJsApi',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'chooseImage',
+            'uploadImage',
+          ]
+        })
+        this.$wx.error(function (res) {
+        console.log("出错了：" + res.errMsg);
+        });
+    // 在这里调用 API
+        this.$wx.ready(function () {
+          this.$wx.checkJsApi({
+            jsApiList: [
+                'checkJsApi',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'getLocation',
+                'chooseImage',
+                'uploadImage'
+            ],
+            success: function (res) {
+
+            }
+          });
+        })
+
+
+      }
+    })
+  },
+  methods: {
+    uploadImages () {
+       this.$wx.chooseImage({
+            count: 3, // 默认9
+            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+            success: function (res) {
+                // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                console.log(res.localIds,'res')
+            }
+        });
     }
   }
 }
