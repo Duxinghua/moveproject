@@ -29,7 +29,7 @@
       <div class="huaban-tz-wrap">
         <HuabantzItem v-for="(item,index) in huabantzlist" :key="index" :item="item" />
       </div>
-      <MoreText moreText="更多" />
+      <MoreText moreText="更多" moreName="HuabanGroupList" />
     </div>
     <Footer :hb="true" />
   </div>

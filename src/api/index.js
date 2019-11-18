@@ -214,7 +214,7 @@ const server = {
     return post('posts/comments', data)
   },
   // 订单列表  goods_order/lists
-  goods_orderLists (data) {
+  goodsOrderLists (data) {
     return post('goods_order/lists', data)
   }
 

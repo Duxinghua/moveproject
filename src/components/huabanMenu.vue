@@ -2,7 +2,7 @@
     <div class="home-top">
       <img class="home-top-search" src="../assets/images/search.png" alt="" @click="searchHandler">
       <ul class="home-top-list">
-        <li :class="{active:current == 0}" @click="menuHandler(index)" v-for="(item, index) in menuList" :key="index">{{item}}</li>
+        <li :class="{active:current === index}" @click="menuHandler(index)" v-for="(item, index) in menuList" :key="index">{{item}}</li>
       </ul>
     </div>
 </template>
@@ -19,13 +19,11 @@ export default {
     }
   },
   methods: {
-    menuHandler () {
-
+    menuHandler (e) {
+      this.current = e
     },
     searchHandler () {
       this.$router.push({name: 'HuabanSearch'})
-
-      console.log('e')
     }
   }
 }
@@ -53,10 +51,12 @@ export default {
     &-list{
       font-size: 28px;
       display: flex;
-      flex-direction: row;
+      // flex-direction: row;
       align-items: center;
       margin-left:45px;
       color:white;
+      overflow: hidden;
+      overflow-x: auto;
       .active{
         font-weight: 500;
         font-size: 36px;
@@ -65,6 +65,7 @@ export default {
     }
     &-list li{
       margin-right:40px;
+      flex-shrink:0;
     }
   }
 </style>
