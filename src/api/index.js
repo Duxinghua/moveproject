@@ -153,6 +153,24 @@ const server = {
 	//  粉丝（取消粉丝） /api/user/saveFans
 	userSaveFans(data) {
 		return post('user/saveFans', data)
+	},
+	/**
+	 * 首页 /api/index/index
+	 */
+	index(data) {
+		return post('/index/index', data)
+	},
+	/**
+	 * 名师 /api/teacher/lists
+	 */
+	teacherList(data) {
+		return post('/teacher/lists', data)
+	},
+	/**
+	 * 名师详情 /api/teacher/index
+	 */
+	teacherDetail(data) {
+		return post('/teacher/index', data)
 	}
 }
 

@@ -188,7 +188,19 @@ export default {
   mounted () {
     // document.getElementById('el-carousel').style.height = this.bannerHeight + 'px';
     // console.log(this.$refs.teacherItem)
-    console.log(this.$api, 'api')
+    // console.log(this.$api, 'api')
+    this.$api.index().then((result) => {
+      if (result.code === 1) {
+        // this.userInfo = result.data
+        console.log(result.data);
+      }
+    })
+    this.$api.teacherList().then((result) => {
+      if (result.code === 1) {
+        // this.userInfo = result.data
+        console.log(result.data);
+      }
+    })
   },
   components: {
     TitleItem,

@@ -48,7 +48,37 @@
         </div>
       </div>
       <div class="ondetail-task-content" v-if="pageType == 2">
-        333333
+        <div class="ondetail-tasks">
+          <div class="ondetail-tasks-item">
+            <div class="task-msg">
+              <div>
+                <img src="../assets/images/userinfoimg.png" alt="">
+                <span>陌上花开135</span>
+                <span>2019-10-06</span>
+              </div>
+              <div>
+                <span>5</span>
+                <img src="../assets/images/taskheart.png" alt="">
+              </div>
+            </div>
+            <div class="task-content">
+              自然风花翁总给人一种飘逸，舒展的感觉，使用组群的方法能够更好的强调层次感，加强花材的质感
+            </div>
+            <div class="task-img">
+              <div class="img"><img src="../assets/images/courseimg.png" alt=""></div>
+              <div class="img"><img src="../assets/images/courseimg.png" alt=""></div>
+              <div class="img"><img src="../assets/images/courseimg.png" alt=""></div>
+            </div>
+          </div>
+          <div class="task-todo"><img src="../assets/images/tasktodo.png" alt=""></div>
+        </div>
+      </div>
+      <div class="ondetail-action">
+        <div class="ondetail-money">合计<span>￥4280</span></div>
+        <div>
+            <div class="ondetail-group-btn">发起拼团</div>
+            <div class="ondetail-buy-btn">立即购买</div>
+        </div>
       </div>
   </div>
 </template>
@@ -219,6 +249,9 @@ export default {
   flex-direction: column;
   width:100%;
   background:#FBF8F4;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow: auto;
   &-video{
       width: 100%;
       height: 500px;
@@ -371,6 +404,159 @@ export default {
     }
     &-item:nth-child(3n){
         margin-right:0px !important;
+    }
+  }
+  &-tasks{
+    padding: 27px 25px;
+    position: relative;
+    &-item{
+      margin-top: 17px;
+      padding-bottom: 30px;
+      // position: relative;
+      // display: flex;
+      // flex-direction: column;
+      &::after{
+        content: "";
+        display: inline-block;
+        width: 610px;
+        height: 1Px;
+        background: #F1EEEA;
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        // transform: scale(0.5);
+      }
+      &:last-child{
+        &::after{
+            display: none;
+        }
+      }
+      .task-msg{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        div:first-child{
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: start;
+          align-items: center;
+          // max-width: 528px;
+          img{
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            margin-right: 20px;
+          }
+          span{
+            font-size: 26px;
+            color: #333333;
+            margin-right: 20px;
+          }
+          span:last-child{
+            // width: 158px;
+            font-size: 26px;
+            color: #999999;
+          }
+        }
+        div:last-child{
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          span{
+            font-size: 26px;
+            color: #995258;
+            margin-right: 8px;
+          }
+          img{
+            width: 37px;
+            height: 32px;
+          }
+        }
+      }
+      .task-content{
+        color: #333333;
+        margin-top: 10px;
+        font-size: 26px;
+        padding-left: 85px;
+      }
+      .task-img{
+        margin-top: 30px;
+        padding-left: 85px;
+        display: flex;
+        // flex-direction: row;
+        flex-flow: wrap;
+        justify-content: space-between;
+        align-items:center;
+        // margin-left: 30px;
+        .img{
+          width: 188px;
+          height: 140px;
+          border-radius: 8px;
+          overflow: hidden;
+          // margin-right: 21px;
+          img{
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+    }
+    .task-todo{
+      position:absolute;
+      bottom: 98px;
+      right: 9px;
+      img{
+        width: 114px;
+        height: 114px;
+      }
+    }
+  }
+  &-action{
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    z-index: 10;
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px 0px 25px;
+    background: #fff;
+    .ondetail-money{
+      color: #333333;
+      font-size: 30px;
+      display: flex;
+      align-items: center;
+      span{
+        color: #995258;
+        font-size: 36px;
+        margin-left: 15px;
+      }
+    }
+    >div{
+      display: flex;
+    }
+    .ondetail-group-btn{
+      width: 220px;
+      height: 80px;
+      line-height: 80px;
+      text-align: center;
+      color: #fff;
+      background: #DCC98B;
+      border-radius:40px 0px 0px 40px;
+      font-size: 34px;
+    }
+    .ondetail-buy-btn{
+      width: 220px;
+      height: 80px;
+      line-height: 80px;
+      text-align: center;
+      color: #F3D995;
+      background: #6D8160;
+      font-size: 34px;
+      border-radius:0px 40px 40px 0px;
     }
   }
 }

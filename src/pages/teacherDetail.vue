@@ -72,7 +72,13 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$route.query.index.id)
+    // console.log(this.$route.query.index.id)
+    this.$api.teacherDetail({id:'1'}).then((result) => {
+      if (result.code === 1) {
+        // this.userInfo = result.data
+        console.log(result.data);
+      }
+    })
   },
   components: {
     TeacherMsg,

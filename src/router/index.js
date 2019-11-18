@@ -9,6 +9,9 @@ import OffCourseList from '@/pages/offCourseList'
 import OffCourseDetail from '@/pages/offCourseDetail'
 import OnlineCourseDetail from '@/pages/onlineCourseDetail'
 import OnlineCourseList from '@/pages/onlineCourseList'
+import OrderCommit from '@/pages/orderCommit'
+import SubmitCourseOrder from '@/pages/submitCourseOrder'
+import DoTask from '@/pages/doTask'
 import Huaban from '@/pages/huaban'
 import HuabanGroupDetail from '@/pages/huabanGroupDetail'
 import HuabanTzDetail from '@/pages/huabanTzDetail'
@@ -125,7 +128,7 @@ const getToken = async (data, url) => {
 }
 */
 
-//路由切换时 页面位置
+// 路由切换时 页面位置
 const scrollBehavior = (to, from, savedPosition) => {
   if (savedPosition) {
     return savedPosition
@@ -198,6 +201,30 @@ const router = new Router({
       component: TeacherDetail,
       meta: {
         title: '名师详情'
+      }
+    },
+    {
+      path: '/ordercommit',
+      name: 'OrderCommit',
+      component: OrderCommit,
+      meta: {
+        title: '有梦不晚'
+      }
+    },
+    {
+      path: '/submitcourseorder',
+      name: 'SubmitCourseOrder',
+      component: SubmitCourseOrder,
+      meta: {
+        title: '提交订单'
+      }
+    },
+    {
+      path: '/dotask',
+      name: 'DoTask',
+      component: DoTask,
+      meta: {
+        title: '有梦不晚'
       }
     },
     {
@@ -398,7 +425,7 @@ const router = new Router({
       component: () => import('@/pages/shopHome'),
       meta: {
         title: '有梦花居',
-        keepAlive: true,
+        keepAlive: true
       }
     },
     {
@@ -448,7 +475,7 @@ const router = new Router({
       meta: {
         title: '购物车'
       }
-    }, 
+    },
     {
       path: '/allGroup',
       name: 'allGroup',
