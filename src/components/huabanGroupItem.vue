@@ -1,10 +1,10 @@
 <template>
         <div class="huaban-top-item"   @click="huabangdHandler">
-          <img class="huaban-top-item-img1" :src="item.image" alt="">
+          <img class="huaban-top-item-img1" src="../assets/images/huabanjoinico.png" alt="">
           <div class="huaban-top-item-des">
-            <span class="title">{{item.title}}</span>
-            <span class="title subtitle">{{item.des}}</span>
-            <span class="title subtitle">{{item.num}}</span>
+            <span class="title">{{item.group_name}}</span>
+            <span class="title subtitle">{{item.description}}</span>
+            <span class="title subtitle">1980成员</span>
           </div>
           <img class="huaban-top-item-img2" src="../assets/images/huabanjoin.png" alt="">
         </div>
@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     huabangdHandler () {
-      this.$router.push({name: 'HuabanJoinGroup',params:{id:1}})
+      this.$emit('joinGroupHandler',1)
     }
   }
 }

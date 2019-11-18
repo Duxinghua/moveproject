@@ -5,7 +5,7 @@
     <div class="myYq-wrap">
       <div class="content">
         <span>长按识别 立即体验</span>
-        <img src="../assets/images/yqwxcode.png" alt="" />
+        <img :src="qrurl" alt="" />
       </div>
     </div>
     <div class="myYq-btn">
@@ -19,18 +19,15 @@ import Api from '@/api/index'
 export default {
   data () {
     return {
-
+      qrurl: ''
     }
   },
-  beforeRouteEnter (to, from, next) {
-    console.log('log start')
+  mounted () {
     Api.userQrcode().then((result) => {
       if (result.code === 1) {
-        console.log(result)
+        this.qrurl = result.data
       }
     })
-    console.log(to, from, next)
-    next()
   }
 }
 </script>

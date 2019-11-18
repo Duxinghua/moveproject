@@ -3,7 +3,7 @@
 
     <div class="huaban-top">
       <div class="huaban-top-wrap">
-        <div class="huaban-top-item" v-for="(item,index) in huabanList" :key="index" @click="huabangdHandler(index)">
+        <div class="huaban-top-item" v-for="(item,index) in huabanList" :key="index" @click="huabangdHandler(1)">
           <img class="huaban-top-item-img1" :src="item.image" alt="">
           <div class="huaban-top-item-des">
             <span class="title">{{item.title}}</span>
@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     huabangdHandler (index) {
-      this.$router.push({name: 'HuabanGroupDetail', params: {id: index}})
+      this.$router.push({name: 'HuabanGroupDetail', query: {id: index}})
     }
   }
 }

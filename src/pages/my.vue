@@ -166,7 +166,11 @@ export default {
         this.userInfo = result.data
       }
     })
-    this.$api.userSignLists().then((result) => {
+    this.getUserSignLists()
+  },
+  methods: {
+    getUserSignLists () {
+       this.$api.userSignLists().then((result) => {
       console.log(result)
       if (result.code === 1) {
         var list = []
@@ -194,13 +198,14 @@ export default {
         this.qdList = list.reverse().concat(fix)
       }
     })
-  },
-  methods: {
+    },
     qdFuClickHandler () {
       this.$api.userSaveSign().then((result) => {
         if (result.cdoe === 1) {
           // this.qdText
-          this.$toast(result.msg)
+          this.$toast({message:result.msg,onClose:()=>{
+             this.getUserSignLists()
+          }})
         } else {
           this.$toast(result.msg)
         }

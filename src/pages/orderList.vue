@@ -2,17 +2,25 @@
   <div class="orderList">
     <div class="orderList-tab">
       <div class="orderList-tab-item" v-for="(item,index) in tabList" :key="index" @click="tabClickHandler(index)">
-         <span :class="{active: current === index ? true : false}">{{item.name}}</span>
+         <span :class="{active: currentIndex === index ? true : false}">{{item.name}}</span>
       </div>
     </div>
     <div class="orderList-content">
-      <div class="orderList-content-item">
+      <van-list
+            v-model="loading"
+            v-show="orderList.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+      >
+      <div class="orderList-content-item" v-for="(item,index) in orderList" :key="index">
         <div class="ordertop">
-          <span>订单编号：86431995</span>
+          <span>订单编号：{{item.order_code}}</span>
           <span>待付款</span>
         </div>
         <div class="ordercontent" @click="orderDetailHandler">
-          <img src="../assets/images/770552.png" alt="">
+          <img :src="item.goods[0].images" alt="">
           <div class="ordercenter">
             <div class="ol">
               <span class="s1">花见小路·橄榄枝花见小路·橄榄枝花见小路·橄榄枝</span>
@@ -30,6 +38,7 @@
           </div>
         </div>
       </div>
+      </van-list>
     </div>
   </div>
 </template>
@@ -39,23 +48,70 @@ export default {
   name: 'OrderList',
   data () {
     return {
-      current: 0,
+      currentIndex: 0,
       tabList: [
         {name: '全部', status: ''},
         {name: '待付款', status: 0},
         {name: '待发货', status: 1},
         {name: '待收货', status: 2},
         {name: '评价', status: 99}
-      ]
+      ],
+      orderList: [],
+      finished: false,
+      loading: false,
+      status: '',
+      current: 1,
+      total: 0
     }
   },
   methods: {
     tabClickHandler (index) {
-      this.current = index
+      this.currentIndex = index
     },
     orderDetailHandler () {
       this.$router.push({name: 'OrderDetail'})
+    },
+    getOrderList () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        status: this.status
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.goodsOrderLists(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+
+          if (this.orderList.length == 0) {
+            // 第一次加载
+            this.orderList = res.data.data || []
+            this.total = res.data.total
+          } else if (this.orderList.length < this.total) {
+            // 加载更多
+            this.orderList = this.orderList.concat(res.data.data)
+          }
+          if (this.orderList.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.orderList.length < this.total) {
+        this.current++
+        this.getOrderList()
+      }
     }
+
+  },
+  mounted () {
+    this.getOrderList()
   }
 }
 </script>

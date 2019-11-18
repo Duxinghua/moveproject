@@ -10,11 +10,11 @@
         </div>
       </div>
       <div class="myXf-top-menu">
-        <span :class="{active: current === 0 ? true : false}" @click="tabClickHandler(0)">好友分销</span>
-        <span :class="{active: current === 1 ? true : false}" @click="tabClickHandler(1)">提现记录</span>
+        <span :class="{active: currentIndex === 0 ? true : false}" @click="tabClickHandler(0)">好友分销</span>
+        <span :class="{active: currentIndex === 1 ? true : false}" @click="tabClickHandler(1)">提现记录</span>
       </div>
     </div>
-    <div class="myXf-content" v-if="current === 0">
+    <div class="myXf-content" v-if="currentIndex === 0">
       <div class="myXf-content-item" v-for="(item, index) in xflist" :key="index" >
         <div class="myXf-content-item-top">
             <img class="userIco" :src="item.avatar" alt="">
@@ -31,7 +31,7 @@
       </div>
       <NoData v-if="xflist.length === 0"/>
     </div>
-    <div class="myXf-Fx" v-if="current === 1">
+    <div class="myXf-Fx" v-if="currentIndex === 1">
       <div class="myXf-Fx-top">
         <span class="time">时间</span>
         <span class="des">详情</span>
@@ -39,12 +39,21 @@
         <span class="status">状态</span>
       </div>
       <div class="myXf-Fx-content">
+        <van-list
+            v-model="loading"
+            v-show="fxlist.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+        >
         <div class="myXf-Fx-content-item" v-for="(item, index) in fxlist" :key="index">
-          <span class="time">{{item.time}}</span>
-          <span class="des">{{item.des}}</span>
+          <span class="time">{{item.create_time}}</span>
+          <span class="des">{{item.remark}}</span>
           <span class="money">¥{{item.money}}</span>
-          <span class="status">{{item.status}}</span>
+          <span class="status">{{item.status_text}}</span>
         </div>
+        </van-list>
       </div>
     </div>
     <img class="myfooter" src="../assets/images/myfooter.png" alt="">
@@ -57,7 +66,11 @@ export default {
   name: 'MyFx',
   data () {
     return {
-      current: 0,
+      currentIndex: 0,
+      finished: false,
+      loading: false,
+      current: 1,
+      total: 0,
       userInfo: {},
       xflist: [
         {
@@ -90,38 +103,55 @@ export default {
         }
 
       ],
-      fxlist: [
-        {
-          time: '2019.11.08',
-          des: '转至支付宝账户',
-          money: '120000',
-          status: '提现失败'
-        },
-        {
-          time: '2019.11.08',
-          des: '转至支付宝账户',
-          money: '120000',
-          status: '提现失败'
-        },
-        {
-          time: '2019.11.08',
-          des: '转至支付宝账户',
-          money: '120000',
-          status: '提现失败'
-        },
-        {
-          time: '2019.11.08',
-          des: '转至支付宝账户',
-          money: '120000',
-          status: '提现失败'
-        }
-      ]
+      fxlist: [],
+
     }
   },
   mounted () {
     this.getuserIndex()
+    if(this.$route.query.current){
+      this.currentIndex = this.$route.query.current
+      this.getuserTakeout()
+    }
   },
   methods: {
+    getuserTakeout () {
+      console.log(this.$api)
+      const param = {
+        page: this.current,
+        pageSize: 10
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.userTakeout(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+
+          if (this.fxlist.length == 0) {
+            // 第一次加载
+            this.fxlist = res.data.data || []
+            this.total = res.data.total
+          } else if (this.fxlist.length < this.total) {
+            // 加载更多
+            this.fxlist = this.fxlist.concat(res.data.data)
+          }
+          if (this.fxlist.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.fxlist.length < this.total) {
+        this.current++
+        this.getuserTakeout()
+      }
+    },
     getuserIndex () {
     this.$api.userIndex().then((result) => {
       if (result.code === 1) {
@@ -130,7 +160,10 @@ export default {
     })
     },
     tabClickHandler (e) {
-      this.current = e
+      this.currentIndex = e
+      if(e === 1) {
+        this.getuserTakeout()
+      }
     },
     linkClickHandler () {
       this.$router.push({name: 'MyTx',params: {money: this.userInfo.money}})
@@ -162,14 +195,15 @@ export default {
 
 <style lang="scss" scoped>
 .time,.status{
-  width:20%
+  width:30%
 }
 .des,.money{
-  width:30%
+  width:20%
 }
 .myXf{
   display: flex;
   flex-direction: column;
+  min-height:100vh;
   &-top{
     background:#FBF8F4;
     height:448px;

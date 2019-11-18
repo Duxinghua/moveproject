@@ -141,6 +141,10 @@ const server = {
   userFollow (data) {
     return post('user/follow', data)
   },
+  // 被喜欢 user/likes
+  userLikes (data) {
+    return post('user/likes', data)
+  },
   // 关注 /api/user/saveFollow
   userSaveFollow (data) {
     return post('user/saveFollow', data)
@@ -156,6 +160,14 @@ const server = {
   // 学分 /api/user/pointsRecords
   userPointsRecords (data) {
     return post('user/pointsRecords', data)
+  },
+  // 提现记录 /user/takeout
+  userTakeout (data) {
+    return post('user/takeout', data)
+  },
+  // 发起提现 user/storeTakeout
+  userStoreTakeout (data) {
+    return post('user/storeTakeout', data)
   },
   // 用户列表 /api/user/lists
   userLists (data) {
@@ -183,12 +195,29 @@ const server = {
   },
   // 贴子点赞 posts/saveLike
   postsSaveLike (data) {
-    return post('posts/saveLike',data)
+    return post('posts/saveLike', data)
   },
   // 发布评论 posts/commentsSave
   postsCommentsSave (data) {
-    return post('posts/commentsSave',data)
+    return post('posts/commentsSave', data)
+  },
+  // 加入社区 posts/groupUser
+  postsGroupUser (data) {
+    return post('posts/groupUser', data)
+  },
+  // 退出社区 posts/groupUserDel
+  postsGroupUserDel (data) {
+    return post('posts/groupUserDel', data)
+  },
+  // 帖子评论列表 posts/comments
+  postsComments (data) {
+    return post('posts/comments', data)
+  },
+  // 订单列表  goods_order/lists
+  goods_orderLists (data) {
+    return post('goods_order/lists', data)
   }
+
 }
 
 export default server

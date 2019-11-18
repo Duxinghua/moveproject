@@ -12,13 +12,13 @@
       </div>
       <span class="gz" v-else  @click="gzClickHandler(user.id)">已关注</span>
     </div>
-    <div class="huabantz-banner">
-      <el-carousel id="huabantz-banner" indicator-position="outside" @change="changeTab">
+    <div :class="autoMarge">
+      <el-carousel id="huabantz-banner" :indicator-position="indicator" @change="changeTab">
         <el-carousel-item v-for="(item,index) in tzDetail.images" :key="index">
           <img class="huabantzimg" :src="item" alt="">
         </el-carousel-item>
       </el-carousel>
-      <span class="huabantzind">{{(index+1)+"/"+bannerLength}}</span>
+      <span class="huabantzind">{{(bannerLength == 1 ? 1 : index+1)+"/"+bannerLength}}</span>
     </div>
     <div class="huabantz-detail">
       <div class="huabantz-detail-content">
@@ -35,16 +35,12 @@
       </div>
       <div class="huabantz-detail-pl">
         <div class="plnum">
-          共7条评论
+          共{{commentsList.length}}条评论
         </div>
         <div class="plcontent">
-          <div class="pl-item">
-              <span>华见笑了</span>
-              <span>很喜欢，做的不错，构图很有心意</span>
-          </div>
-          <div class="pl-item">
-              <span>华见笑了</span>
-              <span>很喜欢，做的不错，构图很有心意</span>
+          <div class="pl-item" v-for="(item,index) in commentsList" :key="index">
+              <span>{{item.user.nickname}}</span>
+              <span>{{item.content}}</span>
           </div>
         </div>
       </div>
@@ -63,34 +59,59 @@ export default {
       id:'',
       index: 1,
       user: {},
-      bannerList: [
-        {
-          id: 1,
-          image: require('../assets/images/770552.png')
-        },
-        {
-          id: 2,
-          image: require('../assets/images/770552.png')
-        },
-        {
-          id: 3,
-          image: require('../assets/images/770552.png')
-        },
-        {
-          id: 4,
-          image: require('../assets/images/770552.png')
-        }
-      ],
-      tzDetail:{},
-      bannerLength:0,
-      content:''
+      tzDetail: {},
+      bannerLength: 0,
+      content: '',
+      commentsList: [],
+      current: 1,
+      total:0,
+      indicator: 'none'
     }
   },
   mounted () {
     this.id = this.$route.query.id
     this.getGzdetail()
+    this.getpostsComments()
   },
   methods: {
+    getpostsComments () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        id: this.id
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.postsComments(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+
+          if (this.commentsList.length == 0) {
+            // 第一次加载
+            this.commentsList = res.data.data || []
+            this.total = res.data.total
+          } else if (this.commentsList.length < this.total) {
+            // 加载更多
+            this.commentsList = this.commentsList.concat(res.data.data)
+          }
+          if (this.commentsList.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+
+    },
+    onLoad () {
+      if (this.commentsList.length < this.total) {
+        this.current++
+        this.getpostsComments()
+      }
+    },
     getGzdetail () {
       this.$api.tzPosts({id:this.id}).then((res)=>{
       if(res.code === 1) {
@@ -98,6 +119,7 @@ export default {
         this.user.logintime =  this.timers(res.data.user.logintime)
         this.tzDetail = res.data
         this.bannerLength = res.data.images.length
+        this.indicator = res.data.images.length > 1 ? 'outside' : 'none'
       }
 
 
@@ -124,7 +146,16 @@ export default {
     },
     dzClickHandler () {
       this.$api.postsSaveLike({gp_id:this.tzDetail.gp_id,gp_user_id:this.tzDetail.user_id}).then((res)=>{
-        console.log(res)
+        if(res.code === 1){
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              console.log('this is ')
+            }
+          })
+        }else{
+          this.$toast(res.msg)
+        }
       })
     },
     submit () {
@@ -142,11 +173,20 @@ export default {
             message:res.msg,
             onClose:()=>{
               this.content = ''
+              this.getpostsComments()
             }
           })
 
         }
       })
+    }
+  },
+  computed: {
+    autoMarge () {
+      return {
+        'huabantz-banner': true,
+        'huabantz-marge': this.bannerLength == 1 ? true : false
+      }
     }
   }
 
@@ -163,6 +203,9 @@ export default {
   background:#FBF8F4;
   display: flex;
   flex-direction: column;
+  &-marge{
+    margin-bottom: 26px;
+  }
   &-top{
     display: flex;
     flex-direction: row;
