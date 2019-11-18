@@ -1,55 +1,52 @@
 <template>
   <div class="huabantz">
     <div class="huabantz-top">
-      <img class="avatar" src="../assets/images/people.png" alt="">
+      <img class="avatar" :src="user.avatar ? user.avatar : require('../assets/images/people.png')" alt="">
       <div class="userdes">
-        <span>朝花夕拾xixi</span>
-        <span>10小时前</span>
+        <span>{{user.nickname}}</span>
+        <span>{{user.logintime}}小时前</span>
       </div>
-      <div class="gzbtn">
+      <div class="gzbtn" v-if="user.amity == 0" @click="gzClickHandler(user.id)">
         <img src="../assets/images/gzico.png" alt="">
         <span>关注</span>
       </div>
+      <span class="gz" v-else  @click="gzClickHandler(user.id)">已关注</span>
     </div>
-    <div class="huabantz-banner">
-      <el-carousel id="huabantz-banner" indicator-position="outside" @change="changeTab">
-        <el-carousel-item v-for="item in bannerList" :key="item.id">
-          <img class="huabantzimg" :src="item.image" alt="">
+    <div :class="autoMarge">
+      <el-carousel id="huabantz-banner" :indicator-position="indicator" @change="changeTab">
+        <el-carousel-item v-for="(item,index) in tzDetail.images" :key="index">
+          <img class="huabantzimg" :src="item" alt="">
         </el-carousel-item>
       </el-carousel>
-      <span class="huabantzind">{{(index+1)+"/"+bannerList.length}}</span>
+      <span class="huabantzind">{{(bannerLength == 1 ? 1 : index+1)+"/"+bannerLength}}</span>
     </div>
     <div class="huabantz-detail">
       <div class="huabantz-detail-content">
         <div class="des">
-          <span class="destitle">传统中式花道基础构图方式道基础构图方式道基础构图方式道基础构图方式道基础构图方式</span>
+          <span class="destitle">{{tzDetail.title}}</span>
           <div class="desico">
-            <img src="../assets/images/gzxico.png" alt="">
+            <img src="../assets/images/gzxico.png" alt="" @click="dzClickHandler">
             <img src="../assets/images/shareico.png" alt="">
           </div>
         </div>
         <div class="info">
-          相邻的花与花之间一定要注意面向的面不能出现平行线~
+         {{tzDetail.content}}
         </div>
       </div>
       <div class="huabantz-detail-pl">
         <div class="plnum">
-          共7条评论
+          共{{commentsList.length}}条评论
         </div>
         <div class="plcontent">
-          <div class="pl-item">
-              <span>华见笑了</span>
-              <span>很喜欢，做的不错，构图很有心意</span>
-          </div>
-          <div class="pl-item">
-              <span>华见笑了</span>
-              <span>很喜欢，做的不错，构图很有心意</span>
+          <div class="pl-item" v-for="(item,index) in commentsList" :key="index">
+              <span>{{item.user.nickname}}</span>
+              <span>{{item.content}}</span>
           </div>
         </div>
       </div>
     </div>
     <div class="huabantz-commit">
-      <input type="text" class="huabantz-commit-input">
+      <input type="text" v-model="content" class="huabantz-commit-input" placeholder="喜欢就评论…" @keyup.enter="submit">
     </div>
   </div>
 </template>
@@ -59,33 +56,137 @@ export default {
   name: 'HuabanTzDetail',
   data () {
     return {
+      id:'',
       index: 1,
-      bannerList: [
-        {
-          id: 1,
-          image: require('../assets/images/770552.png')
-        },
-        {
-          id: 2,
-          image: require('../assets/images/770552.png')
-        },
-        {
-          id: 3,
-          image: require('../assets/images/770552.png')
-        },
-        {
-          id: 4,
-          image: require('../assets/images/770552.png')
-        }
-      ]
+      user: {},
+      tzDetail: {},
+      bannerLength: 0,
+      content: '',
+      commentsList: [],
+      current: 1,
+      total:0,
+      indicator: 'none'
     }
   },
   mounted () {
-    console.log(this.$route.params.id)
+    this.id = this.$route.query.id
+    this.getGzdetail()
+    this.getpostsComments()
   },
   methods: {
+    getpostsComments () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        id: this.id
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.postsComments(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+
+          if (this.commentsList.length == 0) {
+            // 第一次加载
+            this.commentsList = res.data.data || []
+            this.total = res.data.total
+          } else if (this.commentsList.length < this.total) {
+            // 加载更多
+            this.commentsList = this.commentsList.concat(res.data.data)
+          }
+          if (this.commentsList.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+
+    },
+    onLoad () {
+      if (this.commentsList.length < this.total) {
+        this.current++
+        this.getpostsComments()
+      }
+    },
+    getGzdetail () {
+      this.$api.tzPosts({id:this.id}).then((res)=>{
+      if(res.code === 1) {
+        this.user = res.data.user
+        this.user.logintime =  this.timers(res.data.user.logintime)
+        this.tzDetail = res.data
+        this.bannerLength = res.data.images.length
+        this.indicator = res.data.images.length > 1 ? 'outside' : 'none'
+      }
+
+
+    })
+    },
     changeTab (e) {
       this.index = e
+    },
+    timers (timer) {
+      return parseInt((new Date().getTime() - (timer*1000))/3600/1000)
+    },
+    gzClickHandler (id) {
+      console.log(id)
+      this.$api.userSaveFollow({user_id:id}).then((res)=>{
+        if(res.code === 1){
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              this.getGzdetail()
+            }
+          })
+        }
+      })
+    },
+    dzClickHandler () {
+      this.$api.postsSaveLike({gp_id:this.tzDetail.gp_id,gp_user_id:this.tzDetail.user_id}).then((res)=>{
+        if(res.code === 1){
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              console.log('this is ')
+            }
+          })
+        }else{
+          this.$toast(res.msg)
+        }
+      })
+    },
+    submit () {
+      if(!this.content){
+        this.$toast('请输入评论')
+        return
+      }
+      var params = {
+        gp_id: this.tzDetail.gp_id,
+        content: this.content
+      }
+      this.$api.postsCommentsSave(params).then((res)=>{
+        if(res.code === 1) {
+          this.$toast({
+            message:res.msg,
+            onClose:()=>{
+              this.content = ''
+              this.getpostsComments()
+            }
+          })
+
+        }
+      })
+    }
+  },
+  computed: {
+    autoMarge () {
+      return {
+        'huabantz-banner': true,
+        'huabantz-marge': this.bannerLength == 1 ? true : false
+      }
     }
   }
 
@@ -102,6 +203,9 @@ export default {
   background:#FBF8F4;
   display: flex;
   flex-direction: column;
+  &-marge{
+    margin-bottom: 26px;
+  }
   &-top{
     display: flex;
     flex-direction: row;
@@ -114,6 +218,7 @@ export default {
       width:73px;
       height:73px;
       margin-right: 20px;
+      border-radius: 50%;
     }
     .userdes{
       flex:1;
@@ -135,8 +240,8 @@ export default {
     .gzbtn{
       width:170px;
       height:58px;
-      background:rgba(255,255,255,0);
-      border:2px solid rgba(205, 168, 113, 1);
+      background:#6D8160;
+      // border:2px solid rgba(205, 168, 113, 1);
       border-radius:28px;
       display: flex;
       justify-content: center;
@@ -148,6 +253,19 @@ export default {
         width:34px;
         height:30px;
       }
+    }
+    .gz{
+      width:170px;
+      height:58px;
+      background:white;
+      border:2px solid rgba(205, 168, 113, 1);
+      border-radius:28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      font-size: 30px;
+      color:#CDA871;
     }
   }
   &-banner{
@@ -263,6 +381,9 @@ export default {
       border-radius:44px;
       border:none;
       margin:0 auto;
+      padding: 0 50px;
+      color:#666;
+      font-size: 26px;
     }
 
   }

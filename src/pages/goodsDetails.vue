@@ -11,7 +11,7 @@
                         <template v-slot:loading>
                             <van-loading type="spinner" size="20" />
                         </template>
-                    </van-image>    
+                    </van-image>
                 </van-swipe-item>
                 <div
                     class="custom-indicator"
@@ -120,9 +120,9 @@
                         规格
                     </div>
                     <div class="sku-list">
-                        <div 
-                            v-for="(item, index) in skuList" 
-                            :key="index" 
+                        <div
+                            v-for="(item, index) in skuList"
+                            :key="index"
                             :class="['sku-item',{'active': skuIndex == index}]"
                             @click="onSkuClick(index)"
                         >{{item.specs}}</div>
@@ -153,132 +153,132 @@
 import GroupItem from '@/components/shop/groupItem'
 
 export default {
-    data() {
-        return {
-            num:1,
-            swiperCurrent: 0,
-            tabIndex:0,
-            popupStatus:false,
-            skuList:[],//规格
-            skuIndex:-1,//规格
-            goodsId:0,//商品ID
-            goodsData:{},
-            comments:[],//评论列表
-            total:0,
-            current:1,
-            loading: false,
-            finished: false,
-            groupList:[],
-            imageShow:false
-        }
-    },
-    components:{
-        GroupItem,
-    },
-    mounted(){
-        this.goodsId = this.$route.query.goodsId;
-        this.goodsIndex();
-        this.goodsComments();
-        this.goodsTuanLists()
-    },
-    methods: {
-        onImageView(){
-            this.imageShow = true;
-        },
-        onLoad(){
-            this.current++;
-            this.goodsComments()
-        },
-        goodsIndex(){
-            const param = {
-                goods_id:this.goodsId
-            }
-            this.$toast.loading({
-                duration:0,
-                message: '加载中...',
-                forbidClick: true
-            });
-            this.$api.goodsIndex(param).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    this.goodsData = res.data;
-                    this.skuList = res.data.specs ? JSON.parse(res.data.specs) : [];
-                }
-            })
-        },
-        goodsComments(){
-            const param = {
-                page:this.current,
-                pageSize:10,
-                goods_id:this.goodsId
-            }
-            this.$api.goodsComments(param).then((res) => {
-                if(res.code == 1){
-                    if(this.comments.length == 0){
-                        //第一次加载
-                        this.comments = res.data.data || [];
-                        this.total = res.data.total;
-                    }else if(this.comments.length < this.total){
-                        //加载更多
-                        this.comments = this.comments.concat(res.data.data);
-                    }
-                    if(this.comments.length >= this.total){
-                        // 全部加载完成
-                        this.finished = true;
-                    }
-                }
-            })
-        },
-        goodsTuanLists(){
-            const param = {
-                page:1,
-                pageSize:10,
-                goods_id:this.goodsId
-            }
-            this.$api.goodsTuanLists(param).then((res) => {
-                if(res.code == 1){
-                    this.groupList = res.data.data
-                }
-            })
-        },
-        onSkuClick(index){
-            this.skuIndex = index;
-        },
-        onSwipeChange(index){
-            this.swiperCurrent = index;
-        },
-        onTabChange(index){
-            this.tabIndex = index;
-        },
-        onBuy(){
-            this.popupStatus = true;
-        },
-        onSubmit(){
-            if(this.skuIndex == -1){
-                this.$toast('请选择规格')
-                return false
-            }
-            this.$router.push('/submitOrder')
-        },
-        onLinkAll(){
-            this.$router.push('/allGroup')
-        },
-        onGoodsTuanStore(){
-            this.$api.goodsTuanStore({goods_id:this.goodsId}).then((res) => {
-                if(res.code == 1){
-                    this.$toast({
-                        type:'success',
-                        message:'发起拼团成功'
-                    });
-                    this.goodsTuanLists()
-                }else{
-                    this.$toast({
-                        message:res.msg
-                    });
-                }
-            })
-        }
+  data () {
+    return {
+      num: 1,
+      swiperCurrent: 0,
+      tabIndex: 0,
+      popupStatus: false,
+      skuList: [], // 规格
+      skuIndex: -1, // 规格
+      goodsId: 0, // 商品ID
+      goodsData: {},
+      comments: [], // 评论列表
+      total: 0,
+      current: 1,
+      loading: false,
+      finished: false,
+      groupList: [],
+      imageShow: false
     }
+  },
+  components: {
+    GroupItem
+  },
+  mounted () {
+    this.goodsId = this.$route.query.goodsId
+    this.goodsIndex()
+    this.goodsComments()
+    this.goodsTuanLists()
+  },
+  methods: {
+    onImageView () {
+      this.imageShow = true
+    },
+    onLoad () {
+      this.current++
+      this.goodsComments()
+    },
+    goodsIndex () {
+      const param = {
+        goods_id: this.goodsId
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.goodsIndex(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.goodsData = res.data
+          this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
+        }
+      })
+    },
+    goodsComments () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        goods_id: this.goodsId
+      }
+      this.$api.goodsComments(param).then((res) => {
+        if (res.code == 1) {
+          if (this.comments.length == 0) {
+            // 第一次加载
+            this.comments = res.data.data || []
+            this.total = res.data.total
+          } else if (this.comments.length < this.total) {
+            // 加载更多
+            this.comments = this.comments.concat(res.data.data)
+          }
+          if (this.comments.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    goodsTuanLists () {
+      const param = {
+        page: 1,
+        pageSize: 10,
+        goods_id: this.goodsId
+      }
+      this.$api.goodsTuanLists(param).then((res) => {
+        if (res.code == 1) {
+          this.groupList = res.data.data
+        }
+      })
+    },
+    onSkuClick (index) {
+      this.skuIndex = index
+    },
+    onSwipeChange (index) {
+      this.swiperCurrent = index
+    },
+    onTabChange (index) {
+      this.tabIndex = index
+    },
+    onBuy () {
+      this.popupStatus = true
+    },
+    onSubmit () {
+      if (this.skuIndex == -1) {
+        this.$toast('请选择规格')
+        return false
+      }
+      this.$router.push('/submitOrder')
+    },
+    onLinkAll () {
+      this.$router.push('/allGroup')
+    },
+    onGoodsTuanStore () {
+      this.$api.goodsTuanStore({goods_id: this.goodsId}).then((res) => {
+        if (res.code == 1) {
+          this.$toast({
+            type: 'success',
+            message: '发起拼团成功'
+          })
+          this.goodsTuanLists()
+        } else {
+          this.$toast({
+            message: res.msg
+          })
+        }
+      })
+    }
+  }
 }
 </script>
 

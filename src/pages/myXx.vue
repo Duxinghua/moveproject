@@ -1,13 +1,23 @@
 <template>
   <div class="myXq">
+    <van-list
+            v-model="loading"
+            v-show="xqList.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+    >
     <div class="myXq-item" v-for="(item,index) in xqList" :key="index">
       <img class="ico" src="../assets/images/xxico.png" alt="">
       <div class="content">
-        <span class="s1">{{item.t1}}</span>
-        <span :class="autoCss">{{item.t2}}</span>
+        <span class="s1">{{item.type}}</span>
+        <span :class="autoCss">{{item.content}}</span>
       </div>
       <img class="down" :src="item.upFlag ? require('../assets/images/xxup.png') : require('../assets/images/xxdown.png')" alt="" @click="zkClickHandler(item.id)">
     </div>
+    </van-list>
+    <NoData v-if="xqList.length == 0" />
   </div>
 </template>
 
@@ -18,16 +28,15 @@ export default {
   data () {
     return {
       upFlag: false,
-      xqList: [
-        {
-          id: 1,
-          t1: '系统消息',
-          t2: '恭喜你注册成为VIP会员，您将获取的积分奖 励会按时发到您的个人账户，有问题请及时联 系我们的客服电话400-52842000',
-          upFlag: false
-        }
-
-      ]
+      xqList: [],
+      finished: false,
+      loading: false,
+      current: 1,
+      total: 0
     }
+  },
+  mounted () {
+    this.xqListList()
   },
   methods: {
     zkClickHandler (e) {
@@ -35,6 +44,52 @@ export default {
       this.xqList.map((item) => {
         if (item.id === e) {
           item.upFlag = !item.upFlag
+        }
+      })
+    },
+    onLoad () {
+      if (this.xqList.length < this.total) {
+        this.current++
+        this.xqListList()
+      }
+    },
+    xqListList () {
+      const param = {
+        page: this.current,
+        pageSize: 10
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.userMessage(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+
+          if (this.xqList.length == 0) {
+            // 第一次加载
+            var list = []
+            res.data.data.map((item) => {
+              item.upFlag = false
+              list.push(item)
+            })
+            this.xqList = list || []
+            this.total = res.data.total
+          } else if (this.xqList.length < this.total) {
+            // 加载更多
+            var list = []
+            res.data.data.map((item) => {
+              item.upFlag = false
+              list.push(item)
+            })
+            this.xqList = this.xqList.concat(list)
+          }
+          if (this.xqList.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
         }
       })
     }
@@ -65,7 +120,7 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    padding-bottom: 26px;
+    padding: 26px 0;
     border-bottom: 1px solid #F3F3F3;
     .ico{
       width:82px;

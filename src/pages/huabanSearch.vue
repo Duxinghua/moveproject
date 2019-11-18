@@ -3,8 +3,8 @@
     <div class="huabanSearch-header">
       <div class="inputWrap">
         <img src="../assets/images/huabansearchico.png" alt="">
-        <input type="text" class="input" placeholder="插花">
-        <span>搜索</span>
+        <input type="text" v-model="searchText" class="input" placeholder="插花">
+        <span @click="searchHandler">搜索</span>
       </div>
       <div class="menuTab">
         <ul>

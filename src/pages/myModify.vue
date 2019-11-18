@@ -31,19 +31,24 @@ export default {
   methods: {
     userEdit () {
       if (!this.textArea) {
-        this.$dialog.alert({
-          message: '请输入简介'
-        })
+        this.$toast('请输入个人简介')
       }
       this.$api.userEdit({bio: this.textArea}).then((result) => {
         if (result.code === 1) {
-          this.$router.push({name: 'MyEdit'})
+          this.$toast({
+            message: result.msg,
+            onClose: () => {
+              this.$router.push({name: 'MyEdit'})
+            }
+          })
+        } else {
+          this.$toast(result.msg)
         }
       })
     }
   },
   mounted () {
-
+    this.textArea = this.$route.params.bio
   }
 
 }

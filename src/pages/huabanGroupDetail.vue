@@ -5,18 +5,16 @@
         <div class="detail-top">
           <img  class="detail-top-img" src="../assets/images/hgdi.png" alt="">
           <div class="detail-top-center">
-            <span class="detail-title">插花花艺爱好同盟插花花艺爱好同盟插花花艺爱好同盟</span>
+            <span class="detail-title">{{tzDetail.group_name}}</span>
             <div class="detail-avatar">
               <img src="../assets/images/hgdp.png" alt="">
               <span>1586成员</span>
             </div>
           </div>
-          <img class="detail-top-imgmore" src="../assets/images/hgdg.png" alt="">
+          <img class="detail-top-imgmore" src="../assets/images/hgdg.png" alt="" @click="joinGroupHandler">
         </div>
         <span class="detail-bottom">
-小组简介：指尖创造。插花之道，让人们更加的关注周围的
-自然环境，这种脆肉的美好，却充满让人感动的道。指尖创造。插花之道，让人们更加的关注周围的
-自然环境，这种脆肉的美好，却充满让人感动的道。
+          {{tzDetail.description}}
         </span>
       </div>
 
@@ -25,7 +23,7 @@
       <TitleItem title="贴子讨论" />
       <div class="huabangd-tzdl-wrap">
        <HuabantzItem v-for="(item,index) in huabantzlist" :key="index" :item="item" />
-        <div class="tzdl-btn">
+        <div class="tzdl-btn" @click="fptzClickHandler">
           <img src="../assets/images/jiahaoico.png" class="jiahaoico" alt="">
           <span>发表话题</span>
         </div>
@@ -42,6 +40,8 @@ export default {
   name: 'HuabanGroupDetail',
   data () {
     return {
+      tzDetail: {},
+      id:null,
       huabantzlist: [
         {
           id: 1,
@@ -83,8 +83,31 @@ export default {
 
     }
   },
+  methods: {
+    fptzClickHandler () {
+      this.$router.push({name: 'HuabanTzfp',query:{id:1}})
+    },
+    joinGroupHandler () {
+      this.$api.postsGroupUser({group_id: this.tzDetail.group_id}).then((res)=>{
+        if(res.code === 1){
+
+        }
+      })
+    },
+    getGroupIndex () {
+      this.$api.groupIndex({id: this.id}).then((result) => {
+        console.log(result,'tz')
+        if (result.code === 1) {
+          this.tzDetail = result.data
+        }
+      })
+    }
+  },
   mounted () {
-    console.log(this.$route.params.id)
+    console.log(this.$route.query.id)
+    this.id = this.$route.query.id
+    this.getGroupIndex()
+
   },
   beforeRouteEnter (to, from, next) {
     console.log('log start')

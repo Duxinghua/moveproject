@@ -14,22 +14,22 @@
     </div>
     <div class="myTx-content">
       <div class="myTx-content-alipay">
-        <input type="text" placeholder="请输入支付宝账号" v-if="current === 0">
-        <input type="text" placeholder="请输入银行账号" v-if="current === 1">
-        <input type="text" placeholder="请输入开户银行" v-if="current === 1">
-        <input type="text" placeholder="请输入姓名">
-        <input type="text" placeholder="请输入手机号码">
+        <input type="text" v-model="alipay" placeholder="请输入支付宝账号" v-if="current === 0">
+        <input type="text" v-model="blank" placeholder="请输入银行账号" v-if="current === 1">
+        <input type="text" v-model="blankName" placeholder="请输入开户银行" v-if="current === 1">
+        <input type="text" v-model="userName" placeholder="请输入姓名">
+        <input type="text" v-model="mobile" placeholder="请输入手机号码">
         <span>提取金额</span>
         <div class="input-wrap">
-          <input type="text">
+          <input type="text" v-model="inputMoney">
           <span>¥</span>
         </div>
         <div class="tip-wrap">
-          可提现金额¥3512.21
+          可提现金额¥{{money}}
         </div>
       </div>
     </div>
-    <div class="myTx-btn">
+    <div class="myTx-btn" @click="txClickHandler">
       确认提现
     </div>
   </div>
@@ -40,13 +40,92 @@ export default {
   name: 'MyTx',
   data () {
     return {
-      current: 0
+      current: 0,
+      money: '0',
+      alipay: '',
+      blank: '',
+      blankName: '',
+      userName: '',
+      mobile: '',
+      type: 0,
+      inputMoney: ''
     }
   },
   methods: {
     MenuClickHandler (e) {
+              this.blank = ""
+              this.blankName = ""
+              this.mobile = ""
+              this.userName = ""
+              this.alipay = ""
+              this.inputMoney = ""
+              this.type = ""
       this.current = e
+      this.type = e
+    },
+    txClickHandler () {
+      if(this.current === 0){
+        if(!this.alipay){
+          this.$toast('请输入支付宝账号')
+          return
+        }
+      }
+      if(this.current === 1){
+        if(!this.blank){
+          this.$toast('请输入银行账号')
+          return
+        }
+        if(!this.blankName){
+          this.$toast('请输入开户银行')
+          return
+        }
+      }
+      if(!this.userName){
+          this.$toast('请输入姓名')
+          return
+      }
+      if(!this.mobile){
+          this.$toast('请输入手机号码')
+          return
+      }
+      if(!this.inputMoney){
+        this.$toast('请输入提现金额')
+        return
+      }
+      var params = {
+        bank_account: this.blank,
+        bank_address: this.blankName,
+        mobile: this.mobile,
+        true_name: this.userName,
+        ali_account: this.alipay,
+        money: this.inputMoney,
+        type: this.type
+      }
+      this.$api.userStoreTakeout(params).then((res)=>{
+        if(res.code === 1) {
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              console.log('sss')
+              this.blank = ""
+              this.blankName = ""
+              this.mobile = ""
+              this.userName = ""
+              this.alipay = ""
+              this.inputMoney = ""
+              this.type = ""
+              this.$router.push({name: 'MyFx', query:{current: 1}})
+            }
+          })
+        }else{
+          this.$toast(res.msg)
+        }
+      })
+
     }
+  },
+  mounted () {
+    this.money = this.$route.params.money
   }
 }
 </script>
@@ -56,6 +135,7 @@ export default {
   display: flex;
   flex-direction: column;
   background:#FBF8F4;
+  min-height: 100vh;
   &-top{
     display: flex;
     flex-direction: column;
@@ -128,6 +208,10 @@ export default {
         input{
           width: 100%;
           padding-left:54px;
+          position: absolute;
+          transform: translateY(-50%);
+          left:5px;
+          top:50%;
         }
       }
       .tip-wrap{

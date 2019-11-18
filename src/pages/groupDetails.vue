@@ -79,62 +79,62 @@
 
 <script>
 export default {
-    data() {
-        return {
-            goodsData:{},
-            groupId:0,
-            groupDetails:{
-                users:[]
-            }
-        }
-    },
-     mounted(){
-        this.groupId = this.$route.query.id;
-        this.goodsTuan();
-    },
-    methods:{
-        goodsTuan(){
-            this.$toast.loading({
-                duration:0,
-                message: '加载中...',
-                forbidClick: true
-            });
-            this.$api.goodsTuan({t_id:this.groupId}).then((res) => {
-                if(res.code == 1){
-                    this.groupDetails = res.data;
-                    this.goodsIndex(res.data.goods_id)
-                } 
-            })
-        },
-        goodsTuanJoin(){
-            this.$api.goodsTuanJoin({t_id:this.groupId}).then((res) => {
-                if(res.code == 1){
-                    this.goodsTuan();
-                    this.$toast({
-                        type:'success',
-                        forbidClick:true,
-                        message:'加入拼团成功'
-                    });
-                }else{
-                    this.$toast({
-                        forbidClick:true,
-                        message:res.msg
-                    });
-                }
-            })
-        },
-        goodsIndex(id){
-            const param = {
-                goods_id:id
-            }
-            this.$api.goodsIndex(param).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    this.goodsData = res.data;
-                }
-            })
-        },
+  data () {
+    return {
+      goodsData: {},
+      groupId: 0,
+      groupDetails: {
+        users: []
+      }
     }
+  },
+  mounted () {
+    this.groupId = this.$route.query.id
+    this.goodsTuan()
+  },
+  methods: {
+    goodsTuan () {
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.goodsTuan({t_id: this.groupId}).then((res) => {
+        if (res.code == 1) {
+          this.groupDetails = res.data
+          this.goodsIndex(res.data.goods_id)
+        }
+      })
+    },
+    goodsTuanJoin () {
+      this.$api.goodsTuanJoin({t_id: this.groupId}).then((res) => {
+        if (res.code == 1) {
+          this.goodsTuan()
+          this.$toast({
+            type: 'success',
+            forbidClick: true,
+            message: '加入拼团成功'
+          })
+        } else {
+          this.$toast({
+            forbidClick: true,
+            message: res.msg
+          })
+        }
+      })
+    },
+    goodsIndex (id) {
+      const param = {
+        goods_id: id
+      }
+      this.$api.goodsIndex(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.goodsData = res.data
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -369,7 +369,7 @@ export default {
                         border-radius: 40px;
                     }
                 }
-            } 
+            }
         }
     }
 }

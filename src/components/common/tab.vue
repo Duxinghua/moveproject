@@ -21,33 +21,33 @@
 
 <script>
 export default {
-	data() {
-		return {
-			tabIndex:0
-		}
-	},
-	props: {
-		tabList: {
-			type: Array,
-			default: []
-		}
+  data () {
+    return {
+      tabIndex: 0
+    }
   },
-  watch:{
-    tabList(data){
-      if(data){
+  props: {
+    tabList: {
+      type: Array,
+      default: []
+    }
+  },
+  watch: {
+    tabList (data) {
+      if (data) {
         this.tabIndex = data[0].id
       }
     }
   },
-	methods: {
-		tabClick(id) {
-      this.tabIndex = id;
-			this.$emit('on-change', id)
-		},
-		onSearch() {
-			this.$emit('on-search')
-		}
-	}
+  methods: {
+    tabClick (id) {
+      this.tabIndex = id
+      this.$emit('on-change', id)
+    },
+    onSearch () {
+      this.$emit('on-search')
+    }
+  }
 }
 </script>
 

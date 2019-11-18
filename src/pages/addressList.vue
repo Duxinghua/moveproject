@@ -36,100 +36,100 @@
 import NoData from '@/components/nodata'
 
 export default {
-    data() {
-        return {
-            defaultIndex:0,
-            addressList:[]
-        }
-    },
-    components:{
-        NoData
-    },
-    mounted(){
-        this.getAddressList();
-    },
-    methods:{
-        onChange(index,id){
-            this.defaultIndex = index;
-            this.saveAddress(id)
-        },
-        saveAddress(id){
-            const param = {
-                id,
-                is_default:1
-            }
-            this.$toast.loading({
-                duration:0,
-                message: '加载中...',
-                forbidClick: true
-            });
-            this.$api.saveAddress(param).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    this.$toast({
-                        type:'success',
-                        message:'修改成功'
-                    });
-                }else{
-                    Notify({ type: 'danger', message: res.msg });
-                }
-            })
-        },
-        getAddressList(){
-            const param = {
-                page:1,
-                pageSize:100
-            }
-            this.$api.addressList(param).then((res) => {
-                if(res.code == 1){
-                    this.addressList = res.data.data;
-                }
-            })
-        },
-        onLinkAdd(){
-            this.$router.push('/editAddress')
-        },
-        onRemove(id){
-            const _this = this;
-            this.$dialog.confirm({
-                title: '提示',
-                message: '确认是否删除',
-                beforeClose(action, done) {
-                    if (action === 'confirm') {
-                        _this.delAddress(id,done)
-                    } else {
-                        done();
-                    }
-                }
-            });
-        },
-        delAddress(id,done){
-            this.$api.delAddress({id}).then((res) => {
-                if(res.code == 1){
-                    done()
-                    this.$toast({
-                        type:'success',
-                        message:res.msg
-                    });
-                    this.defaultIndex = 0;
-                    this.getAddressList();
-                }else{
-                    this.$toast({
-                        forbidClick:true,
-                        message:res.msg
-                    });
-                }
-            })
-        },
-        onEdit(id){
-            this.$router.push({
-                path:'/editAddress',
-                query:{
-                    id
-                }
-            })
-        }
+  data () {
+    return {
+      defaultIndex: 0,
+      addressList: []
     }
+  },
+  components: {
+    NoData
+  },
+  mounted () {
+    this.getAddressList()
+  },
+  methods: {
+    onChange (index, id) {
+      this.defaultIndex = index
+      this.saveAddress(id)
+    },
+    saveAddress (id) {
+      const param = {
+        id,
+        is_default: 1
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.saveAddress(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.$toast({
+            type: 'success',
+            message: '修改成功'
+          })
+        } else {
+          Notify({ type: 'danger', message: res.msg })
+        }
+      })
+    },
+    getAddressList () {
+      const param = {
+        page: 1,
+        pageSize: 100
+      }
+      this.$api.addressList(param).then((res) => {
+        if (res.code == 1) {
+          this.addressList = res.data.data
+        }
+      })
+    },
+    onLinkAdd () {
+      this.$router.push('/editAddress')
+    },
+    onRemove (id) {
+      const _this = this
+      this.$dialog.confirm({
+        title: '提示',
+        message: '确认是否删除',
+        beforeClose (action, done) {
+          if (action === 'confirm') {
+            _this.delAddress(id, done)
+          } else {
+            done()
+          }
+        }
+      })
+    },
+    delAddress (id, done) {
+      this.$api.delAddress({id}).then((res) => {
+        if (res.code == 1) {
+          done()
+          this.$toast({
+            type: 'success',
+            message: res.msg
+          })
+          this.defaultIndex = 0
+          this.getAddressList()
+        } else {
+          this.$toast({
+            forbidClick: true,
+            message: res.msg
+          })
+        }
+      })
+    },
+    onEdit (id) {
+      this.$router.push({
+        path: '/editAddress',
+        query: {
+          id
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -184,7 +184,7 @@ export default {
                                 border-radius: 5px;
                             }
                         }
-                        
+
                     }
                 }
                 .action{
@@ -198,7 +198,7 @@ export default {
                             height: 30px;
                             margin-right: 20px;
                         }
-                    }   
+                    }
                 }
             }
 

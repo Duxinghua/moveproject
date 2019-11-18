@@ -20,6 +20,10 @@ import HuabanJoinGroup from '@/pages/huabanJoinGroup'
 import HuabanTzfp from '@/pages/huabanTzfp'
 import HuabanSearch from '@/pages/huabanSearch'
 import HuabanUserInfo from '@/pages/huabanUserInfo'
+import OrderList from '@/pages/orderlist'
+import OrderDetail from '@/pages/OrderDetail'
+import CourseOrderList from '@/pages/courseOrderList'
+import CourseOrderDetail from '@/pages/courseOrderDetail'
 import MyEdit from '@/pages/myEdit'
 import MyModify from '@/pages/myModify'
 import MyBx from '@/pages/myBx'
@@ -409,6 +413,38 @@ const router = new Router({
       component: About,
       meta: {
         title: '关于我们'
+      }
+    },
+    {
+      path: '/orderlist',
+      name: 'OrderList',
+      component: OrderList,
+      meta: {
+        title: '商品订单'
+      }
+    },
+    {
+      path: '/orderdetail',
+      name: 'OrderDetail',
+      component: OrderDetail,
+      meta: {
+        title: '商品订单详情'
+      }
+    },
+    {
+      path: '/courseorderlist',
+      name: 'CourseOrderList',
+      component: CourseOrderList,
+      meta: {
+        title: '课程订单'
+      }
+    },
+    {
+      path: '/courseorderdetail',
+      name: 'CourseOrderDetail',
+      component: CourseOrderDetail,
+      meta: {
+        title: '商品订单详情'
       }
     },
     {

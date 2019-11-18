@@ -4,7 +4,7 @@
       <img class="card" src="../assets/images/myxf.png" alt="">
       <div class="cardInfo">
         <div class="cardInfo-c">
-          <span>学会</span>
+          <span>学分</span>
           <span>1250</span>
         </div>
       </div>
@@ -39,7 +39,7 @@ export default {
     }
   },
   mounted () {
-    this.$api.userFans().then((result) => {
+    this.$api.userPointsRecords().then((result) => {
       console.log(result)
       if (result.code === 1) {
         this.xflist = result.data.data

@@ -2,10 +2,10 @@
   <div class="huabanUserItem huabanUserBottom" @click="userInfoHandler">
             <img class="avatar" :src="item.avatar" alt="">
             <div class="huabanUserItem-center">
-                <span class="user">{{item.des}}</span>
-                <span class="userinfo">{{item.date}}</span>
+                <span class="user">{{item.nickname}}</span>
+                <span class="userinfo">{{autoTime(item.create_time)}}</span>
             </div>
-            <img class="huabandz" :src="item.image"/>
+            <img class="huabandz" src="../assets/images/userdz.png"/>
     </div>
 </template>
 
@@ -30,6 +30,7 @@ export default {
         'gzbackground': !!this.item.isGz
       }
     }
+
   },
   data () {
     return {
@@ -37,6 +38,10 @@ export default {
     }
   },
   methods: {
+    autoTime (time) {
+      var tim = new Date(time*1000)
+      return tim.getFullYear()+"-"+(tim.getMonth()+1)+"-"+(tim.getDate().length == 1 ? 0+tim.getDate() : tim.getDate())+" "+tim.getHours()+":"+tim.getMinutes()
+    },
     userInfoHandler () {
       this.$router.push({name: 'HuabanUserInfo'})
     }
@@ -57,6 +62,7 @@ export default {
       .avatar{
         width:107px;
         height:107px;
+        border-radius: 50%;
         margin-right:25px;
       }
       &-center{

@@ -1,5 +1,5 @@
 <template>
-  <div :class="autoBorder" >
+  <div class="huabanUserItem" >
             <img class="avatar" :src="item.avatar" alt="" @click="userInfoHandler">
             <div class="huabanUserItem-center" @click="userInfoHandler">
                 <span class="user">{{item.nickname}}</span>
@@ -9,16 +9,16 @@
                    <span>{{item.gznum}}</span>
                  </div>
             </div>
-            <div :class="autoBack">
+            <div :class="autoBack"  @click="cancelHandler(item.id)">
               <div v-if="!types">
-                <span class="gz" v-if="item.isGz">已关注</span>
+                <span class="gz" v-if="item.amity == 1">已关注</span>
                 <div class="nogz" v-else >
                   <img src="../assets/images/gzico.png" alt="" >
                   <span>关注</span>
                 </div>
               </div>
               <div v-else>
-                <div class="nogz" @click="cancelHandler(item.id)">
+                <div class="nogz">
                   <span>已关注</span>
                 </div>
               </div>
@@ -43,14 +43,13 @@ export default {
     autoBack () {
       return {
         'huabanUserItem-btn': true,
-        'nogzbackground': !this.item.isGz,
-        'gzbackground': !!this.item.isGz
+        'nogzbackground': !!this.item.amity,
+        'gzbackground': !this.item.amity
       }
     },
     autoBorder () {
       return {
-        'huabanUserItem': true,
-        'huabanUserBottom': this.types
+        'huabanUserItem': true
       }
     }
   },
@@ -84,6 +83,7 @@ export default {
         width:107px;
         height:107px;
         margin-right:25px;
+        border-radius: 50%;
       }
       &-center{
         width:336px;
@@ -163,5 +163,8 @@ export default {
     .huabanUserItem-center{
       width:362px;
     }
+  }
+  .huabanUserBottom:last-child{
+    border-bottom: 2px solid transparent;
   }
 </style>

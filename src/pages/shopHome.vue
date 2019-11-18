@@ -33,99 +33,97 @@ import Footer from '@/components/footer.vue'
 import NoData from '@/components/nodata'
 
 export default {
-    data() {
-        return {
-            tabList: [],
-            goodsList: [],
-            loading: false,
-            finished: false,
-            total:0,
-            current:1,
-            gcId:0
-        }
-    },
-    components: {
-        Tab,
-        GoodsItem,
-        Footer,
-        NoData
-    },
-    mounted(){
-        this.categorys();
-    },
-    methods: {
-        categorys(){
-            this.$api.categorys().then((res) => {
-                if(res.code == 1){
-                    if(res.data.length > 0){
-                        this.tabList = res.data.map((item) => {
-                            return {
-                                id:item.gc_id,
-                                name:item.gc_name
-                            }
-                        })
-
-                        this.gcId = this.tabList[0].id;
-                        this.getGoodsList()
-                    }
-                }
-            })
-        },
-        getGoodsList(){
-            const param = {
-                page:this.current,
-                pageSize:10,
-                gc_id:this.gcId
-            }
-            this.$toast.loading({
-                duration:0,
-                message: '加载中...',
-                forbidClick: true
-            });
-            this.$api.goodsList(param).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    this.loading = false;
-                    
-                    if(this.goodsList.length == 0){
-                        //第一次加载
-                        this.goodsList = res.data.data || [];
-                        this.total = res.data.total;
-
-                    }else if(this.goodsList.length < this.total){
-                        //加载更多
-                        this.goodsList = this.goodsList.concat(res.data.data);
-
-                    }
-                    if(this.goodsList.length >= this.total){
-                        // 全部加载完成
-                        this.finished = true;
-                    }
-                }
-            })
-        },
-        onLoad() {
-            if(this.goodsList.length < this.total){
-                this.current++;
-                this.getGoodsList()
-            }
-        },
-        onTabChange(id) {
-            this.goodsList = [];
-            this.current = 1;
-            this.gcId = id;
-            this.finished = false;
-            this.getGoodsList()
-        },
-        onSearch(id) {
-            this.$router.push({
-                path:'/searchGoods',
-                query:{
-                    id
-                }
-            })
-        }
+  data () {
+    return {
+      tabList: [],
+      goodsList: [],
+      loading: false,
+      finished: false,
+      total: 0,
+      current: 1,
+      gcId: 0
     }
+  },
+  components: {
+    Tab,
+    GoodsItem,
+    Footer,
+    NoData
+  },
+  mounted () {
+    this.categorys()
+  },
+  methods: {
+    categorys () {
+      this.$api.categorys().then((res) => {
+        if (res.code == 1) {
+          if (res.data.length > 0) {
+            this.tabList = res.data.map((item) => {
+              return {
+                id: item.gc_id,
+                name: item.gc_name
+              }
+            })
+
+            this.gcId = this.tabList[0].id
+            this.getGoodsList()
+          }
+        }
+      })
+    },
+    getGoodsList () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        gc_id: this.gcId
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.goodsList(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+
+          if (this.goodsList.length == 0) {
+            // 第一次加载
+            this.goodsList = res.data.data || []
+            this.total = res.data.total
+          } else if (this.goodsList.length < this.total) {
+            // 加载更多
+            this.goodsList = this.goodsList.concat(res.data.data)
+          }
+          if (this.goodsList.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.goodsList.length < this.total) {
+        this.current++
+        this.getGoodsList()
+      }
+    },
+    onTabChange (id) {
+      this.goodsList = []
+      this.current = 1
+      this.gcId = id
+      this.finished = false
+      this.getGoodsList()
+    },
+    onSearch (id) {
+      this.$router.push({
+        path: '/searchGoods',
+        query: {
+          id
+        }
+      })
+    }
+  }
 }
 </script>
 

@@ -36,45 +36,45 @@
 
 <script>
 export default {
-    data() {
-        return {
-            num:1,
-            shopList:[],
-            checked:false
-        }
-    },
-    mounted(){
-        this.goodsCarts();
-    },
-    methods:{
-        goodsCarts(){
-            const params = {
-                page:1,
-                pageSize:100
-            }
-            this.$api.goodsCarts(params).then((res) => {
-                if(res.code == 1){
-                    this.shopList = res.data.data;
-                }
-            })
-        },
-        onLinkShop(){
-            this.$router.push('/shopHome')
-        },
-        onRemove(){
-            this.$dialog.confirm({
-                title: '提示',
-                message: '确认是否删除',
-                beforeClose(action, done) {
-                    if (action === 'confirm') {
-                        setTimeout(done, 1000);
-                    } else {
-                        done();
-                    }
-                }
-            });
-        }
+  data () {
+    return {
+      num: 1,
+      shopList: [],
+      checked: false
     }
+  },
+  mounted () {
+    this.goodsCarts()
+  },
+  methods: {
+    goodsCarts () {
+      const params = {
+        page: 1,
+        pageSize: 100
+      }
+      this.$api.goodsCarts(params).then((res) => {
+        if (res.code == 1) {
+          this.shopList = res.data.data
+        }
+      })
+    },
+    onLinkShop () {
+      this.$router.push('/shopHome')
+    },
+    onRemove () {
+      this.$dialog.confirm({
+        title: '提示',
+        message: '确认是否删除',
+        beforeClose (action, done) {
+          if (action === 'confirm') {
+            setTimeout(done, 1000)
+          } else {
+            done()
+          }
+        }
+      })
+    }
+  }
 }
 </script>
 
@@ -89,7 +89,7 @@ export default {
                 font-size: 28px;
             }
         }
-        
+
     }
 .shop-container{
     width: 100%;
@@ -135,7 +135,7 @@ export default {
             &:last-child{
                 border-bottom: none;
             }
-            
+
             .shop-img{
                 width: 200px;
                 height: 150px;
