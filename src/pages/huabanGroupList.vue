@@ -1,6 +1,6 @@
 <template>
   <div class="huabanList">
-    <HuabanMenu :menuList="menuList"/>
+    <HuabanMenu :menuList="menuList" @menuClick="menuClick"/>
     <div class="huabanList-content">
       <van-list
             v-model="loading"
@@ -23,22 +23,37 @@ export default {
   name: 'HuabanGroupList',
   data () {
     return {
-      menuList: [
-        '推荐',
-        '美居分享',
-        '花院分享'
-      ],
+      menuList: [],
       huabanList: [],
       finished: false,
       loading: false,
       current: 1,
-      total: 0
+      total: 0,
+      gc_id: 0
     }
   },
   mounted () {
-    this.getGroupLists()
+    this.getGroupCateGory()
   },
   methods: {
+    menuClick (v) {
+      this.gc_id = v
+      this.current = 1
+      this.total = 0
+      this.huabanList = []
+      this.finished = false
+      this.loading = false
+      this.getGroupLists()
+    },
+    getGroupCateGory () {
+      this.$api.groupCateGory().then((res)=>{
+        if(res.code === 1) {
+          this.menuList = res.data
+          this.gc_id = res.data ? res.data[0].gc_id : 1
+          this.getGroupLists()
+        }
+      })
+    },
     joinGroupHandler () {
 
     },
@@ -71,14 +86,13 @@ export default {
           }
         }
       })
-
     },
     onLoad () {
       if (this.huabanList.length < this.total) {
         this.current++
         this.getGroupLists()
       }
-    },
+    }
   },
   components: {
     HuabanMenu,

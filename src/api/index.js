@@ -193,6 +193,14 @@ const server = {
   tzPosts (data) {
     return post('posts', data)
   },
+  // 贴子列表 posts/lists
+  postsLists (data) {
+    return post('posts/lists', data)
+  },
+  // 社区分类 group/category
+  groupCateGory (data) {
+    return post('group/category', data)
+  },
   // 贴子点赞 posts/saveLike
   postsSaveLike (data) {
     return post('posts/saveLike', data)

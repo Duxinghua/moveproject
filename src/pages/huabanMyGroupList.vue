@@ -1,6 +1,5 @@
 <template>
   <div class="huabanList">
-    <HuabanMenu :menuList="menuList"/>
     <div class="huabanList-content">
       <van-list
             v-model="loading"
@@ -20,32 +19,30 @@
 import HuabanMenu from '@/components/huabanMenu.vue'
 import HuabanGroupItem from '@/components/huabanGroupItem.vue'
 export default {
-  name: 'HuabanGroupList',
+  name: 'HuabanMyGroupList',
   data () {
     return {
-      menuList: [
-        '推荐',
-        '美居分享',
-        '花院分享'
-      ],
       huabanList: [],
       finished: false,
       loading: false,
       current: 1,
-      total: 0
+      total: 0,
+      type: ''
     }
   },
   mounted () {
-    this.getGroupLists()
+    this.type = this.$route.query.type
+    this.getGroupLists(this.type)
   },
   methods: {
     joinGroupHandler () {
 
     },
-    getGroupLists () {
+    getGroupLists (type) {
       const param = {
         page: this.current,
-        pageSize: 10
+        pageSize: 10,
+        recommend: type
       }
       this.$toast.loading({
         duration: 0,
@@ -75,7 +72,7 @@ export default {
     onLoad () {
       if (this.huabanList.length < this.total) {
         this.current++
-        this.getGroupLists()
+        this.getGroupLists(this.type)
       }
     }
   },
@@ -93,7 +90,7 @@ export default {
   background:#F9F5EE;
   min-height: 100vh;
   &-content{
-    margin-top:126px;
+    margin-top:26px;
     display: flex;
     flex-direction: column;
     padding-right:26px;
