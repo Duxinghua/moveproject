@@ -214,12 +214,12 @@ const server = {
     return post('posts/commentsSave', data)
   },
   // 加入社区 posts/groupUser
-  postsGroupUser (data) {
-    return post('posts/groupUser', data)
+  groupGroupUser (data) {
+    return post('group/groupUser', data)
   },
   // 退出社区 posts/groupUserDel
-  postsGroupUserDel (data) {
-    return post('posts/groupUserDel', data)
+  groupGroupUserDel (data) {
+    return post('group/groupUserDel', data)
   },
   // 帖子评论列表 posts/comments
   postsComments (data) {

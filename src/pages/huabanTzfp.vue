@@ -31,7 +31,7 @@ export default {
     }
   },
   mounted () {
-    this.$api.userGetSignPackage().then((res) => {
+    this.$api.userGetSignPackage({url:location.href}).then((res) => {
       if (res.code === 1) {
         var wxpay = res.data
         this.$wx.config({

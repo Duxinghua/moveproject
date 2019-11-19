@@ -1,6 +1,5 @@
 <template>
   <div class="huabanList">
-    <HuabanMenu :menuList="menuList"/>
     <div class="huabanList-content">
       <van-list
             v-model="loading"
@@ -59,11 +58,23 @@ export default {
 
           if (this.huabanList.length == 0) {
             // 第一次加载
-            this.huabanList = res.data.data || []
+              var list =  res.data.data
+              list.map((item)=>{
+              item.image = item.images ? item.images[0]: ''
+              item.nickname = item.user.nickname
+              item.avatar = item.user.avatar
+            })
+            this.huabanList = list
             this.total = res.data.total
           } else if (this.huabanList.length < this.total) {
             // 加载更多
-            this.huabanList = this.huabanList.concat(res.data.data)
+            var list =  res.data.data
+              list.map((item)=>{
+              item.image = item.images ? item.images[0]: ''
+              item.nickname = item.user.nickname
+              item.avatar = item.user.avatar
+            })
+            this.huabanList = this.huabanList.concat(list)
           }
           if (this.huabanList.length >= this.total) {
             // 全部加载完成

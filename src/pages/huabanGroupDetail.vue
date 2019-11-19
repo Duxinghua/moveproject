@@ -88,11 +88,11 @@ export default {
       this.$router.push({name: 'HuabanTzfp', query: {id: 1}})
     },
     joinGroupHandler () {
-      this.$api.postsGroupUser({group_id: this.tzDetail.group_id}).then((res) => {
-        if (res.code === 1) {
+      // this.$api.postsGroupUser({group_id: this.tzDetail.group_id}).then((res) => {
+      //   if (res.code === 1) {
 
-        }
-      })
+      //   }
+      // })
     },
     getGroupIndex () {
       this.$api.groupIndex({id: this.id}).then((result) => {

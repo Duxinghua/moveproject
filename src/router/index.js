@@ -14,6 +14,7 @@ import HuabanMyGroupList from '@/pages/HuabanMyGroupList'
 import HuabanGroupList from '@/pages/huabanGroupList'
 import HuabanJoinGroup from '@/pages/huabanJoinGroup'
 import HuabanTzfp from '@/pages/huabanTzfp'
+import HuabanTzList from '@/pages/huabanTzList'
 import HuabanSearch from '@/pages/huabanSearch'
 import HuabanUserInfo from '@/pages/huabanUserInfo'
 import OrderList from '@/pages/orderlist'
@@ -194,6 +195,15 @@ const router = new Router({
       meta: {
         title: '小组详情'
       }
+    },
+    {
+      path: '/huabantzlist',
+      name: 'HuabanTzList',
+      component: HuabanTzList,
+      meta: {
+        title: '贴子列表'
+      }
+
     },
     {
       path: '/huabantzdetail',

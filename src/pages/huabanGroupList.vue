@@ -12,11 +12,13 @@
       >
       <HuabanGroupItem v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler"/>
       </van-list>
+      <NoData v-if="huabanList.length === 0" />
     </div>
   </div>
 </template>
 
 <script>
+import NoData from '@/components/nodata.vue'
 import HuabanMenu from '@/components/huabanMenu.vue'
 import HuabanGroupItem from '@/components/huabanGroupItem.vue'
 export default {
@@ -54,13 +56,47 @@ export default {
         }
       })
     },
-    joinGroupHandler () {
-
+    joinGroupHandler (is_join,group_id) {
+      console.log(is_join == 0)
+      if(is_join === 0) {
+        this.$api.groupGroupUser({group_id:group_id}).then((res)=>{
+          if(res.code === 1){
+            this.$toast({
+              message: res.msg,
+              onClose: () => {
+                this.huabanList = []
+                this.finished = false
+                this.loading = false
+                this.getGroupLists()
+              }
+            })
+          }else{
+            this.$toast(res.msg)
+          }
+        })
+      }else if(is_join === 1) {
+       this.$api.groupGroupUserDel({group_id:group_id}).then((res)=>{
+          if(res.code === 1){
+            this.$toast({
+              message: res.msg,
+              onClose: () => {
+                this.huabanList = []
+                this.finished = false
+                this.loading = false
+                this.getGroupLists()
+              }
+            })
+          }else{
+            this.$toast(res.msg)
+          }
+        })
+      }
     },
     getGroupLists () {
       const param = {
         page: this.current,
-        pageSize: 10
+        pageSize: 10,
+        gc_id: this.gc_id
       }
       this.$toast.loading({
         duration: 0,
@@ -96,7 +132,8 @@ export default {
   },
   components: {
     HuabanMenu,
-    HuabanGroupItem
+    HuabanGroupItem,
+    NoData
   }
 }
 </script>

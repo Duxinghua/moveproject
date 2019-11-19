@@ -35,7 +35,7 @@
       <div class="huaban-tz-wrap">
         <HuabantzItem v-for="(item,index) in huabantzlist" :key="index" :item="item" />
       </div>
-      <MoreText moreText="更多" moreName="HuabanGroupList" />
+      <MoreText moreText="更多" moreName="HuabanTzList" />
     </div>
     <Footer :hb="true" />
   </div>

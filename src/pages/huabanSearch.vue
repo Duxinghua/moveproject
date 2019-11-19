@@ -21,32 +21,17 @@
             :immediate-check="false"
             @load="onLoad"
             >
-          <component :is="isComponent" v-for="(item, index) in huabanList" :key="index" :item="item"/>
+          <HuabanGroupItem v-if="currentIndex === 0"  v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler"/>
+          <HuabantzItem v-if="currentIndex === 1"  v-for="(item, index) in huabanList" :key="index" :item="item" />
+          <HuabanUsergzItem  v-if="currentIndex === 2" v-for="(item, index) in huabanList" :key="index" :item="item" @cancelGz="cancelGz"/>
           </van-list>
-          <!-- <div class="huabanUserItem">
-            <img class="avatar" src="../assets/images/people.png" alt="">
-            <div class="huabanUserItem-center">
-                <span class="user">花田喜事xibe</span>
-                <span class="userinfo">年少时向往远方，走的太匆忙</span>
-                 <div class="usergz">
-                   <span>关注</span>
-                   <span>1782</span>
-                 </div>
-            </div>
-            <div class="huabanUserItem-btn nogzbackground">
-              <span class="gz" style="display:none">已关注</span>
-              <div class="nogz" >
-                <img src="../assets/images/gzico.png" alt="">
-                <span>关注</span>
-              </div>
-            </div>
-          </div> -->
-
+          <NoData v-if="huabanList.length === 0" />
     </div>
   </div>
 </template>
 
 <script>
+import NoData from '@/components/nodata'
 import HuabanGroupItem from '@/components/huabanGroupItem.vue'
 import HuabantzItem from '@/components/huabantzItem.vue'
 import HuabanUsergzItem from '@/components/huabanUsergzItem.vue'
@@ -81,9 +66,62 @@ export default {
   components: {
     HuabanGroupItem,
     HuabantzItem,
-    HuabanUsergzItem
+    HuabanUsergzItem,
+    NoData
   },
   methods: {
+    joinGroupHandler (is_join,group_id) {
+      if(is_join === 0){
+      this.$api.groupGroupUser({group_id:group_id}).then((res)=>{
+        if(res.code === 1){
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              this.huabanList = []
+              this.finished = false
+              this.loading = false
+              this.getGroupLists()
+            }
+          })
+        }else{
+          this.$toast(res.msg)
+        }
+      })
+      }else if(is_join === 1) {
+       this.$api.groupGroupUserDel({group_id:group_id}).then((res)=>{
+        if(res.code === 1){
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              this.huabanList = []
+              this.finished = false
+              this.loading = false
+              this.getGroupLists()
+            }
+          })
+        }else{
+          this.$toast(res.msg)
+        }
+      })
+      }
+    },
+    cancelGz(id) {
+      this.$api.userSaveFollow({user_id:id}).then((res)=>{
+        if(res.code === 1){
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              this.huabanList = []
+              this.finished = false
+              this.loading = false
+              this.getGroupLists()
+            }
+          })
+        }else{
+          this.$toast(res.msg)
+        }
+      })
+    },
     submit () {
       this.huabanList = []
       this.finished = false
@@ -136,6 +174,7 @@ export default {
               res.data.data.map((item)=>{
                 item.nickname = item.user.nickname
                 item.avatar = item.user.avatar
+                item.image = item.images ? item.images[0] : ''
                 list.push(item)
               })
               this.huabanList = list || []
@@ -146,7 +185,7 @@ export default {
               res.data.data.map((item)=>{
                 item.nickname = item.user.nickname
                 item.avatar = item.user.avatar
-                item.image = item.image ? item.image[0] : ''
+                item.image = item.images ? item.images[0] : ''
                 list.push(item)
               })
               this.huabanList = this.huabanList.concat(list)
@@ -188,29 +227,18 @@ export default {
     },
 
     resultClickHandler (arg) {
+      if(!this.searchText){
+        this.$toast('请输入搜索内容')
+        return
+      }
+      this.currentIndex = arg
       this.huabanList = []
       this.finished = false
       this.loading = false
       this.current = 1
       this.total = 0
-      this.currentIndex = arg
-      if(!this.searchText){
-        this.$toast('请输入搜索内容')
-        return
-      }
       this.getGroupLists()
       console.log(arg,'arg')
-      switch (arg) {
-        case 0:
-          this.isComponent = 'HuabanGroupItem'
-          break
-        case 1:
-          this.isComponent = 'HuabantzItem'
-          break
-        case 2:
-          this.isComponent = 'HuabanUsergzItem'
-          break
-      }
     },
     searchHandler () {
       this.$router.push({name: 'HuabanGroupList'})
