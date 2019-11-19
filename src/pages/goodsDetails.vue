@@ -105,7 +105,7 @@
         <van-popup v-model="popupStatus" round :safe-area-inset-bottom="true" position="bottom">
             <div class="sku-content">
                 <div class="sku-header">
-                    <img src="../assets/images/banners.png" alt="">
+                    <img :src="goodsData.images && goodsData.images[0]" alt="">
                     <div class="price">
                         <div class="money" v-if="skuIndex == -1"><span>￥{{goodsData.price}}</span><em>￥{{goodsData.price_cost}}</em></div>
                         <div class="money" v-if="skuIndex != -1"><span>￥{{ skuList[skuIndex] ? skuList[skuIndex].price : '0.00'}}</span><em>￥{{ skuList[skuIndex] ? skuList[skuIndex].price_cost : '0.00'}}</em></div>
