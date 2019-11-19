@@ -8,7 +8,7 @@
             <span class="detail-title">{{tzDetail.group_name}}</span>
             <div class="detail-avatar">
               <img src="../assets/images/hgdp.png" alt="">
-              <span>1586成员</span>
+              <span>{{tzDetail.user_count}}成员</span>
             </div>
           </div>
           <img class="detail-top-imgmore" src="../assets/images/hgdg.png" alt="" @click="joinGroupHandler">
@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       tzDetail: {},
-      id:null,
+      id: null,
       huabantzlist: [
         {
           id: 1,
@@ -85,18 +85,18 @@ export default {
   },
   methods: {
     fptzClickHandler () {
-      this.$router.push({name: 'HuabanTzfp',query:{id:1}})
+      this.$router.push({name: 'HuabanTzfp', query: {id: 1}})
     },
     joinGroupHandler () {
-      this.$api.postsGroupUser({group_id: this.tzDetail.group_id}).then((res)=>{
-        if(res.code === 1){
+      this.$api.postsGroupUser({group_id: this.tzDetail.group_id}).then((res) => {
+        if (res.code === 1) {
 
         }
       })
     },
     getGroupIndex () {
       this.$api.groupIndex({id: this.id}).then((result) => {
-        console.log(result,'tz')
+        console.log(result, 'tz')
         if (result.code === 1) {
           this.tzDetail = result.data
         }
@@ -107,7 +107,6 @@ export default {
     console.log(this.$route.query.id)
     this.id = this.$route.query.id
     this.getGroupIndex()
-
   },
   beforeRouteEnter (to, from, next) {
     console.log('log start')

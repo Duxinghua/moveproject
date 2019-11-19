@@ -24,30 +24,30 @@ export default {
   },
   methods: {
     gzClickHandler (e) {
-      this.$api.userSaveFollow({user_id: e}).then((res)=>{
-        if(res.code == 1){
+      this.$api.userSaveFollow({user_id: e}).then((res) => {
+        if (res.code == 1) {
           this.$toast({
             message: res.msg,
             onClose: () => {
               this.current = 1
-                const param = {
-                  page: this.current,
-                  pageSize: 10,
-                  by: 1
+              const param = {
+                page: this.current,
+                pageSize: 10,
+                by: 1
+              }
+              this.$toast.loading({
+                duration: 0,
+                message: '加载中...',
+                forbidClick: true
+              })
+              this.$api.userFollow(param).then((res) => {
+                this.$toast.clear()
+                if (res.code == 1) {
+                  this.loading = false
+                  this.gzList = res.data.data || []
+                  this.total = res.data.total
                 }
-                this.$toast.loading({
-                  duration: 0,
-                  message: '加载中...',
-                  forbidClick: true
-                })
-                this.$api.userFollow(param).then((res) => {
-                  this.$toast.clear()
-                  if (res.code == 1) {
-                    this.loading = false
-                    this.gzList = res.data.data || []
-                    this.total = res.data.total
-                  }
-                })
+              })
             }
           })
         }

@@ -31,8 +31,8 @@ export default {
     }
   },
   mounted () {
-    this.$api.userGetSignPackage().then((res)=>{
-      if(res.code === 1){
+    this.$api.userGetSignPackage().then((res) => {
+      if (res.code === 1) {
         var wxpay = res.data
         this.$wx.config({
           debug: true,
@@ -45,44 +45,42 @@ export default {
             'onMenuShareTimeline',
             'onMenuShareAppMessage',
             'chooseImage',
-            'uploadImage',
+            'uploadImage'
           ]
         })
         this.$wx.error(function (res) {
-        console.log("出错了：" + res.errMsg);
-        });
-    // 在这里调用 API
+          console.log('出错了：' + res.errMsg)
+        })
+        // 在这里调用 API
         this.$wx.ready(function () {
           this.$wx.checkJsApi({
             jsApiList: [
-                'checkJsApi',
-                'onMenuShareTimeline',
-                'onMenuShareAppMessage',
-                'getLocation',
-                'chooseImage',
-                'uploadImage'
+              'checkJsApi',
+              'onMenuShareTimeline',
+              'onMenuShareAppMessage',
+              'getLocation',
+              'chooseImage',
+              'uploadImage'
             ],
             success: function (res) {
 
             }
-          });
+          })
         })
-
-
       }
     })
   },
   methods: {
     uploadImages () {
-       this.$wx.chooseImage({
-            count: 3, // 默认9
-            sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-            sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-            success: function (res) {
-                // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                console.log(res.localIds,'res')
-            }
-        });
+      this.$wx.chooseImage({
+        count: 3, // 默认9
+        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+        success: function (res) {
+          // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+          console.log(res.localIds, 'res')
+        }
+      })
     }
   }
 }

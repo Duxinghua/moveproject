@@ -39,8 +39,8 @@ export default {
   },
   methods: {
     autoTime (time) {
-      var tim = new Date(time*1000)
-      return tim.getFullYear()+"-"+(tim.getMonth()+1)+"-"+(tim.getDate().length == 1 ? 0+tim.getDate() : tim.getDate())+" "+tim.getHours()+":"+tim.getMinutes()
+      var tim = new Date(time * 1000)
+      return tim.getFullYear() + '-' + (tim.getMonth() + 1) + '-' + (tim.getDate().length == 1 ? 0 + tim.getDate() : tim.getDate()) + ' ' + tim.getHours() + ':' + tim.getMinutes()
     },
     userInfoHandler () {
       this.$router.push({name: 'HuabanUserInfo'})

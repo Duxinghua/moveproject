@@ -1,58 +1,63 @@
 <template>
   <div class="huabanList">
-    <HuabanMenu :menuList="menuList"/>
     <div class="huabanList-content">
-      <van-list
+      <!-- <van-list
             v-model="loading"
             v-show="huabanList.length > 0"
             :finished="finished"
             finished-text="没有更多了"
             :immediate-check="false"
             @load="onLoad"
-      >
-      <HuabantzItem v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler"/>
-      </van-list>
+      > -->
+      <HuabanGroupItem v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler"/>
+      <!-- </van-list> -->
     </div>
   </div>
 </template>
 
 <script>
 import HuabanMenu from '@/components/huabanMenu.vue'
-import HuabantzItem from '@/components/huabantzItem.vue'
+import HuabanGroupItem from '@/components/huabanGroupItem.vue'
 export default {
-  name: 'HuabanTzList',
+  name: 'HuabanMoreGroupList',
   data () {
     return {
-      menuList: [
-        '推荐',
-        '美居分享',
-        '花院分享'
-      ],
       huabanList: [],
       finished: false,
       loading: false,
       current: 1,
-      total: 0
+      total: 0,
+      type: ''
     }
   },
   mounted () {
-    this.getpostsLists()
+    console.log(11)
+    this.type = this.$route.query.type
+    console.log(22)
+    this.getGroupLists(this.type)
+  },
+  created() {
+    console.log(111)
+  },
+  activated () {
+    console.log(33)
   },
   methods: {
     joinGroupHandler () {
 
     },
-    getpostsLists () {
+    getGroupLists (type) {
       const param = {
         page: this.current,
-        pageSize: 10
+        pageSize: 10,
+        recommend: type
       }
       this.$toast.loading({
         duration: 0,
         message: '加载中...',
         forbidClick: true
       })
-      this.$api.postsLists(param).then((res) => {
+      this.$api.groupLists(param).then((res) => {
         this.$toast.clear()
         if (res.code == 1) {
           this.loading = false
@@ -72,16 +77,16 @@ export default {
         }
       })
     },
-    onLoad () {
-      if (this.huabanList.length < this.total) {
-        this.current++
-        this.getpostsLists()
-      }
-    }
+    // onLoad () {
+    //   if (this.huabanList.length < this.total) {
+    //     this.current++
+    //     this.getGroupLists(this.type)
+    //   }
+    // }
   },
   components: {
     HuabanMenu,
-    HuabantzItem
+    HuabanGroupItem
   }
 }
 </script>
@@ -93,7 +98,7 @@ export default {
   background:#F9F5EE;
   min-height: 100vh;
   &-content{
-    margin-top:126px;
+    margin-top:26px;
     display: flex;
     flex-direction: column;
     padding-right:26px;

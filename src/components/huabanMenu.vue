@@ -2,7 +2,7 @@
     <div class="home-top">
       <img class="home-top-search" src="../assets/images/search.png" alt="" @click="searchHandler">
       <ul class="home-top-list">
-        <li :class="{active:current === index}" @click="menuHandler(index)" v-for="(item, index) in menuList" :key="index">{{item}}</li>
+        <li :class="{active:current === index}" @click="menuHandler(index,item.gc_id)" v-for="(item, index) in menuList" :key="index">{{item.gc_name}}</li>
       </ul>
     </div>
 </template>
@@ -19,8 +19,9 @@ export default {
     }
   },
   methods: {
-    menuHandler (e) {
+    menuHandler (e,id) {
       this.current = e
+      this.$emit('menuClick',id)
     },
     searchHandler () {
       this.$router.push({name: 'HuabanSearch'})

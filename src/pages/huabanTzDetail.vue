@@ -3,7 +3,7 @@
     <div class="huabantz-top">
       <img class="avatar" :src="user.avatar ? user.avatar : require('../assets/images/people.png')" alt="">
       <div class="userdes">
-        <span>{{user.nickname}}</span>
+        <span>{{user.nickname ? user.nickname : ''}}</span>
         <span>{{user.logintime}}小时前</span>
       </div>
       <div class="gzbtn" v-if="user.amity == 0" @click="gzClickHandler(user.id)">
@@ -25,7 +25,7 @@
         <div class="des">
           <span class="destitle">{{tzDetail.title}}</span>
           <div class="desico">
-            <img src="../assets/images/gzxico.png" alt="" @click="dzClickHandler">
+            <img :src="tzDetail.likes == 0 ? require('../assets/images/gzxico.png') : require('../assets/images/ydz.png')" alt="" @click="dzClickHandler">
             <img src="../assets/images/shareico.png" alt="">
           </div>
         </div>
@@ -38,10 +38,19 @@
           共{{commentsList.length}}条评论
         </div>
         <div class="plcontent">
-          <div class="pl-item" v-for="(item,index) in commentsList" :key="index">
-              <span>{{item.user.nickname}}</span>
-              <span>{{item.content}}</span>
-          </div>
+          <van-list
+            v-model="loading"
+            v-show="commentsList.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+          >
+            <div class="pl-item" v-for="(item,index) in commentsList" :key="index">
+                <span>{{item.user ? item.user.nickname : ''}}</span>
+                <span>{{item.content}}</span>
+            </div>
+            </van-list>
         </div>
       </div>
     </div>
@@ -56,7 +65,7 @@ export default {
   name: 'HuabanTzDetail',
   data () {
     return {
-      id:'',
+      id: '',
       index: 1,
       user: {},
       tzDetail: {},
@@ -64,8 +73,10 @@ export default {
       content: '',
       commentsList: [],
       current: 1,
-      total:0,
-      indicator: 'none'
+      total: 0,
+      indicator: 'none',
+      finished: false,
+      loading: false,
     }
   },
   mounted () {
@@ -89,11 +100,11 @@ export default {
         this.$toast.clear()
         if (res.code == 1) {
           this.loading = false
-
+          this.total = res.data.total
           if (this.commentsList.length == 0) {
             // 第一次加载
             this.commentsList = res.data.data || []
-            this.total = res.data.total
+
           } else if (this.commentsList.length < this.total) {
             // 加载更多
             this.commentsList = this.commentsList.concat(res.data.data)
@@ -104,7 +115,6 @@ export default {
           }
         }
       })
-
     },
     onLoad () {
       if (this.commentsList.length < this.total) {
@@ -113,28 +123,26 @@ export default {
       }
     },
     getGzdetail () {
-      this.$api.tzPosts({id:this.id}).then((res)=>{
-      if(res.code === 1) {
-        this.user = res.data.user
-        this.user.logintime =  this.timers(res.data.user.logintime)
-        this.tzDetail = res.data
-        this.bannerLength = res.data.images.length
-        this.indicator = res.data.images.length > 1 ? 'outside' : 'none'
-      }
-
-
-    })
+      this.$api.tzPosts({id: this.id}).then((res) => {
+        if (res.code === 1) {
+          this.user = res.data.user
+          this.user.logintime = this.timers(res.data.user.logintime)
+          this.tzDetail = res.data
+          this.bannerLength = res.data.images.length
+          this.indicator = res.data.images.length > 1 ? 'outside' : 'none'
+        }
+      })
     },
     changeTab (e) {
       this.index = e
     },
     timers (timer) {
-      return parseInt((new Date().getTime() - (timer*1000))/3600/1000)
+      return parseInt((new Date().getTime() - (timer * 1000)) / 3600 / 1000)
     },
     gzClickHandler (id) {
       console.log(id)
-      this.$api.userSaveFollow({user_id:id}).then((res)=>{
-        if(res.code === 1){
+      this.$api.userSaveFollow({user_id: id}).then((res) => {
+        if (res.code === 1) {
           this.$toast({
             message: res.msg,
             onClose: () => {
@@ -145,21 +153,21 @@ export default {
       })
     },
     dzClickHandler () {
-      this.$api.postsSaveLike({gp_id:this.tzDetail.gp_id,gp_user_id:this.tzDetail.user_id}).then((res)=>{
-        if(res.code === 1){
+      this.$api.postsSaveLike({gp_id: this.id, gp_user_id: this.tzDetail.user_id}).then((res) => {
+        if (res.code === 1) {
           this.$toast({
             message: res.msg,
             onClose: () => {
-              console.log('this is ')
+              this.getGzdetail()
             }
           })
-        }else{
+        } else {
           this.$toast(res.msg)
         }
       })
     },
     submit () {
-      if(!this.content){
+      if (!this.content) {
         this.$toast('请输入评论')
         return
       }
@@ -167,16 +175,15 @@ export default {
         gp_id: this.tzDetail.gp_id,
         content: this.content
       }
-      this.$api.postsCommentsSave(params).then((res)=>{
-        if(res.code === 1) {
+      this.$api.postsCommentsSave(params).then((res) => {
+        if (res.code === 1) {
           this.$toast({
-            message:res.msg,
-            onClose:()=>{
+            message: res.msg,
+            onClose: () => {
               this.content = ''
               this.getpostsComments()
             }
           })
-
         }
       })
     }
@@ -185,7 +192,7 @@ export default {
     autoMarge () {
       return {
         'huabantz-banner': true,
-        'huabantz-marge': this.bannerLength == 1 ? true : false
+        'huabantz-marge': this.bannerLength == 1
       }
     }
   }
@@ -203,6 +210,7 @@ export default {
   background:#FBF8F4;
   display: flex;
   flex-direction: column;
+  min-height:100vh;
   &-marge{
     margin-bottom: 26px;
   }
@@ -210,8 +218,8 @@ export default {
     display: flex;
     flex-direction: row;
     height:111px;
-    padding-left:26px;
-    padding-right:26px;
+    padding:26px;
+
     box-sizing: border-box;
     align-items: center;
     .avatar{
@@ -373,7 +381,7 @@ export default {
   &-commit{
     display: flex;
     flex-direction: column;
-    height:500px;
+    padding-bottom: 1rem;
     &-input{
       width:700px;
       height:88px;

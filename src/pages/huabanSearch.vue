@@ -3,17 +3,26 @@
     <div class="huabanSearch-header">
       <div class="inputWrap">
         <img src="../assets/images/huabansearchico.png" alt="">
-        <input type="text" v-model="searchText" class="input" placeholder="插花">
-        <span @click="searchHandler">搜索</span>
+        <input type="text" v-model="searchText" class="input" placeholder="插花" @keyup.enter="submit">
+        <span @click="searchHandler">取消</span>
       </div>
       <div class="menuTab">
         <ul>
-          <li :class="{active: current == item.id ? true : false }" @click="resultClickHandler(item.id)" v-for="(item) in menuList" :key="item.id">{{item.name}}</li>
+          <li :class="{active: currentIndex == item.id ? true : false }" @click="resultClickHandler(item.id)" v-for="(item) in menuList" :key="item.id">{{item.name}}</li>
         </ul>
       </div>
     </div>
     <div class="huabanSearch-content">
-          <component :is="isComponent" v-for="(item, index) in usergzlist" :key="index" :item="item"/>
+          <van-list
+            v-model="loading"
+            v-show="huabanList.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+            >
+          <component :is="isComponent" v-for="(item, index) in huabanList" :key="index" :item="item"/>
+          </van-list>
           <!-- <div class="huabanUserItem">
             <img class="avatar" src="../assets/images/people.png" alt="">
             <div class="huabanUserItem-center">
@@ -45,8 +54,8 @@ export default {
   name: 'HuabanSearch',
   data () {
     return {
-      current: 0,
-      isComponent: HuabanUsergzItem,
+      currentIndex: 0,
+      isComponent: HuabanGroupItem,
       menuList: [
         {
           id: 0,
@@ -57,25 +66,16 @@ export default {
           name: '帖子'
         },
         {
+          id: 2,
           name: '用户'
         }
       ],
-      usergzlist: [
-        {
-          avatar: require('../assets/images/people.png'),
-          username: '花田喜事xibe',
-          userinfo: '年少时向往远方，走的太匆忙',
-          isGz: true,
-          gznum: '1782'
-        },
-        {
-          avatar: require('../assets/images/people.png'),
-          username: '花田喜事xibe',
-          userinfo: '年少时向往远方，走的太匆忙',
-          isGz: false,
-          gznum: '1782'
-        }
-      ]
+      huabanList: [],
+      searchText: '',
+      finished: false,
+      loading: false,
+      current: 1,
+      total: 0
     }
   },
   components: {
@@ -84,8 +84,122 @@ export default {
     HuabanUsergzItem
   },
   methods: {
+    submit () {
+      this.huabanList = []
+      this.finished = false
+      this.loading = false
+      this.current = 1
+      this.total = 0
+      console.log(this.currentIndex,'ci')
+      this.getGroupLists()
+    },
+    getGroupLists () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        keyword: this.searchText
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      if(this.currentIndex == 0){
+        this.$api.groupLists(param).then((res) => {
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
+
+            if (this.huabanList.length == 0) {
+              // 第一次加载
+              this.huabanList = res.data.data || []
+              this.total = res.data.total
+            } else if (this.huabanList.length < this.total) {
+              // 加载更多
+              this.huabanList = this.huabanList.concat(res.data.data)
+            }
+            if (this.huabanList.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
+          }
+        })
+      }else if(this.currentIndex == 1){
+        this.$api.postsLists(param).then((res)=>{
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
+
+            if (this.huabanList.length == 0) {
+              // 第一次加载
+              var list = []
+              res.data.data.map((item)=>{
+                item.nickname = item.user.nickname
+                item.avatar = item.user.avatar
+                list.push(item)
+              })
+              this.huabanList = list || []
+              this.total = res.data.total
+            } else if (this.huabanList.length < this.total) {
+              // 加载更多
+              var list = []
+              res.data.data.map((item)=>{
+                item.nickname = item.user.nickname
+                item.avatar = item.user.avatar
+                item.image = item.image ? item.image[0] : ''
+                list.push(item)
+              })
+              this.huabanList = this.huabanList.concat(list)
+            }
+            if (this.huabanList.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
+          }
+        })
+      }else if(this.currentIndex == 2){
+        this.$api.userLists(param).then((res)=>{
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
+
+            if (this.huabanList.length == 0) {
+              // 第一次加载
+              this.huabanList = res.data.data || []
+              this.total = res.data.total
+            } else if (this.huabanList.length < this.total) {
+              // 加载更多
+              this.huabanList = this.huabanList.concat(res.data.data)
+            }
+            if (this.huabanList.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
+          }
+
+        })
+      }
+    },
+    onLoad () {
+      if (this.huabanList.length < this.total) {
+        this.current++
+        this.getGroupLists()
+      }
+    },
+
     resultClickHandler (arg) {
-      this.current = arg
+      this.huabanList = []
+      this.finished = false
+      this.loading = false
+      this.current = 1
+      this.total = 0
+      this.currentIndex = arg
+      if(!this.searchText){
+        this.$toast('请输入搜索内容')
+        return
+      }
+      this.getGroupLists()
+      console.log(arg,'arg')
       switch (arg) {
         case 0:
           this.isComponent = 'HuabanGroupItem'
@@ -97,6 +211,9 @@ export default {
           this.isComponent = 'HuabanUsergzItem'
           break
       }
+    },
+    searchHandler () {
+      this.$router.push({name: 'HuabanGroupList'})
     }
   }
 

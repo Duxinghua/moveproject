@@ -50,7 +50,7 @@ export default {
           if (this.Lklist.length == 0) {
             // 第一次加载
             var list = []
-            res.data.data.map((item)=>{
+            res.data.data.map((item) => {
               item.nickname = item.user.nickname
               item.avatar = item.user.avatar
               list.push(item)
@@ -60,7 +60,7 @@ export default {
           } else if (this.Lklist.length < this.total) {
             // 加载更多
             var list = []
-            res.data.data.map((item)=>{
+            res.data.data.map((item) => {
               item.nickname = item.user.nickname
               item.avatar = item.user.avatar
               list.push(item)
@@ -73,7 +73,6 @@ export default {
           }
         }
       })
-
     },
     onLoad () {
       if (this.Lklist.length < this.total) {

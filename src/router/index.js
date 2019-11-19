@@ -9,6 +9,8 @@ import OnlineCourseDetail from '@/pages/onlineCourseDetail'
 import Huaban from '@/pages/huaban'
 import HuabanGroupDetail from '@/pages/huabanGroupDetail'
 import HuabanTzDetail from '@/pages/huabanTzDetail'
+import HuabanMoreGroupList from '@/pages/huabanMoreGroupList'
+import HuabanMyGroupList from '@/pages/HuabanMyGroupList'
 import HuabanGroupList from '@/pages/huabanGroupList'
 import HuabanJoinGroup from '@/pages/huabanJoinGroup'
 import HuabanTzfp from '@/pages/huabanTzfp'
@@ -208,6 +210,23 @@ const router = new Router({
       meta: {
         title: '社区小组'
       }
+    },
+    {
+      path: '/huabanmoregrouplist',
+      name: 'HuabanMoreGroupList',
+      component: HuabanMoreGroupList,
+      meta: {
+        title: '推荐圈子'
+      }
+    },
+    {
+      path: '/huabanmygrouplist',
+      name: 'HuabanMyGroupList',
+      component: HuabanMyGroupList,
+      meta: {
+        title: '我加入的圈子'
+      }
+
     },
     {
       path: '/huabanjoingroup',

@@ -53,42 +53,42 @@ export default {
   },
   methods: {
     MenuClickHandler (e) {
-              this.blank = ""
-              this.blankName = ""
-              this.mobile = ""
-              this.userName = ""
-              this.alipay = ""
-              this.inputMoney = ""
-              this.type = ""
+      this.blank = ''
+      this.blankName = ''
+      this.mobile = ''
+      this.userName = ''
+      this.alipay = ''
+      this.inputMoney = ''
+      this.type = ''
       this.current = e
       this.type = e
     },
     txClickHandler () {
-      if(this.current === 0){
-        if(!this.alipay){
+      if (this.current === 0) {
+        if (!this.alipay) {
           this.$toast('请输入支付宝账号')
           return
         }
       }
-      if(this.current === 1){
-        if(!this.blank){
+      if (this.current === 1) {
+        if (!this.blank) {
           this.$toast('请输入银行账号')
           return
         }
-        if(!this.blankName){
+        if (!this.blankName) {
           this.$toast('请输入开户银行')
           return
         }
       }
-      if(!this.userName){
-          this.$toast('请输入姓名')
-          return
+      if (!this.userName) {
+        this.$toast('请输入姓名')
+        return
       }
-      if(!this.mobile){
-          this.$toast('请输入手机号码')
-          return
+      if (!this.mobile) {
+        this.$toast('请输入手机号码')
+        return
       }
-      if(!this.inputMoney){
+      if (!this.inputMoney) {
         this.$toast('请输入提现金额')
         return
       }
@@ -101,27 +101,26 @@ export default {
         money: this.inputMoney,
         type: this.type
       }
-      this.$api.userStoreTakeout(params).then((res)=>{
-        if(res.code === 1) {
+      this.$api.userStoreTakeout(params).then((res) => {
+        if (res.code === 1) {
           this.$toast({
             message: res.msg,
             onClose: () => {
               console.log('sss')
-              this.blank = ""
-              this.blankName = ""
-              this.mobile = ""
-              this.userName = ""
-              this.alipay = ""
-              this.inputMoney = ""
-              this.type = ""
-              this.$router.push({name: 'MyFx', query:{current: 1}})
+              this.blank = ''
+              this.blankName = ''
+              this.mobile = ''
+              this.userName = ''
+              this.alipay = ''
+              this.inputMoney = ''
+              this.type = ''
+              this.$router.push({name: 'MyFx', query: {current: 1}})
             }
           })
-        }else{
+        } else {
           this.$toast(res.msg)
         }
       })
-
     }
   },
   mounted () {
