@@ -10,7 +10,7 @@
             :immediate-check="false"
             @load="onLoad"
       >
-      <HuabanGroupItem v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler"/>
+      <HuabantzItem v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler"/>
       </van-list>
     </div>
   </div>
@@ -18,9 +18,9 @@
 
 <script>
 import HuabanMenu from '@/components/huabanMenu.vue'
-import HuabanGroupItem from '@/components/huabanGroupItem.vue'
+import HuabantzItem from '@/components/huabantzItem.vue'
 export default {
-  name: 'HuabanGroupList',
+  name: 'HuabanTzList',
   data () {
     return {
       menuList: [
@@ -36,13 +36,13 @@ export default {
     }
   },
   mounted () {
-    this.getGroupLists()
+    this.getpostsLists()
   },
   methods: {
     joinGroupHandler () {
 
     },
-    getGroupLists () {
+    getpostsLists () {
       const param = {
         page: this.current,
         pageSize: 10
@@ -52,7 +52,7 @@ export default {
         message: '加载中...',
         forbidClick: true
       })
-      this.$api.groupLists(param).then((res) => {
+      this.$api.postsLists(param).then((res) => {
         this.$toast.clear()
         if (res.code == 1) {
           this.loading = false
@@ -76,13 +76,13 @@ export default {
     onLoad () {
       if (this.huabanList.length < this.total) {
         this.current++
-        this.getGroupLists()
+        this.getpostsLists()
       }
     },
   },
   components: {
     HuabanMenu,
-    HuabanGroupItem
+    HuabantzItem
   }
 }
 </script>

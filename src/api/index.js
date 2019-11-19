@@ -197,6 +197,10 @@ const server = {
   postsSaveLike (data) {
     return post('posts/saveLike', data)
   },
+  // 贴子列表 posts/lists
+  postsLists (data) {
+    return post('posts/lists', data)
+  },
   // 发布评论 posts/commentsSave
   postsCommentsSave (data) {
     return post('posts/commentsSave', data)
