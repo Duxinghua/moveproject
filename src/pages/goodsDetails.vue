@@ -5,7 +5,7 @@
                 <van-swipe-item
                     v-for="(image, index) in goodsData.images"
                     :key="index"
-                    @click="onImageView"
+                    @click="onImageView(goodsData.images,index)"
                 >
                     <van-image :src="image">
                         <template v-slot:loading>
@@ -83,7 +83,7 @@
                                 {{item.content}}
                             </div>
                             <div class="comments-img">
-                                <div class="img" v-for="(self, index) in item.images" :key="index">
+                                <div class="img" v-for="(self, index) in item.images" :key="index" @click="onImageView(item.images,index)">
                                     <img :src="self" alt="">
                                 </div>
                             </div>
@@ -141,7 +141,8 @@
         </van-popup>
         <van-image-preview
             v-model="imageShow"
-            :images="goodsData.images"
+            :images="imagePreview"
+            :startPosition="startPosition"
         >
       </van-image-preview>
     </div>
@@ -170,7 +171,9 @@ export default {
             imageShow:false,
             disabled:false,
             groupTime:0,
-            buyType:'buy'
+            buyType:'buy',
+            imagePreview:[],
+            startPosition:0
         }
     },
     components:{
@@ -183,7 +186,9 @@ export default {
         this.goodsTuanLists();
     },
     methods: {
-        onImageView(){
+        onImageView(data,index){
+            this.imagePreview = data;
+            this.startPosition = index;
             this.imageShow = true;
         },
         onLoad(){

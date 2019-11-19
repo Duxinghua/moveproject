@@ -92,7 +92,13 @@ export default {
                 page:1,
                 pageSize:100
             }
+            this.$toast.loading({
+                duration:0,
+                message: '加载中...',
+                forbidClick: true
+            });
             this.$api.addressList(param).then((res) => {
+                this.$toast.clear();
                 if(res.code == 1){
                     this.addressList = res.data.data;
                 }
