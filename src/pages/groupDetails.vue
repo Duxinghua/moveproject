@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="goods-time">
-                <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down :time="100000000" />后结束
+                <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="groupDetails.expire_time * 1000" />后结束
             </div>
             <div class="goods-submit" @click="goodsTuanJoin">参与拼团</div>
             <div class="goods-process">

@@ -1,19 +1,20 @@
 <template>
     <div class="address-box">
         <div class="address-list" v-if="addressList.length > 0">
-            <div class="address-item" v-for="(item, index) in addressList" :key="index">
+
+            <div class="address-item" v-for="(item, index) in addressList" :key="index" @click="selectAddress(item)">
                 <div class="name"><span>{{item.user_name}}</span><span>{{item.mobile}}</span></div>
                 <div class="address">{{item.address_name.replace(/[/]/g," ")}}&nbsp;{{item.address}}</div>
                 <div class="default">
                     <div class="radio-box">
-                        <van-checkbox :value="index == defaultIndex" @click="onChange(index,item.id)" shape checked-color="#718063">默认地址</van-checkbox>
+                        <van-checkbox :value="index == defaultIndex" @click.stop="onChange(index,item.id)" shape checked-color="#718063">默认地址</van-checkbox>
                     </div>
                     <div class="action">
-                        <div class="action-item" @click="onEdit(item.id)">
+                        <div class="action-item" @click.stop="onEdit(item.id)">
                             <img src="../assets/images/edit.png" alt="">
                             <span>编辑</span>
                         </div>
-                        <div class="action-item" @click="onRemove(item.id)">
+                        <div class="action-item" @click.stop="onRemove(item.id)">
                             <img src="../assets/images/delete.png" alt="">
                             <span>删除</span>
                         </div>
@@ -34,12 +35,14 @@
 
 <script>
 import NoData from '@/components/nodata'
+import {mapMutations} from 'vuex'
 
 export default {
     data() {
         return {
             defaultIndex:0,
-            addressList:[]
+            addressList:[],
+            type:undefined
         }
     },
     components:{
@@ -47,8 +50,17 @@ export default {
     },
     mounted(){
         this.getAddressList();
+        const {type} = this.$route.query;
+        this.type = type;
     },
     methods:{
+        ...mapMutations('shop',['saveAddressData']),
+        selectAddress(data){
+            if(this.type == 'select'){
+                this.saveAddressData(data);
+                this.$router.back(-1);
+            }
+        },
         onChange(index,id){
             this.defaultIndex = index;
             this.saveAddress(id)

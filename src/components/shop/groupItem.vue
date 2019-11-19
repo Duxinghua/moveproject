@@ -13,7 +13,7 @@
         </div>
         <div class="group-info">
             <div class="lack">还差<em>{{groupData.user_number - groupData.current_number}}人</em>拼成</div>
-            <div class="time">剩余<van-count-down :time="time" /></div>
+            <div class="time">剩余<van-count-down :time="groupData.expire_time ? (groupData.expire_time - groupTime) * 1000 : 0" /></div>
         </div>
         <div class="group-btn" @click="onLook">查看</div>
     </div>
@@ -23,13 +23,17 @@
 export default {
     data() {
         return {
-            time: 30 * 60 * 60 * 1000
+            
         }
     },
     props:{
         groupData:{
             type:Object,
             default:{}
+        },
+        groupTime:{
+            type:[Number , String],
+            default:0
         }
     },
     methods:{

@@ -6,18 +6,19 @@
             <div class="btn" @click="onLinkShop">开启购物之旅</div>
         </div>
         <div class="shop-list" v-if="shopList.length > 0">
-            <div class="shop-item" v-for="(item, index) in shopList" :key="index">
-                <van-checkbox v-model="checked" checked-color="#718063"></van-checkbox>
+            <div class="shop-item" v-for="(item, index) in shopList" :key="item.index" v-if="item.goods">
+                <van-checkbox v-model="item.checked" checked-color="#718063"></van-checkbox>
                 <div class="shop-img">
-                    <img src="../assets/images/770552.png" alt="">
+                    <img :src="item.goods.images[0]" alt="">
                 </div>
 
                 <div class="shop-center">
-                    <div class="shop-title"><span>青梅菊花酒</span><van-icon name="cross" @click="onRemove" /></div>
-                    <div class="shop-sub">绵甜低度健康酒，清火养生不上头</div>
+                    <div class="shop-title"><span>{{item.goods.goods_name}}</span><van-icon name="cross" @click="onRemove(item.cart_id)" /></div>
+                    <div class="shop-sub">{{item.goods.description}}</div>
+                    <div class="shops-sku">规格：{{item.specs.specs}}</div>
                     <div class="shop-money">
-                        <div class="money">￥<span>99</span></div>
-                        <div class="num"><van-stepper disable-input v-model="num" /></div>
+                        <div class="money">￥<span>{{item.specs.price}}</span></div>
+                        <div class="num"><van-stepper :key="index" disable-input v-model="item.goods_num" @change="onChangeNum($event,item)"/></div>
                     </div>
                 </div>
             </div>
@@ -25,11 +26,11 @@
 
         <div class="buy" v-if="shopList.length > 0">
             <div class="left">
-                <van-checkbox v-model="checked" checked-color="#718063"></van-checkbox>
-                <span class="num">已选(5)</span>
-                <div class="total">合计<span>￥4280</span></div>
+                <van-checkbox v-model="allChecked" checked-color="#718063"></van-checkbox>
+                <span class="num">已选({{checkedTotal}})</span>
+                <div class="total">合计<span>￥{{moneyTotal}}</span></div>
             </div>
-            <div class="submit">立即购买</div>
+            <div class="submit" @click="onBuy">立即购买</div>
         </div>
     </div>
 </template>
@@ -38,41 +39,129 @@
 export default {
     data() {
         return {
-            num:1,
+            moneyTotal:'0.00',
             shopList:[],
-            checked:false
+            allChecked:false,
+            checkedTotal:0
+        }
+    },
+    watch:{
+        shopList:{
+            deep:true,
+            handler(data){
+                let checkedTotal = 0;
+                let moneyTotal = 0;
+                data.forEach((item) => {
+                    if(item.checked){
+                        checkedTotal += 1;
+                        if(item.specs){
+                            moneyTotal += item.goods_num * item.specs.price;
+                        }
+                    }
+                    
+                })
+                if(checkedTotal != 0 && checkedTotal == data.length){
+                    this.allChecked = true;
+                }
+
+                this.moneyTotal = moneyTotal;
+                this.checkedTotal = checkedTotal;
+            }
+        },
+        allChecked(data){
+            const shopList = this.shopList.map((item) => {
+                return {
+                    ...item,
+                    checked:data
+                }
+            })
+            this.shopList = shopList;
         }
     },
     mounted(){
         this.goodsCarts();
     },
     methods:{
+        onBuy(){
+            if(this.checkedTotal == 0){
+                this.$toast('请选择支付商品');
+                return false;
+            }
+            
+        },
+        onChangeNum(value,item){
+            this.goodsStoreCarts(item,value)
+        },
         goodsCarts(){
             const params = {
                 page:1,
                 pageSize:100
             }
+            this.$toast.loading({
+                duration:0,
+                message: '加载中...',
+                forbidClick: true
+            });
             this.$api.goodsCarts(params).then((res) => {
+                this.$toast.clear();
                 if(res.code == 1){
-                    this.shopList = res.data.data;
+                    this.shopList = res.data.data.map((item,index) => {
+                        return {
+                            ...item,
+                            index,
+                            checked:false
+                        }
+                    });
                 }
             })
         },
         onLinkShop(){
             this.$router.push('/shopHome')
         },
-        onRemove(){
+        onRemove(id){
+            const _this = this;
             this.$dialog.confirm({
                 title: '提示',
                 message: '确认是否删除',
                 beforeClose(action, done) {
                     if (action === 'confirm') {
-                        setTimeout(done, 1000);
+                        _this.goodsDelCarts(id,done)
                     } else {
                         done();
                     }
                 }
             });
+        },
+        goodsDelCarts(id,done){
+            this.$api.goodsDelCarts({cart_id:id}).then((res) => {
+                done()
+                if(res.code == 1){
+                    const index = this.shopList.findIndex((item) => item.cart_id == id);
+                    this.shopList.splice(index,1)
+                    this.$toast('删除成功');
+                }else{
+                    this.$toast(res.msg);
+                }
+            })
+        },
+        goodsStoreCarts(data,goodsNum){
+            const param = {
+                goods_id:data.goods_id,
+                goods_num:goodsNum,
+                specs:JSON.stringify(data.specs)
+
+            }
+            this.$toast.loading({
+                duration:0,
+                message: '加载中...',
+                forbidClick: true
+            });
+            this.$api.goodsStoreCarts(param).then((res) => {
+                this.$toast.clear();
+                if(res.code == 1){
+                    this.$toast('修改成功');
+                }
+            })
         }
     }
 }
@@ -138,7 +227,7 @@ export default {
             
             .shop-img{
                 width: 200px;
-                height: 150px;
+                height: 170px;
                 border-radius: 5px;
                 margin-left: 25px;
                 margin-right: 30px;
@@ -148,26 +237,42 @@ export default {
                 }
             }
             .shop-center{
+                width: 400px;
                 display: flex;
                 flex-direction: column;
                 // justify-content: space-between;
-                height: 150px;
+                height: 170px;
                 .shop-title{
+                    width: 100%;
                     color: #333333;
                     font-size: 30px;
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+                    span{
+                        width: 100%;
+                        display: inline-block;
+                        text-overflow:ellipsis;
+                        white-space: nowrap;
+                        overflow: hidden;
+
+                    }
                     i{
                         font-size: 30px;
                         color: #D3D3D3;
                     }
                 }
                 .shop-sub{
+                    width: 400px;
                     color: #999999;
                     font-size: 26px;
-                    margin-top: 15px;
-                    margin-bottom: 15px;
+                    text-overflow:ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                }
+                .shops-sku{
+                    color: #999999;
+                    font-size: 24px;
                 }
                 .shop-money{
                     display: flex;
@@ -228,6 +333,8 @@ export default {
         justify-content: space-between;
         align-items: center;
         box-shadow:0px 0px 16px 0px rgba(0, 0, 0, 0.2);
+        background: #fff;
+        z-index: 10;
         .left{
             display: flex;
             align-items: center;

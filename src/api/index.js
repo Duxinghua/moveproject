@@ -57,6 +57,24 @@ const server = {
 		return post('/goods/carts', data);
 	},
 	/**
+	 * 添加订单
+	 */
+	goodsOrderCreate(data) {
+		return post('/goods_order/create', data);
+	},
+	/**
+	 * 添加修改购物车
+	 */
+	goodsStoreCarts(data) {
+		return post('/goods/storeCarts', data);
+	},
+	/**
+	 * 删除购物车
+	 */
+	goodsDelCarts(data) {
+		return post('/goods/delCarts', data);
+	},
+	/**
 	 * 商品拼团详情
 	 */
 	goodsTuan(data) {

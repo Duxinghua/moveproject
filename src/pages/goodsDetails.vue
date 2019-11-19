@@ -37,21 +37,20 @@
                 <span>分享</span>
             </div>
         </div>
-
         <div class="goods-group">
             <div class="group-header">
                 <h3>商品拼团</h3>
                 <div class="right" @click="onLinkAll">查看全部拼团<van-icon name="arrow" /></div>
             </div>
             <div class="group-list">
-                <GroupItem v-for="(item, index) in groupList" :key="index" :groupData="item"/>
-                <div class="group-no">
+                <GroupItem v-for="(item, index) in groupList" :key="index" :groupData="item" :groupTime="groupTime"/>
+                <div class="group-no" v-if="groupList.length == 0">
                     <img src="../assets/images/tuan.png" alt="">
                     <span>暂无拼团,快去拼团吧</span>
                 </div>
             </div>
         </div>
-
+        
         <div class="goods-content">
             <div class="goods-tab">
                 <div :class="['tab-item' ,{'active' : tabIndex == 0}]" @click="onTabChange(0)">
@@ -61,7 +60,6 @@
                     商品评价
                 </div>
             </div>
-
             <div class="goods-detail" v-if="tabIndex == 0" v-html="goodsData.content">
             </div>
 
@@ -79,7 +77,7 @@
                             <div class="comments-user">
                                 <div class="img"><img :src="item.user.avatar ? item.user.avatar : require('../assets/images/img1.png')" alt=""></div>
                                 <span class="user">{{item.user.nickname}}</span>
-                                <span class="time">2019-10-06</span>
+                                <span class="time">{{item.create_time}}</span>
                             </div>
                             <div class="comments-center">
                                 {{item.content}}
@@ -97,10 +95,10 @@
         </div>
 
         <div class="goods-action">
-            <div class="goods-money">合计<span>￥{{goodsData.price}}</span></div>
+            <div class="goods-money">合计<span>￥{{skuList[skuIndex] ? (skuList[skuIndex].price * goodsNum) : '0.00'}}</span></div>
             <div>
-                <div class="goods-group-btn" @click="onGoodsTuanStore">发起拼团</div>
-                <div class="goods-buy-btn" @click="onBuy">立即购买</div>
+                <div class="goods-group-btn" @click="onBuy('group')">发起拼团</div>
+                <div class="goods-buy-btn" @click="onBuy('buy')">立即购买</div>
             </div>
         </div>
 
@@ -133,7 +131,7 @@
                         数量
                     </div>
                     <div class="sku-list">
-                        <van-stepper disable-input v-model="num" />
+                        <van-stepper :disabled="disabled" disable-input v-model="goodsNum" />
                     </div>
                 </div>
                 <div class="submit" @click="onSubmit">
@@ -155,7 +153,7 @@ import GroupItem from '@/components/shop/groupItem'
 export default {
     data() {
         return {
-            num:1,
+            goodsNum:1,
             swiperCurrent: 0,
             tabIndex:0,
             popupStatus:false,
@@ -169,7 +167,10 @@ export default {
             loading: false,
             finished: false,
             groupList:[],
-            imageShow:false
+            imageShow:false,
+            disabled:false,
+            groupTime:0,
+            buyType:'buy'
         }
     },
     components:{
@@ -179,7 +180,7 @@ export default {
         this.goodsId = this.$route.query.goodsId;
         this.goodsIndex();
         this.goodsComments();
-        this.goodsTuanLists()
+        this.goodsTuanLists();
     },
     methods: {
         onImageView(){
@@ -202,7 +203,7 @@ export default {
                 this.$toast.clear();
                 if(res.code == 1){
                     this.goodsData = res.data;
-                    this.skuList = res.data.specs ? JSON.parse(res.data.specs) : [];
+                    this.skuList = res.data.specs;
                 }
             })
         },
@@ -237,12 +238,17 @@ export default {
             }
             this.$api.goodsTuanLists(param).then((res) => {
                 if(res.code == 1){
-                    this.groupList = res.data.data
+                    this.groupList = res.data.data;
+                    this.groupTime = res.time;
                 }
             })
         },
         onSkuClick(index){
-            this.skuIndex = index;
+            if(this.skuIndex == index){
+                this.skuIndex = -1;
+            }else{
+                this.skuIndex = index;
+            }
         },
         onSwipeChange(index){
             this.swiperCurrent = index;
@@ -250,7 +256,14 @@ export default {
         onTabChange(index){
             this.tabIndex = index;
         },
-        onBuy(){
+        onBuy(type){
+            this.buyType = type;
+            if(type == 'group'){
+                this.goodsNum = 1;
+                this.disabled = true;
+            }else{
+                this.disabled = false
+            }
             this.popupStatus = true;
         },
         onSubmit(){
@@ -258,7 +271,14 @@ export default {
                 this.$toast('请选择规格')
                 return false
             }
-            this.$router.push('/submitOrder')
+            if(this.buyType == 'group'){
+                // this.onGoodsTuanStore()
+                // this.goodsOrderCreate({t_id:})
+            }else{
+                // this.goodsStoreCarts();//加入购物车
+                this.goodsOrderCreate({goods_id:this.goodsId})
+                
+            }
         },
         onLinkAll(){
             this.$router.push('/allGroup')
@@ -275,6 +295,42 @@ export default {
                     this.$toast({
                         message:res.msg
                     });
+                }
+            })
+        },
+        goodsStoreCarts(){
+            const param = {
+                goods_id:this.goodsId,
+                goods_num:this.goodsNum,
+                specs:JSON.stringify(this.skuList[this.skuIndex])
+            }
+            this.$toast.loading({
+                duration:0,
+                forbidClick: true
+            });
+            this.$api.goodsStoreCarts(param).then((res) => {
+                this.$toast.clear();
+                if(res.code == 1){
+                    this.$toast({
+                        type:'success',
+                        message:'添加到购物车'
+                    });
+                }else{
+                    this.$toast({
+                        message:res.msg
+                    });
+                }
+            })
+        },
+        goodsOrderCreate(data){
+            const param = {
+                ...data,
+                specs:JSON.stringify(this.skuList[this.skuIndex]),
+                goods_num:this.goodsNum
+            }
+            this.$api.goodsOrderCreate(param).then((res) => {
+                if(res.code == 1){
+                    this.$router.push('/submitOrder')
                 }
             })
         }
@@ -361,6 +417,7 @@ export default {
             color: #333333;
             font-size: 30px;
             margin-top: 10px;
+            width: 8.5rem;
         }
         .goods-subtitle{
             color: #999999;
@@ -492,6 +549,7 @@ export default {
                             width: 65px;
                             height: 65px;
                             border-radius: 50%;
+                            overflow: hidden;
                             img{
                                 width: 100%;
                                 height: 100%;
@@ -516,8 +574,8 @@ export default {
                         padding-left: 85px;
                     }
                     .comments-img{
-                        margin-top: 30px;
-                        padding-left: 85px;
+                        margin-top: 20px;
+                        padding-left: 60px;
                         display: flex;
                         flex-flow: wrap;
                         align-items:center;
@@ -527,6 +585,11 @@ export default {
                             height: 140px;
                             border-radius: 8px;
                             overflow: hidden;
+                            margin-right: 30px;
+                            margin-top: 10px;
+                            &:nth-child(3n){
+                                margin-right: 0px;
+                            }
                             img{
                                 width: 100%;
                                 height: 100%;

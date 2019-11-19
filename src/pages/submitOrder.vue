@@ -2,18 +2,18 @@
     <div class="submit-order">
         <div class="order-site" @click="onLinkAddress">
             <div class="site-top"></div>
-            <div class="order-not" v-if="!address.id">
+            <div class="order-not" v-if="!addressData.id">
                 <div class="left">
                     <img src="../assets/images/site1.png" alt="">
                     <span>选择收货地址</span>
                 </div>
                 <van-icon name="arrow" />
             </div>
-            <div class="site-data" v-if="address.id">
+            <div class="site-data" v-if="addressData.id">
                 <img src="../assets/images/site.png" alt="">
                 <div class="site-info">
-                    <div class="name">收货人：{{address.user_name}}<span>{{address.mobile}}</span></div>
-                    <div class="location">{{address.address_name.replace(/[/]/g," ")}}&nbsp;&nbsp;{{address.address}}</div>
+                    <div class="name">收货人：{{addressData.user_name}}<span>{{addressData.mobile}}</span></div>
+                    <div class="location">{{addressData.address_name.replace(/[/]/g," ")}}&nbsp;&nbsp;{{addressData.address}}</div>
                 </div>
                 <van-icon name="arrow" />
             </div>
@@ -56,24 +56,34 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
+
 export default {
     data() {
         return {
             num:1,
             radio:"2",
             checked:false,
-            address:{}
         }
+    },
+    computed:{
+        ...mapState('shop',['addressData'])
     },
     mounted(){
         this.getAddressList();
     },
     methods:{
+        ...mapMutations('shop',['saveAddressData']),
         onLinkAddress(){
-            this.$router.push('/addressList')
+            this.$router.push({
+                path:'/addressList',
+                query:{
+                    type:'select'
+                }
+            })
         },
         onBuy(){
-            if(!this.address.mobile){
+            if(!this.addressData.mobile){
                 this.$toast('请填写收货地址')
                 return false
             }
@@ -90,7 +100,9 @@ export default {
             this.$api.addressList(param).then((res) => {
                 if(res.code == 1){
                     if(res.data.data.length > 0){
-                        this.address = res.data.data[0];
+                        if(!this.addressData.id){
+                            this.saveAddressData(res.data.data[0])
+                        }
                     }
                 }
             })
