@@ -15,12 +15,13 @@
                 <div class="shop-center">
                     <div class="shop-title"><span>{{item.goods.goods_name}}</span><van-icon name="cross" @click="onRemove(item.cart_id)" /></div>
                     <div class="shop-sub">{{item.goods.description}}</div>
-                    <div class="shops-sku">规格：{{item.specs.specs}}</div>
-                    <div class="shop-money">
+                    <div class="shops-sku" v-if="item.specs">规格：{{item.specs.specs}}</div>
+                    <div class="shop-money" v-if="item.specs">
                         <div class="money">￥<span>{{item.specs.price}}</span></div>
                         <div class="num"><van-stepper :key="index" disable-input v-model="item.goods_num" @change="onChangeNum($event,item)"/></div>
                     </div>
                 </div>
+                
             </div>
         </div>
 
@@ -42,7 +43,8 @@ export default {
             moneyTotal:'0.00',
             shopList:[],
             allChecked:false,
-            checkedTotal:0
+            checkedTotal:0,
+            cartIdChecked:[],
         }
     },
     watch:{
@@ -51,9 +53,11 @@ export default {
             handler(data){
                 let checkedTotal = 0;
                 let moneyTotal = 0;
+                let cartIdChecked = [];
                 data.forEach((item) => {
                     if(item.checked){
                         checkedTotal += 1;
+                        cartIdChecked.push(item.cart_id)
                         if(item.specs){
                             moneyTotal += item.goods_num * item.specs.price;
                         }
@@ -64,8 +68,9 @@ export default {
                     this.allChecked = true;
                 }
 
-                this.moneyTotal = moneyTotal;
+                this.moneyTotal = moneyTotal.toFixed(2);
                 this.checkedTotal = checkedTotal;
+                this.cartIdChecked = cartIdChecked;
             }
         },
         allChecked(data){
@@ -87,6 +92,7 @@ export default {
                 this.$toast('请选择支付商品');
                 return false;
             }
+            this.goodsOrderCreate()
             
         },
         onChangeNum(value,item){
@@ -160,6 +166,31 @@ export default {
                 this.$toast.clear();
                 if(res.code == 1){
                     this.$toast('修改成功');
+                }
+            })
+        },
+        goodsOrderCreate(){
+            const param = {
+                type:0,
+                cart_id:this.cartIdChecked.join(',')
+            }
+            this.$toast.loading({
+                duration:0,
+                message: '加载中...',
+                forbidClick: true
+            });
+            this.$api.goodsOrderCreate(param).then((res) => {
+                this.$toast.clear();
+                if(res.code == 1){
+                    this.$router.push({
+                        path:'/submitOrder',
+                        query:{
+                            orderId:res.data.order_id,
+                            type:0
+                        }
+                    })
+                }else{
+                    this.$toast(res.msg);
                 }
             })
         }

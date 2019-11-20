@@ -15,7 +15,7 @@
         </div>
 
         <div class="goods-group">
-            <div :class="['group-list',{'list-active':groupDetails.user_number == 3}]">
+            <div :class="['group-list',{'list-active1':groupDetails.user_number == 2,'list-active':groupDetails.user_number == 3}]">
                 <div class="group-item" v-for="(item, index) in groupDetails.users" :key="index">
                     <div class="img"><img src="../assets/images/770552.png" alt=""></div>
                     <div class="tag" v-if="index == 0">团长</div>
@@ -27,7 +27,7 @@
             <div class="goods-time">
                 <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="groupDetails.expire_time * 1000" />后结束
             </div>
-            <div class="goods-submit" @click="goodsTuanJoin">参与拼团</div>
+            <div class="goods-submit" @click="goodsOrderCreate">参与拼团</div>
             <div class="goods-process">
                 <span>邀请好友拼团</span>
                 <van-icon name="arrow" />
@@ -102,38 +102,32 @@ export default {
             this.$api.goodsTuan({t_id:this.groupId}).then((res) => {
                 if(res.code == 1){
                     this.groupDetails = res.data;
-                    this.goodsIndex(res.data.goods_id)
+                    this.goodsData = res.data.goods || {};
                 } 
             })
         },
-        goodsTuanJoin(){
-            this.$api.goodsTuanJoin({t_id:this.groupId}).then((res) => {
-                if(res.code == 1){
-                    this.goodsTuan();
-                    this.$toast({
-                        type:'success',
-                        forbidClick:true,
-                        message:'加入拼团成功'
-                    });
-                }else{
-                    this.$toast({
-                        forbidClick:true,
-                        message:res.msg
-                    });
-                }
-            })
-        },
-        goodsIndex(id){
+        goodsOrderCreate(type){
+            //参加拼团到支付页面
             const param = {
-                goods_id:id
+                type,
+                // goods_id:this.goodsId,
+                // specs:JSON.stringify(this.skuList[this.skuIndex]),
+                // goods_num:this.goodsNum
             }
-            this.$api.goodsIndex(param).then((res) => {
-                this.$toast.clear();
+            this.$api.goodsOrderCreate(param).then((res) => {
                 if(res.code == 1){
-                    this.goodsData = res.data;
+                    this.$router.push({
+                        path:'/submitOrder',
+                        query:{
+                            orderId:res.data.order_id,
+                            type
+                        }
+                    })
+                }else{
+                    this.$toast(res.msg);
                 }
             })
-        },
+        }
     }
 }
 </script>
@@ -243,6 +237,12 @@ export default {
             margin-left: auto;
             margin-right: auto;
         }
+        .list-active1{
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         .goods-time{
             display: flex;
             justify-content: center;

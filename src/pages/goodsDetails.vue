@@ -277,7 +277,6 @@ export default {
                 return false
             }
             if(this.buyType == 'group'){
-                // this.onGoodsTuanStore()
                 this.goodsOrderCreate(1)
             }else{
                 // this.goodsStoreCarts();//加入购物车
@@ -336,7 +335,15 @@ export default {
             }
             this.$api.goodsOrderCreate(param).then((res) => {
                 if(res.code == 1){
-                    this.$router.push('/submitOrder')
+                    this.$router.push({
+                        path:'/submitOrder',
+                        query:{
+                            orderId:res.data.order_id,
+                            type
+                        }
+                    })
+                }else{
+                    this.$toast(res.msg);
                 }
             })
         }

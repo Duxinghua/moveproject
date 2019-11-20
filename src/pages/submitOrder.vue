@@ -20,36 +20,36 @@
         </div>
 
         <div class="order-details">
-            <div class="order-info">
+            <div class="order-info" v-for="(item, index) in orderData.goods" :key="index">
                 <div class="img">
-                    <img src="../assets/images/770552.png" alt="">
+                    <img :src="item.images" alt="">
                 </div>
                 <div class="info">
-                    <div class="title">青梅菊花酒</div>
-                    <div class="money">￥<span>58.00</span></div>
-                    <div class="num"><van-stepper disable-input v-model="num" /></div>
+                    <div class="title">{{item.goods_name}}</div>
+                    <div class="money">￥<span>{{item.price}}</span> <em>{{item.specs}}</em></div>
+                    <div class="num"><van-stepper disabled disable-input v-model="item.goods_num"/></div>
                 </div>
             </div>
             <div class="order-item">
                 <div class="left">商品合计</div>
-                <div class="right">￥58.00</div>
+                <div class="right">￥{{goodsTotal.toFixed(2)}}</div>
             </div>
              <div class="order-item">
                 <div class="left">运费</div>
-                <div class="right">￥58.00</div>
+                <div class="right">￥0.00</div>
             </div>
              <div class="order-item">
                 <div class="left">优惠活动</div>
-                <div class="right">原价￥580.00</div>
+                <div class="right">原价￥0.00</div>
             </div>
             <div class="order-item" @click="toggle">
-                <div class="left">可用<span>120学分</span>抵用<span>12</span>元</div>
+                <div class="left">可用<span>0学分</span>抵用<span>0</span>元</div>
                 <van-checkbox v-model="checked" ref="checkboxes" checked-color="#718063"></van-checkbox>
             </div>
         </div>
 
         <div class="buy-box">
-            <div class="money">需支付<span>￥58</span></div>
+            <div class="money">需支付<span>￥{{goodsTotal.toFixed(2)}}</span></div>
             <div class="submit" @click="onBuy">立即购买</div>
         </div>
     </div>
@@ -64,16 +64,69 @@ export default {
             num:1,
             radio:"2",
             checked:false,
+            orderId:0,
+            orderData:{},
+            goodsTotal:0,
+            orderMoney:0,
+            orderType:0
+        }
+    },
+    watch:{
+        orderData:{
+            deep:true,
+            handler(data){
+                let goodsTotal = 0;
+                if(data.goods && data.goods.length > 0){
+                    data.goods.forEach((item) => {
+                        goodsTotal += item.goods_num * item.price;
+                    })
+                }
+                this.goodsTotal = goodsTotal;
+            }
         }
     },
     computed:{
         ...mapState('shop',['addressData'])
     },
     mounted(){
+        const {orderId,type} = this.$route.query;
+        this.orderId = orderId;
+        this.orderType == type;
         this.getAddressList();
+        this.goodsOrder();
     },
     methods:{
         ...mapMutations('shop',['saveAddressData']),
+        goodsOrderStore(){
+            // 微信支付
+            let param = {}
+            if(this.orderType == 0){
+                let cart_id = [];
+                this.orderData.goods.forEach((item) => {
+                    cart_id.push(item.cart_id)
+                })
+                param = {
+                    cart_id:cart_id.join(','),
+                    type:this.orderType,
+                    address_id:this.addressData.id,
+                }
+            }else{
+                param = {
+                    goods_id:this.orderData.goods[0].goods_id,
+                    specs:this.orderData.goods[0].specs,
+                    goods_num:this.orderData.goods[0].goods_num,
+                    address_id:this.addressData.id,
+                    type:this.orderType
+                }
+            }
+            this.$api.goodsOrderStore(param).then((res) => {
+                if(res.code == 1){
+                    
+                }else{
+                    this.$toast(res.msg);
+                }
+            })
+        },
         onLinkAddress(){
             this.$router.push({
                 path:'/addressList',
@@ -87,17 +140,33 @@ export default {
                 this.$toast('请填写收货地址')
                 return false
             }
-            this.$router.push('/shop')
+            this.goodsOrderStore()
         },
         toggle(){
             this.$refs.checkboxes.toggle();
+        },
+        goodsOrder(){
+            const param = {
+                order_id:this.orderId
+            }
+            this.$api.goodsOrder(param).then((res) => {
+                if(res.code == 1){
+                    this.orderData = res.data;
+                }
+            })
         },
         getAddressList(){
             const param = {
                 page:1,
                 pageSize:100
             }
+            this.$toast.loading({
+                duration:0,
+                message: '加载中...',
+                forbidClick: true
+            });
             this.$api.addressList(param).then((res) => {
+                this.$toast.clear();
                 if(res.code == 1){
                     if(res.data.data.length > 0){
                         if(!this.addressData.id){
@@ -202,8 +271,13 @@ export default {
                 height: 100%;
                 margin-left: 30px;
                 .title{
+                    width: 400px;
                     color: #333333;
                     font-size: 32px;
+                    overflow: hidden;
+                    text-overflow:ellipsis;
+                    white-space: nowrap;
+                    
                 }
                 .money{
                     color: #995258;
@@ -212,6 +286,11 @@ export default {
                     margin-top: 5px;
                     span{
                         font-size: 30px;
+                    }
+                    em{
+                        font-style: normal;
+                        color: #333;
+                        margin-left: 10px;
                     }
                 }
                 .num{

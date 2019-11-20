@@ -69,6 +69,18 @@ const server = {
 		return post('/goods_order/create', data);
 	},
 	/**
+	 * 添加订单
+	 */
+	goodsOrderStore(data) {
+		return post('/goods_order/store', data);
+	},
+	/**
+	 * 支付订单
+	 */
+	goodsOrderPayOrder(data) {
+		return post('/goods_order/payOrder', data);
+	},
+	/**
 	 * 添加修改购物车
 	 */
 	goodsStoreCarts(data) {
