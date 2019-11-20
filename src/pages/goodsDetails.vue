@@ -278,10 +278,10 @@ export default {
             }
             if(this.buyType == 'group'){
                 // this.onGoodsTuanStore()
-                // this.goodsOrderCreate({t_id:})
+                this.goodsOrderCreate(1)
             }else{
                 // this.goodsStoreCarts();//加入购物车
-                this.goodsOrderCreate({goods_id:this.goodsId})
+                this.goodsOrderCreate(2)
                 
             }
         },
@@ -327,9 +327,10 @@ export default {
                 }
             })
         },
-        goodsOrderCreate(data){
+        goodsOrderCreate(type){
             const param = {
-                ...data,
+                type,
+                goods_id:this.goodsId,
                 specs:JSON.stringify(this.skuList[this.skuIndex]),
                 goods_num:this.goodsNum
             }

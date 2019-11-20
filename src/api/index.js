@@ -57,6 +57,12 @@ const server = {
 		return post('/goods/carts', data);
 	},
 	/**
+	 * 订单详情
+	 */
+	goodsOrder(data) {
+		return post('/goods_order', data);
+	},
+	/**
 	 * 添加订单
 	 */
 	goodsOrderCreate(data) {
