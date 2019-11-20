@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import config from '@/utils/config'
 export default {
   name: 'HuabanTzfp',
   data () {
@@ -29,7 +30,16 @@ export default {
     }
   },
   mounted () {
-    this.$api.userGetSignPackage({url:location.href}).then((res) => {
+    var data = {
+      url:location.href
+    }
+    const agent = navigator.userAgent
+    const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+    if(isiOS){
+      data.url = config.shareurls
+    }
+    alert(data.url)
+    this.$api.userGetSignPackage(data).then((res) => {
       if (res.code === 1) {
         var wxpay = res.data
         this.$wx.config({
@@ -108,6 +118,7 @@ export default {
           success: function (res) {
             var serverId = res.serverId; // 返回图片的服务器端ID
             _this.$toast('serverId')
+            alert(res.serverId)
             _this.getImgData(localId,serverId)
           }
       })
@@ -116,6 +127,10 @@ export default {
       const agent = navigator.userAgent
       const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
       var _this = this
+      this.$api.commonwxUpload({id:serverId}).then((res)=>{
+          alert(JSON.stringify(res))
+          alert(res.msg)
+      })
       if(isiOS){
         this.$wx.getLocalImgData({
               localId: localId, // 图片的localID
