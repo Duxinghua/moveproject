@@ -5,24 +5,35 @@
       <div class="cardInfo">
         <div class="cardInfo-c">
           <span>学分</span>
-          <span>1250</span>
+          <span>{{score}}</span>
         </div>
       </div>
       <div class="myXf-top-menu">
-        <span :class="{active: current === 0 ? true : false}" @click="tabClickHandler(0)">学分记录</span>
-        <span :class="{active: current === 1 ? true : false}" @click="tabClickHandler(1)">学分规则</span>
+        <span :class="{active: currentIndex === 0 ? true : false}" @click="tabClickHandler(0)">学分记录</span>
+        <span :class="{active: currentIndex === 1 ? true : false}" @click="tabClickHandler(1)">学分规则</span>
       </div>
     </div>
     <div class="myXf-content">
-      <div class="myXf-content-item">
+      <van-list
+            v-model="loading"
+            v-show="xflist.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+      >
+      <div class="myXf-content-item" v-if="currentIndex === 0" v-for="(item,index) in xflist" :key="index">
         <img class="userIco" src="../assets/images/myxfzl.png" alt="">
         <div class="userInfo">
-          <span>完善个人资料</span>
-          <span>2019.10.11 15:28</span>
+          <span>{{item.memo}}</span>
+          <span>{{item.createtime}}</span>
         </div>
-        <span class="userNum">+30</span>
+        <span class="userNum">+{{item.score}}</span>
       </div>
-      <NoData v-if="xflist.length === 0 && current === 0"/>
+      </van-list>
+      <div class="aids" style="font-size: initial;" v-if="currentIndex === 1" v-html="points_rule">
+      </div>
+      <NoData v-if="(xflist.length === 0 && currentIndex === 0) || (currentIndex === 1) && !points_rule"/>
       <img class="myfooter" src="../assets/images/myfooter.png" alt="">
     </div>
   </div>
@@ -34,40 +45,76 @@ export default {
   name: 'MyXf',
   data () {
     return {
-      current: 0,
-      xflist: []
+      currentIndex: 0,
+      xflist: [],
+      finished: false,
+      loading: false,
+      current: 1,
+      total: 0,
+      score: 0,
+      points_rule:null
     }
   },
   mounted () {
-    this.$api.userPointsRecords().then((result) => {
-      console.log(result)
-      if (result.code === 1) {
-        this.xflist = result.data.data
-      }
-    })
+    this.score = this.$route.query.score
+    this.getxflist()
   },
   methods: {
     tabClickHandler (e) {
-      this.current = e
+      this.currentIndex = e
+      if(this.currentIndex === 0){
+        this.getxflist()
+      }else{
+        this.getcommonConfig()
+      }
+    },
+    getcommonConfig(){
+      this.$api.commonConfig({name:'points_rule'}).then((res)=>{
+        if(res.code === 1) {
+          this.points_rule = res.data.content
+        }
+      })
+    },
+    getxflist () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        user_id: this.user_id
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+        this.$api.userScoreLog(param).then((res) => {
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
+
+            if (this.xflist.length == 0) {
+              // 第一次加载
+              this.xflist = res.data.data || []
+              this.total = res.data.total
+            } else if (this.xflist.length < this.total) {
+              // 加载更多
+              this.xflist = this.xflist.concat(res.data.data)
+            }
+            if (this.xflist.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
+          }
+        })
+
+    },
+    onLoad () {
+      if (this.xflist.length < this.total) {
+        this.current++
+        this.getxflist()
+      }
     }
   },
   computed: {
-    autoIco (type) {
-      var links
-      switch (type) {
-        case 1:
-          links = require('../assets/images/myxfzl.png')
-          break
-        case 2:
-        case 3:
-          links = require('../assets/images/myxfxx.png')
-          break
-        case 4:
-          links = require('../assets/images/myxfft.png')
-          break
-      }
-      return links
-    }
   },
   components: {
     NoData
@@ -76,6 +123,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.aids{
+  font-size: initial;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.aids img{
+  width:100% !important;
+  height:auto !important;
+}
 .myXf{
   display: flex;
   flex-direction: column;

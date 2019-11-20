@@ -2,66 +2,185 @@
   <div class="userinfo">
     <div class="userinfo-top">
       <div class="userinfo-header">
-        <img src="../assets/images/people.png" alt="">
+        <img :src="detail.avatar" alt="">
         <div class="userinfo-top-wrap">
-          <span class="username">花田喜事xibe花田喜事xibe花田喜事xibe</span>
+          <span class="username">{{detail.nickname}}</span>
           <div class="userxf">
             <span>被喜欢</span>
-            <span>2568</span>
+            <span>{{detail.likes}}</span>
             <span>喜欢</span>
-            <span>1782</span>
+            <span>{{detail.likes}}</span>
           </div>
         </div>
         <span class="userinfo-top-btn">已关注</span>
       </div>
       <div class="userinfo-tab">
         <ul>
-          <li :class="{active : (current == 0 ? true : false)}" @click="tabClick(0)">帖子</li>
-          <li :class="{active : (current == 1 ? true : false)}" @click="tabClick(1)">图册</li>
+          <li :class="{active : (currentIndex == 0 ? true : false)}" @click="tabClick(0)">帖子</li>
+          <li :class="{active : (currentIndex == 1 ? true : false)}" @click="tabClick(1)">图册</li>
         </ul>
       </div>
     </div>
     <div class="userinfo-content">
-      <div class="userinfo-content-item" style="display:none">
-        <img src="../assets/images/userinfoimg.png" alt="">
-        <span class="title">花艺课中式传统插花</span>
+      <van-list
+            v-model="loading"
+            v-show="huabanList.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+      >
+      <div class="userinfo-content-item" v-if="currentIndex === 0" v-for="(item,index) in huabanList" :key="index">
+        <img :src="item.image" alt="">
+        <span class="title">{{item.title}}</span>
         <div class="like">
-            <img class="avatar" src="../assets/images/people.png" alt="">
-            <span class="ather">Kate sapdiekssss</span>
+            <img class="avatar" :src="item.avatar" alt="">
+            <span class="ather">{{item.nickname}}</span>
             <img class="likeico" src="../assets/images/like.png" alt="">
-            <span class="anum">50</span>
+            <span class="anum">{{item.likes}}</span>
         </div>
 
       </div>
-      <div class="userinfo-content-imgitem">
+      <div class="userinfo-content-imgitem" v-if="currentIndex === 1">
         <img src="../assets/images/userinfophoto.png" alt="">
       </div>
+      </van-list>
+      <div class="no-more">
+        <NoData v-if="huabanList.length === 0" />
+      </div>
     </div>
+
   </div>
 </template>
 
 <script>
+import NoData from '@/components/nodata.vue'
 export default {
   name: 'HuabanUserInfo',
   data () {
     return {
-      current: 0
+      currentIndex: 0,
+      finished: false,
+      loading: false,
+      current: 1,
+      total: 0,
+      huabanList: [],
+      detail:{},
+      user_id:''
     }
   },
+  mounted () {
+    this.user_id = this.$route.query.id
+    this.getUserInfo()
+  },
+  components: {
+    NoData
+  },
   methods: {
+    getUserInfoList () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        user_id: this.user_id
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      if(this.currentIndex === 0){
+        this.$api.postsLists(param).then((res) => {
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
+            if (this.huabanList.length == 0) {
+              // 第一次加载
+              console.log(res.data.data)
+              var list = []
+              res.data.data.map((item)=>{
+                item.image = item.images ? item.images[0] : ''
+                item.avatar = item.user.avatar
+                item.nickname = item.user.nickname
+                list.push(item)
+              })
+              this.huabanList = list || []
+              this.total = res.data.total
+            } else if (this.huabanList.length < this.total) {
+              // 加载更多
+              var list = []
+              res.data.data.map((item)=>{
+                item.image = item.images ? item.images[0] : ''
+                item.avatar = item.user.avatar
+                item.nickname = item.user.nickname
+                list.push(item)
+              })
+              this.huabanList = this.huabanList.concat(list)
+            }
+            if (this.huabanList.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
+          }
+        })
+      }else if(this.currentIndex === 1){
+        this.$api.groupPhotos(param).then((res) => {
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
+
+            if (this.huabanList.length == 0) {
+              // 第一次加载
+              this.huabanList = res.data.data || []
+              this.total = res.data.total
+            } else if (this.huabanList.length < this.total) {
+              // 加载更多
+              this.huabanList = this.huabanList.concat(res.data.data)
+            }
+            if (this.huabanList.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
+          }
+        })
+      }
+    },
+    getUserInfo () {
+      this.$api.userIndex({user_id:this.user_id}).then((res)=>{
+        if(res.code === 1) {
+          this.detail = res.data
+          this.getUserInfoList()
+        }
+      })
+    },
     tabClick (e) {
-      this.current = e
+      this.currentIndex = e
+      this.finished = false
+      this.loading = false
+      this.current = 1
+      this.total = 0
+      this.huabanList = []
+      this.getUserInfoList()
+    },
+    onLoad () {
+      if (this.huabanList.length < this.total) {
+        this.current++
+        this.getUserInfoList()
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+ /deep/ .van-list__finished-text{
+  width:100%;
+}
 .userinfo{
   background:#FBF8F4;
   display: flex;
   flex-direction: column;
   width:100%;
+  min-height: 100vh;
   &-header{
     height:107px;
     display: flex;
@@ -81,6 +200,7 @@ export default {
       height:107px;
       margin-right:25px;
       margin-left:26px;
+      border-radius: 50%;
     }
     &-wrap{
       width:369px;
@@ -164,8 +284,22 @@ export default {
     display: flex;
     width:100%;
     padding:24px 24px 124px 24px;
+    box-sizing: border-box;
+    flex-direction: column;
+    .van-list{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
     &-item{
       width:339px;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 24px;
+      margin-right: 24px;
+      background:#FFFFFF;
+      border-radius: 8px;
       img{
         width:339px;
         height:292px;
@@ -174,7 +308,11 @@ export default {
       .title{
         font-size: 30px;
         color:#333333;
-        display: flex;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding:12px 17px;
       }
       .like{
         display: flex;
@@ -182,10 +320,12 @@ export default {
         justify-content: space-between;
         align-items: center;
         margin-top:12px;
-        height:38px;
+        padding:0px 17px 15px 17px;
+        // height:38px;
           .avatar{
             width:38px;
             height:38px;
+            border-radius: 50%;
             margin-right:12px;
           }
           span{
@@ -221,5 +361,8 @@ export default {
     }
   }
 
+}
+.van-list .userinfo-content-item:nth-child(2n){
+margin-right:0px !important;
 }
 </style>

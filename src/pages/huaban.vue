@@ -2,7 +2,7 @@
   <div class="huaban">
     <div class="huaban-top">
       <div class="huaban-top-wrap">
-        <div class="huaban-top-item" v-for="(item,index) in huabanList" :key="index" @click="huabangdHandler(1)">
+        <div class="huaban-top-item" v-for="(item,index) in huabanList" :key="index" @click="huabangdHandler(item.group_id)">
           <img class="huaban-top-item-img1" :src="item.image" alt="">
           <div class="huaban-top-item-des">
             <span class="title">{{item.group_name}}</span>
@@ -57,7 +57,7 @@ export default {
   },
   mounted () {
     this.getGroupLists({recommend:0},{data:1})
-    this.getGroupLists({recommend:0},{data:2})
+    this.getGroupLists({my:1},{data:2})
     this.getPostsLists()
   },
   methods: {
@@ -78,7 +78,7 @@ export default {
     getPostsLists () {
       this.$api.postsLists({recommend:1}).then((result)=>{
         if(result.code === 1) {
-         var list =  result.data.data.splice(0,3)
+        var list =  result.data.data.splice(0,3)
          list.map((item)=>{
            item.image = item.images ? item.images[0]: ''
            item.nickname = item.user.nickname

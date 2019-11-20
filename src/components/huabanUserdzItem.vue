@@ -5,7 +5,7 @@
                 <span class="user">{{item.nickname}}</span>
                 <span class="userinfo">{{autoTime(item.create_time)}}</span>
             </div>
-            <img class="huabandz" src="../assets/images/userdz.png"/>
+            <img class="huabandz" :src="auToImage(item)"/>
     </div>
 </template>
 
@@ -38,6 +38,9 @@ export default {
     }
   },
   methods: {
+    auToImage (item) {
+      return item.post.images ? item.post.images[0] : ''
+    },
     autoTime (time) {
       var tim = new Date(time * 1000)
       return tim.getFullYear() + '-' + (tim.getMonth() + 1) + '-' + (tim.getDate().length == 1 ? 0 + tim.getDate() : tim.getDate()) + ' ' + tim.getHours() + ':' + tim.getMinutes()

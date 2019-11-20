@@ -3,22 +3,18 @@
     <div class="huabanTzfp-top">
       <input type="text" class="huabanTzfp-top-input" placeholder="请输入标题内容…">
       <textarea placeholder="请输入帖子内容…"  class="huabanTzfp-top-textarea"/>
-      <span>添加图片（0/3）</span>
+      <span>添加图片（{{imgList.length}}/3）</span>
       <div class="huabanTzfp-top-uploads">
-        <div class="uploadimgs-wrap" >
-          <img src="../assets/images/uploadimg.png" class="uploadimgs" alt="">
+        <div class="uploadimgs-wrap" v-for="(item,index) in imgList" :key="index" @click="delImg(index)">
+          <img :src="item.l" class="uploadimgs" alt="">
           <img src="../assets/images/uploadcloses.png" class="uploadclose" alt="">
         </div>
-        <div class="uploadimgs-wrap">
-          <img src="../assets/images/uploadimg.png" class="uploadimgs" alt="">
-          <img src="../assets/images/uploadcloses.png" class="uploadclose" alt="">
-        </div>
-        <div class="uploadimgs-wrap uploadborder" @click="uploadImages">
+        <div class="uploadimgs-wrap uploadborder" @click="chooseImage" v-if="imgList.length < 3">
           <img src="../assets/images/uploadmores.png" class="uplaodmores" alt="" />
         </div>
       </div>
     </div>
-    <div class="huabanTzfp-btn">确认发布</div>
+    <div class="huabanTzfp-btn" @click="postSave">确认发布</div>
   </div>
 </template>
 
@@ -27,7 +23,9 @@ export default {
   name: 'HuabanTzfp',
   data () {
     return {
-
+      num: 3,//上传数量
+      localIds: [],
+      imgList: []
     }
   },
   mounted () {
@@ -45,7 +43,8 @@ export default {
             'onMenuShareTimeline',
             'onMenuShareAppMessage',
             'chooseImage',
-            'uploadImage'
+            'uploadImage',
+            'getLocalImgData'
           ]
         })
         this.$wx.error(function (res) {
@@ -58,30 +57,80 @@ export default {
               'checkJsApi',
               'onMenuShareTimeline',
               'onMenuShareAppMessage',
-              'getLocation',
               'chooseImage',
-              'uploadImage'
+              'uploadImage',
+              'getLocalImgData'
             ],
             success: function (res) {
 
             }
           })
         })
+
       }
     })
   },
   methods: {
-    uploadImages () {
-      this.$wx.chooseImage({
-        count: 3, // 默认9
-        sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-        sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-        success: function (res) {
-          // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-          console.log(res.localIds, 'res')
-        }
+    postSave () {
+
+    },
+    delImg (index) {
+      this.imgList.splice(index,1)
+      this.localIds.splice(index,1)
+      this.num = this.imgList
+      console.log(this.imgList,'imgList')
+    },
+    chooseImage () {
+      var _this = this
+      if(this.imgList.length < 4){
+        this.$wx.chooseImage({
+          count: this.num, // 默认9
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+            // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            _this.localIds = res.localIds
+            _this.localIds.map((item)=>{
+              _this.uploadImage(new String(item).toString())
+            })
+          }
+        })
+      }else{
+        this.$toast('只能上传三张')
+      }
+    },
+    uploadImage (localId) {
+      this.$toast('uploadImage')
+      var _this = this
+      this.$wx.uploadImage({
+          localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+          isShowProgressTips: 1, // 默认为1，显示进度提示
+          success: function (res) {
+            var serverId = res.serverId; // 返回图片的服务器端ID
+            _this.$toast('serverId')
+            _this.getImgData(localId,serverId)
+          }
       })
+    },
+    getImgData (localId,serverId) {
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      var _this = this
+      if(isiOS){
+        this.$wx.getLocalImgData({
+              localId: localId, // 图片的localID
+              success: function (res) {
+                  var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
+                  localData = localData.replace('jgp', 'jpeg');
+                  _this.imgList.push({l:localData,s:serverId})
+              }
+        });
+      }else{
+        _this.imgList.push({l:localId,s:serverId})
+      }
+      _this.num --
     }
+
   }
 }
 </script>

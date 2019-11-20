@@ -117,6 +117,10 @@ const server = {
   userIndex (data) {
     return post('/user/index', data)
   },
+  // 用户相册 /api/group/photos
+  groupPhotos (data) {
+    return post('group/photos', data)
+  },
   // 获取二维码
   userQrcode (data) {
     return post('/user/qrcode', data)
@@ -157,9 +161,9 @@ const server = {
   userSaveFans (data) {
     return post('user/saveFans', data)
   },
-  // 学分 /api/user/pointsRecords
-  userPointsRecords (data) {
-    return post('user/pointsRecords', data)
+  // 学分 user/scoreLog
+  userScoreLog (data) {
+    return post('user/scoreLog', data)
   },
   // 提现记录 /user/takeout
   userTakeout (data) {
@@ -177,6 +181,10 @@ const server = {
   userMessage (data) {
     return post('user/messages', data)
   },
+  // 公共配置 /api/common/config
+  commonConfig (data) {
+    return post('common/config', data)
+  },
   // 社区详情 /api/group/index
   groupIndex (data) {
     return post('group/index', data)
@@ -192,10 +200,6 @@ const server = {
   // 贴子详情 posts
   tzPosts (data) {
     return post('posts', data)
-  },
-  // 贴子列表 posts/lists
-  postsLists (data) {
-    return post('posts/lists', data)
   },
   // 社区分类 group/category
   groupCateGory (data) {

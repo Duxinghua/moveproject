@@ -265,7 +265,11 @@ export default {
           Links = 'CourseOrderList'
           break
       }
+      if(arg === 'xf'){
+      this.$router.push({name: Links,query:{score:this.userInfo.score}})
+      }else{
       this.$router.push({name: Links})
+      }
     }
   },
   components: {

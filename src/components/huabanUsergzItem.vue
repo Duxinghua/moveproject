@@ -63,7 +63,9 @@ export default {
       this.$emit('cancelGz', id)
     },
     userInfoHandler () {
-      this.$router.push({name: 'HuabanUserInfo'})
+      this.$router.push({name: 'HuabanUserInfo',query: {
+        id:this.item.id
+      }})
     }
   }
 }

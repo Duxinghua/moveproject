@@ -1,6 +1,6 @@
 import Vue from 'vue'
-// import getSitem from '@/utils/storage'
-// import Api from '@/api/index'
+import getSitem from '@/utils/storage'
+import Api from '@/api/index'
 import Router from 'vue-router'
 import Home from '@/pages/home'
 import TeacherDetail from '@/pages/teacherDetail'
@@ -40,7 +40,7 @@ import Login from '@/pages/login'
 import Test from '@/pages/test'
 
 Vue.use(Router)
-/*
+
 const GetUrlParame = (parameName) => {
   var parames = window.location.search
   if (parames.indexOf(parameName) > -1) {
@@ -80,7 +80,6 @@ const getToken = (data) => {
     })
   }
 }
-*/
 
 /*
 const getToken = async (data, url) => {
@@ -515,8 +514,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
-  /*
+
   const agent = navigator.userAgent
   const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
   if (isiOS) {
@@ -559,7 +557,6 @@ router.beforeEach((to, from, next) => {
     // }
     next()
   }
-  */
 })
 
 export default router
