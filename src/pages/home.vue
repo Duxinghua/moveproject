@@ -18,21 +18,21 @@
       <div class="home-course">
         <TitleItem title="线下课程" />
         <div class="home-course-content">
-          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" offlineDetail="/offcoursedetail"/>
+          <CourceItem v-for="(cource,index) in offcourseList" :item="cource" :key="index" courseDetail="/offcoursedetail"/>
         </div>
-        <MoreText moreText="更多课程" moreOffCourse="OffCourseList" />
+        <MoreText moreText="更多课程" moreName="OffCourseList" />
       </div>
       <div class="home-teacher">
         <TitleItem title="名师推荐" />
         <el-carousel :autoplay="true" :interval="4000" indicator-position="none" id="home-teacher-carousel" arrow="always">
           <el-carousel-item  v-for="item in schoolList" :key="item.id">
             <div class="home-teacher-item" >
-              <img  :src="item.img" alt="">
+              <img  :src="item.avatar" alt="">
               <div class="teacherinfo">
-                <span class="teacher-name">{{item.name}}</span>
-                <span class="teacher-des">{{item.des}}</span>
+                <span class="teacher-name">{{item.nickname}}</span>
+                <span class="teacher-des">{{item.keywords}}</span>
                 <div class="teacher-btn">
-                  <span @click="teacherInfoHandle(item)">详情</span>
+                  <span @click="teacherInfoHandle(item.id)">详情</span>
                   <img src="../assets/images/teachersq.png" alt="">
                 </div>
               </div>
@@ -44,16 +44,16 @@
       <div class="home-course home-onlinecourse">
         <TitleItem title="线上课程" />
         <div class="home-course-content">
-          <CourceItem v-for="(cource,index) in courceList" :item="cource" :key="index" onlineDetail="/onlineCourseDetail"/>
+          <CourceItem v-for="(cource,index) in oncourseList" :item="cource" :key="index" courseDetail="/onlineCourseDetail"/>
         </div>
-        <MoreText moreText="更多课程" moreOnlineCourse="OnlineCourseList"/>
+        <MoreText moreText="更多课程" moreName="OnlineCourseList"/>
 
       </div>
       <div class="home-video">
         <TitleItem title="直播约课" />
         <el-carousel indicator-position="none" :interval="4000" type="card" id="home-video-carousel" @change="cardChange">
-          <el-carousel-item v-for="item in 6" :key="item">
-            <img  class="home-video-img" src="../assets/images/video1.png" />
+          <el-carousel-item v-for="item in videoList" :key="item.course_id">
+            <img  class="home-video-img" :src="item.image[0]" />
           </el-carousel-item>
         </el-carousel>
         <div class="home-video-course">
@@ -67,16 +67,26 @@
       </div>
     </div>
     <div class="home-ms-content" v-if="pageType == 1">
-       <div class="home-mingshi">
-         <div class="home-mingshi-item" v-for="item in schoolList" :key="item.id">
-           <img :src="item.img" alt="">
-           <div class="home-mingshi-item-des">
-             <span class="teacher-name">{{item.name}}</span>
-             <p class="teacher-des">{{item.des}}</p>
-             <MoreText class="moretext" moreText="了解更多" />
-           </div>
-         </div>
-       </div>
+      <van-list
+        v-model="loading"
+        v-show="TeacherLists.length > 0"
+        :finished="finished"
+        finished-text="没有更多了"
+        :immediate-check="false"
+        @load="onLoad"
+      >
+        <div class="home-mingshi">
+          <div class="home-mingshi-item" v-for="item in TeacherLists" :key="item.id">
+            <img :src="item.avatar" alt="">
+            <div class="home-mingshi-item-des">
+              <span class="teacher-name">{{item.nickname}}</span>
+              <p class="teacher-des">{{item.keywords}}</p>
+              <MoreText class="moretext" moreText="了解更多" />
+            </div>
+          </div>
+        </div>
+      </van-list>
+      <NoData v-if="TeacherLists.length == 0"/>
     </div>
     <Footer :mrt="true" />
   </div>
@@ -87,6 +97,7 @@ import TitleItem from '@/components/titleItem.vue'
 import MoreText from '@/components/moreItem.vue'
 import CourceItem from '@/components/courceItem.vue'
 import Footer from '@/components/footer.vue'
+import NoData from '@/components/nodata'
 // import ApiModel from '@/api'
 
 export default {
@@ -107,59 +118,22 @@ export default {
           image: require('../assets/images/banners.png')
         }
       ],
-      courceList: [
-        {
-          id: 1,
-          img: require('../assets/images/courseimg.png'),
-          title: '花艺课中式传统插花',
-          avater: require('../assets/images/people.png'),
-          name: 'Kate sapdiek'
-        },
-        {
-          id: 2,
-          img: require('../assets/images/courseimg.png'),
-          title: '花艺课中式传统插花',
-          avater: require('../assets/images/people.png'),
-          name: 'Kate sapdiek'
-        },
-        {
-          id: 3,
-          img: require('../assets/images/courseimg.png'),
-          title: '花艺课中式传统插花',
-          avater: require('../assets/images/people.png'),
-          name: 'Kate sapdiek'
-        },
-        {
-          id: 4,
-          img: require('../assets/images/courseimg.png'),
-          title: '花艺课中式传统插花',
-          avater: require('../assets/images/people.png'),
-          name: 'Kate sapdiek'
-        }
-      ],
-      schoolList: [
-        {
-          id: 0,
-          img: require('../assets/images/teacher.png'),
-          name: '柯杏林',
-          des: '知音花艺协会副会长兼秘书长; 中国传统插花中国传统插花中国传统插花中国传统插花'
-        },
-        {
-          id: 1,
-          img: require('../assets/images/teacher.png'),
-          name: '陈进',
-          des: '中国插花协会理事；湖北省花木盆景协会插花分会副秘书长；知音插花协会副会长知音插花协会副会长'
-        },
-        {
-          id: 2,
-          img: require('../assets/images/teacher.png'),
-          name: '柯杏林',
-          des: '知音花艺协会副会长兼秘书长; 中国传统插花中国传统插花中国传统插花中国传统插花'
-        }
-      ],
+      offcourseList: [],
+      oncourseList: [],
+      videoList:[],
+      schoolList: [],
+      TeacherLists: [],
       current: 0,
-      pageType: 0
+      pageType: 0,
+      total: 0,
+      page: 1,
+      loading: false,
+      finished: false,
     }
+  },
+  mounted () {
+    this.getCourseList()
+    this.getTeacherRec()
   },
   methods: {
     menuHandler (index) {
@@ -167,7 +141,7 @@ export default {
       this.pageType = index
     },
     cardChange (index) {
-      console.log(index, 'cardindex')
+      // console.log(index, 'cardindex')
     },
     onChange (index) {
       this.current = index
@@ -183,30 +157,100 @@ export default {
     },
     searchHandle () {
       this.$router.push({name: 'HomeSearch'})
+    },
+    getTeacherRec () {
+      const paramRec = {
+        page: 1,
+        pageSize: 4,
+        recommend: 1
+      }
+      const paramL = {
+        page: this.page,
+        pageSize: 10,
+        recommend: 0
+      }
+      this.$api.teacherList(paramRec).then((res) => {
+        if (res.code === 1) {
+          this.schoolList = res.data.data
+          console.log(res.data)
+        }
+      })
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.teacherList(paramL).then((res) => {
+        this.$toast.clear()
+        if (res.code === 1) {
+          this.loading = false
+          // console.log(res.data)
+          if (this.TeacherLists.length == 0) {
+            // 第一次加载
+            this.TeacherLists = res.data.data || []
+            this.total = res.data.total
+          } else if (this.TeacherLists.length < this.total) {
+            // 加载更多
+            this.TeacherLists = this.TeacherLists.concat(res.data.data)
+          }
+          if (this.TeacherLists.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    getCourseList () {
+      const paramOff = {
+        page: 1,
+        pageSize: 4,
+        type: 3, // 线下
+        recommend: 1
+      }
+      const paramOn = {
+        page: 1,
+        pageSize: 4,
+        type: 2, // 线上
+        recommend: 1
+      }
+      const paramV = {
+        page: 1,
+        pageSize: 5,
+        type: 1, // 直播
+        recommend: 1
+      }
+      this.$api.courseList(paramOff).then((res) => {
+        if (res.code === 1) {
+          this.offcourseList = res.data.data
+          // console.log(res.data)
+        }
+      })
+      this.$api.courseList(paramOn).then((res) => {
+        if (res.code === 1) {
+          this.oncourseList = res.data.data
+          // console.log(res.data)
+        }
+      })
+      this.$api.courseList(paramV).then((res) => {
+        if (res.code === 1) {
+          this.videoList = res.data.data
+          // console.log(res.data.data)
+        }
+      })
+    },
+    onLoad () {
+      if (this.TeacherLists.length < this.total) {
+        this.page++
+        this.getTeacherRec()
+      }
     }
-  },
-  mounted () {
-    // document.getElementById('el-carousel').style.height = this.bannerHeight + 'px';
-    // console.log(this.$refs.teacherItem)
-    // console.log(this.$api, 'api')
-    this.$api.index().then((result) => {
-      if (result.code === 1) {
-        // this.userInfo = result.data
-        console.log(result.data);
-      }
-    })
-    this.$api.teacherList().then((result) => {
-      if (result.code === 1) {
-        // this.userInfo = result.data
-        console.log(result.data);
-      }
-    })
   },
   components: {
     TitleItem,
     MoreText,
     CourceItem,
-    Footer
+    Footer,
+    NoData
   }
 }
 </script>

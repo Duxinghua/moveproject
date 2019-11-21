@@ -216,8 +216,31 @@ const server = {
   // 订单列表  goods_order/lists
   goodsOrderLists (data) {
     return post('goods_order/lists', data)
+  },
+  // 课程列表 /api/course/lists
+  courseList (data) {
+    return post('course/lists', data)
+  },
+  // 课程详情 /api/course/indexindex/lists
+  courseDetail (data) {
+    return post('course/index', data)
+  },
+  // 课程拼团列表  /api/course_tuan/lists
+  courseTuanList (data) {
+    return post('course_tuan/lists', data)
+  },
+  // 名师列表  /api/teacher/lists
+  teacherList (data) {
+    return post('teacher/lists', data)
+  },
+  // 名师详情  /api/teacher/index
+  teacherDetail (data) {
+    return post('teacher/index', data)
+  },
+  // 名师作品  /api/teacher/opusLists
+  teacherWorksList (data) {
+    return post('teacher/opusLists', data)
   }
-
 }
 
 export default server

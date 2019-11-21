@@ -1,14 +1,40 @@
 <template>
   <div class="offdetail">
+    <div class="course-swiper">
+      <van-swipe :autoplay="10000">
+        <van-swipe-item
+            v-for="(image, index) in courseDetails.image"
+            :key="index"
+        >
+            <van-image :src="image">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+            </van-image>
+        </van-swipe-item>
+      </van-swipe>
+    </div>
     <div class="offdetail-top">
-      <img src="../assets/images/offlinedetail.png" alt="">
       <div class="offdetail-top-rec">
-        <div>插花设计中的4种色彩搭配方式</div>
-        <p>我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色。</p>
-        <span>¥1248</span>
+        <div>{{courseDetails.title}}</div>
+        <p>{{courseDetails.description}}</p>
+        <span>¥{{courseDetails.price}}</span>
         <div>
           <img src="../assets/images/offlinenjoy.png" alt="">
           <span>分享</span>
+        </div>
+      </div>
+    </div>
+    <div class="goods-group">
+      <div class="group-header">
+        <h3>课程拼团</h3>
+        <div class="right" @click="onLinkAll">查看全部拼团<van-icon name="arrow" /></div>
+      </div>
+      <div class="group-list">
+        <GroupItem v-for="(item, index) in groupList" :key="index" :groupData="item"/>
+        <div class="group-no">
+          <img src="../assets/images/tuan.png" alt="">
+          <span>暂无拼团,快去拼团吧</span>
         </div>
       </div>
     </div>
@@ -18,11 +44,11 @@
       <div class="offdetail-course-sec">
         <p>
           <span>开课时间</span>
-          <span>2019-10-22 9:00-12:00</span>
+          <span>{{courseOffline.open_time_text}}</span>
         </p>
         <p>
           <span>开课地址</span>
-          <span>武汉市武汉市武汉市武汉市武汉市</span>
+          <span>{{courseOffline.address}}</span>
         </p>
         <p>
           <span>主办单位</span>
@@ -67,6 +93,13 @@
         </div>
       </div>
     </div>
+    <div class="goods-action">
+      <div class="goods-money">合计<span>￥</span></div>
+      <div>
+        <div class="goods-group-btn" >发起拼团</div>
+        <div class="goods-buy-btn">立即购买</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -77,11 +110,10 @@ export default {
   name: 'OffCourseDetail',
   data () {
     return {
-      msgItem: {
-        img: require('../assets/images/people.png'),
-        name: '柯杏林',
-        msg: '知音花艺协会副会长兼秘书长; 中国传统插花中国传统插花中国传统插花中国传统插花'
-      },
+      // swiperCurrent: 0,
+      bannerImg: [],
+      courseDetails: {},
+      courseOffline: {},
       planList: [
         {
           id: 1,
@@ -107,14 +139,62 @@ export default {
             {id: 4, content: '自然的包装方式'}
           ]
         }
-      ]
+      ],
+      msgItem: {
+        img: require('../assets/images/people.png'),
+        name: '柯杏林',
+        msg: '知音花艺协会副会长兼秘书长秘书长'
+      },
+      groupList: [],
+      courseId: 0,  // 课程id
+      imageShow: false
     }
   },
   mounted () {
-    // this.msgItem.img = this.$route.query.img
-    // this.msgItem.name = this.$route.query.name
-    // this.msgItem.des = this.$route.query.des
     console.log(this.$route.query.id)
+    this.courseId = this.$route.query.id
+    this.courseDetail()
+    this.courseTuanList()
+  },
+  methods: {
+    // onSwipeChange (index) {
+    //   this.swiperCurrent = index
+    // },
+    courseDetail () {
+      const param = {
+        course_id: this.courseId
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.courseDetail(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.courseDetails = res.data
+          this.courseOffline = res.data.courseOffline
+          // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
+          console.log(res.data)
+        }
+      })
+    },
+    courseTuanList () {
+      const param = {
+        page: 1,
+        pageSize: 10,
+        course_id: this.courseId
+      }
+      this.$api.courseTuanList(param).then((res) => {
+        if (res.code == 1) {
+          this.groupList = res.data.data
+          console.log(res.data)
+        }
+      })
+    },
+    onLinkAll () {
+      this.$router.push('/allGroup')
+    }
   },
   components: {
     TeacherMsg
@@ -124,19 +204,27 @@ export default {
 
 <style lang="scss" scoped>
   .offdetail{
-    display: flex;
-    flex-direction: column;
     width:100%;
     background:#FBF8F4;
+    padding-bottom: 100px;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow: auto;
+    .course-swiper{
+      width: 100%;
+      height: 550px;
+      position: relative;
+      .van-image{
+        width: 100%;
+        height: 100%;
+      }
+      .van-swipe{
+        height: 100%;
+      }
+    }
     &-top{
-      display: flex;
-      flex-direction: column;
       width: 100%;
       border-bottom: 15px solid #F6F3EE;
-      img{
-        width:749px;
-        height: 500px;
-      }
       &-rec{
         position: relative;
         display: flex;
@@ -149,12 +237,18 @@ export default {
           font-size: 36px;
           color: #333333;
           font-weight: 500;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         p{
           font-size: 26px;
           color: #999999;
-          // font-weight: 500;
+          overflow: hidden;
           text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
         }
         span{
           font-size: 32px;
@@ -185,6 +279,49 @@ export default {
         }
       }
     }
+    .goods-group{
+      margin-top: 15px;
+      background: #FBF8F5;
+      padding: 40px 25px 35px 25px;
+      border-bottom: 15px solid #F6F3EE;
+      .group-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        h3{
+          color: #6D8160;
+          font-size: 36px;
+        }
+        .right{
+          color: #999999;
+          font-size: 26px;
+          display: flex;
+          align-items: center;
+          .van-icon{
+              font-size: 34px;
+              color: #D4B589;
+          }
+        }
+      }
+      .group-list{
+        .group-no{
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding: 20px 0px;
+          img{
+            width: 160px;
+            height: 104px;
+          }
+          span{
+            color: #666666;
+            font-size: 30px;
+            margin-top: 40px;
+          }
+        }
+      }
+    }
     .offdetail-course,.offdetail-teacher,.offdetail-set{
       margin: 0 auto;
       padding-top: 10px;
@@ -192,6 +329,9 @@ export default {
       flex-direction: column;
       justify-content: space-around;
       border-bottom: 15px solid #F6F3EE;
+    }
+    .offdetail-set{
+      border-bottom: 0 !important;
     }
     &-course{
       min-height: 501px;
@@ -237,49 +377,6 @@ export default {
         padding-left: 4%;
         padding-right: 4%;
       }
-      // &-msg{
-      //   display: flex;
-      //   flex-direction: row;
-      //   justify-content: space-between;
-      //   align-items: center;
-      //   // margin: 40px 0;
-      //   img{
-      //     width: 85px;
-      //     height: 85px;
-      //   }
-      //   div{
-      //     width: 368px;
-      //     display: flex;
-      //     flex-direction: column;
-      //     // padding: 50px 0;
-      //     span{
-      //       font-size: 32px;
-      //       color: #333333;
-      //       margin-bottom: 6px;
-      //     }
-      //     p{
-      //       width: 100%;
-      //       font-size: 26px;
-      //       color: #666666;
-      //       overflow: hidden;
-      //       text-overflow: ellipsis;
-      //       // line-height: 36px;
-      //       display: -webkit-box;
-      //       -webkit-box-orient: vertical;
-      //       -webkit-line-clamp: 1;
-      //     }
-      //   }
-      //   .offdetail-teacher-btn{
-      //     width: 172px;
-      //     height: 62px;
-      //     border: 1px solid #CDA871;
-      //     border-radius: 31px;
-      //     color: #CDA871;
-      //     font-size: 30px;
-      //     text-align: center;
-      //     line-height: 62px;
-      //   }
-      // }
       &-sec{
         display: flex;
         flex-direction: column;
@@ -381,6 +478,53 @@ export default {
           width: 73%;
           font-size: 26px;
           color: #666666;
+      }
+    }
+    .goods-action{
+      position: fixed;
+      bottom: 0px;
+      left: 0px;
+      z-index: 10;
+      width: 100%;
+      height: 100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0px 20px 0px 25px;
+      background: #fff;
+      .goods-money{
+        color: #333333;
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        span{
+          color: #995258;
+          font-size: 36px;
+          margin-left: 15px;
+        }
+      }
+      >div{
+        display: flex;
+      }
+      .goods-group-btn{
+        width: 220px;
+        height: 80px;
+        line-height: 80px;
+        text-align: center;
+        color: #fff;
+        background: #DCC98B;
+        border-radius:40px 0px 0px 40px;
+        font-size: 34px;
+      }
+      .goods-buy-btn{
+        width: 220px;
+        height: 80px;
+        line-height: 80px;
+        text-align: center;
+        color: #F3D995;
+        background: #6D8160;
+        font-size: 34px;
+        border-radius:0px 40px 40px 0px;
       }
     }
   }

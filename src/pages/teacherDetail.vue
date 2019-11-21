@@ -2,7 +2,7 @@
   <div class="teacherdetail">
     <TeacherMsg :msgItem="msgItem"></TeacherMsg>
     <div class="teacherdetail-content">
-      <p>插花是一条修行的路，用分享美好之心对待生活；在喧嚣的人事走向自然逍遥之境，田园之美，作品大气沉稳，清丽淡雅，天地人和谐共处，自然而然。</p>
+      <p>{{msgItem.description}}</p>
       <img src="../assets/images/teacherdetail.png" alt="">
     </div>
     <div class="teacherdetail-works">
@@ -11,9 +11,18 @@
         <span>作品</span>
         <img src="../assets/images/worksright.png" alt="">
       </div>
-      <div class="teacher-works">
-        <TeacherWorks v-for="item in teacherWorks" :key="item.id" :item="item"></TeacherWorks>
-      </div>
+      <van-list
+            v-model="loading"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+        >
+        <div class="teacher-works">
+          <TeacherWorks v-for="item in teacherWorks" :key="item.id" :item="item"></TeacherWorks>
+        </div>
+      </van-list>
+      <NoData v-if="teacherWorks.length == 0"/>
     </div>
   </div>
 </template>
@@ -21,68 +30,80 @@
 <script>
 import TeacherMsg from '@/components/teacherMsg.vue'
 import TeacherWorks from '@/components/teacherWorks.vue'
+import NoData from '@/components/nodata'
 
 export default {
   name: 'Teacher',
   data () {
     return {
-      msgItem: {
-        img: require('../assets/images/people.png'),
-        name: '柯杏林',
-        msg: '知音花艺协会副会长兼秘书长秘书长'
-      },
-      teacherWorks: [
-        {
-          id: 1,
-          img: require('../assets/images/onlineworks.png'),
-          title: '残荷听雨',
-          des: '杏林 2019.1020'
-        },
-        {
-          id: 2,
-          img: require('../assets/images/onlineworks.png'),
-          title: '残荷听雨',
-          des: '杏林 2019.1020'
-        },
-        {
-          id: 3,
-          img: require('../assets/images/onlineworks.png'),
-          title: '秋水伊人',
-          des: '杏林 2019.1020'
-        },
-        {
-          id: 4,
-          img: require('../assets/images/onlineworks.png'),
-          title: '喜迎军运',
-          des: '杏林 2019.1020'
-        },
-        {
-          id: 5,
-          img: require('../assets/images/onlineworks.png'),
-          title: '残荷听雨',
-          des: '杏林 2019.1020'
-        },
-        {
-          id: 6,
-          img: require('../assets/images/onlineworks.png'),
-          title: '残荷听雨',
-          des: '杏林 2019.1020'
-        }
-      ]
+      id: '',
+      current: 1,
+      total: 0,
+      finished: false,
+      loading: false,
+      msgItem: {},
+      teacherWorks: []
     }
   },
   mounted () {
-    // console.log(this.$route.query.index.id)
-    this.$api.teacherDetail({id:'1'}).then((result) => {
-      if (result.code === 1) {
-        // this.userInfo = result.data
-        console.log(result.data);
+    this.id = this.$route.query.index;
+    this.getDetail()
+  },
+  methods: {
+    getDetail () {
+      const param ={
+        id: this.id
       }
-    })
+      this.$api.teacherDetail(param).then((res) => {
+        if (res.code === 1) {
+          console.log(res.data);
+          this.msgItem = res.data
+          this.getWorksList()
+        }
+      })
+    },
+    getWorksList () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        admin_id: this.id
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.teacherWorksList(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+          console.log(res.data)
+          if (this.teacherWorks.length == 0) {
+            // 第一次加载
+            this.teacherWorks = res.data.data || []
+            this.total = res.data.total
+          } else if (this.teacherWorks.length < this.total) {
+            // 加载更多
+            this.teacherWorks = this.teacherWorks.concat(res.data.data)
+          }
+          if (this.teacherWorks.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.teacherWorks.length < this.total) {
+        this.current++
+        this.getWorksList()
+      }
+    }
   },
   components: {
     TeacherMsg,
-    TeacherWorks
+    TeacherWorks,
+    NoData
   }
 }
 </script>
@@ -92,6 +113,7 @@ export default {
   display: flex;
   flex-direction: column;
   width:100%;
+  min-height: 100vh;
   padding-top: 38px;
   background:#FBF8F4;
   &-content{

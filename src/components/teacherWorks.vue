@@ -1,8 +1,8 @@
 <template>
   <div class="teacher-works-item">
-    <img :src="item.img" alt="">
+    <img :src="item.image[0]" alt="">
     <div>{{item.title}}</div>
-    <span>{{item.des}}</span>
+    <span>{{item.description}} {{item.create_time}}</span>
   </div>
 
 </template>

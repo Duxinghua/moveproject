@@ -1,9 +1,9 @@
 <template>
   <div class="offdetail-teacher-msg">
-    <img :src="msgItem.img" alt="">
+    <img :src="msgItem.avatar" alt="">
     <div>
-      <span>{{msgItem.name}}</span>
-      <p>{{msgItem.msg}}</p>
+      <span>{{msgItem.nickname}}</span>
+      <p>{{msgItem.keywords}}</p>
     </div>
     <span class="offdetail-teacher-btn">已关注</span>
   </div>
