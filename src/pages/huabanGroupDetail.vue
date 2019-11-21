@@ -8,10 +8,10 @@
             <span class="detail-title">{{tzDetail.group_name}}</span>
             <div class="detail-avatar">
               <img src="../assets/images/hgdp.png" alt="">
-              <span>1586成员</span>
+              <span>{{tzDetail.user_count}}成员</span>
             </div>
           </div>
-          <img class="detail-top-imgmore" src="../assets/images/hgdg.png" alt="" @click="joinGroupHandler">
+          <img class="detail-top-imgmore" :src="tzDetail.is_join === 0 ? require('../assets/images/hgdg.png') : require('../assets/images/ygz.png')" alt="" @click="joinGroupHandler">
         </div>
         <span class="detail-bottom">
           {{tzDetail.description}}
@@ -22,7 +22,16 @@
     <div class="huabangd-tzdl">
       <TitleItem title="贴子讨论" />
       <div class="huabangd-tzdl-wrap">
-       <HuabantzItem v-for="(item,index) in huabantzlist" :key="index" :item="item" />
+        <van-list
+              v-model="loading"
+              v-show="huabantzlist.length > 0"
+              :finished="finished"
+              finished-text="没有更多了"
+              :immediate-check="false"
+              @load="onLoad"
+        >
+        <HuabantzItem v-for="(item,index) in huabantzlist" :key="index" :item="item" />
+        </van-list>
         <div class="tzdl-btn" @click="fptzClickHandler">
           <img src="../assets/images/jiahaoico.png" class="jiahaoico" alt="">
           <span>发表话题</span>
@@ -41,73 +50,120 @@ export default {
   data () {
     return {
       tzDetail: {},
-      id:null,
-      huabantzlist: [
-        {
-          id: 1,
-          title: '武汉周末线下插花兴趣活动武汉周末线下插花兴趣活动',
-          image: require('../assets/images/huabaninfos.png'),
-          name: '花田喜事Hebe',
-          timer: '13小时前更新',
-          avatar: require('../assets/images/people.png'),
-          num: 56
-        },
-        {
-          id: 2,
-          title: '武汉周末线下插花兴趣活动武汉周末线下插花兴趣活动',
-          image: require('../assets/images/huabaninfos.png'),
-          name: '花田喜事Hebe',
-          timer: '13小时前更新',
-          avatar: require('../assets/images/people.png'),
-          num: 56
-        },
-        {
-          id: 3,
-          title: '武汉周末线下插花兴趣活动武汉周末线下插花兴趣活动',
-          image: require('../assets/images/huabaninfos.png'),
-          name: '花田喜事Hebe',
-          timer: '13小时前更新',
-          avatar: require('../assets/images/people.png'),
-          num: 56
-        },
-        {
-          id: 4,
-          title: '武汉周末线下插花兴趣活动武汉周末线下插花兴趣活动',
-          image: require('../assets/images/huabaninfos.png'),
-          name: '花田喜事Hebe',
-          timer: '13小时前更新',
-          avatar: require('../assets/images/people.png'),
-          num: 56
-        }
-      ]
+      id: null,
+      huabantzlist: [],
+      finished: false,
+      loading: false,
+      current: 1,
+      total: 0
 
     }
   },
   methods: {
     fptzClickHandler () {
-      this.$router.push({name: 'HuabanTzfp',query:{id:1}})
+      this.$router.push({name: 'HuabanTzfp', query: {id: this.id}})
     },
     joinGroupHandler () {
-      this.$api.postsGroupUser({group_id: this.tzDetail.group_id}).then((res)=>{
-        if(res.code === 1){
-
-        }
-      })
+      var is_join = this.tzDetail.is_join
+      var group_id = this.tzDetail.group_id
+      if(is_join === 0) {
+        this.$api.groupGroupUser({group_id:group_id}).then((res)=>{
+          if(res.code === 1){
+            this.$toast({
+              message: res.msg,
+              onClose: () => {
+                this.huabanList = []
+                this.finished = false
+                this.loading = false
+                this.getGroupIndex()
+              }
+            })
+          }else{
+            this.$toast(res.msg)
+          }
+        })
+      }else if(is_join === 1) {
+       this.$api.groupGroupUserDel({group_id:group_id}).then((res)=>{
+          if(res.code === 1){
+            this.$toast({
+              message: res.msg,
+              onClose: () => {
+                this.huabanList = []
+                this.finished = false
+                this.loading = false
+                this.getGroupIndex()
+              }
+            })
+          }else{
+            this.$toast(res.msg)
+          }
+        })
+      }
     },
     getGroupIndex () {
       this.$api.groupIndex({id: this.id}).then((result) => {
-        console.log(result,'tz')
+        console.log(result, 'tz')
         if (result.code === 1) {
           this.tzDetail = result.data
         }
       })
+    },
+    getTzLists () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        gc_id: this.gc_id
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.postsLists(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+
+          if (this.huabantzlist.length == 0) {
+            // 第一次加载
+            var list =  res.data.data
+            list.map((item)=>{
+              item.image = item.images ? item.images[0]: ''
+              item.nickname = item.user.nickname
+              item.avatar = item.user.avatar
+            })
+
+            this.huabantzlist = list || []
+            this.total = res.data.total
+          } else if (this.huabantzlist.length < this.total) {
+            // 加载更多
+            var list =  res.data.data
+            list.map((item)=>{
+              item.image = item.images ? item.images[0]: ''
+              item.nickname = item.user.nickname
+              item.avatar = item.user.avatar
+            })
+            this.huabantzlist = this.huabantzlist.concat(list)
+          }
+          if (this.huabantzlist.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.huabantzlist.length < this.total) {
+        this.current++
+        this.getTzLists()
+      }
     }
   },
   mounted () {
     console.log(this.$route.query.id)
     this.id = this.$route.query.id
     this.getGroupIndex()
-
+    this.getTzLists()
   },
   beforeRouteEnter (to, from, next) {
     console.log('log start')
@@ -127,6 +183,7 @@ export default {
   flex-direction: column;
   background:#FBF8F4;
   width:100%;
+  min-height: 100vh;
   &-top{
     width:100%;
     height:297px;

@@ -1,16 +1,16 @@
 <template>
-  <div class="huaban-tz-item" @click="huabantzHandler(item.id)">
+  <div class="huaban-tz-item" @click="huabantzHandler(item.gp_id)">
           <div class="tzleft">
             <img src="../assets/images/huabanmsg.png" alt="">
-            <span>{{item.num}}</span>
+            <span>{{item.comment_count}}</span>
           </div>
           <div class="tzcenter">
             <span class="tztitle cleartext">{{item.title}}</span>
             <div class="tzcdes">
               <img class="tzavatar" :src="item.avatar" alt="">
               <div class="tzcinfo">
-              <span>{{item.name}}</span>
-              <span>{{item.timer}}</span>
+              <span>{{item.nickname}}</span>
+              <span>{{autoTimer(item.create_time)}}小时前更新</span>
               </div>
             </div>
           </div>
@@ -29,7 +29,10 @@ export default {
   },
   methods: {
     huabantzHandler (index) {
-      this.$router.push({name: 'HuabanTzDetail', query: {id: 2}})
+      this.$router.push({name: 'HuabanTzDetail', query: {id: index}})
+    },
+    autoTimer (timer) {
+      return parseInt((new Date().getTime() - timer*1000)/1000/3600)
     }
   }
 }
@@ -62,6 +65,9 @@ export default {
           font-size: 30px;
           line-height: 36px;
           width:calc(100% - 26px);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         .tzcdes{
           display: flex;
@@ -72,6 +78,7 @@ export default {
           .tzavatar{
             width:40px;
             height:40px;
+            border-radius: 50%;
             margin-right:16px;
           }
           .tzcinfo{

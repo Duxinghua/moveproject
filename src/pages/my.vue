@@ -170,42 +170,43 @@ export default {
   },
   methods: {
     getUserSignLists () {
-       this.$api.userSignLists().then((result) => {
-      console.log(result)
-      if (result.code === 1) {
-        var list = []
-        result.data.map((item) => {
-          console.log(item)
-          list.push({
-            num: item.days,
-            check: true
-          })
-          if (this.currentDate == item.sign_time_text) {
-            console.log(this.currentDate, '1')
-            this.qdcontrol = true
-            this.qdText = '已经连续签到' + result.data.length + '天'
-          }
-        })
-        var fix = []
-        for (var i = 1, l = 7; i < l; i++) {
-          if (!list[i]) {
-            fix.push({
-              num: i + 1,
-              check: false
+      this.$api.userSignLists().then((result) => {
+        console.log(result)
+        if (result.code === 1) {
+          var list = []
+          result.data.map((item) => {
+            console.log(item)
+            list.push({
+              num: item.days,
+              check: true
             })
+            if (this.currentDate == item.sign_time_text) {
+              console.log(this.currentDate, '1')
+              this.qdcontrol = true
+              this.qdText = '已经连续签到' + result.data.length + '天'
+            }
+          })
+          var fix = []
+          for (var i = 1, l = 7; i < l; i++) {
+            if (!list[i]) {
+              fix.push({
+                num: i + 1,
+                check: false
+              })
+            }
           }
+          this.qdList = list.reverse().concat(fix)
         }
-        this.qdList = list.reverse().concat(fix)
-      }
-    })
+      })
     },
     qdFuClickHandler () {
       this.$api.userSaveSign().then((result) => {
         if (result.cdoe === 1) {
           // this.qdText
-          this.$toast({message:result.msg,onClose:()=>{
-             this.getUserSignLists()
-          }})
+          this.$toast({message: result.msg,
+            onClose: () => {
+              this.getUserSignLists()
+            }})
         } else {
           this.$toast(result.msg)
         }
@@ -264,7 +265,11 @@ export default {
           Links = 'CourseOrderList'
           break
       }
+      if(arg === 'xf'){
+      this.$router.push({name: Links,query:{score:this.userInfo.score}})
+      }else{
       this.$router.push({name: Links})
+      }
     }
   },
   components: {

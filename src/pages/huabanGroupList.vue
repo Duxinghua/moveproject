@@ -1,6 +1,6 @@
 <template>
   <div class="huabanList">
-    <HuabanMenu :menuList="menuList"/>
+    <HuabanMenu :menuList="menuList" @menuClick="menuClick"/>
     <div class="huabanList-content">
       <van-list
             v-model="loading"
@@ -12,40 +12,91 @@
       >
       <HuabanGroupItem v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler"/>
       </van-list>
+      <NoData v-if="huabanList.length === 0" />
     </div>
   </div>
 </template>
 
 <script>
+import NoData from '@/components/nodata.vue'
 import HuabanMenu from '@/components/huabanMenu.vue'
 import HuabanGroupItem from '@/components/huabanGroupItem.vue'
 export default {
   name: 'HuabanGroupList',
   data () {
     return {
-      menuList: [
-        '推荐',
-        '美居分享',
-        '花院分享'
-      ],
+      menuList: [],
       huabanList: [],
       finished: false,
       loading: false,
       current: 1,
-      total: 0
+      total: 0,
+      gc_id: 0
     }
   },
   mounted () {
-    this.getGroupLists()
+    this.getGroupCateGory()
   },
   methods: {
-    joinGroupHandler () {
-
+    menuClick (v) {
+      this.gc_id = v
+      this.current = 1
+      this.total = 0
+      this.huabanList = []
+      this.finished = false
+      this.loading = false
+      this.getGroupLists()
+    },
+    getGroupCateGory () {
+      this.$api.groupCateGory().then((res)=>{
+        if(res.code === 1) {
+          this.menuList = res.data
+          this.gc_id = res.data ? res.data[0].gc_id : 1
+          this.getGroupLists()
+        }
+      })
+    },
+    joinGroupHandler (is_join,group_id) {
+      console.log(is_join == 0)
+      if(is_join === 0) {
+        this.$api.groupGroupUser({group_id:group_id}).then((res)=>{
+          if(res.code === 1){
+            this.$toast({
+              message: res.msg,
+              onClose: () => {
+                this.huabanList = []
+                this.finished = false
+                this.loading = false
+                this.getGroupLists()
+              }
+            })
+          }else{
+            this.$toast(res.msg)
+          }
+        })
+      }else if(is_join === 1) {
+       this.$api.groupGroupUserDel({group_id:group_id}).then((res)=>{
+          if(res.code === 1){
+            this.$toast({
+              message: res.msg,
+              onClose: () => {
+                this.huabanList = []
+                this.finished = false
+                this.loading = false
+                this.getGroupLists()
+              }
+            })
+          }else{
+            this.$toast(res.msg)
+          }
+        })
+      }
     },
     getGroupLists () {
       const param = {
         page: this.current,
-        pageSize: 10
+        pageSize: 10,
+        gc_id: this.gc_id
       }
       this.$toast.loading({
         duration: 0,
@@ -71,18 +122,18 @@ export default {
           }
         }
       })
-
     },
     onLoad () {
       if (this.huabanList.length < this.total) {
         this.current++
         this.getGroupLists()
       }
-    },
+    }
   },
   components: {
     HuabanMenu,
-    HuabanGroupItem
+    HuabanGroupItem,
+    NoData
   }
 }
 </script>

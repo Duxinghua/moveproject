@@ -28,7 +28,7 @@
       </div>
       <div class="order-msg">我已同意<span>实名认证与隐私安全保障》</span>协议</div>
     </div>
-    <div class="order-commit-btn">
+    <div class="order-commit-btn" @click="onCommit">
       确认提交
     </div>
   </div>
@@ -36,7 +36,15 @@
 
 <script>
 export default {
-  name: 'OrderCommit'
+  name: 'OrderCommit',
+  data () {
+    return {}
+  },
+  methods: {
+    onCommit () {
+      this.$router.push('/submitCourseOrder')
+    }
+  }
 }
 </script>
 

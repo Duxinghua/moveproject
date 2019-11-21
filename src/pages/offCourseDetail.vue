@@ -58,22 +58,12 @@
     </div>
     <div class="offdetail-teacher">
       <div class="offdetail-teacher-title">讲师介绍</div>
-      <!-- <div class="offdetail-teacher-msg">
-        <img src="../assets/images/people.png" alt="">
-        <div>
-          <span>柯杏林</span>
-          <p>知音花艺协会副会长兼秘书长秘书长</p>
-        </div>
-        <span class="offdetail-teacher-btn">已关注</span>
-      </div> -->
       <TeacherMsg :msgItem="msgItem" />
       <div class="offdetail-teacher-sec">
-        <div>
-          <img src="../assets/images/video1.png" alt="">
-          <img src="../assets/images/video1.png" alt="">
-          <img src="../assets/images/video1.png" alt="">
+        <div v-for="(item,index) in tecImg.image" :key="index">
+          <img :src="item" alt="">
         </div>
-        <div>我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色我们通常会把能够给人予温暖的感觉得颜色称为暖色我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色我们通常会把能够给人予温暖的感觉得颜色称为暖色</div>
+        <div>{{tecImg.description}}</div>
       </div>
     </div>
     <div class="offdetail-set">
@@ -97,7 +87,7 @@
       <div class="goods-money">合计<span>￥</span></div>
       <div>
         <div class="goods-group-btn" >发起拼团</div>
-        <div class="goods-buy-btn">立即购买</div>
+        <div class="goods-buy-btn" @click="onBuy">立即购买</div>
       </div>
     </div>
   </div>
@@ -140,11 +130,8 @@ export default {
           ]
         }
       ],
-      msgItem: {
-        img: require('../assets/images/people.png'),
-        name: '柯杏林',
-        msg: '知音花艺协会副会长兼秘书长秘书长'
-      },
+      msgItem: {}, // 讲师详情
+      tecImg: {}, // 讲师作品
       groupList: [],
       courseId: 0,  // 课程id
       imageShow: false
@@ -174,6 +161,8 @@ export default {
         if (res.code == 1) {
           this.courseDetails = res.data
           this.courseOffline = res.data.courseOffline
+          this.msgItem = res.data.admin
+          this.tecImg = res.data.adminOpus
           // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
           console.log(res.data)
         }
@@ -188,12 +177,15 @@ export default {
       this.$api.courseTuanList(param).then((res) => {
         if (res.code == 1) {
           this.groupList = res.data.data
-          console.log(res.data)
+          // console.log(res.data)
         }
       })
     },
     onLinkAll () {
       this.$router.push('/allGroup')
+    },
+    onBuy () {
+      this.$router.push('/orderCommit')
     }
   },
   components: {
@@ -388,6 +380,8 @@ export default {
           display: flex;
           flex-direction: row;
           justify-content: space-between;
+          overflow: hidden;
+          flex-wrap: nowrap;
           img{
             width: 216px;
             height: 287.3px;

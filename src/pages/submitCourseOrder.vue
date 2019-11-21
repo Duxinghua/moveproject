@@ -52,12 +52,37 @@
       <div class="money">需支付<span>￥1299</span></div>
       <div class="submit" @click="onBuy">立即购买</div>
     </div>
+    <div class="submit-order-reconfirm" v-if="reShow">
+      <div class="re-mb"></div>
+      <div class="re-body">
+        <div class="pt">提示</div>
+        <div class="pb">确定要购买此课程吗？</div>
+        <div  class="btns">
+          <span @click="cancelHandler">取消</span>
+          <span>确定</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'SubmitCourseOrder'
+  name: 'SubmitCourseOrder',
+  data () {
+    return {
+      reShow: false
+    }
+  },
+  methods: {
+    onBuy () {
+      this.reShow = true;
+      console.log(1)
+    },
+    cancelHandler () {
+      this.reShow = false;
+    }
+  }
 }
 </script>
 
@@ -191,6 +216,64 @@ export default {
       color: #F3D995;
       font-size: 36px;
       border-radius: 50px;
+    }
+  }
+  &-reconfirm{
+    .re-mb{
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 999;
+      background: rgba(1,1,1,0.6);
+      width: 100%;
+      height: 100%;
+    }
+    .re-body{
+      position: fixed;
+      margin: auto;
+      left: 0;
+      right: 0;
+      top: 345px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      // transform: translate(-30%,-50%);
+      width: 578px;
+      height: 350px;
+      padding: 47px 0;
+      background: #FFFFFF;
+      border-radius: 12px;
+      z-index: 1000;
+      .pt,.pb{
+        font-size: 32px;
+        color: #333333;
+      }
+      .pb{
+        font-weight: Bold;
+      }
+      .btns{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        span{
+          width: 209px;
+          height: 72px;
+          line-height: 72px;
+          text-align: center;
+          font-size: 30px;
+          border-radius: 36px;
+          border: 1px solid #E3E3E3;
+          color: #999999;
+          background-color: #fff;
+          margin: 0 13px;
+        }
+        :last-child{
+          border: 1px solid #738666;
+          background-color: #738666;
+          color: #F3D995;
+        }
+      }
     }
   }
 }

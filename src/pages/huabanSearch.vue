@@ -3,41 +3,35 @@
     <div class="huabanSearch-header">
       <div class="inputWrap">
         <img src="../assets/images/huabansearchico.png" alt="">
-        <input type="text" v-model="searchText" class="input" placeholder="插花">
-        <span @click="searchHandler">搜索</span>
+        <input type="text" v-model="searchText" class="input" placeholder="插花" @keyup.enter="submit">
+        <span @click="searchHandler">取消</span>
       </div>
       <div class="menuTab">
         <ul>
-          <li :class="{active: current == item.id ? true : false }" @click="resultClickHandler(item.id)" v-for="(item) in menuList" :key="item.id">{{item.name}}</li>
+          <li :class="{active: currentIndex == item.id ? true : false }" @click="resultClickHandler(item.id)" v-for="(item) in menuList" :key="item.id">{{item.name}}</li>
         </ul>
       </div>
     </div>
     <div class="huabanSearch-content">
-          <component :is="isComponent" v-for="(item, index) in usergzlist" :key="index" :item="item"/>
-          <!-- <div class="huabanUserItem">
-            <img class="avatar" src="../assets/images/people.png" alt="">
-            <div class="huabanUserItem-center">
-                <span class="user">花田喜事xibe</span>
-                <span class="userinfo">年少时向往远方，走的太匆忙</span>
-                 <div class="usergz">
-                   <span>关注</span>
-                   <span>1782</span>
-                 </div>
-            </div>
-            <div class="huabanUserItem-btn nogzbackground">
-              <span class="gz" style="display:none">已关注</span>
-              <div class="nogz" >
-                <img src="../assets/images/gzico.png" alt="">
-                <span>关注</span>
-              </div>
-            </div>
-          </div> -->
-
+          <van-list
+            v-model="loading"
+            v-show="huabanList.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+            >
+          <HuabanGroupItem v-if="currentIndex === 0"  v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler"/>
+          <HuabantzItem v-if="currentIndex === 1"  v-for="(item, index) in huabanList" :key="index" :item="item" />
+          <HuabanUsergzItem  v-if="currentIndex === 2" v-for="(item, index) in huabanList" :key="index" :item="item" @cancelGz="cancelGz"/>
+          </van-list>
+          <NoData v-if="huabanList.length === 0" />
     </div>
   </div>
 </template>
 
 <script>
+import NoData from '@/components/nodata'
 import HuabanGroupItem from '@/components/huabanGroupItem.vue'
 import HuabantzItem from '@/components/huabantzItem.vue'
 import HuabanUsergzItem from '@/components/huabanUsergzItem.vue'
@@ -45,8 +39,8 @@ export default {
   name: 'HuabanSearch',
   data () {
     return {
-      current: 0,
-      isComponent: HuabanUsergzItem,
+      currentIndex: 0,
+      isComponent: HuabanGroupItem,
       menuList: [
         {
           id: 0,
@@ -57,46 +51,197 @@ export default {
           name: '帖子'
         },
         {
+          id: 2,
           name: '用户'
         }
       ],
-      usergzlist: [
-        {
-          avatar: require('../assets/images/people.png'),
-          username: '花田喜事xibe',
-          userinfo: '年少时向往远方，走的太匆忙',
-          isGz: true,
-          gznum: '1782'
-        },
-        {
-          avatar: require('../assets/images/people.png'),
-          username: '花田喜事xibe',
-          userinfo: '年少时向往远方，走的太匆忙',
-          isGz: false,
-          gznum: '1782'
-        }
-      ]
+      huabanList: [],
+      searchText: '',
+      finished: false,
+      loading: false,
+      current: 1,
+      total: 0
     }
   },
   components: {
     HuabanGroupItem,
     HuabantzItem,
-    HuabanUsergzItem
+    HuabanUsergzItem,
+    NoData
   },
   methods: {
-    resultClickHandler (arg) {
-      this.current = arg
-      switch (arg) {
-        case 0:
-          this.isComponent = 'HuabanGroupItem'
-          break
-        case 1:
-          this.isComponent = 'HuabantzItem'
-          break
-        case 2:
-          this.isComponent = 'HuabanUsergzItem'
-          break
+    joinGroupHandler (is_join,group_id) {
+      if(is_join === 0){
+      this.$api.groupGroupUser({group_id:group_id}).then((res)=>{
+        if(res.code === 1){
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              this.huabanList = []
+              this.finished = false
+              this.loading = false
+              this.getGroupLists()
+            }
+          })
+        }else{
+          this.$toast(res.msg)
+        }
+      })
+      }else if(is_join === 1) {
+       this.$api.groupGroupUserDel({group_id:group_id}).then((res)=>{
+        if(res.code === 1){
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              this.huabanList = []
+              this.finished = false
+              this.loading = false
+              this.getGroupLists()
+            }
+          })
+        }else{
+          this.$toast(res.msg)
+        }
+      })
       }
+    },
+    cancelGz(id) {
+      this.$api.userSaveFollow({user_id:id}).then((res)=>{
+        if(res.code === 1){
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              this.huabanList = []
+              this.finished = false
+              this.loading = false
+              this.getGroupLists()
+            }
+          })
+        }else{
+          this.$toast(res.msg)
+        }
+      })
+    },
+    submit () {
+      this.huabanList = []
+      this.finished = false
+      this.loading = false
+      this.current = 1
+      this.total = 0
+      console.log(this.currentIndex,'ci')
+      this.getGroupLists()
+    },
+    getGroupLists () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        keyword: this.searchText
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      if(this.currentIndex == 0){
+        this.$api.groupLists(param).then((res) => {
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
+
+            if (this.huabanList.length == 0) {
+              // 第一次加载
+              this.huabanList = res.data.data || []
+              this.total = res.data.total
+            } else if (this.huabanList.length < this.total) {
+              // 加载更多
+              this.huabanList = this.huabanList.concat(res.data.data)
+            }
+            if (this.huabanList.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
+          }
+        })
+      }else if(this.currentIndex == 1){
+        this.$api.postsLists(param).then((res)=>{
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
+
+            if (this.huabanList.length == 0) {
+              // 第一次加载
+              var list = []
+              res.data.data.map((item)=>{
+                item.nickname = item.user.nickname
+                item.avatar = item.user.avatar
+                item.image = item.images ? item.images[0] : ''
+                list.push(item)
+              })
+              this.huabanList = list || []
+              this.total = res.data.total
+            } else if (this.huabanList.length < this.total) {
+              // 加载更多
+              var list = []
+              res.data.data.map((item)=>{
+                item.nickname = item.user.nickname
+                item.avatar = item.user.avatar
+                item.image = item.images ? item.images[0] : ''
+                list.push(item)
+              })
+              this.huabanList = this.huabanList.concat(list)
+            }
+            if (this.huabanList.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
+          }
+        })
+      }else if(this.currentIndex == 2){
+        this.$api.userLists(param).then((res)=>{
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
+
+            if (this.huabanList.length == 0) {
+              // 第一次加载
+              this.huabanList = res.data.data || []
+              this.total = res.data.total
+            } else if (this.huabanList.length < this.total) {
+              // 加载更多
+              this.huabanList = this.huabanList.concat(res.data.data)
+            }
+            if (this.huabanList.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
+          }
+
+        })
+      }
+    },
+    onLoad () {
+      if (this.huabanList.length < this.total) {
+        this.current++
+        this.getGroupLists()
+      }
+    },
+
+    resultClickHandler (arg) {
+      if(!this.searchText){
+        this.$toast('请输入搜索内容')
+        return
+      }
+      this.currentIndex = arg
+      this.huabanList = []
+      this.finished = false
+      this.loading = false
+      this.current = 1
+      this.total = 0
+      this.getGroupLists()
+      console.log(arg,'arg')
+    },
+    searchHandler () {
+      this.$router.push({name: 'HuabanGroupList'})
     }
   }
 

@@ -117,6 +117,10 @@ const server = {
   userIndex (data) {
     return post('/user/index', data)
   },
+  // 用户相册 /api/group/photos
+  groupPhotos (data) {
+    return post('group/photos', data)
+  },
   // 获取二维码
   userQrcode (data) {
     return post('/user/qrcode', data)
@@ -157,9 +161,9 @@ const server = {
   userSaveFans (data) {
     return post('user/saveFans', data)
   },
-  // 学分 /api/user/pointsRecords
-  userPointsRecords (data) {
-    return post('user/pointsRecords', data)
+  // 学分 user/scoreLog
+  userScoreLog (data) {
+    return post('user/scoreLog', data)
   },
   // 提现记录 /user/takeout
   userTakeout (data) {
@@ -177,6 +181,10 @@ const server = {
   userMessage (data) {
     return post('user/messages', data)
   },
+  // 公共配置 /api/common/config
+  commonConfig (data) {
+    return post('common/config', data)
+  },
   // 社区详情 /api/group/index
   groupIndex (data) {
     return post('group/index', data)
@@ -193,21 +201,29 @@ const server = {
   tzPosts (data) {
     return post('posts', data)
   },
+  // 社区分类 group/category
+  groupCateGory (data) {
+    return post('group/category', data)
+  },
   // 贴子点赞 posts/saveLike
   postsSaveLike (data) {
     return post('posts/saveLike', data)
+  },
+  // 贴子列表 posts/lists
+  postsLists (data) {
+    return post('posts/lists', data)
   },
   // 发布评论 posts/commentsSave
   postsCommentsSave (data) {
     return post('posts/commentsSave', data)
   },
   // 加入社区 posts/groupUser
-  postsGroupUser (data) {
-    return post('posts/groupUser', data)
+  groupGroupUser (data) {
+    return post('group/groupUser', data)
   },
   // 退出社区 posts/groupUserDel
-  postsGroupUserDel (data) {
-    return post('posts/groupUserDel', data)
+  groupGroupUserDel (data) {
+    return post('group/groupUserDel', data)
   },
   // 帖子评论列表 posts/comments
   postsComments (data) {
@@ -216,6 +232,10 @@ const server = {
   // 订单列表  goods_order/lists
   goodsOrderLists (data) {
     return post('goods_order/lists', data)
+  },
+  // 图片上传 /common/wxUpload
+  commonwxUpload (data) {
+    return post('common/wxUpload', data)
   },
   // 课程列表 /api/course/lists
   courseList (data) {

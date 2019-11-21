@@ -1,12 +1,12 @@
 <template>
         <div class="huaban-top-item"   @click="huabangdHandler">
-          <img class="huaban-top-item-img1" src="../assets/images/huabanjoinico.png" alt="">
+          <img class="huaban-top-item-img1" :src="item.image" alt="">
           <div class="huaban-top-item-des">
             <span class="title">{{item.group_name}}</span>
             <span class="title subtitle">{{item.description}}</span>
-            <span class="title subtitle">1980成员</span>
+            <span class="title subtitle">{{item.user_count}}成员</span>
           </div>
-          <img class="huaban-top-item-img2" src="../assets/images/huabanjoin.png" alt="">
+          <img class="huaban-top-item-img2" @click="joinGroupHandler" :src="item.is_join === 0 ? require('../assets/images/hgdg.png') : require('../assets/images/ygz.png')" alt="">
         </div>
 </template>
 
@@ -21,7 +21,10 @@ export default {
   },
   methods: {
     huabangdHandler () {
-      this.$emit('joinGroupHandler',1)
+      // this.$emit('joinGroupHandler', 1)
+    },
+    joinGroupHandler () {
+      this.$emit('joinGroupHandler',this.item.is_join,this.item.group_id)
     }
   }
 }
@@ -42,6 +45,7 @@ export default {
       &-img1{
         width:117px;
         height:117px;
+        border-radius: 8px;
         margin-right:20px;
       }
       &-des{

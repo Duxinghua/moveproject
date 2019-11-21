@@ -6,7 +6,7 @@
                 <span class="userinfo">{{item.bio}}</span>
                  <div class="usergz" v-if="!types">
                    <span>关注</span>
-                   <span>{{item.gznum}}</span>
+                   <span>{{item.user_count}}</span>
                  </div>
             </div>
             <div :class="autoBack"  @click="cancelHandler(item.id)">
@@ -63,7 +63,9 @@ export default {
       this.$emit('cancelGz', id)
     },
     userInfoHandler () {
-      this.$router.push({name: 'HuabanUserInfo'})
+      this.$router.push({name: 'HuabanUserInfo',query: {
+        id:this.item.id
+      }})
     }
   }
 }

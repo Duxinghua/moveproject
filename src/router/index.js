@@ -1,6 +1,6 @@
 import Vue from 'vue'
-// import getSitem from '@/utils/storage'
-// import Api from '@/api/index'
+import getSitem from '@/utils/storage'
+import Api from '@/api/index'
 import Router from 'vue-router'
 import Home from '@/pages/home'
 import HomeSearch from '@/pages/homeSearch'
@@ -15,9 +15,12 @@ import DoTask from '@/pages/doTask'
 import Huaban from '@/pages/huaban'
 import HuabanGroupDetail from '@/pages/huabanGroupDetail'
 import HuabanTzDetail from '@/pages/huabanTzDetail'
+import HuabanMoreGroupList from '@/pages/huabanMoreGroupList'
+import HuabanMyGroupList from '@/pages/HuabanMyGroupList'
 import HuabanGroupList from '@/pages/huabanGroupList'
 import HuabanJoinGroup from '@/pages/huabanJoinGroup'
 import HuabanTzfp from '@/pages/huabanTzfp'
+import HuabanTzList from '@/pages/huabanTzList'
 import HuabanSearch from '@/pages/huabanSearch'
 import HuabanUserInfo from '@/pages/huabanUserInfo'
 import OrderList from '@/pages/orderlist'
@@ -43,7 +46,7 @@ import Login from '@/pages/login'
 import Test from '@/pages/test'
 
 Vue.use(Router)
-/*
+
 const GetUrlParame = (parameName) => {
   var parames = window.location.search
   if (parames.indexOf(parameName) > -1) {
@@ -68,22 +71,23 @@ const getToken = (data) => {
     })
   } else {
     Api.wxLogin(data).then((result) => {
+      getSitem.setStr('open', true)
       if (result.code === 1) {
         console.log(result)
         getSitem.setStr('mobile', result.data.info.mobile)
         getSitem.setStr('token', result.data.info.token)
-        // if (getSitem.getStr('open')) {
-        //   location.reload()
-        // } else {
-        //   getSitem.setStr('open', false)
-        // }
+        if (getSitem.getStr('open')) {
+          location.reload()
+        } else {
+          getSitem.setStr('open', false)
+        }
       } else {
         console.log(result)
       }
     })
   }
 }
-*/
+
 
 /*
 const getToken = async (data, url) => {
@@ -248,6 +252,15 @@ const router = new Router({
       }
     },
     {
+      path: '/huabantzlist',
+      name: 'HuabanTzList',
+      component: HuabanTzList,
+      meta: {
+        title: '贴子列表'
+      }
+
+    },
+    {
       path: '/huabantzdetail',
       name: 'HuabanTzDetail',
       component: HuabanTzDetail,
@@ -262,6 +275,23 @@ const router = new Router({
       meta: {
         title: '社区小组'
       }
+    },
+    {
+      path: '/huabanmoregrouplist',
+      name: 'HuabanMoreGroupList',
+      component: HuabanMoreGroupList,
+      meta: {
+        title: '推荐圈子'
+      }
+    },
+    {
+      path: '/huabanmygrouplist',
+      name: 'HuabanMyGroupList',
+      component: HuabanMyGroupList,
+      meta: {
+        title: '我加入的圈子'
+      }
+
     },
     {
       path: '/huabanjoingroup',
@@ -540,8 +570,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
-  /*
   const agent = navigator.userAgent
   const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
   if (isiOS) {
@@ -584,7 +612,8 @@ router.beforeEach((to, from, next) => {
     // }
     next()
   }
-  */
+
 })
+
 
 export default router

@@ -103,13 +103,13 @@ export default {
         }
 
       ],
-      fxlist: [],
+      fxlist: []
 
     }
   },
   mounted () {
     this.getuserIndex()
-    if(this.$route.query.current){
+    if (this.$route.query.current) {
       this.currentIndex = this.$route.query.current
       this.getuserTakeout()
     }
@@ -153,20 +153,20 @@ export default {
       }
     },
     getuserIndex () {
-    this.$api.userIndex().then((result) => {
-      if (result.code === 1) {
-        this.userInfo = result.data
-      }
-    })
+      this.$api.userIndex().then((result) => {
+        if (result.code === 1) {
+          this.userInfo = result.data
+        }
+      })
     },
     tabClickHandler (e) {
       this.currentIndex = e
-      if(e === 1) {
+      if (e === 1) {
         this.getuserTakeout()
       }
     },
     linkClickHandler () {
-      this.$router.push({name: 'MyTx',params: {money: this.userInfo.money}})
+      this.$router.push({name: 'MyTx', params: {money: this.userInfo.money}})
     }
   },
   computed: {

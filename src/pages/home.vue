@@ -81,7 +81,11 @@
             <div class="home-mingshi-item-des">
               <span class="teacher-name">{{item.nickname}}</span>
               <p class="teacher-des">{{item.keywords}}</p>
-              <MoreText class="moretext" moreText="了解更多" />
+              <div class="home-course-more">
+                  <img src="../assets/images/moreleft.png" alt="">
+                  <span @click="teacherInfoHandle(item.id)">了解更多</span>
+                  <img src="../assets/images/moreright.png" alt="">
+              </div>
             </div>
           </div>
         </div>
@@ -121,8 +125,8 @@ export default {
       offcourseList: [],
       oncourseList: [],
       videoList:[],
-      schoolList: [],
-      TeacherLists: [],
+      schoolList: [], // 推荐页名师
+      TeacherLists: [], // 名师列表页名师
       current: 0,
       pageType: 0,
       total: 0,
@@ -172,7 +176,7 @@ export default {
       this.$api.teacherList(paramRec).then((res) => {
         if (res.code === 1) {
           this.schoolList = res.data.data
-          console.log(res.data)
+          // console.log(res.data)
         }
       })
       this.$toast.loading({
@@ -502,9 +506,25 @@ export default {
           -webkit-line-clamp: 2;
           margin-top: 16px;
         }
-        .moretext {
-          margin-top: 20px;
-          justify-content: left;
+        // .moretext {
+        //   justify-content: left;
+        // }
+        .home-course-more{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: left;
+            font-size: 28px;
+            height:36px;
+            color:#738965;
+            line-height: 36px;
+            margin-top: 20px;
+            margin-bottom: 13px;
+            img{
+              width:17px;
+              height:25px;
+              margin: 0;
+            }
         }
       }
     }

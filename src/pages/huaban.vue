@@ -1,27 +1,33 @@
 <template>
   <div class="huaban">
-
     <div class="huaban-top">
       <div class="huaban-top-wrap">
-        <div class="huaban-top-item" v-for="(item,index) in huabanList" :key="index" @click="huabangdHandler(1)">
+        <div class="huaban-top-item" v-for="(item,index) in huabanList" :key="index" @click="huabangdHandler(item.group_id)">
           <img class="huaban-top-item-img1" :src="item.image" alt="">
           <div class="huaban-top-item-des">
-            <span class="title">{{item.title}}</span>
-            <span class="title subtitle">{{item.des}}</span>
-            <span class="title subtitle">{{item.num}}</span>
+            <span class="title">{{item.group_name}}</span>
+            <span class="title subtitle">{{item.description}}</span>
+            <span class="title subtitle">{{item.user_count}} 成员</span>
           </div>
-          <img class="huaban-top-item-img2" src="../assets/images/huabanjoin.png" alt="">
+          <img class="huaban-top-item-img2" :src="item.is_join == 0 ? require('../assets/images/hgdg.png') : require('../assets/images/ygz.png')" alt="">
         </div>
       </div>
       <div class="huaban-top-join">
         <TitleItem title="加入我们" />
         <div class="huaban-top-jwrap">
+          <div class="huaban-top-jwrap-item" @click="moreGroupHandler">
+            <div class= "img-wrap">
+              <img src="../assets/images/jiahaoico.png" alt="">
+            </div>
+            <span class="s1">更多圈子</span>
+          </div>
           <div class="huaban-top-jwrap-item" v-for="(item,index) in huabanJoin" :key="index">
             <img :src="item.image" alt="">
-            <span>{{item.text}}</span>
+            <span class="s1">{{item.group_name}}</span>
+            <span class="s2" v-if="item.recommend">推荐</span>
           </div>
         </div>
-        <MoreText moreText="更多" moreName="HuabanGroupList"/>
+        <MoreText moreText="更多" moreName="HuabanMyGroupList"/>
       </div>
     </div>
     <div class="huaban-tz">
@@ -29,7 +35,7 @@
       <div class="huaban-tz-wrap">
         <HuabantzItem v-for="(item,index) in huabantzlist" :key="index" :item="item" />
       </div>
-      <MoreText moreText="更多" moreName="HuabanGroupList" />
+      <MoreText moreText="更多" moreName="HuabanTzList" />
     </div>
     <Footer :hb="true" />
   </div>
@@ -44,78 +50,49 @@ export default {
   name: 'Huaban',
   data () {
     return {
-      huabanList: [
-        {
-          image: require('../assets/images/huabanp1.png'),
-          title: '插花花艺爱好同盟',
-          des: '爱华，爱生活！',
-          num: '1979成员'
-        },
-        {
-          image: require('../assets/images/huabanp1.png'),
-          title: '插花花艺爱好同盟',
-          des: '爱华，爱生活！',
-          num: '1979成员'
-        },
-        {
-          image: require('../assets/images/huabanp1.png'),
-          title: '插花花艺爱好同盟',
-          des: '爱华，爱生活！',
-          num: '1979成员'
+      huabanList: [],
+      huabanJoin: [],
+      huabantzlist: []
+    }
+  },
+  mounted () {
+    this.getGroupLists({recommend:0},{data:1})
+    this.getGroupLists({my:1},{data:2})
+    this.getPostsLists()
+  },
+  methods: {
+    getGroupLists (data,type) {
+      this.$api.groupLists(data).then((res)=>{
+        if(res.code === 1){
+          if(type.data === 1) {
+            this.huabanList = res.data.data
+          }else if(type.data === 2){
+            this.huabanJoin = res.data.data
+          }
         }
-      ],
-      huabanJoin: [
-        {
-          image: require('../assets/images/huabanjoinico.png'),
-          text: '花艺同盟'
-        },
-        {
-          image: require('../assets/images/huabanjoinico.png'),
-          text: '花艺同盟'
-        },
-        {
-          image: require('../assets/images/huabanjoinico.png'),
-          text: '花艺同盟'
-        },
-        {
-          image: require('../assets/images/huabanjoinico.png'),
-          text: '花艺同盟'
-        },
-        {
-          image: require('../assets/images/huabanjoinico.png'),
-          text: '花艺同盟'
+      })
+    },
+    formatTimer (timer) {
+      return parseInt((new Date().getTime() - timer*1000)/1000/3600)
+    },
+    getPostsLists () {
+      this.$api.postsLists({recommend:1}).then((result)=>{
+        if(result.code === 1) {
+        var list =  result.data.data.splice(0,3)
+         list.map((item)=>{
+           item.image = item.images ? item.images[0]: ''
+           item.nickname = item.user.nickname
+           item.avatar = item.user.avatar
+         })
+         this.huabantzlist = list
         }
-      ],
-      huabantzlist: [
-        {
-          id: 1,
-          title: '武汉周末线下插花兴趣活动武汉周末线下插花兴趣活动',
-          image: require('../assets/images/huabaninfos.png'),
-          name: '花田喜事Hebe',
-          timer: '13小时前更新',
-          avatar: require('../assets/images/people.png'),
-          num: 56
-        },
-        {
-          id: 2,
-          title: '武汉周末线下插花兴趣活动武汉周末线下插花兴趣活动',
-          image: require('../assets/images/huabaninfos.png'),
-          name: '花田喜事Hebe',
-          timer: '13小时前更新',
-          avatar: require('../assets/images/people.png'),
-          num: 56
-        },
-        {
-          id: 3,
-          title: '武汉周末线下插花兴趣活动武汉周末线下插花兴趣活动',
-          image: require('../assets/images/huabaninfos.png'),
-          name: '花田喜事Hebe',
-          timer: '13小时前更新',
-          avatar: require('../assets/images/people.png'),
-          num: 56
-        }
-      ]
-
+      })
+    },
+    huabangdHandler (index) {
+      this.$router.push({name: 'HuabanGroupDetail', query: {id: index}})
+    },
+    moreGroupHandler () {
+      this.$router.push({name: 'HuabanGroupList'})
     }
   },
   components: {
@@ -123,11 +100,6 @@ export default {
     MoreText,
     TitleItem,
     HuabantzItem
-  },
-  methods: {
-    huabangdHandler (index) {
-      this.$router.push({name: 'HuabanGroupDetail', query: {id: index}})
-    }
   }
 }
 </script>
@@ -142,12 +114,16 @@ display: none;
   display: inline-block;
   white-space: nowrap
 }
+.background-item{
+  background:#6D8160;
+}
 .huaban{
   display: flex;
   flex-direction: column;
   background:#FBF8F4;
   width:100%;
   padding-top:26px;
+  min-height: 100vh;
   &-top{
     padding-bottom: 15px;
     border-bottom: 15px solid #F6F3EE;
@@ -209,6 +185,8 @@ display: none;
       flex-direction: row;
       justify-content: flex-start;
       margin-bottom: 26px;
+      overflow: hidden;
+      overflow-x: auto;
       &-item{
         width:117px;
         display: flex;
@@ -216,12 +194,29 @@ display: none;
         justify-content: center;
         align-items: center;
         margin-right:calc(113px /4);
+        flex-shrink: 0;
+        position: relative;
+        .img-wrap{
+          width:117px;
+          height:117px;
+          border-radius: 8px;
+          position: relative;
+          background:#6D8160;
+          img{
+            position: absolute;
+            left:50%;
+            top:50%;
+            width:43px;
+            height:43px;
+            transform: translate(-50%,-50%)
+          }
+        }
         img{
           width:117px;
           height:117px;
           border-radius: 8px;
         }
-        span{
+        .s1{
           font-size: 24px;
           color:#333;
           overflow: hidden;
@@ -232,9 +227,19 @@ display: none;
           margin-top:5px;
           text-align: center;
         }
-      }
-      &-item:nth-child(5n){
-        margin-right:0px !important;
+        .s2{
+          font-size: 24px;
+          color:#E4CF8F;
+          width:63px;
+          height:32px;
+          background:#6D8160;
+          border-radius: 10px 0px 10px 0px;
+          position: absolute;
+          right:0;
+          bottom: 38px;
+          text-align: center;
+          line-height: 32px;
+        }
       }
     }
   }
