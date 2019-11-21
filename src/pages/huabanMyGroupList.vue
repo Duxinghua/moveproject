@@ -9,7 +9,7 @@
             :immediate-check="false"
             @load="onLoad"
       >
-      <HuabanGroupItem v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler"/>
+      <HuabanGroupItem v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler" @linkDetail="linkDetail(item.group_id)"/>
       </van-list>
     </div>
   </div>
@@ -34,6 +34,9 @@ export default {
     this.getGroupLists()
   },
   methods: {
+    linkDetail (id) {
+      this.$router.push({name:'HuabanGroupDetail', query:{id:id}})
+    },
     joinGroupHandler (is_join,group_id) {
       console.log(is_join == 0)
       if(is_join === 0) {

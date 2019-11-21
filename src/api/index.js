@@ -113,9 +113,17 @@ const server = {
   wxTokenCheck (data) {
     return post('/auth/check', data)
   },
+  // 发送验证码
+  smsSend (data) {
+  // 发送验证码 /api/sms/send
+    return post('/sms/send', data)
+  },
+  authSaveMobile (data) {
+    return post('auth/saveMobile', data)
+  },
   // 用户首页
   userIndex (data) {
-    return post('/user/index', data)
+    return post('user/index', data)
   },
   // 用户相册 /api/group/photos
   groupPhotos (data) {

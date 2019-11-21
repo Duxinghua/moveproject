@@ -10,7 +10,7 @@
 <script>
 import NoData from '@/components/nodata.vue'
 export default {
-  name: 'About',
+  name: 'MyYx',
   data () {
     return {
       detail:null
@@ -21,7 +21,7 @@ export default {
   },
   mounted () {
     console.log(1)
-    this.$api.commonConfig({name:'about_us'}).then((res)=>{
+    this.$api.commonConfig({name:'login_agreement'}).then((res)=>{
       if(res.code === 1){
         this.detail = res.data.value
       }
@@ -34,6 +34,7 @@ export default {
 .myAbout{
   background:#FBF8F4;
   min-height:100vh;
+  padding:0px 26px;
 }
 .aids{
   font-size: initial;

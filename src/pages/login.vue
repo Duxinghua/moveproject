@@ -3,24 +3,24 @@
     <span class="loginTip">欢迎来到有梦不晚</span>
     <div class="input-wrap">
       <img src="../assets/images/phone.png" alt="">
-      <input type="text" placeholder="请输入手机号">
+      <input type="text" placeholder="请输入手机号" v-model="phone" >
     </div>
     <div class="input-wrap input-wrap-btn">
       <img src="../assets/images/phone.png" alt="">
-      <input class="yz" type="text" placeholder="请输入短信验证码">
+      <input class="yz" type="text" placeholder="请输入短信验证码" v-model="captcha">
       <span class="btns" @click="sendClickHandler">{{timerText}}</span>
     </div>
     <div class="xy-wrap">
       <img @click="xyClickHandler" :src="yx ? require('../assets/images/select.png') : require('../assets/images/noselect.png')" alt="">
-      <div>我已同意<span>《实名认证与隐私安全保障》</span>协议</div>
+      <div>我已同意 <router-link :to="{ name: 'MyYx'}"><span>《实名认证与隐私安全保障》</span></router-link>协议</div>
     </div>
-    <div class="btn">
+    <div class="btn" @click="login">
       确认提交
     </div>
     <img class="myfooter" src="../assets/images/myfooter.png" alt="">
-    <div class="tipmessage">
+    <div class="tipmessage" v-if="tipmessage">
       <img src="../assets/images/logintip.png" alt="">
-      <span>验证码错误，请重新输入</span>
+      <span>{{error}}</span>
     </div>
   </div>
 </template>
@@ -34,7 +34,10 @@ export default {
       timeFlag: true,
       timer: null,
       timerText: '获取验证码',
-      yx: true
+      yx: true,
+      tipmessage: false,
+      phone:null,
+      captcha:null
     }
   },
   methods: {
@@ -42,21 +45,63 @@ export default {
       this.yx = !this.yx
     },
     sendClickHandler () {
-      if (this.timeFlag) {
-        this.timeFlag = false
-        this.timer = setInterval(() => {
-          if (this.time === 0) {
-            clearInterval(this.timer)
-            this.time = 60
-            this.timer = null
-            this.timeFlag = true
-            this.timerText = '获取验证码'
-          } else {
-            this.time--
-            this.timerText = this.time + 's'
-          }
-        }, 1000)
+      if(!this.phone){
+        this.$toast('请输入手机号')
+        return
       }
+      if(!/^\d{11}$/.test(this.phone)){
+        this.$toast('请输入正确的手机号')
+        return
+      }
+      var _this = this
+      if (this.timeFlag) {
+        this.$api.smsSend({mobile:this.phone}).then((res)=>{
+          this.timeFlag = false
+          this.timer = setInterval(() => {
+            if (this.time === 0) {
+              clearInterval(this.timer)
+              this.time = 60
+              this.timer = null
+              this.timeFlag = true
+              this.timerText = '获取验证码'
+            } else {
+              this.time--
+              this.timerText = this.time + 's'
+            }
+          }, 1000)
+
+        })
+      }else{
+        this.$toast('60s之内只能发一次')
+        return
+      }
+    },
+    login () {
+      if(!this.captcha){
+        this.$toast('请输入验证码')
+        return
+      }
+      if(!this.phone){
+        this.$toast('请输入手机号')
+        return
+      }
+      var params = {
+        mobile: this.phone,
+        captcha: this.captcha
+      }
+      var _this = this
+      this.$api.authSaveMobile(params).then((res)=>{
+        if(res.code === 1){
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              _this.$router.go(-1)
+            }
+          })
+        }else{
+          this.toast(res.msg)
+        }
+      })
     }
   },
   destroyed () {
@@ -97,6 +142,7 @@ export default {
   flex-direction: column;
   padding-left:26px;
   padding-right:26px;
+  min-height: 100vh;
   .loginTip{
     font-size: 36px;
     color:#333;

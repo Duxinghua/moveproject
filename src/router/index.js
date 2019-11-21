@@ -31,6 +31,7 @@ import MyFx from '@/pages/myFx'
 import MyTx from '@/pages/myTx'
 import MyTz from '@/pages/myTz'
 import MyXx from '@/pages/myXx'
+import MyYx from '@/pages/myYx'
 import MyYq from '@/pages/myYq'
 import MyYy from '@/pages/myYy'
 import MyPl from '@/pages/myPl'
@@ -376,6 +377,14 @@ const router = new Router({
       }
     },
     {
+      path: '/myyx',
+      name: 'MyYx',
+      component: MyYx,
+      meta: {
+        title: '登陆认证协议'
+      }
+    },
+    {
       path: '/mypl',
       name: 'MyPl',
       component: MyPl,
@@ -516,6 +525,8 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  next()
+  return;
   const agent = navigator.userAgent
   const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
   if (isiOS) {

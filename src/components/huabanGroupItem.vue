@@ -1,7 +1,7 @@
 <template>
-        <div class="huaban-top-item"   @click="huabangdHandler">
+        <div class="huaban-top-item">
           <img class="huaban-top-item-img1" :src="item.image" alt="">
-          <div class="huaban-top-item-des">
+          <div class="huaban-top-item-des" @click="huabangdHandler">
             <span class="title">{{item.group_name}}</span>
             <span class="title subtitle">{{item.description}}</span>
             <span class="title subtitle">{{item.user_count}}成员</span>
@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     huabangdHandler () {
-      // this.$emit('joinGroupHandler', 1)
+      this.$emit('linkDetail', this.item.group_id)
     },
     joinGroupHandler () {
       this.$emit('joinGroupHandler',this.item.is_join,this.item.group_id)

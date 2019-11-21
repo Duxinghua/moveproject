@@ -10,7 +10,7 @@
             :immediate-check="false"
             @load="onLoad"
       >
-      <HuabanGroupItem v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler"/>
+      <HuabanGroupItem v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler" @linkDetail="linkDetail"/>
       </van-list>
       <NoData v-if="huabanList.length === 0" />
     </div>
@@ -38,6 +38,9 @@ export default {
     this.getGroupCateGory()
   },
   methods: {
+    linkDetail (id) {
+      this.$router.push({name:'HuabanGroupDetail', query:{id:id}})
+    },
     menuClick (v) {
       this.gc_id = v
       this.current = 1

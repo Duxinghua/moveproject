@@ -14,6 +14,12 @@
         </div>
       </div>
     </div>
+    <div >
+      <ul>
+        <li v-for="(item,index) in imgList" :key="index">{{item.s}}
+        </li>
+      </ul>
+    </div>
     <div class="huabanTzfp-btn" @click="postSave">确认发布</div>
   </div>
 </template>

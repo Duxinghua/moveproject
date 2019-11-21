@@ -21,7 +21,7 @@
             </div>
             <span class="s1">更多圈子</span>
           </div>
-          <div class="huaban-top-jwrap-item" v-for="(item,index) in huabanJoin" :key="index">
+          <div class="huaban-top-jwrap-item" v-for="(item,index) in huabanJoin" :key="index" @click="linkDetail(item.group_id)">
             <img :src="item.image" alt="">
             <span class="s1">{{item.group_name}}</span>
             <span class="s2" v-if="item.recommend">推荐</span>
@@ -61,6 +61,9 @@ export default {
     this.getPostsLists()
   },
   methods: {
+    linkDetail (id) {
+      this.$router.push({name:'HuabanGroupDetail', query:{id:id}})
+    },
     getGroupLists (data,type) {
       this.$api.groupLists(data).then((res)=>{
         if(res.code === 1){

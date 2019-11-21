@@ -21,7 +21,7 @@
             :immediate-check="false"
             @load="onLoad"
             >
-          <HuabanGroupItem v-if="currentIndex === 0"  v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler"/>
+          <HuabanGroupItem v-if="currentIndex === 0"  v-for="(item, index) in huabanList" :key="index" :item="item" @joinGroupHandler="joinGroupHandler" @linkDetail="linkDetail(item.group_id)"/>
           <HuabantzItem v-if="currentIndex === 1"  v-for="(item, index) in huabanList" :key="index" :item="item" />
           <HuabanUsergzItem  v-if="currentIndex === 2" v-for="(item, index) in huabanList" :key="index" :item="item" @cancelGz="cancelGz"/>
           </van-list>
@@ -70,6 +70,9 @@ export default {
     NoData
   },
   methods: {
+    linkDetail (id) {
+      this.$router.push({name:'HuabanGroupDetail', query:{id:id}})
+    },
     joinGroupHandler (is_join,group_id) {
       if(is_join === 0){
       this.$api.groupGroupUser({group_id:group_id}).then((res)=>{

@@ -71,7 +71,7 @@ export default {
     getcommonConfig(){
       this.$api.commonConfig({name:'points_rule'}).then((res)=>{
         if(res.code === 1) {
-          this.points_rule = res.data.content
+          this.points_rule = res.data.value
         }
       })
     },
@@ -124,6 +124,7 @@ export default {
 
 <style lang="scss" scoped>
 .aids{
+  padding-top:26px;
   font-size: initial;
   word-wrap: break-word;
   word-break: break-all;
