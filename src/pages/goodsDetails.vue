@@ -84,7 +84,11 @@
                             </div>
                             <div class="comments-img">
                                 <div class="img" v-for="(self, index) in item.images" :key="index" @click="onImageView(item.images,index)">
-                                    <img :src="self" alt="">
+                                    <van-image :src="self">
+                                        <template v-slot:loading>
+                                            <van-loading type="spinner" size="20" />
+                                        </template>
+                                    </van-image>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +99,8 @@
         </div>
 
         <div class="goods-action">
-            <div class="goods-money">合计<span>￥{{skuList[skuIndex] ? (skuList[skuIndex].price * goodsNum) : '0.00'}}</span></div>
+            <div class="goods-money" v-if="!disabled">合计<span>￥{{skuList[skuIndex] ? (skuList[skuIndex].price * goodsNum) : '0.00'}}</span></div>
+            <div class="goods-money" v-if="disabled">合计<span>￥{{ skuIndex != -1 ? goodsData.price_tuan : '0.00'}}</span></div>
             <div>
                 <div class="goods-group-btn" @click="onBuy('group')">发起拼团</div>
                 <div class="goods-buy-btn" @click="onBuy('buy')">立即购买</div>
@@ -108,7 +113,8 @@
                     <img :src="goodsData.images && goodsData.images[0]" alt="">
                     <div class="price">
                         <div class="money" v-if="skuIndex == -1"><span>￥{{goodsData.price}}</span><em>￥{{goodsData.price_cost}}</em></div>
-                        <div class="money" v-if="skuIndex != -1"><span>￥{{ skuList[skuIndex] ? skuList[skuIndex].price : '0.00'}}</span><em>￥{{ skuList[skuIndex] ? skuList[skuIndex].price_cost : '0.00'}}</em></div>
+                        <div class="money" v-if="skuIndex != -1 && !disabled"><span>￥{{ skuList[skuIndex] ? skuList[skuIndex].price : '0.00'}}</span><em>￥{{ skuList[skuIndex] ? skuList[skuIndex].price_cost : '0.00'}}</em></div>
+                        <div class="money" v-if="skuIndex != -1 && disabled"><span>￥{{ goodsData.price_tuan }}</span><em>￥{{ goodsData.price_cost }}</em></div>
                         <div class="attri" v-if="skuIndex == -1">请选择规格属性</div>
                         <div class="attri" v-if="skuIndex != -1">{{skuList[skuIndex] ? skuList[skuIndex].specs : '请选择规格属性'}}</div>
                     </div>
@@ -287,21 +293,6 @@ export default {
         onLinkAll(){
             this.$router.push('/allGroup')
         },
-        onGoodsTuanStore(){
-            this.$api.goodsTuanStore({goods_id:this.goodsId}).then((res) => {
-                if(res.code == 1){
-                    this.$toast({
-                        type:'success',
-                        message:'发起拼团成功'
-                    });
-                    this.goodsTuanLists()
-                }else{
-                    this.$toast({
-                        message:res.msg
-                    });
-                }
-            })
-        },
         goodsStoreCarts(){
             const param = {
                 goods_id:this.goodsId,
@@ -317,7 +308,8 @@ export default {
                 if(res.code == 1){
                     this.$toast({
                         type:'success',
-                        message:'添加到购物车'
+                        message:'添加到购物车',
+                        forbidClick: true
                     });
                 }else{
                     this.$toast({
@@ -333,7 +325,12 @@ export default {
                 specs:JSON.stringify(this.skuList[this.skuIndex]),
                 goods_num:this.goodsNum
             }
+            this.$toast.loading({
+                duration:0,
+                forbidClick: true
+            });
             this.$api.goodsOrderCreate(param).then((res) => {
+                this.$toast.clear();
                 if(res.code == 1){
                     this.$router.push({
                         path:'/submitOrder',
@@ -563,6 +560,7 @@ export default {
                             height: 65px;
                             border-radius: 50%;
                             overflow: hidden;
+                            
                             img{
                                 width: 100%;
                                 height: 100%;
@@ -602,6 +600,11 @@ export default {
                             margin-top: 10px;
                             &:nth-child(3n){
                                 margin-right: 0px;
+                            }
+                            /deep/ .van-image{
+                                width: 100%;
+                                height: 100%;
+                                position: relative;
                             }
                             img{
                                 width: 100%;

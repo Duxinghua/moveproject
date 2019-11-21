@@ -91,7 +91,7 @@ export default {
     mounted(){
         const {orderId,type} = this.$route.query;
         this.orderId = orderId;
-        this.orderType == type;
+        this.orderType = type;
         this.getAddressList();
         this.goodsOrder();
     },
@@ -101,6 +101,7 @@ export default {
             // 微信支付
             let param = {}
             if(this.orderType == 0){
+                //购物车购买
                 let cart_id = [];
                 this.orderData.goods.forEach((item) => {
                     cart_id.push(item.cart_id)
@@ -110,7 +111,15 @@ export default {
                     type:this.orderType,
                     address_id:this.addressData.id,
                 }
+            }else if(this.orderType == 1){
+                //拼团购买
+                param = {
+                    t_id:this.orderData.t_id,
+                    type:this.orderType,
+                    address_id:this.addressData.id,
+                }
             }else{
+                //单个商品购买
                 param = {
                     goods_id:this.orderData.goods[0].goods_id,
                     specs:this.orderData.goods[0].specs,

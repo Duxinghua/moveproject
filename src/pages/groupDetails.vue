@@ -27,7 +27,7 @@
             <div class="goods-time">
                 <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="groupDetails.expire_time * 1000" />后结束
             </div>
-            <div class="goods-submit" @click="goodsOrderCreate">参与拼团</div>
+            <div class="goods-submit" @click="showPopup">参与拼团</div>
             <div class="goods-process">
                 <span>邀请好友拼团</span>
                 <van-icon name="arrow" />
@@ -74,6 +74,44 @@
                 </div>
             </div>
         </div>
+
+        <van-popup v-model="popupStatus" round :safe-area-inset-bottom="true" position="bottom">
+            <div class="sku-content">
+                <div class="sku-header">
+                    <img :src="goodsData.images && goodsData.images[0]" alt="">
+                    <div class="price">
+                        <div class="money" v-if="skuIndex == -1"><span>￥{{goodsData.price}}</span><em>￥{{goodsData.price_cost}}</em></div>
+                        <div class="money" v-if="skuIndex != -1"><span>￥{{ goodsData.price_tuan }}</span><em>￥{{ goodsData.price_cost }}</em></div>
+                        <div class="attri" v-if="skuIndex == -1">请选择规格属性</div>
+                        <div class="attri" v-if="skuIndex != -1">{{skuList[skuIndex] ? skuList[skuIndex].specs : '请选择规格属性'}}</div>
+                    </div>
+                </div>
+                <div class="sku-row">
+                    <div class="sku-title">
+                        规格
+                    </div>
+                    <div class="sku-list">
+                        <div 
+                            v-for="(item, index) in skuList" 
+                            :key="index" 
+                            :class="['sku-item',{'active': skuIndex == index}]"
+                            @click="onSkuClick(index)"
+                        >{{item.specs}}</div>
+                    </div>
+                </div>
+                <div class="sku-row">
+                    <div class="sku-title">
+                        数量
+                    </div>
+                    <div class="sku-list">
+                        <van-stepper :disabled="true" disable-input v-model="goodsNum" />
+                    </div>
+                </div>
+                <div class="submit" @click="onSubmit">
+                    确认
+                </div>
+            </div>
+        </van-popup>
     </div>
 </template>
 
@@ -81,6 +119,10 @@
 export default {
     data() {
         return {
+            popupStatus:false,
+            goodsNum:1,
+            skuIndex:-1,
+            skuList:[],
             goodsData:{},
             groupId:0,
             groupDetails:{
@@ -100,19 +142,38 @@ export default {
                 forbidClick: true
             });
             this.$api.goodsTuan({t_id:this.groupId}).then((res) => {
+                this.$toast.clear();
                 if(res.code == 1){
                     this.groupDetails = res.data;
                     this.goodsData = res.data.goods || {};
+                    this.skuList = res.data.goods.specs || [];
                 } 
             })
+        },
+        onSkuClick(index){
+            if(this.skuIndex == index){
+                this.skuIndex = -1;
+            }else{
+                this.skuIndex = index;
+            }
+        },
+        onSubmit(){
+            if(this.skuIndex == -1){
+                this.$toast('请选择规格')
+                return false
+            }
+            this.goodsOrderCreate(1)
+        },
+        showPopup(){
+            this.popupStatus = true;
         },
         goodsOrderCreate(type){
             //参加拼团到支付页面
             const param = {
                 type,
-                // goods_id:this.goodsId,
-                // specs:JSON.stringify(this.skuList[this.skuIndex]),
-                // goods_num:this.goodsNum
+                t_id:this.groupId,
+                specs:JSON.stringify(this.skuList[this.skuIndex]),
+                goods_num:this.goodsNum
             }
             this.$api.goodsOrderCreate(param).then((res) => {
                 if(res.code == 1){
@@ -370,6 +431,106 @@ export default {
                     }
                 }
             } 
+        }
+    }
+
+    .sku-content{
+        padding: 45px 35px 25px 35px;
+        .sku-header{
+            display: flex;
+            align-items: center;
+            margin-bottom: 50px;
+            img{
+                width: 200px;
+                height: 150px;
+            }
+            .price{
+                margin-left: 20px;
+                .money{
+                    span{
+                        color: #995258;
+                        font-size: 30px;
+                        font-weight: 500;
+                    }
+                    em{
+                        color: #999999;
+                        font-size: 26px;
+                        text-decoration: line-through;
+                        margin-left: 10px;
+                        font-style: normal;
+                    }
+                }
+                .attri{
+                    color: #333333;
+                    font-size: 24px;
+                }
+            }
+        }
+        .sku-row{
+            .sku-title{
+                color: #333333;
+                font-size: 26px;
+                margin-bottom: 20px;
+                margin-top: 20px;
+            }
+            .sku-list{
+                display: flex;
+                .sku-item{
+                    padding: 12px 26px;
+                    border-radius: 6px;
+                    border: 1Px solid #E3E3E3;
+                    font-size: 24px;
+                    color: #333333;
+                    margin-right: 20px;
+                    cursor: pointer;
+                    transition: all .3s;
+                }
+                .active{
+                    border-color: #CDA871;
+                    color: #CDA871;
+                }
+                /deep/ .van-stepper{
+                    border: 1Px solid #D3D3D3;
+                    border-radius: 6px;
+                     .van-stepper__minus, .van-stepper__plus{
+                        width: 80px;
+                        height: 55px;
+                        background: #fff;
+                        &::before{
+                            width: 13Px;
+                            height: 1Px;
+                        }
+                        &::after{
+                            width: 1Px;
+                            height: 13Px;
+                        }
+                    }
+                    input{
+                        width: 115px;
+                        margin: 0px;
+                        height: 100%;
+                        border-left: 1Px solid #D3D3D3;
+                        border-right: 1Px solid #D3D3D3;
+                        background: #fff;
+                        font-size: 24px;
+                    }
+                    input[disabled]{
+                        color: #333333;
+                        -webkit-text-fill-color:#333333;
+                        -webkit-opacity: 1;
+                    }
+                }
+            }
+        }
+        .submit{
+            width: 100%;
+            height: 90px;
+            text-align: center;
+            line-height: 90px;
+            color: #F3D995;
+            font-size: 36px;
+            background:url('../assets/images/buy-bg.png') 100%/100% no-repeat;
+            margin-top: 40px;
         }
     }
 }
