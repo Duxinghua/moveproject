@@ -1,6 +1,7 @@
 <template>
   <div class="huaban">
     <div class="huaban-top">
+      <button @click="test">222</button>
       <div class="huaban-top-wrap">
         <div class="huaban-top-item" v-for="(item,index) in huabanList" :key="index" @click="huabangdHandler(item.group_id)">
           <img class="huaban-top-item-img1" :src="item.image" alt="">
@@ -37,6 +38,7 @@
       </div>
       <MoreText moreText="更多" moreName="HuabanTzList" />
     </div>
+
     <Footer :hb="true" />
   </div>
 </template>
@@ -46,6 +48,7 @@ import Footer from '@/components/footer.vue'
 import MoreText from '@/components/moreItem.vue'
 import TitleItem from '@/components/titleItem.vue'
 import HuabantzItem from '@/components/huabantzItem.vue'
+import WxSing from '@/utils/wxSing'
 export default {
   name: 'Huaban',
   data () {
@@ -56,11 +59,16 @@ export default {
     }
   },
   mounted () {
+    WxSing.init('花伴123','测试发的哈456',location.href,'https://youmeng.qixiuu.com/uploads/20191031/92c752479595ee8fbd07c3caca9dd434.png')
     this.getGroupLists({recommend:0},{data:1})
     this.getGroupLists({my:1},{data:2})
     this.getPostsLists()
   },
   methods: {
+    test() {
+  localStorage.removeItem('mobile')
+  localStorage.removeItem('token')
+    },
     linkDetail (id) {
       this.$router.push({name:'HuabanGroupDetail', query:{id:id}})
     },

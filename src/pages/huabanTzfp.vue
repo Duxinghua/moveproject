@@ -48,7 +48,7 @@ export default {
     this.$api.userGetSignPackage(data).then((res) => {
       if (res.code === 1) {
         var wxpay = res.data
-        this.$wx.config({
+        wx.config({
           debug: true,
           appId: wxpay.appId,
           timestamp: wxpay.timestamp,
@@ -63,12 +63,12 @@ export default {
             'getLocalImgData'
           ]
         })
-        this.$wx.error(function (res) {
+        wx.error(function (res) {
           console.log('出错了：' + res.errMsg)
         })
         // 在这里调用 API
-        this.$wx.ready(function () {
-          this.$wx.checkJsApi({
+        wx.ready(function () {
+          wx.checkJsApi({
             jsApiList: [
               'checkJsApi',
               'onMenuShareTimeline',
@@ -99,7 +99,7 @@ export default {
     chooseImage () {
       var _this = this
       if(this.imgList.length < 4){
-        this.$wx.chooseImage({
+        wx.chooseImage({
           count: this.num, // 默认9
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
@@ -118,7 +118,7 @@ export default {
     uploadImage (localId) {
       this.$toast('uploadImage')
       var _this = this
-      this.$wx.uploadImage({
+      wx.uploadImage({
           localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
           isShowProgressTips: 1, // 默认为1，显示进度提示
           success: function (res) {
@@ -138,7 +138,7 @@ export default {
           alert(res.msg)
       })
       if(isiOS){
-        this.$wx.getLocalImgData({
+        wx.getLocalImgData({
               localId: localId, // 图片的localID
               success: function (res) {
                   var localData = res.localData; // localData是图片的base64数据，可以用img标签显示

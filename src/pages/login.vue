@@ -56,7 +56,7 @@ export default {
       }
       var _this = this
       if (this.timeFlag) {
-        this.$api.smsSend({mobile:this.phone}).then((res)=>{
+        this.$api.smsSend({mobile:this.phone,event:'send'}).then((res)=>{
           this.timeFlag = false
           this.timer = setInterval(() => {
             if (this.time === 0) {
@@ -88,7 +88,8 @@ export default {
       }
       var params = {
         mobile: this.phone,
-        captcha: this.captcha
+        captcha: this.captcha,
+        event: 'bind'
       }
       var _this = this
       this.$api.authSaveMobile(params).then((res)=>{

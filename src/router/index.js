@@ -524,13 +524,18 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
-  return;
+
+  console.log(to)
+  // getSitem.remove('token')
+  // getSitem.remove('mobile')
+  // getSitem.remove('open')
   const agent = navigator.userAgent
   const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
   if (isiOS) {
     getSitem.setStr('iosurl', location.href)
   }
+  next()
+  return;
   console.log(to.fullPath, 'tofullpaty')
   var localurl = window.location.href
   console.log(localurl, 'localurl')
@@ -550,23 +555,26 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       console.log(getSitem.getStr('token'), 'token')
-      console.log('222')
       next()
     }
   } else {
     console.log('已拿到code', code)
     console.log('111')
     var data = {
-      code: '123456'
+      code: code
     }
     getToken(data)
-    // if (isiOS && to.path !== location.pathname) {
-    //   // 此处不可使用location.replace
-    //   location.assign(to.fullPath)
-    // } else {
-    //   next()
-    // }
-    next()
+    if(!getSitem.getStr('mobile')){
+      if(to.name == 'MyFs'){
+        next('/login')
+      }else{
+        next()
+      }
+
+
+    }else{
+      next()
+    }
   }
 
 })

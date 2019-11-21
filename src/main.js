@@ -3,7 +3,6 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import wx from 'weixin-js-sdk'
 import 'amfe-flexible/index.js'
 import Vant from 'vant'
 import ElementUI from 'element-ui'
@@ -18,7 +17,6 @@ import './assets/css/fixvant.css'
 import api from '@/api/index'
 
 Vue.prototype.$api = api
-Vue.prototype.$wx = wx
 
 Vue.config.productionTip = false
 
