@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import getSitem from '@/utils/storage'
 export default {
   name: 'Login',
   data () {
@@ -95,11 +96,12 @@ export default {
           this.$toast({
             message: res.msg,
             onClose: () => {
+              getSitem.setStr('mobile', res.data.mobile)
               _this.$router.go(-1)
             }
           })
         }else{
-          this.toast(res.msg)
+          this.$toast(res.msg)
         }
       })
     }

@@ -83,7 +83,6 @@ const getToken = (data) => {
   }
 }
 
-
 /*
 const getToken = async (data, url) => {
   // alert('gettoken')

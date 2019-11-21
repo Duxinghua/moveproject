@@ -90,7 +90,7 @@
         </div>
         <div class="t-body-b">
           <div class="title">
-              今日签到可获得<img src="../assets/images/qdda.png" alt=""> 5学分
+              今日签到可获得<img src="../assets/images/qdda.png" alt=""> {{signValue}}学分
           </div>
           <div class="list">
             <div class="litem" v-for="(item,index) in qdList" :key="index">
@@ -148,7 +148,8 @@ export default {
       userSignList: [],
       qdText: '立即签到',
       currentDate: '',
-      qdcontrol: false // 今天是否签到
+      qdcontrol: false, // 今天是否签到
+      signValue: 5
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -156,56 +157,65 @@ export default {
     next()
   },
   mounted () {
-    var date = new Date()
-    var getyear = date.getFullYear()
-    var getmonth = date.getMonth() + 1
-    var getday = date.getDate()
-    this.currentDate = getyear + '-' + getmonth + '-' + getday
+    // var date = new Date()
+    // var getyear = date.getFullYear()
+    // var getmonth = date.getMonth() + 1
+    // var getday = date.getDate()
+    this.currentDate = this.formatTime(false)
     this.$api.userIndex().then((result) => {
       if (result.code === 1) {
         this.userInfo = result.data
       }
     })
+    this.$api.commonConfig({name:'sign'}).then((res)=>{
+      if(res.code === 1) {
+        this.signValue = res.data.value
+      }
+    })
     this.getUserSignLists()
   },
   methods: {
+    formatTime (time) {
+      var date  = ""
+      if (time) {
+        date = new Date(time)
+      }else{
+        date = new Date()
+      }
+      var getyear = date.getFullYear()
+      var getmonth = date.getMonth() + 1
+      var getday = date.getDate()
+      return getyear + '-' + getmonth + '-' + getday
+    },
     getUserSignLists () {
+      var _this = this
       this.$api.userSignLists().then((result) => {
         console.log(result)
         if (result.code === 1) {
-          var list = []
-          result.data.map((item) => {
-            console.log(item)
-            list.push({
-              num: item.days,
-              check: true
+          console.log(_this.currentDate)
+          console.log(_this.formatTime(result.data.sign_time_text))
+            if (_this.currentDate == _this.formatTime(result.data.sign_time_text)) {
+              _this.qdcontrol = true
+            }else{
+              _this.qdcontrol = false
+            }
+            _this.qdText = '已经连续签到' + result.data.days + '天'
+            _this.qdList.map((item)=>{
+              if(item.num <= result.data.days){
+                item.check = true
+              }
             })
-            if (this.currentDate == item.sign_time_text) {
-              console.log(this.currentDate, '1')
-              this.qdcontrol = true
-              this.qdText = '已经连续签到' + result.data.length + '天'
-            }
-          })
-          var fix = []
-          for (var i = 1, l = 7; i < l; i++) {
-            if (!list[i]) {
-              fix.push({
-                num: i + 1,
-                check: false
-              })
-            }
-          }
-          this.qdList = list.reverse().concat(fix)
         }
       })
     },
     qdFuClickHandler () {
+      var _this = this
       this.$api.userSaveSign().then((result) => {
         if (result.cdoe === 1) {
           // this.qdText
           this.$toast({message: result.msg,
             onClose: () => {
-              this.getUserSignLists()
+              _this.getUserSignLists()
             }})
         } else {
           this.$toast(result.msg)

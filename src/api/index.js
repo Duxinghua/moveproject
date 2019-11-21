@@ -241,6 +241,10 @@ const server = {
   goodsOrderLists (data) {
     return post('goods_order/lists', data)
   },
+  // 删除订单 /api/goods_order/del
+  goodsOrderDel (data) {
+    return post('goods_order/del', data)
+  },
   // 图片上传 /common/wxUpload
   commonwxUpload (data) {
     return post('common/wxUpload', data)
