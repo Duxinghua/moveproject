@@ -20,6 +20,7 @@ import HuabanUserInfo from '@/pages/huabanUserInfo'
 import OrderList from '@/pages/orderlist'
 import OrderDetail from '@/pages/OrderDetail'
 import OrderRefund from '@/pages/orderRefund'
+import OrderComment from '@/pages/orderComment'
 import CourseOrderList from '@/pages/courseOrderList'
 import CourseOrderDetail from '@/pages/courseOrderDetail'
 import MyEdit from '@/pages/myEdit'
@@ -432,6 +433,14 @@ const router = new Router({
       component: OrderRefund,
       meta: {
         title: '申请退款'
+      }
+    },
+    {
+      path: '/ordercomment',
+      name: 'OrderComment',
+      component: OrderComment,
+      meta: {
+        title: '订单评论'
       }
     },
     {

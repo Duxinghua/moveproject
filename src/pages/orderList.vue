@@ -37,6 +37,9 @@
           <div class="btns">
             <span class="cancel" v-if="item.status === 0" @click="cancelClickHandler(item.order_id)">取消订单</span>
             <span v-if="item.status === 0" @click="replayClickHandler(item.order_id)">去付款</span>
+            <span v-if="item.status === 1" @click="sendClickHandler(item.order_id)">提配发货</span>
+            <span v-if="item.status === 2" @click="confirmClickHandler(item.order_id)">确认收货</span>
+            <span v-if="item.status === 3 && item.is_comment === 0" @click="commentClickHandler(item.order_id)">评论</span>
           </div>
         </div>
       </div>
@@ -72,6 +75,15 @@ export default {
     }
   },
   methods: {
+    confirmClickHandler (order_id) {
+
+    },
+    sendClickHandler (order_id) {
+
+    },
+    commentClickHandler (order_id) {
+      this.$router.push({name:'OrderComment',query:{id:order_id}})
+    },
     replayClickHandler (order_id) {
        var _this = this
        this.$api.goodsOrderPayOrder({order_id:order_id}).then((res)=>{
