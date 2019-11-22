@@ -36,11 +36,11 @@
             </div>
              <div class="order-item">
                 <div class="left">运费</div>
-                <div class="right">￥0.00</div>
+                <div class="right">￥{{orderData.express_price || '0.00'}}</div>
             </div>
              <div class="order-item">
                 <div class="left">优惠活动</div>
-                <div class="right">原价￥0.00</div>
+                <div class="right">原价￥{{ orderData.goods && orderData.goods.price_cost}}</div>
             </div>
             <div class="order-item" @click="toggle">
                 <div class="left">可用<span>0学分</span>抵用<span>0</span>元</div>
@@ -68,7 +68,8 @@ export default {
             orderData:{},
             goodsTotal:0,
             orderMoney:0,
-            orderType:0
+            orderType:0,
+            wx:null
         }
     },
     watch:{
@@ -87,6 +88,32 @@ export default {
     },
     computed:{
         ...mapState('shop',['addressData'])
+    },
+    created() {
+        let config = {};
+        config.url = window.location.href; // 当前页面url
+         if(!config.url.match(/\?#/)) {
+            location.replace(window.location.href.split('#')[0] + '?' + window.location.hash);
+            return ;
+        }
+        console.log(config.url)
+        // 请求api返回sdk配置参数
+        // this.$http.post('/api/wx/sdk-config', config).then(ret => {
+        //     config = ret.data.config;
+        //     config.debug = true;
+        //     wx.config({
+        //         debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        //         appId: '', // 必填，公众号的唯一标识
+        //         timestamp: , // 必填，生成签名的时间戳
+        //         nonceStr: '', // 必填，生成签名的随机串
+        //         signature: '',// 必填，签名
+        //         jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
+        //     });
+            
+        //     wx.ready(() => {
+        //         this.wx = wx;
+        //     });
+        // });
     },
     mounted(){
         const {orderId,type} = this.$route.query;
@@ -185,6 +212,25 @@ export default {
                 }
             })
         },
+        wxPay(wxmsg){
+            this.wx.chooseWXPay({
+                appId: wxmsg.appId,
+                timestamp: wxmsg.timeStamp,
+                nonceStr: wxmsg.nonceStr, // 支付签名随机串，不长于 32 位
+                package: wxmsg.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                paySign: wxmsg.paySign, // 支付签名
+                success: function (res) {
+                    // 支付成功的回调函数
+                },
+                cancel: function (res) {
+                    // 支付取消的回调函数
+                },
+                error: function (res) {
+                    // 支付失败的回调函数
+                }
+            })
+        }
     }
 }
 </script>
