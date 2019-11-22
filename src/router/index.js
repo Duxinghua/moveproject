@@ -66,7 +66,7 @@ const getToken = (data) => {
     })
   } else {
     Api.wxLogin(data).then((result) => {
-      alert(JSON.stringify(result))
+      // alert(JSON.stringify(result))
       getSitem.setStr('open', true)
       if (result.code === 1) {
         console.log(result)
@@ -78,7 +78,7 @@ const getToken = (data) => {
           getSitem.setStr('open', false)
         }
       } else {
-        alert(222)
+        // alert(222)
         console.log(result)
       }
     })
@@ -534,8 +534,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
-  return
   console.log(to)
   // getSitem.remove('token')
   // getSitem.remove('mobile')
@@ -572,7 +570,6 @@ router.beforeEach((to, from, next) => {
     var data = {
       code: code
     }
-    alert(code)
     getToken(data)
     if (!getSitem.getStr('mobile')) {
       if (to.name === 'My' || to.name === 'goodsDetails') {
