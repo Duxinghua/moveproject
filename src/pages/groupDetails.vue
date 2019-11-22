@@ -45,25 +45,7 @@
             </div>
 
             <div class="goods-list">
-                <div class="goods-item">
-                    <div class="img"><img src="../assets/images/770552.png" alt=""></div>
-                    <div class="content">
-                        <div class="title">玫瑰花泥面膜</div>
-                        <div class="price">单买价¥1599</div>
-                        <div class="money"><em>5人团</em>￥<span>1299</span></div>
-                        <div class="submit">去开团</div>
-                    </div>
-                </div>
-                <div class="goods-item">
-                    <div class="img"><img src="../assets/images/770552.png" alt=""></div>
-                    <div class="content">
-                        <div class="title">玫瑰花泥面膜</div>
-                        <div class="price">单买价¥1599</div>
-                        <div class="money"><em>5人团</em>￥<span>1299</span></div>
-                        <div class="submit">去开团</div>
-                    </div>
-                </div>
-                <div class="goods-item">
+                <div class="goods-item" v-for="(item, index) in groupList" :key="index" :groupTime="groupTime">
                     <div class="img"><img src="../assets/images/770552.png" alt=""></div>
                     <div class="content">
                         <div class="title">玫瑰花泥面膜</div>

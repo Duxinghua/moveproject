@@ -36,11 +36,11 @@
             </div>
              <div class="order-item">
                 <div class="left">运费</div>
-                <div class="right">￥0.00</div>
+                <div class="right">￥{{orderData.express_price || '0.00'}}</div>
             </div>
              <div class="order-item">
                 <div class="left">优惠活动</div>
-                <div class="right">原价￥0.00</div>
+                <div class="right">原价￥{{ orderData.goods && orderData.goods.price_cost}}</div>
             </div>
             <div class="order-item" @click="toggle">
                 <div class="left">可用<span>0学分</span>抵用<span>0</span>元</div>
@@ -109,6 +109,7 @@ export default {
         //         signature: '',// 必填，签名
         //         jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
         //     });
+
 
         //     wx.ready(() => {
         //         this.wx = wx;
