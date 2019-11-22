@@ -69,7 +69,8 @@ export default {
             goodsTotal:0,
             orderMoney:0,
             orderType:0,
-            wx:null
+            wx:null,
+            wxConfig:{}
         }
     },
     watch:{
@@ -90,31 +91,41 @@ export default {
         ...mapState('shop',['addressData'])
     },
     created() {
-        let config = {};
-        config.url = window.location.href; // 当前页面url
-         if(!config.url.match(/\?#/)) {
-            location.replace(window.location.href.split('#')[0] + '?' + window.location.hash);
-            return ;
+        // let config = {};
+        // config.url = window.location.href; // 当前页面url
+        //  if(!config.url.match(/\?#/)) {
+        //     location.replace(window.location.href.split('#')[0] + '?' + window.location.hash);
+        //     return ;
+        // }
+        // console.log(config.url)
+
+        var data = {
+          url: location.href
         }
-        console.log(config.url)
+        const agent = navigator.userAgent
+        const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+        if (isiOS) {
+          data.url = config.shareurls
+        }
         // 请求api返回sdk配置参数
-        // this.$http.post('/api/wx/sdk-config', config).then(ret => {
-        //     config = ret.data.config;
-        //     config.debug = true;
-        //     wx.config({
-        //         debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-        //         appId: '', // 必填，公众号的唯一标识
-        //         timestamp: , // 必填，生成签名的时间戳
-        //         nonceStr: '', // 必填，生成签名的随机串
-        //         signature: '',// 必填，签名
-        //         jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
-        //     });
-
-
-        //     wx.ready(() => {
-        //         this.wx = wx;
-        //     });
-        // });
+        this.$api.userGetSignPackage(data).then(ret => {
+            if (res.code === 1) {
+                var wxConfig = res.data;
+                this.wxConfig = wxConfig;
+                wx.config({
+                    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId: wxConfig.appId, // 必填，公众号的唯一标识
+                    timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
+                    nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
+                    signature: wxConfig.signature,// 必填，签名
+                    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
+                });
+            }
+            
+            wx.ready(() => {
+                this.wx = wx;
+            });
+        });
     },
     mounted(){
         const {orderId,type} = this.$route.query;
@@ -158,7 +169,7 @@ export default {
             }
             this.$api.goodsOrderStore(param).then((res) => {
                 if(res.code == 1){
-
+                    // this.wxPay()
                 }else{
                     this.$toast(res.msg);
                 }
@@ -215,9 +226,9 @@ export default {
         },
         wxPay(wxmsg){
             this.wx.chooseWXPay({
-                appId: wxmsg.appId,
-                timestamp: wxmsg.timeStamp,
-                nonceStr: wxmsg.nonceStr, // 支付签名随机串，不长于 32 位
+                appId: this.wxConfig.appId,
+                timestamp: this.wxConfig.timeStamp,
+                nonceStr: this.wxConfig.nonceStr, // 支付签名随机串，不长于 32 位
                 package: wxmsg.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
                 signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
                 paySign: wxmsg.paySign, // 支付签名
