@@ -38,8 +38,8 @@
         <span>¥{{order_detail.price_pay}}</span>
       </div>
       <div class="orderItem orderItemfix" v-if="order_detail.status == 1 || order_detail.status == 3 && order_detail.is_comment == 0 ">
-          <span class="btn" v-if="order_detail.status == 1">退款</span>
-          <span class="btn" v-if="order_detail.status == 3 && order_detail.is_comment == 0">退款</span>
+          <span class="btn" v-if="order_detail.status == 1" @click="refundHandler(order_detail.order_id)">退款</span>
+          <span class="btn" v-if="order_detail.status == 3 && order_detail.is_comment == 0">评价</span>
       </div>
     </div>
     <div class="orderdetail-content">
@@ -128,6 +128,9 @@ export default {
     this.getDetail()
   },
   methods: {
+    refundHandler (order_id) {
+      this.$router.push({name:'OrderRefund',query:{id:order_id}})
+    },
     payClickHandler (order_id) {
       var _this = this
       this.$api.goodsOrderPayOrder({order_id: order_id}).then((res)=>{

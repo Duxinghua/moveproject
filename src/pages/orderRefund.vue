@@ -15,66 +15,22 @@
             </div>
         </div>
       </div>
-      <div class="orderItem">
-        <span>商品总价：</span>
-        <span>¥{{order_detail.price_amount}}</span>
-      </div>
-      <div class="orderItem">
-        <span>运费：</span>
-        <span>¥{{order_detail.express_price}}</span>
-      </div>
-      <div class="orderItem">
-        <span>优费：</span>
-        <span>¥{{order_detail.price_deduction}}</span>
-      </div>
-      <div class="orderItem total">
-        <span>实付款（含运费）</span>
-        <span>¥{{order_detail.price_pay}}</span>
-      </div>
-      <div class="orderItem orderItemfix" v-if="order_detail.status == 1 || order_detail.status == 3 && order_detail.is_comment == 0 ">
-          <span class="btn" v-if="order_detail.status == 1">退款</span>
-          <span class="btn" v-if="order_detail.status == 3 && order_detail.is_comment == 0">退款</span>
+      <textarea placeholder="请输入退货原因…"  class="orderdetail-top-textarea"/>
+      <div class="orderdetail-top-price">退款金额：<span>¥{{order_detail.price_pay}}</span></div>
+      <span>上传凭证（{{0}}/3）</span>
+      <div class="orderdetail-top-uploads">
+        <div class="uploadimgs-wrap" v-for="(item,index) in imgList" :key="index" @click="delImg(index)">
+          <img :src="item.l" class="uploadimgs" alt="">
+          <img src="../assets/images/uploadcloses.png" class="uploadclose" alt="">
+        </div>
+        <div class="orderdetail-wrap uploadborder" @click="chooseImage" v-if="imgList.length < 3">
+          <img src="../assets/images/uploadmores.png" class="uplaodmores" alt="" />
+        </div>
       </div>
     </div>
     <div class="orderdetail-content">
-      <div class="header">
-        <span>
-          订单详情
-        </span>
-      </div>
-      <div class="address">
-        <span>收货人</span>
-        <div class="infos">
-          <span>{{order_detail.address_name}}</span>
-          <span>{{order_detail.address_mobile}}</span>
-          <span>{{order_detail.addressInfo}}</span>
-        </div>
-      </div>
-      <div class="orderother">
-        <span>订单编号</span>
-        <span>{{order_detail.order_code}}</span>
-      </div>
-      <div class="orderother">
-        <span>快递公司</span>
-        <span>{{order_detail.express_cp}}</span>
-      </div>
-      <div class="orderother">
-        <span>快递单号</span>
-        <span>{{order_detail.express_num}}</span>
-      </div>
-      <div class="orderother">
-        <span>下单时间</span>
-        <span>{{formatTime(order_detail.create_time)}}</span>
-      </div>
     </div>
-    <div class="orderdetail-btns" v-if="order_detail.status == 0">
-      <span class="cancel" v-if="order_detail.status == 0" @click="cancelClickHandler(order_detail.order_id)">
-        关闭订单
-      </span>
-      <span class="success" v-if="order_detail.status == 0" @click="payClickHandler(order_detail.order_id)">
-        立即付款
-      </span>
-      <span class="repay" v-if="false">重新购买</span>
+
     </div>
   </div>
 </template>
@@ -87,34 +43,9 @@ export default {
     return {
       order_id: null,
       order_detail: {},
-      tips: [
-        {
-          image: require('../assets/images/orderpay.png'),
-          t1: '等待买家付款',
-          t2: '剩23小时59分自动关闭'
-        },
-        {
-          image: require('../assets/images/ordersend.png'),
-          t1: '等待卖家发货',
-          t2: '卖家会尽快为您发货'
-        },
-        {
-          image: require('../assets/images/ordersend.png'),
-          t1: '卖家已发货',
-          t2: '请卖家收到货之后，确认收货'
-        },
-        {
-          image: require('../assets/images/ordersuccess.png'),
-          t1: '交易成功',
-          t2: '买家已经确认收货'
-        },
-        {
-          image: require('../assets/images/orderclose.png'),
-          t1: '订单已关闭',
-          t2: '订单已超过可支付时间，请重新购买。'
-        }
-
-      ]
+      num: 3,//上传数量
+      localIds: [],
+      imgList: []
     }
   },
   mounted () {
@@ -122,72 +53,10 @@ export default {
     this.getDetail()
   },
   methods: {
-    payClickHandler (order_id) {
-      var _this = this
-      this.$api.goodsOrderPayOrder({order_id: order_id}).then((res)=>{
-        if(res.code === 1){
-          this.$toast({
-            message: res.msg,
-            onClose: () => {
-              _this.getDetail()
-            }
-          })
-        }else{
-          this.$toast(res.msg)
-        }
-      })
-    },
-    cancelClickHandler (order_id) {
-      var _this = this
-       this.$api.goodsOrderDel({order_id:order_id}).then((res)=>{
-         if (res.code === 1) {
-           _this.$toast({
-             message: res.msg,
-             onClose: () => {
-
-               _this.getDetail()
-             }
-           })
-
-         }else{
-           _this.$toast(res.msg)
-         }
-       })
-    },
-    formatTime (time) {
-      var date  = ""
-      if (time) {
-        date = new Date(time*1000)
-      }else{
-        date = new Date()
-      }
-      var getyear = date.getFullYear()
-      var getmonth = date.getMonth() + 1
-      var getday = date.getDate()
-      var gethours = date.getHours()
-      var getminute = date.getMinutes()
-      return getyear + '-' + getmonth + '-' + getday + ' ' + gethours + ':'+ getminute
-    },
     getDetail () {
       this.$api.goodsOrderIndex({order_id:this.order_id}).then((res)=>{
         if(res.code === 1) {
-          var address = res.data.address_text
-          var arr = address.split('，')
-          var list = []
           this.order_detail = res.data
-          if(arr.length){
-            list.push(area.province_list[arr[0]])
-            list.push(area.city_list[arr[1]])
-            list.push(area.county_list[arr[2]])
-            list.push(arr[3])
-            this.order_detail.addressInfo = list.join()
-          }else{
-            this.order_detail.addressInfo = ''
-          }
-          var status = res.data.status
-          this.order_detail.tipsimage = this.tips[status].image
-          this.order_detail.tipst1 = this.tips[status].t1
-          this.order_detail.tipst2 = this.tips[status].t2
         }
       })
     }
@@ -206,6 +75,61 @@ export default {
    flex-direction: column;
    background:white;
    padding:26px 26px 0px 26px;
+     &-textarea{
+      margin-top:42px;
+      width:100%;
+      padding:10px;
+      height:311px;
+      resize:none;
+      font-size:28px;
+      border-radius:12px;
+      margin-bottom: 28px;
+      border:2px solid rgba(241, 241, 241, 1);
+    }
+    &-price{
+      font-size: 30px;
+      color:#333;
+      padding-bottom: 40px;
+      border-bottom: 2px solid #F3F3F3;
+      span{
+        font-size: 36px;
+        color:#995258;
+      }
+    }
+    &-uploads{
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      .orderdetail-wrap{
+        width:157px;
+        height:157px;
+        position: relative;
+        margin-right:25px;
+        display: flex;
+        .uploadimgs{
+          width:157px;
+          height:157px;
+        }
+        .uploadclose{
+          width:36px;
+          height:36px;
+          position: absolute;
+          right:10px;
+          top:10px;
+        }
+        .uplaodmores{
+          width:73px;
+          height:73px;
+          margin:auto;
+        }
+
+      }
+      .uploadborder{
+        width:157px;
+        height:157px;
+        border:1px solid #D2D2D2;
+      }
+    }
     .tip{
       font-size:30px;
       color:#333;
@@ -331,6 +255,7 @@ export default {
       border-bottom: 1px solid transparent;
     }
   }
+
   &-content{
     display: flex;
     flex-direction: column;
