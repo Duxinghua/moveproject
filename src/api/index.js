@@ -285,6 +285,18 @@ const server = {
   goodsOrderDel (data) {
     return post('goods_order/del', data)
   },
+  //提醒发货  /api/goods_order/hastenOrder
+  goodsOrderHastenOrder (data) {
+    return post('goods_order/hastenOrder',data)
+  },
+  // 确认收货 /api/goods_order/receiveGoods
+  goodsOrderReceiveGoods (data) {
+    return post('goods_order/receiveGoods',data)
+  },
+  // 订单列表 /api/course_order/lists
+  courseOrderList (data) {
+    return post('course_order/lists',data)
+  },
   // 图片上传 /common/wxUpload
   commonwxUpload (data) {
     return post('common/wxUpload', data)

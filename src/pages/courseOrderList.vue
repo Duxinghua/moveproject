@@ -1,35 +1,44 @@
 <template>
   <div class="orderList">
     <div class="orderList-tab">
-      <div class="orderList-tab-item" v-for="(item,index) in tabList" :key="index" @click="tabClickHandler(index)">
+      <div class="orderList-tab-item" v-for="(item,index) in tabList" :key="index" @click="tabClickHandler(index,item.status)">
          <span :class="{active: current === index ? true : false}">{{item.name}}</span>
       </div>
     </div>
     <div class="orderList-content">
-      <div class="orderList-content-item">
-        <div class="ordertop">
-          <span>订单编号：86431995</span>
-          <span>待付款</span>
-        </div>
-        <div class="ordercontent" @click="orderDetailHandler">
-          <img src="../assets/images/770552.png" alt="">
-          <div class="ordercenter">
-            <div class="ol">
-              <span class="s1">花见小路·橄榄枝花见小路·橄榄枝花见小路·橄榄枝</span>
-              <span class="s1 s2">白色</span>
-              <div><span class="s3">¥</span><span class="s4">39</span></div>
+      <van-list
+            v-model="loading"
+            v-show="orderList.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+      >
+        <div class="orderList-content-item" v-for="(item,index) in orderList" :key="index">
+          <div class="ordertop">
+            <span>订单编号：{{item.order_code}}</span>
+            <span>{{item.status_text}}</span>
+          </div>
+          <div class="ordercontent" @click="orderDetailHandler">
+            <img :src="item.image" alt="">
+            <div class="ordercenter">
+              <div class="ol">
+                <span class="s1">{{item.title}}</span>
+                <span class="s1 s2">{{item.nickname}}</span>
+                <div><span class="s3">¥</span><span class="s4">{{item.price}}</span></div>
+              </div>
+              <span class="s5">x 1</span>
             </div>
-            <span class="s5">X200000</span>
+          </div>
+          <div class="orderfooter">
+            <span>合计: ¥{{item.price_pay}}</span>
+            <div class="btns">
+              <span class="cancel">取消预约</span>
+              <span>去付款</span>
+            </div>
           </div>
         </div>
-        <div class="orderfooter">
-          <span>合计: ¥78</span>
-          <div class="btns">
-            <span class="cancel">取消预约</span>
-            <span>去付款</span>
-          </div>
-        </div>
-      </div>
+      </van-list>
     </div>
   </div>
 </template>
@@ -42,18 +51,67 @@ export default {
       current: 0,
       tabList: [
         {name: '全部', status: ''},
-        {name: '线下课程', status: 0},
-        {name: '线上课程', status: 1},
-        {name: '直播课程', status: 2}
-      ]
+        {name: '线下课程', status: 3},
+        {name: '线上课程', status: 2},
+        {name: '直播课程', status: 1}
+      ],
+      orderList: [],
+      type: '',
+      finished: false,
+      loading: false,
+      status: '',
+      current: 1,
+      total: 0,
+      wxpay: {}
     }
   },
+  mounted() {
+    this.getOrderList()
+  },
   methods: {
-    tabClickHandler (index) {
+    tabClickHandler (index,type) {
       this.current = index
+      this.type = type
     },
     orderDetailHandler () {
       this.$router.push({name: 'CourseOrderDetail'})
+    },
+    getOrderList () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        type: this.type
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.courseOrderList(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+
+          if (this.orderList.length == 0) {
+            // 第一次加载
+            this.orderList = res.data.data || []
+            this.total = res.data.total
+          } else if (this.orderList.length < this.total) {
+            // 加载更多
+            this.orderList = this.orderList.concat(res.data.data)
+          }
+          if (this.orderList.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.orderList.length < this.total) {
+        this.current++
+        this.getOrderList()
+      }
     }
   }
 }
