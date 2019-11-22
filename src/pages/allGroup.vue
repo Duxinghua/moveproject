@@ -8,7 +8,7 @@
             @load="onLoad"
         >
             <div class="group-list">
-                <GroupItem v-for="(item, index) in groupList" :key="index" :groupData="item"/>
+                <GroupItem v-for="(item, index) in groupList" :key="index" :groupData="item" :groupTime="groupTime"/>
             </div>
         </van-list>
     </div>
@@ -24,7 +24,9 @@ export default {
       loading: false,
       finished: false,
       current: 1,
-      total: 10
+      total: 10,
+      groupTime: 0
+
     }
   },
   components: {

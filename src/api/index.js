@@ -55,7 +55,43 @@ const server = {
   goodsCarts (data) {
     return post('/goods/carts', data)
   },
-  /**
+	/**
+	 * 订单详情
+	 */
+	goodsOrder(data) {
+		return post('/goods_order', data);
+	},
+	/**
+	 * 添加订单
+	 */
+	goodsOrderCreate(data) {
+		return post('/goods_order/create', data);
+	},
+	/**
+	 * 添加订单
+	 */
+	goodsOrderStore(data) {
+		return post('/goods_order/store', data);
+	},
+	/**
+	 * 支付订单
+	 */
+	goodsOrderPayOrder(data) {
+		return post('/goods_order/payOrder', data);
+	},
+	/**
+	 * 添加修改购物车
+	 */
+	goodsStoreCarts(data) {
+		return post('/goods/storeCarts', data);
+	},
+	/**
+	 * 删除购物车
+	 */
+	goodsDelCarts(data) {
+		return post('/goods/delCarts', data);
+	},
+	/**
 	 * 商品拼团详情
 	 */
   goodsTuan (data) {
@@ -248,10 +284,6 @@ const server = {
   // 删除订单 /api/goods_order/del
   goodsOrderDel (data) {
     return post('goods_order/del', data)
-  },
-  // 支付订单 /api/goods_order/payOrder
-  goodsOrderPayOrder (data) {
-    return post('goods_order/payOrder', data)
   },
   // 图片上传 /common/wxUpload
   commonwxUpload (data) {

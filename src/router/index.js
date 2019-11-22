@@ -66,6 +66,7 @@ const getToken = (data) => {
     })
   } else {
     Api.wxLogin(data).then((result) => {
+      alert(JSON.stringify(result))
       getSitem.setStr('open', true)
       if (result.code === 1) {
         console.log(result)
@@ -77,6 +78,7 @@ const getToken = (data) => {
           getSitem.setStr('open', false)
         }
       } else {
+        alert(222)
         console.log(result)
       }
     })
@@ -344,6 +346,14 @@ const router = new Router({
       }
     },
     {
+      path: '/mytx',
+      name: 'MyTx',
+      component: MyTx,
+      meta: {
+        title: '我的提现'
+      }
+    },
+    {
       path: '/myyq',
       name: 'MyYq',
       component: MyYq,
@@ -524,7 +534,8 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-
+  next()
+  return
   console.log(to)
   // getSitem.remove('token')
   // getSitem.remove('mobile')
@@ -534,8 +545,6 @@ router.beforeEach((to, from, next) => {
   if (isiOS) {
     getSitem.setStr('iosurl', location.href)
   }
-  next()
-  return;
   console.log(to.fullPath, 'tofullpaty')
   var localurl = window.location.href
   console.log(localurl, 'localurl')
@@ -563,21 +572,18 @@ router.beforeEach((to, from, next) => {
     var data = {
       code: code
     }
+    alert(code)
     getToken(data)
-    if(!getSitem.getStr('mobile')){
-      if(to.name == 'MyFs'){
+    if (!getSitem.getStr('mobile')) {
+      if (to.name === 'My' || to.name === 'goodsDetails') {
         next('/login')
-      }else{
+      } else {
         next()
       }
-
-
-    }else{
+    } else {
       next()
     }
   }
-
 })
-
 
 export default router

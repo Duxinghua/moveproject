@@ -2,100 +2,237 @@
     <div class="submit-order">
         <div class="order-site" @click="onLinkAddress">
             <div class="site-top"></div>
-            <div class="order-not" v-if="!address.id">
+            <div class="order-not" v-if="!addressData.id">
                 <div class="left">
                     <img src="../assets/images/site1.png" alt="">
                     <span>选择收货地址</span>
                 </div>
                 <van-icon name="arrow" />
             </div>
-            <div class="site-data" v-if="address.id">
+            <div class="site-data" v-if="addressData.id">
                 <img src="../assets/images/site.png" alt="">
                 <div class="site-info">
-                    <div class="name">收货人：{{address.user_name}}<span>{{address.mobile}}</span></div>
-                    <div class="location">{{address.address_name.replace(/[/]/g," ")}}&nbsp;&nbsp;{{address.address}}</div>
+                    <div class="name">收货人：{{addressData.user_name}}<span>{{addressData.mobile}}</span></div>
+                    <div class="location">{{addressData.address_name.replace(/[/]/g," ")}}&nbsp;&nbsp;{{addressData.address}}</div>
                 </div>
                 <van-icon name="arrow" />
             </div>
         </div>
 
         <div class="order-details">
-            <div class="order-info">
+            <div class="order-info" v-for="(item, index) in orderData.goods" :key="index">
                 <div class="img">
-                    <img src="../assets/images/770552.png" alt="">
+                    <img :src="item.images" alt="">
                 </div>
                 <div class="info">
-                    <div class="title">青梅菊花酒</div>
-                    <div class="money">￥<span>58.00</span></div>
-                    <div class="num"><van-stepper disable-input v-model="num" /></div>
+                    <div class="title">{{item.goods_name}}</div>
+                    <div class="money">￥<span>{{item.price}}</span> <em>{{item.specs}}</em></div>
+                    <div class="num"><van-stepper disabled disable-input v-model="item.goods_num"/></div>
                 </div>
             </div>
             <div class="order-item">
                 <div class="left">商品合计</div>
-                <div class="right">￥58.00</div>
+                <div class="right">￥{{goodsTotal.toFixed(2)}}</div>
             </div>
              <div class="order-item">
                 <div class="left">运费</div>
-                <div class="right">￥58.00</div>
+                <div class="right">￥0.00</div>
             </div>
              <div class="order-item">
                 <div class="left">优惠活动</div>
-                <div class="right">原价￥580.00</div>
+                <div class="right">原价￥0.00</div>
             </div>
             <div class="order-item" @click="toggle">
-                <div class="left">可用<span>120学分</span>抵用<span>12</span>元</div>
+                <div class="left">可用<span>0学分</span>抵用<span>0</span>元</div>
                 <van-checkbox v-model="checked" ref="checkboxes" checked-color="#718063"></van-checkbox>
             </div>
         </div>
 
         <div class="buy-box">
-            <div class="money">需支付<span>￥58</span></div>
+            <div class="money">需支付<span>￥{{goodsTotal.toFixed(2)}}</span></div>
             <div class="submit" @click="onBuy">立即购买</div>
         </div>
     </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
+
 export default {
-  data () {
-    return {
-      num: 1,
-      radio: '2',
-      checked: false,
-      address: {}
-    }
-  },
-  mounted () {
-    this.getAddressList()
-  },
-  methods: {
-    onLinkAddress () {
-      this.$router.push('/addressList')
-    },
-    onBuy () {
-      if (!this.address.mobile) {
-        this.$toast('请填写收货地址')
-        return false
-      }
-      this.$router.push('/shop')
-    },
-    toggle () {
-      this.$refs.checkboxes.toggle()
-    },
-    getAddressList () {
-      const param = {
-        page: 1,
-        pageSize: 100
-      }
-      this.$api.addressList(param).then((res) => {
-        if (res.code == 1) {
-          if (res.data.data.length > 0) {
-            this.address = res.data.data[0]
-          }
+    data() {
+        return {
+            num:1,
+            radio:"2",
+            checked:false,
+            orderId:0,
+            orderData:{},
+            goodsTotal:0,
+            orderMoney:0,
+            orderType:0,
+            wx:null
         }
-      })
+    },
+    watch:{
+        orderData:{
+            deep:true,
+            handler(data){
+                let goodsTotal = 0;
+                if(data.goods && data.goods.length > 0){
+                    data.goods.forEach((item) => {
+                        goodsTotal += item.goods_num * item.price;
+                    })
+                }
+                this.goodsTotal = goodsTotal;
+            }
+        }
+    },
+    computed:{
+        ...mapState('shop',['addressData'])
+    },
+    created() {
+        let config = {};
+        config.url = window.location.href; // 当前页面url
+         if(!config.url.match(/\?#/)) {
+            location.replace(window.location.href.split('#')[0] + '?' + window.location.hash);
+            return ;
+        }
+        console.log(config.url)
+        // 请求api返回sdk配置参数
+        // this.$http.post('/api/wx/sdk-config', config).then(ret => {
+        //     config = ret.data.config;
+        //     config.debug = true;
+        //     wx.config({
+        //         debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        //         appId: '', // 必填，公众号的唯一标识
+        //         timestamp: , // 必填，生成签名的时间戳
+        //         nonceStr: '', // 必填，生成签名的随机串
+        //         signature: '',// 必填，签名
+        //         jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
+        //     });
+
+        //     wx.ready(() => {
+        //         this.wx = wx;
+        //     });
+        // });
+    },
+    mounted(){
+        const {orderId,type} = this.$route.query;
+        this.orderId = orderId;
+        this.orderType = type;
+        this.getAddressList();
+        this.goodsOrder();
+    },
+    methods:{
+        ...mapMutations('shop',['saveAddressData']),
+        goodsOrderStore(){
+            // 微信支付
+            let param = {}
+            if(this.orderType == 0){
+                //购物车购买
+                let cart_id = [];
+                this.orderData.goods.forEach((item) => {
+                    cart_id.push(item.cart_id)
+                })
+                param = {
+                    cart_id:cart_id.join(','),
+                    type:this.orderType,
+                    address_id:this.addressData.id,
+                }
+            }else if(this.orderType == 1){
+                //拼团购买
+                param = {
+                    t_id:this.orderData.t_id,
+                    type:this.orderType,
+                    address_id:this.addressData.id,
+                }
+            }else{
+                //单个商品购买
+                param = {
+                    goods_id:this.orderData.goods[0].goods_id,
+                    specs:this.orderData.goods[0].specs,
+                    goods_num:this.orderData.goods[0].goods_num,
+                    address_id:this.addressData.id,
+                    type:this.orderType
+                }
+            }
+            this.$api.goodsOrderStore(param).then((res) => {
+                if(res.code == 1){
+
+                }else{
+                    this.$toast(res.msg);
+                }
+            })
+        },
+        onLinkAddress(){
+            this.$router.push({
+                path:'/addressList',
+                query:{
+                    type:'select'
+                }
+            })
+        },
+        onBuy(){
+            if(!this.addressData.mobile){
+                this.$toast('请填写收货地址')
+                return false
+            }
+            this.goodsOrderStore()
+        },
+        toggle(){
+            this.$refs.checkboxes.toggle();
+        },
+        goodsOrder(){
+            const param = {
+                order_id:this.orderId
+            }
+            this.$api.goodsOrder(param).then((res) => {
+                if(res.code == 1){
+                    this.orderData = res.data;
+                }
+            })
+        },
+        getAddressList(){
+            const param = {
+                page:1,
+                pageSize:100
+            }
+            this.$toast.loading({
+                duration:0,
+                message: '加载中...',
+                forbidClick: true
+            });
+            this.$api.addressList(param).then((res) => {
+                this.$toast.clear();
+                if(res.code == 1){
+                    if(res.data.data.length > 0){
+                        if(!this.addressData.id){
+                            this.saveAddressData(res.data.data[0])
+                        }
+                    }
+                }
+            })
+        },
+        wxPay(wxmsg){
+            this.wx.chooseWXPay({
+                appId: wxmsg.appId,
+                timestamp: wxmsg.timeStamp,
+                nonceStr: wxmsg.nonceStr, // 支付签名随机串，不长于 32 位
+                package: wxmsg.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                paySign: wxmsg.paySign, // 支付签名
+                success: function (res) {
+                    // 支付成功的回调函数
+                },
+                cancel: function (res) {
+                    // 支付取消的回调函数
+                },
+                error: function (res) {
+                    // 支付失败的回调函数
+                }
+            })
+        }
     }
-  }
+
 }
 </script>
 
@@ -190,8 +327,13 @@ export default {
                 height: 100%;
                 margin-left: 30px;
                 .title{
+                    width: 400px;
                     color: #333333;
                     font-size: 32px;
+                    overflow: hidden;
+                    text-overflow:ellipsis;
+                    white-space: nowrap;
+
                 }
                 .money{
                     color: #995258;
@@ -200,6 +342,11 @@ export default {
                     margin-top: 5px;
                     span{
                         font-size: 30px;
+                    }
+                    em{
+                        font-style: normal;
+                        color: #333;
+                        margin-left: 10px;
                     }
                 }
                 .num{
