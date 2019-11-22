@@ -17,7 +17,7 @@
       </div>
       <textarea placeholder="请输入退货原因…"  class="orderdetail-top-textarea"/>
       <div class="orderdetail-top-price">退款金额：<span>¥{{order_detail.price_pay}}</span></div>
-      <span>上传凭证（{{0}}/3）</span>
+      <span class="orderdetail-top-span">上传凭证（{{0}}/3）</span>
       <div class="orderdetail-top-uploads">
         <div class="uploadimgs-wrap" v-for="(item,index) in imgList" :key="index" @click="delImg(index)">
           <img :src="item.l" class="uploadimgs" alt="">
@@ -28,10 +28,9 @@
         </div>
       </div>
     </div>
-    <div class="orderdetail-content">
-    </div>
 
-    </div>
+
+    <div class="orderdetail-btn" @click="postSave">确认提交</div>
   </div>
 </template>
 
@@ -70,6 +69,17 @@ export default {
   flex-direction: column;
   min-height: 100vh;
   background: #FBF8F4;
+  &-btn{
+    width:677px;
+    height:88px;
+    font-size: 36px;
+    line-height: 88px;
+    text-align: center;
+    border-radius: 36px;
+    background:#6D8160;
+    color:#F3D995;
+    margin:50px auto;
+  }
   &-top{
    display: flex;
    flex-direction: column;
@@ -96,10 +106,16 @@ export default {
         color:#995258;
       }
     }
+    &-span{
+      font-size: 26px;
+      color:#999;
+      padding:20px 0;
+    }
     &-uploads{
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
+      padding-bottom: 40px;
       .orderdetail-wrap{
         width:157px;
         height:157px;

@@ -339,8 +339,9 @@ export default {
     display: flex;
     flex-direction: column;
     background:white;
-    padding:0px 26px;
+    padding:0px 26px 26px  26px;
     margin-top:15px;
+
     .header{
       padding:26px 0;
       color:#6D8160;
@@ -402,7 +403,9 @@ export default {
         color:#333333;
       }
     }
-
+    .orderother:last-child{
+      border-bottom: 1px solid transparent;
+    }
   }
   &-btns{
     display: flex;
