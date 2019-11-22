@@ -1,13 +1,7 @@
 <template>
   <div class="orderdetail">
     <div class="orderdetail-top">
-      <div class="orderwlinfo">
-        <img :src="order_detail.tipsimage" alt="">
-        <div class="orderwl">
-          <span>{{order_detail.tipst1}}</span>
-          <span>{{order_detail.tipst2}}</span>
-        </div>
-      </div>
+      <span class="tip">退款商品</span>
       <div class="orderlist">
         <div class="ordercontent" v-for="(goodsitem,index) in order_detail.goods" :key="index">
             <img :src="goodsitem.images" alt="">
@@ -88,7 +82,7 @@
 <script>
 import area from '@/utils/area'
 export default {
-  name: 'OrderDetail',
+  name: 'OrderRefund',
   data () {
     return {
       order_id: null,
@@ -212,6 +206,11 @@ export default {
    flex-direction: column;
    background:white;
    padding:26px 26px 0px 26px;
+    .tip{
+      font-size:30px;
+      color:#333;
+      padding:30px 0;
+    }
     .orderwlinfo{
       display: flex;
       flex-direction: row;

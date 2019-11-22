@@ -89,7 +89,7 @@ export default {
       var params = {
         mobile: this.phone,
         captcha: this.captcha,
-        event: 'bind'
+        event: 'send'
       }
       var _this = this
       this.$api.authSaveMobile(params).then((res)=>{

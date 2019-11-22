@@ -19,7 +19,7 @@
           <span>订单编号：{{item.order_code}}</span>
           <span>{{item.status_text}}</span>
         </div>
-        <div class="orderclist" @click="orderDetailHandler">
+        <div class="orderclist" @click="orderDetailHandler(item.order_id)">
           <div class="ordercontent" v-for="(goodsitem,index) in item.goods" :key="goodsitem.goods_id">
             <img :src="goodsitem.images" alt="">
             <div class="ordercenter">
@@ -36,7 +36,7 @@
           <span>合计: ¥{{item.price_pay}}</span>
           <div class="btns">
             <span class="cancel" v-if="item.status === 0" @click="cancelClickHandler(item.order_id)">取消订单</span>
-            <span v-if="item.status === 0">去付款</span>
+            <span v-if="item.status === 0" @click="replayClickHandler(item.order_id)">去付款</span>
           </div>
         </div>
       </div>
@@ -72,6 +72,27 @@ export default {
     }
   },
   methods: {
+    replayClickHandler (order_id) {
+       var _this = this
+       this.$api.goodsOrderPayOrder({order_id:order_id}).then((res)=>{
+         if (res.code === 1) {
+           _this.$toast({
+             message: res.msg,
+             onClose: () => {
+               _this.orderList = []
+               _this.finished = false
+               _this.loading = false
+               _this.current = 1
+               _this.getOrderList()
+             }
+           })
+
+         }else{
+           _this.$toast(res.msg)
+         }
+       })
+
+    },
     cancelClickHandler (order_id) {
       var _this = this
        this.$api.goodsOrderDel({order_id:order_id}).then((res)=>{
@@ -100,8 +121,8 @@ export default {
       this.loading = false
       this.getOrderList()
     },
-    orderDetailHandler () {
-      this.$router.push({name: 'OrderDetail'})
+    orderDetailHandler (order_id) {
+      this.$router.push({name: 'OrderDetail',query:{id:order_id}})
     },
     getOrderList () {
       const param = {
@@ -269,14 +290,14 @@ export default {
             height:62px;
             line-height:62px;
             text-align: center;
-            border:1px solid rgba(205, 168, 113, 1);
+            border:2px solid rgba(205, 168, 113, 1);
             border-radius:31px;
             margin-right:16px;
             margin-left:16px;
           }
           .cancel{
             color:#666666;
-            border:1px solid #E3E3E3;
+            border:2px solid #E3E3E3;
           }
         }
       }
