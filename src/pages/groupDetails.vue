@@ -2,7 +2,7 @@
     <div class="group-details">
         <div class="goods-header">
             <div class="goods-img">
-                <img src="../assets/images/770552.png" alt="">
+                <img :src="goodsData.images && goodsData.images[0]" alt="">
             </div>
             <div class="goods-info">
                 <div class="title">{{goodsData.goods_name}}</div>
@@ -17,7 +17,7 @@
         <div class="goods-group">
             <div :class="['group-list',{'list-active1':groupDetails.user_number == 2,'list-active':groupDetails.user_number == 3}]">
                 <div class="group-item" v-for="(item, index) in groupDetails.users" :key="index">
-                    <div class="img"><img src="../assets/images/770552.png" alt=""></div>
+                    <div class="img"><img :src="item.avatar" alt=""></div>
                     <div class="tag" v-if="index == 0">团长</div>
                 </div>
                 <div class="group-item active" v-for="(item, index) in ((groupDetails.user_number - groupDetails.users.length) || [])" :key="'active' + index">
@@ -45,7 +45,7 @@
             </div>
 
             <div class="goods-list">
-                <div class="goods-item" v-for="(item, index) in groupList" :key="index" :groupTime="groupTime">
+                <!-- <div class="goods-item" v-for="(item, index) in groupList" :key="index" :groupTime="groupTime">
                     <div class="img"><img src="../assets/images/770552.png" alt=""></div>
                     <div class="content">
                         <div class="title">玫瑰花泥面膜</div>
@@ -53,7 +53,7 @@
                         <div class="money"><em>5人团</em>￥<span>1299</span></div>
                         <div class="submit">去开团</div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 

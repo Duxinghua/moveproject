@@ -26,7 +26,8 @@
                 </div>
                 <div class="info">
                     <div class="title">{{item.goods_name}}</div>
-                    <div class="money">￥<span>{{item.price}}</span> <em>{{item.specs}}</em></div>
+                    <div class="money" v-if="orderType != 1">￥<span>{{item.price}}</span> <em>{{item.specs}}</em></div>
+                    <div class="money" v-if="orderType == 1">￥<span>{{orderData.goodsTuan}}</span> <em>{{item.specs}}</em></div>
                     <div class="num"><van-stepper disabled disable-input v-model="item.goods_num"/></div>
                 </div>
             </div>
@@ -40,7 +41,7 @@
             </div>
              <div class="order-item">
                 <div class="left">优惠活动</div>
-                <div class="right">原价￥{{ orderData.goods && orderData.goods.price_cost}}</div>
+                <div class="right">原价￥{{ orderData.goods ? orderData.goods[0].price_cost : '0.00'}}</div>
             </div>
             <div class="order-item" @click="toggle">
                 <div class="left">可用<span>0学分</span>抵用<span>0</span>元</div>
@@ -57,6 +58,7 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex';
+import config from '@/utils/config'
 
 export default {
     data() {
@@ -79,6 +81,10 @@ export default {
             handler(data){
                 let goodsTotal = 0;
                 if(data.goods && data.goods.length > 0){
+                    if(this.orderType == 1){
+                        this.goodsTotal = data.goodsTuan;
+                        return
+                    }
                     data.goods.forEach((item) => {
                         goodsTotal += item.goods_num * item.price;
                     })
@@ -91,24 +97,11 @@ export default {
         ...mapState('shop',['addressData'])
     },
     created() {
-        // let config = {};
-        // config.url = window.location.href; // 当前页面url
-        //  if(!config.url.match(/\?#/)) {
-        //     location.replace(window.location.href.split('#')[0] + '?' + window.location.hash);
-        //     return ;
-        // }
-        // console.log(config.url)
-
-        var data = {
-          url: location.href
-        }
-        const agent = navigator.userAgent
-        const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-        if (isiOS) {
-          data.url = config.shareurls
+        const config = {
+            url:location.href.split('#')[0]
         }
         // 请求api返回sdk配置参数
-        this.$api.userGetSignPackage(data).then(ret => {
+        this.$api.userGetSignPackage(config).then(res => {
             if (res.code === 1) {
                 var wxConfig = res.data;
                 this.wxConfig = wxConfig;
@@ -132,10 +125,32 @@ export default {
         this.orderId = orderId;
         this.orderType = type;
         this.getAddressList();
-        this.goodsOrder();
+        // this.goodsOrder();
+        this.goodsOrderCreate();
     },
     methods:{
         ...mapMutations('shop',['saveAddressData']),
+        goodsOrderCreate(){
+            const param = this.$route.query;
+            // const param = {
+            //     type,
+            //     goods_id:this.goodsId,
+            //     specs:JSON.stringify(this.skuList[this.skuIndex]),
+            //     goods_num:this.goodsNum
+            // }
+            this.$toast.loading({
+                duration:0,
+                forbidClick: true
+            });
+            this.$api.goodsOrderCreate(param).then((res) => {
+                this.$toast.clear();
+                if(res.code == 1){
+                    this.orderData = res.data;
+                }else{
+                    this.$toast(res.msg);
+                }
+            })
+        },
         goodsOrderStore(){
             // 微信支付
             let param = {}

@@ -325,24 +325,28 @@ export default {
                 specs:JSON.stringify(this.skuList[this.skuIndex]),
                 goods_num:this.goodsNum
             }
-            this.$toast.loading({
-                duration:0,
-                forbidClick: true
-            });
-            this.$api.goodsOrderCreate(param).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    this.$router.push({
-                        path:'/submitOrder',
-                        query:{
-                            orderId:res.data.order_id,
-                            type
-                        }
-                    })
-                }else{
-                    this.$toast(res.msg);
-                }
+             this.$router.push({
+                path:'/submitOrder',
+                query:param
             })
+            // this.$toast.loading({
+            //     duration:0,
+            //     forbidClick: true
+            // });
+            // this.$api.goodsOrderCreate(param).then((res) => {
+            //     this.$toast.clear();
+            //     if(res.code == 1){
+            //         this.$router.push({
+            //             path:'/submitOrder',
+            //             query:{
+            //                 orderId:res.data.order_id,
+            //                 type
+            //             }
+            //         })
+            //     }else{
+            //         this.$toast(res.msg);
+            //     }
+            // })
         }
 
     }
