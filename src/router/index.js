@@ -456,7 +456,7 @@ const router = new Router({
       name: 'CourseOrderDetail',
       component: CourseOrderDetail,
       meta: {
-        title: '商品订单详情'
+        title: '课程订单详情'
       }
     },
     {

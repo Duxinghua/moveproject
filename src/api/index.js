@@ -285,7 +285,7 @@ const server = {
   goodsOrderDel (data) {
     return post('goods_order/del', data)
   },
-  //提醒发货  /api/goods_order/hastenOrder
+  // 提醒发货  /api/goods_order/hastenOrder
   goodsOrderHastenOrder (data) {
     return post('goods_order/hastenOrder',data)
   },
@@ -295,7 +295,19 @@ const server = {
   },
   // 订单列表 /api/course_order/lists
   courseOrderList (data) {
-    return post('course_order/lists',data)
+    return post('course_order/lists', data)
+  },
+  // 订单详情 /api/course_order/index
+  courseOrderIndex (data) {
+    return post('course_order/index', data)
+  },
+  // 取消预约 /api/course/delAppoint
+  courseDelAppoint (data) {
+    return post('course/delAppoint', data)
+  },
+  // 我的预约记录 /api/user/appoint
+  userAppoint (data) {
+    return post('user/appoint', data)
   },
   // 图片上传 /common/wxUpload
   commonwxUpload (data) {

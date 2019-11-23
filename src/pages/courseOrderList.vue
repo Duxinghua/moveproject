@@ -2,7 +2,7 @@
   <div class="orderList">
     <div class="orderList-tab">
       <div class="orderList-tab-item" v-for="(item,index) in tabList" :key="index" @click="tabClickHandler(index,item.status)">
-         <span :class="{active: current === index ? true : false}">{{item.name}}</span>
+         <span :class="{active: currentIndex === index ? true : false}">{{item.name}}</span>
       </div>
     </div>
     <div class="orderList-content">
@@ -19,7 +19,7 @@
             <span>订单编号：{{item.order_code}}</span>
             <span>{{item.status_text}}</span>
           </div>
-          <div class="ordercontent" @click="orderDetailHandler">
+          <div class="ordercontent" @click="orderDetailHandler(item.order_id)">
             <img :src="item.image" alt="">
             <div class="ordercenter">
               <div class="ol">
@@ -32,23 +32,28 @@
           </div>
           <div class="orderfooter">
             <span>合计: ¥{{item.price_pay}}</span>
-            <div class="btns">
-              <span class="cancel">取消预约</span>
-              <span>去付款</span>
+            <div class="btns" >
+              <span class="cancel" @click="cancelHandler(item.order_id)">取消预约</span>
             </div>
           </div>
         </div>
       </van-list>
+      <NoData v-if="orderList.length === 0" />
     </div>
+
   </div>
 </template>
 
 <script>
+import NoData from '@/components/nodata.vue'
 export default {
   name: 'CourseOrderList',
+  components: {
+    NoData
+  },
   data () {
     return {
-      current: 0,
+      currentIndex: 0,
       tabList: [
         {name: '全部', status: ''},
         {name: '线下课程', status: 3},
@@ -69,9 +74,36 @@ export default {
     this.getOrderList()
   },
   methods: {
+    cancelHandler (order_id) {
+      var _this = this
+      this.$api.courseDelAppoint({order_id:order_id}).then((res)=>{
+        if (res.code === 1) {
+          this.$toast({
+            message:res.msg,
+            onClose: () => {
+              _this.orderList = []
+              _this.finished = false
+              _this.loading = false
+              _this.current = 1
+              _this.getOrderList()
+
+            }
+
+          })
+        }else{
+          this.$toast(res.msg)
+        }
+      })
+    },
     tabClickHandler (index,type) {
-      this.current = index
+      this.currentIndex = index
       this.type = type
+      this.orderList = []
+      this.finished = false
+      this.loading = false
+      this.current = 1
+      this.getOrderList()
+
     },
     orderDetailHandler () {
       this.$router.push({name: 'CourseOrderDetail'})
@@ -219,10 +251,14 @@ export default {
       .orderfooter{
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: flex-end;
         margin-top:15px;
         height:62px;
         align-items: center;
+        span{
+          display: flex;
+          flex:1;
+        }
         .btns{
           display: flex;
           flex-direction: row;
@@ -231,14 +267,16 @@ export default {
             height:62px;
             line-height:62px;
             text-align: center;
-            border:1px solid rgba(205, 168, 113, 1);
+            border:2px solid rgba(205, 168, 113, 1);
             border-radius:31px;
-            margin-right:16px;
-            margin-left:16px;
+            // margin-right:16px;
+            // margin-left:16px;
           }
           .cancel{
             color:#666666;
-            border:1px solid #E3E3E3;
+            border:2px solid #E3E3E3;
+            display: block;
+            margin: 0 auto;
           }
         }
       }

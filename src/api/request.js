@@ -14,7 +14,7 @@ axios.interceptors.request.use(
     config.headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
       token: localStorage.getItem('token')
-      // token: '9eff5dce-e71e-4583-b24b-e08a1fc138f0'
+      // token: 'be52f303-229e-4c62-a2c6-83734eefca88'
     }
     config.data = qs.stringify(config.data)
     return config

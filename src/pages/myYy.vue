@@ -1,29 +1,110 @@
 <template>
   <div class="MyYy">
-    <div class="MyYy-item">
-      <div class="myleft">
-        <img class="img" src="../assets/images/myYypic.png" alt="" />
-        <img class="play" src="../assets/images/myYyplay.png" alt="">
-      </div>
-      <div class="myright">
-        <span class="title">传统构图三大要素</span>
-        <div class="userinfo">
-          <img src="../assets/images/people.png" alt="">
-          <span>Kate sapdiek</span>
+     <van-list
+            v-model="loading"
+            v-show="orderList.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+      >
+        <div class="MyYy-item" v-for="(item,index) in orderList" :key="index">
+          <div class="myleft">
+            <img class="img" :src="item.course.image ? item.course.image[0] : ''" alt="" />
+            <img class="play" src="../assets/images/myYyplay.png" alt="">
+          </div>
+          <div class="myright">
+            <span class="title">{{item.course.title}}</span>
+            <div class="userinfo">
+              <img :src="item.course.admin.avatar" alt="">
+              <span>{{item.course.admin.nickname}}</span>
+            </div>
+            <span class="time">预约时间：{{new String(item.create_time).split(" ")[0]}}</span>
+            <span class="btn" @click="cancelHandler">取消预约</span>
+          </div>
         </div>
-        <span class="time">预约时间：2019.10.11</span>
-        <span class="btn">取消预约</span>
-      </div>
-    </div>
+      </van-list>
+      <NoData v-if="orderList.length === 0" />
+      <video width="320"  controls="controls" poster="https://www.baidu.com/img/bd_logo1.png?qua=high">
+              <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+      </video>
   </div>
 </template>
 
 <script>
+import NoData from '@/components/nodata.vue'
 export default {
   name: 'MyYy',
+  components: {
+    NoData
+  },
   data () {
     return {
+      orderList: [],
+      finished: false,
+      loading: false,
+      status: '',
+      current: 1,
+      total: 0
+    }
+  },
+  mounted () {
+    this.getOrderList()
+  },
+  methods: {
+    cancelHandler (order_id) {
+      var _this = this
+      this.$api.courseDelAppoint({order_id:order_id}).then((res)=>{
+        if(res.code == 1) {
+          _this.$toast({
+            message:res.msg,
+            onClick: () => {
+              _this.finished = false
+              _this.loading = false
+              _this.current = 1
+              _this.orderList = []
+              _this.getOrderList()
+            }
+          })
+        }
+      })
+    },
+    getOrderList () {
+      const param = {
+        page: this.current,
+        pageSize: 10
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.userAppoint(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
 
+          if (this.orderList.length == 0) {
+            // 第一次加载
+            this.orderList = res.data.data || []
+            this.total = res.data.total
+          } else if (this.orderList.length < this.total) {
+            // 加载更多
+            this.orderList = this.orderList.concat(res.data.data)
+          }
+          if (this.orderList.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.orderList.length < this.total) {
+        this.current++
+        this.getOrderList()
+      }
     }
   }
 }
@@ -40,6 +121,7 @@ export default {
     flex-direction: row;
     background:white;
     padding:43px 0px;
+    border-bottom: 15px solid #FBF8F4;
     .myleft{
       width:325px;
       height:216px;
@@ -67,6 +149,10 @@ export default {
       .title{
         font-size: 30px;
         color: #333333;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
       .userinfo{
         display: flex;
@@ -95,7 +181,7 @@ export default {
         width:180px;
         height:62px;
         background:rgba(255,255,255,1);
-        border:1px solid rgba(227, 227, 227, 1);
+        border:2px solid rgba(227, 227, 227, 1);
         border-radius:31px;
         font-size: 30px;
         color:#666666;
