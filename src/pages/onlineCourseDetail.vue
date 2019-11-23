@@ -51,26 +51,24 @@
                 <TeacherWorks v-for="item in teacherWorks" :key="item.id" :item="item"></TeacherWorks>
               </div>
             </van-list>
-            <!-- <NoData v-if="teacherWorks.length == 0"/> -->
           </div>
         </div>
       </div>
       <div class="ondetail-flower-content" v-if="pageType == 1">
         <div class="ondetail-flowers">
-          <div class="ondetail-flowers-item" v-for="item in flowerLists" :key="item.id">
+          <div class="ondetail-flowers-item" v-for="(item,index) in flowerLists" :key="index">
             <img :src="item.image" alt="">
             <p>{{item.title}}</p>
-            <div v-for="(i,key,index) in item.item_json" :key="index">
-              <span>{{key}}：{{i}}</span>
-              <!-- <span>温度要求{{item.des.wet}}</span>
-              <span>养护难度：{{item.des.difficult}}</span> -->
+            <div>
+              <span v-for="(i,itemPl,index) in item.item_json">{{i}}:{{itemPl}}</span>
             </div>
           </div>
+          <NoData v-if="flowerLists.length == 0"/>
         </div>
       </div>
       <div class="ondetail-task-content" v-if="pageType == 2">
         <div class="ondetail-tasks">
-          <div class="ondetail-tasks-item" v-for = "item in comments" :key= "item.id">
+          <div class="ondetail-tasks-item" v-for="item in comments" :key="item.id">
             <div class="task-msg">
               <div>
                 <img :src="item.avatar" alt="">
@@ -87,13 +85,14 @@
               <div class="img" v-for="(i,index) in item.images" :key="index"><img :src="i" alt=""></div>
             </div>
           </div>
+          <NoData v-if="comments.length == 0"/>
           <div class="task-todo" @click="doTask"><img src="../assets/images/tasktodo.png" alt=""></div>
         </div>
       </div>
       <div class="ondetail-action">
-        <div class="ondetail-money">合计<span>￥4280</span></div>
+        <div class="ondetail-money">合计<span>￥{{onlineMsg.price}}</span></div>
         <div>
-            <div class="ondetail-group-btn">发起拼团</div>
+            <div class="ondetail-group-btn" @click="onTrun(courseId)">发起拼团</div>
             <div class="ondetail-buy-btn" @click="onBuy(courseId)">立即购买</div>
         </div>
       </div>
@@ -124,7 +123,7 @@
 <script>
 import TeacherMsg from '@/components/teacherMsg.vue'
 import TeacherWorks from '@/components/teacherWorks.vue'
-// import NoData from '@/components/nodata'
+import NoData from '@/components/nodata'
 
 export default {
   name: 'OnlineCourseDetail',
@@ -247,10 +246,11 @@ export default {
         pageSize: 9
       }
       this.$api.flowers(param).then((res) => {
+        console.log(res)
         if (res.code == 1) {
           // this.flowerLists = res.data.data
           console.log(res.data.data)
-          
+
           this.flowerLists = res.data.data
         }
       })
@@ -280,13 +280,16 @@ export default {
     },
     onBuy (courseId) {
       // this.popupStatus = true
-      this.$router.push({path: '/submitCourseOrder', query: {courseId}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1}})
+    },
+    onTrun (courseId) {
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2}})
     }
   },
   components: {
     TeacherMsg,
     TeacherWorks,
-    // NoData
+    NoData
   }
 }
 </script>
@@ -300,6 +303,12 @@ export default {
   min-height: 100vh;
   overflow-x: hidden;
   overflow: auto;
+  &-tasks{
+    /deep/  .nodata{
+      position: absolute;
+      margin-top:25%;
+    }
+  }
   &-video{
       width: 100%;
       height: 500px;
@@ -455,10 +464,13 @@ export default {
     padding: 45px 24px 80px;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    align-content: flex-start;
     flex-wrap: wrap;
+    /deep/  .nodata{
+      position: absolute;
+      margin-top:25%;
+    }
     &-item{
       display: flex;
       flex-direction: column;

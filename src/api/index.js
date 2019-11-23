@@ -280,6 +280,10 @@ const server = {
   // 名师作品  /api/teacher/opusLists
   teacherWorksList (data) {
     return post('teacher/opusLists', data)
+  },
+  // 线上课程预览接口 /api/course_order/preview
+  courseOrderPreview (data) {
+    return get('course_order/preview', data)
   }
 }
 

@@ -63,7 +63,7 @@ export default {
     .offdetail-teacher-btn{
       width: 172px;
       height: 62px;
-      border: 1px solid #CDA871;
+      border: 2px solid #CDA871;
       border-radius: 31px;
       color: #CDA871;
       font-size: 30px;
