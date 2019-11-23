@@ -59,7 +59,7 @@
         <div class="pb">确定要购买此课程吗？</div>
         <div  class="btns">
           <span @click="cancelHandler">取消</span>
-          <span>确定</span>
+          <span @click="onHandler">确定</span>
         </div>
       </div>
     </div>
@@ -74,13 +74,26 @@ export default {
       reShow: false
     }
   },
+  mounted () {
+    const param = {
+      course_id: this.$route.query.courseId,
+      type: 0
+    }
+    this.$api.courseOrderStore(param).then((res) => {
+      if(res.code == 1) {
+        console.log(res.data)
+      }
+    })
+  },
   methods: {
     onBuy () {
       this.reShow = true;
-      console.log(1)
     },
     cancelHandler () {
       this.reShow = false;
+    },
+    onHandler () {
+      this.$router.push('/orderSuccess')
     }
   }
 }

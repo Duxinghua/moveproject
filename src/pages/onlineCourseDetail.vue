@@ -17,228 +17,276 @@
       </div>
       <div class="ondetail-rec-content" v-if="pageType == 0">
         <div class="ondetail-title">
-          <div>如何用气球打造排队-实景布置</div>
-          <p>副标题如何用气球打造排队-实景布置</p>
+          <div>{{onlineMsg.title}}</div>
+          <p>{{onlineMsg.description}}</p>
         </div>
-        <div class="ondetail-pt"></div>
+        <div class="goods-group">
+          <div class="group-header">
+            <h3>课程拼团</h3>
+            <div class="right" @click="onLinkAll">查看全部拼团<van-icon name="arrow" /></div>
+          </div>
+          <div class="group-list">
+            <GroupItem v-for="(item, index) in groupList" :key="index" :groupData="item"/>
+            <div class="group-no">
+              <img src="../assets/images/tuan.png" alt="">
+              <span>暂无拼团,快去拼团吧</span>
+            </div>
+          </div>
+        </div>
         <div class="ondetail-teacher">
           <TeacherMsg :msgItem="msgItem"></TeacherMsg>
           <div class="ondetail-teacher-content">
-            如何用气球打造排队-实景布置,副标题如何用气球打造排队-实景布置副标题如何用气球打造排队-实景布置副标题如何用气球打造排队~
+            {{msgItem.description}}
           </div>
           <div class="ondetail-teacher-works">
             <p>作品</p>
-            <div class="teacher-works">
-              <TeacherWorks v-for="item in teacherWorks" :key="item.id" :item="item"></TeacherWorks>
-            </div>
+            <van-list
+              v-model="loading"
+              :finished="finished"
+              finished-text="没有更多了"
+              :immediate-check="false"
+              @load="onLoad"
+            >
+              <div class="teacher-works">
+                <TeacherWorks v-for="item in teacherWorks" :key="item.id" :item="item"></TeacherWorks>
+              </div>
+            </van-list>
+            <!-- <NoData v-if="teacherWorks.length == 0"/> -->
           </div>
         </div>
       </div>
       <div class="ondetail-flower-content" v-if="pageType == 1">
         <div class="ondetail-flowers">
-          <div class="ondetail-flowers-item" v-for="item in flowerList" :key="item.id">
-            <img :src="item.img" alt="">
-            <p>{{item.name}}</p>
-            <div>
-              <span>气味浓度：{{item.des.smell}}</span>
-              <span>温度要求{{item.des.wet}}</span>
-              <span>养护难度：{{item.des.difficult}}</span>
+          <div class="ondetail-flowers-item" v-for="item in flowerLists" :key="item.id">
+            <img :src="item.image" alt="">
+            <p>{{item.title}}</p>
+            <div v-for="(i,key,index) in item.item_json" :key="index">
+              <span>{{key}}：{{i}}</span>
+              <!-- <span>温度要求{{item.des.wet}}</span>
+              <span>养护难度：{{item.des.difficult}}</span> -->
             </div>
           </div>
         </div>
       </div>
       <div class="ondetail-task-content" v-if="pageType == 2">
         <div class="ondetail-tasks">
-          <div class="ondetail-tasks-item">
+          <div class="ondetail-tasks-item" v-for = "item in comments" :key= "item.id">
             <div class="task-msg">
               <div>
-                <img src="../assets/images/userinfoimg.png" alt="">
-                <span>陌上花开135</span>
-                <span>2019-10-06</span>
+                <img :src="item.avatar" alt="">
+                <span>{{item.nickname}}</span>
+                <span>{{item.create_time}}</span>
               </div>
               <div>
                 <span>5</span>
                 <img src="../assets/images/taskheart.png" alt="">
               </div>
             </div>
-            <div class="task-content">
-              自然风花翁总给人一种飘逸，舒展的感觉，使用组群的方法能够更好的强调层次感，加强花材的质感
-            </div>
+            <div class="task-content">{{item.content}}</div>
             <div class="task-img">
-              <div class="img"><img src="../assets/images/courseimg.png" alt=""></div>
-              <div class="img"><img src="../assets/images/courseimg.png" alt=""></div>
-              <div class="img"><img src="../assets/images/courseimg.png" alt=""></div>
+              <div class="img" v-for="(i,index) in item.images" :key="index"><img :src="i" alt=""></div>
             </div>
           </div>
-          <div class="task-todo"><img src="../assets/images/tasktodo.png" alt=""></div>
+          <div class="task-todo" @click="doTask"><img src="../assets/images/tasktodo.png" alt=""></div>
         </div>
       </div>
       <div class="ondetail-action">
         <div class="ondetail-money">合计<span>￥4280</span></div>
         <div>
             <div class="ondetail-group-btn">发起拼团</div>
-            <div class="ondetail-buy-btn">立即购买</div>
+            <div class="ondetail-buy-btn" @click="onBuy(courseId)">立即购买</div>
         </div>
       </div>
+      <!-- <van-popup v-model="popupStatus" round :safe-area-inset-bottom="true" position="bottom">
+        <div class="sku-content">
+            <div class="sku-header">
+              <img src="../assets/images/banners.png" alt="">
+              <div class="price">
+                <div class="money">
+                  <span>￥299.99</span>
+                  <em>￥399</em>
+                </div>
+                <div class="attri">请选择数量</div>
+              </div>
+            </div>
+            <div class="sku-row">
+                <div class="sku-title">数量</div>
+                <div class="sku-list">
+                    <van-stepper disable-input v-model="num" />
+                </div>
+            </div>
+            <div class="submit" @click="onSubmit">确认</div>
+        </div>
+      </van-popup> -->
   </div>
 </template>
 
 <script>
 import TeacherMsg from '@/components/teacherMsg.vue'
 import TeacherWorks from '@/components/teacherWorks.vue'
+// import NoData from '@/components/nodata'
 
 export default {
   name: 'OnlineCourseDetail',
   data () {
     return {
-      msgItem: {
-        img: require('../assets/images/people.png'),
-        name: '柯杏林',
-        msg: '知音花艺协会副会长兼秘书长秘书长'
-      },
-      teacherWorks: [
-        {
-          id: 1,
-          img: require('../assets/images/onlineworks.png'),
-          title: '残荷听雨',
-          des: '杏林 2019.1020'
-        },
-        {
-          id: 2,
-          img: require('../assets/images/onlineworks.png'),
-          title: '残荷听雨',
-          des: '杏林 2019.1020'
-        },
-        {
-          id: 3,
-          img: require('../assets/images/onlineworks.png'),
-          title: '秋水伊人',
-          des: '杏林 2019.1020'
-        },
-        {
-          id: 4,
-          img: require('../assets/images/onlineworks.png'),
-          title: '喜迎军运',
-          des: '杏林 2019.1020'
-        },
-        {
-          id: 5,
-          img: require('../assets/images/onlineworks.png'),
-          title: '残荷听雨',
-          des: '杏林 2019.1020'
-        },
-        {
-          id: 6,
-          img: require('../assets/images/onlineworks.png'),
-          title: '残荷听雨',
-          des: '杏林 2019.1020'
-        }
-      ],
-      flowerList: [
-        {
-          id: 1,
-          img: require('../assets/images/flowers.png'),
-          name: '小苍蓝',
-          des: {
-            smell: '无味',
-            wet: '30%',
-            difficult: '易'
-          }
-        },
-        {
-          id: 2,
-          img: require('../assets/images/flowers.png'),
-          name: '小苍蓝',
-          des: {
-            smell: '无味',
-            wet: '30%',
-            difficult: '易'
-          }
-        },
-        {
-          id: 3,
-          img: require('../assets/images/flowers.png'),
-          name: '小苍蓝',
-          des: {
-            smell: '无味',
-            wet: '30%',
-            difficult: '易'
-          }
-        },
-        {
-          id: 4,
-          img: require('../assets/images/flowers.png'),
-          name: '花毛莨',
-          des: {
-            smell: '无味',
-            wet: '30%',
-            difficult: '易'
-          }
-        },
-        {
-          id: 5,
-          img: require('../assets/images/flowers.png'),
-          name: '绣球',
-          des: {
-            smell: '无味',
-            wet: '30%',
-            difficult: '易'
-          }
-        },
-        {
-          id: 6,
-          img: require('../assets/images/flowers.png'),
-          name: '小苍蓝',
-          des: {
-            smell: '无味',
-            wet: '30%',
-            difficult: '易'
-          }
-        },
-        {
-          id: 7,
-          img: require('../assets/images/flowers.png'),
-          name: '花毛莨',
-          des: {
-            smell: '无味',
-            wet: '30%',
-            difficult: '易'
-          }
-        },
-        {
-          id: 8,
-          img: require('../assets/images/flowers.png'),
-          name: '小苍蓝',
-          des: {
-            smell: '无味',
-            wet: '30%',
-            difficult: '易'
-          }
-        },
-        {
-          id: 9,
-          img: require('../assets/images/flowers.png'),
-          name: '绣球',
-          des: {
-            smell: '无味',
-            wet: '30%',
-            difficult: '易'
-          }
-        }
-      ],
+      num: 1,
       current: 0,
-      pageType: 0
+      pageType: 0,
+      courseId: 0,
+      id: "",
+      onlineMsg: {},
+      msgItem: {},
+      teacherWorks: [],
+      flowerLists: [],
+      groupList: [],
+      comments: [],
+      commentUser: {},
+      commentsImg: [],
+      finished: false,
+      loading: false,
+      popupStatus: false
     }
+  },
+  mounted () {
+    console.log(this.$route.query.id)
+    this.courseId = this.$route.query.id
+    this.onlineDetail()
+    this.flowerList()
+    this.courseComment()
   },
   methods: {
     menuHandler (index) {
       this.current = index
       this.pageType = index
+    },
+    onSubmit () {
+      // if (this.skuIndex == -1) {
+      //   this.$toast('请选择规格')
+      //   return false
+      // }
+      this.$router.push('/submitCourseOrder')
+    },
+    doTask () {
+      this.$router.push('/doTask')
+    },
+    onlineDetail () {
+      const param ={
+        course_id: this.courseId
+      }
+      this.$api.courseDetail(param).then((res) => {
+        // this.$toast.clear()
+        if (res.code == 1) {
+          this.onlineMsg = res.data
+          this.msgItem = res.data.admin
+          this.id = res.data.admin.id
+          // this.courseDetails = res.data
+          // this.courseOffline = res.data.courseOffline
+          // this.msgItem = res.data.admin
+          // this.tecImg = res.data.adminOpus
+          // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
+          // console.log(res.data)
+          this.getWorksList()
+        }
+      })
+    },
+    getWorksList () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        admin_id: this.id
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.teacherWorksList(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+          // console.log(res.data)
+          if (this.teacherWorks.length == 0) {
+            // 第一次加载
+            this.teacherWorks = res.data.data || []
+            this.total = res.data.total
+          } else if (this.teacherWorks.length < this.total) {
+            // 加载更多
+            this.teacherWorks = this.teacherWorks.concat(res.data.data)
+          }
+          if (this.teacherWorks.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.teacherWorks.length < this.total) {
+        this.current++
+        this.getWorksList()
+      }
+    },
+    courseTuanList () {
+      const param = {
+        page: 1,
+        pageSize: 10,
+        course_id: this.courseId
+      }
+      this.$api.courseTuanList(param).then((res) => {
+        if (res.code == 1) {
+          this.groupList = res.data.data
+          // console.log(res.data)
+        }
+      })
+    },
+    flowerList () {
+      const param = {
+        course_id: this.courseId,
+        page: 1,
+        pageSize: 9
+      }
+      this.$api.flowers(param).then((res) => {
+        if (res.code == 1) {
+          // this.flowerLists = res.data.data
+          console.log(res.data.data)
+          
+          this.flowerLists = res.data.data
+        }
+      })
+    },
+    courseComment () {
+      const param = {
+        course_id: this.courseId,
+        page: 1,
+        pageSize: 4
+      }
+      this.$api.courseComment(param).then((res) => {
+        if (res.code == 1) {
+          // console.log(res.data.data)
+          var list = []
+          res.data.data.map((item)=>{
+            item.images = item.images
+            item.nickname = item.user ? item.user.nickname : ''
+            item.avatar = item.user ? item.user.avatar : ''
+            list.push(item)
+          })
+          this.comments = list
+        }
+      })
+    },
+    onLinkAll () {
+      this.$router.push('/allGroup')
+    },
+    onBuy (courseId) {
+      // this.popupStatus = true
+      this.$router.push({path: '/submitCourseOrder', query: {courseId}})
     }
   },
   components: {
     TeacherMsg,
-    TeacherWorks
+    TeacherWorks,
+    // NoData
   }
 }
 </script>
@@ -312,20 +360,64 @@ export default {
       font-size: 36px;
       color: #333333;
       border-bottom: 14px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     p{
       font-size: 26px;
       color: #666666;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
-  &-pt{
-    height: 451px;
+  .goods-group{
+    background: #FBF8F5;
+    padding: 40px 25px 35px 25px;
     border-bottom: 15px solid #F6F3EE;
+    .group-header{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      h3{
+        color: #6D8160;
+        font-size: 36px;
+      }
+      .right{
+        color: #999999;
+        font-size: 26px;
+        display: flex;
+        align-items: center;
+        .van-icon{
+            font-size: 34px;
+            color: #D4B589;
+        }
+      }
+    }
+    .group-list{
+      .group-no{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 0px;
+        img{
+          width: 160px;
+          height: 104px;
+        }
+        span{
+          color: #666666;
+          font-size: 30px;
+          margin-top: 40px;
+        }
+      }
+    }
   }
   &-teacher{
-    padding-top: 69px;
-    display: flex;
-    flex-direction: column;
+    padding: 40px 25px 35px 25px;
+    // display: flex;
+    // flex-direction: column;
     border-bottom: 15px solid #F6F3EE;
     &-content{
       font-size: 26px;
@@ -333,8 +425,6 @@ export default {
       color: #333333;
       margin-top: 45px;
       margin-bottom: 45px;
-      padding-left: 35px;
-      padding-right: 35px;
       overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
@@ -344,11 +434,12 @@ export default {
     &-works{
       display: flex;
       flex-direction: column;
+      // width:100%;
+      // min-height: 500px;
       padding-bottom: 160px;
       p{
         font-size: 36px;
         color: #6D8160;
-        padding-left: 29px;
       }
       .teacher-works{
         display: flex;
@@ -356,8 +447,6 @@ export default {
         flex-wrap: wrap;
         box-sizing: border-box;
         padding-top: 35px;
-        padding-left: 24px;
-        padding-right: 24px;
       }
     }
   }
@@ -368,6 +457,7 @@ export default {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    align-content: flex-start;
     flex-wrap: wrap;
     &-item{
       display: flex;
@@ -394,7 +484,7 @@ export default {
         margin-top: 18px;
         display: flex;
         flex-direction: column;
-        justify-content: space-around;
+        // justify-content: space-around;
       }
       div span {
         font-size: 24px;
@@ -407,7 +497,8 @@ export default {
     }
   }
   &-tasks{
-    padding: 27px 25px;
+    width: 100%;
+    padding: 27px 25px 150px;
     position: relative;
     &-item{
       margin-top: 17px;
@@ -503,8 +594,8 @@ export default {
       }
     }
     .task-todo{
-      position:absolute;
-      bottom: 98px;
+      position: fixed;
+      bottom: 120px;
       right: 9px;
       img{
         width: 114px;
@@ -559,5 +650,105 @@ export default {
       border-radius:0px 40px 40px 0px;
     }
   }
+  // .sku-content{
+  //   padding: 45px 35px 25px 35px;
+  //   .sku-header{
+  //       display: flex;
+  //       align-items: center;
+  //       margin-bottom: 50px;
+  //       img{
+  //           width: 200px;
+  //           height: 150px;
+  //       }
+  //       .price{
+  //           margin-left: 20px;
+  //           .money{
+  //               span{
+  //                   color: #995258;
+  //                   font-size: 30px;
+  //                   font-weight: 500;
+  //               }
+  //               em{
+  //                   color: #999999;
+  //                   font-size: 26px;
+  //                   text-decoration: line-through;
+  //                   margin-left: 10px;
+  //                   font-style: normal;
+  //               }
+  //           }
+  //           .attri{
+  //               color: #333333;
+  //               font-size: 24px;
+  //           }
+  //       }
+  //   }
+  //   .sku-row{
+  //       .sku-title{
+  //           color: #333333;
+  //           font-size: 26px;
+  //           margin-bottom: 20px;
+  //           margin-top: 20px;
+  //       }
+  //       .sku-list{
+  //           display: flex;
+  //           // .sku-item{
+  //           //     padding: 12px 26px;
+  //           //     border-radius: 6px;
+  //           //     border: 1Px solid #E3E3E3;
+  //           //     font-size: 24px;
+  //           //     color: #333333;
+  //           //     margin-right: 20px;
+  //           //     cursor: pointer;
+  //           //     transition: all .3s;
+  //           // }
+  //           // .active{
+  //           //     border-color: #CDA871;
+  //           //     color: #CDA871;
+  //           // }
+  //           /deep/ .van-stepper{
+  //               border: 1Px solid #D3D3D3;
+  //               border-radius: 6px;
+  //                 .van-stepper__minus, .van-stepper__plus{
+  //                   width: 80px;
+  //                   height: 55px;
+  //                   background: #fff;
+  //                   &::before{
+  //                       width: 13Px;
+  //                       height: 1Px;
+  //                   }
+  //                   &::after{
+  //                       width: 1Px;
+  //                       height: 13Px;
+  //                   }
+  //               }
+  //               input{
+  //                   width: 115px;
+  //                   margin: 0px;
+  //                   height: 100%;
+  //                   border-left: 1Px solid #D3D3D3;
+  //                   border-right: 1Px solid #D3D3D3;
+  //                   border-bottom: 1Px solid #D3D3D3;
+  //                   background: #fff;
+  //                   font-size: 24px;
+  //               }
+  //               input[disabled]{
+  //                   color: #333333;
+  //                   -webkit-text-fill-color:#333333;
+  //                   -webkit-opacity: 1;
+  //               }
+  //           }
+  //       }
+  //   }
+  //   .submit{
+  //       width: 100%;
+  //       height: 90px;
+  //       text-align: center;
+  //       line-height: 90px;
+  //       color: #F3D995;
+  //       font-size: 36px;
+  //       background:url('../assets/images/buy-bg.png') 100%/100% no-repeat;
+  //       margin-top: 40px;
+  //   }
+  // }
 }
 </style>

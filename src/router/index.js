@@ -11,6 +11,7 @@ import OnlineCourseDetail from '@/pages/onlineCourseDetail'
 import OnlineCourseList from '@/pages/onlineCourseList'
 import OrderCommit from '@/pages/orderCommit'
 import SubmitCourseOrder from '@/pages/submitCourseOrder'
+import OrderSuccess from '@/pages/orderSuccess'
 import DoTask from '@/pages/doTask'
 import Huaban from '@/pages/huaban'
 import HuabanGroupDetail from '@/pages/huabanGroupDetail'
@@ -225,6 +226,14 @@ const router = new Router({
       component: SubmitCourseOrder,
       meta: {
         title: '提交订单'
+      }
+    },
+    {
+      path: '/orderSuccess',
+      name: 'OrderSuccess',
+      component: OrderSuccess,
+      meta: {
+        title: '有梦不晚'
       }
     },
     {
@@ -569,51 +578,51 @@ const router = new Router({
   ]
 })
 
-router.beforeEach((to, from, next) => {
-  const agent = navigator.userAgent
-  const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-  if (isiOS) {
-    getSitem.setStr('iosurl', location.href)
-  }
-  console.log(to.fullPath, 'tofullpaty')
-  var localurl = window.location.href
-  console.log(localurl, 'localurl')
-  var goback = encodeURIComponent(localurl)
-  var code = GetUrlParame('code')
-  console.log(code, 'code')
-  console.log(window.location.href)
-  var appid = 'wxd2a255476bf18aec'
-  var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + goback + '&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect'
-  console.log('当前url', url)
-  console.log('获取code码')
-  console.log(getSitem.getStr('token'))
-  if (!code) {
-    console.log(getSitem.getStr('token'))
-    if (!getSitem.getStr('token')) {
-      window.location.href = url
-      next()
-    } else {
-      console.log(getSitem.getStr('token'), 'token')
-      console.log('222')
-      next()
-    }
-  } else {
-    console.log('已拿到code', code)
-    console.log('111')
-    var data = {
-      code: '123456'
-    }
-    getToken(data)
-    // if (isiOS && to.path !== location.pathname) {
-    //   // 此处不可使用location.replace
-    //   location.assign(to.fullPath)
-    // } else {
-    //   next()
-    // }
-    next()
-  }
+// router.beforeEach((to, from, next) => {
+//   const agent = navigator.userAgent
+//   const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+//   if (isiOS) {
+//     getSitem.setStr('iosurl', location.href)
+//   }
+//   console.log(to.fullPath, 'tofullpaty')
+//   var localurl = window.location.href
+//   console.log(localurl, 'localurl')
+//   var goback = encodeURIComponent(localurl)
+//   var code = GetUrlParame('code')
+//   console.log(code, 'code')
+//   console.log(window.location.href)
+//   var appid = 'wxd2a255476bf18aec'
+//   var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + goback + '&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect'
+//   console.log('当前url', url)
+//   console.log('获取code码')
+//   console.log(getSitem.getStr('token'))
+//   if (!code) {
+//     console.log(getSitem.getStr('token'))
+//     if (!getSitem.getStr('token')) {
+//       window.location.href = url
+//       next()
+//     } else {
+//       console.log(getSitem.getStr('token'), 'token')
+//       console.log('222')
+//       next()
+//     }
+//   } else {
+//     console.log('已拿到code', code)
+//     console.log('111')
+//     var data = {
+//       code: '123456'
+//     }
+//     getToken(data)
+//     // if (isiOS && to.path !== location.pathname) {
+//     //   // 此处不可使用location.replace
+//     //   location.assign(to.fullPath)
+//     // } else {
+//     //   next()
+//     // }
+//     next()
+//   }
 
-})
+// })
 
 
 export default router

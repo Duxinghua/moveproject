@@ -249,6 +249,26 @@ const server = {
   courseTuanList (data) {
     return post('course_tuan/lists', data)
   },
+  // 相关花材 /api/course/materials
+  flowers (data) {
+    return post('course/materials', data)
+  },
+  // 课程评论 /api/course/comments
+  courseComment (data) {
+    return post('course/comments', data)
+  },
+  // 线下课程预约 /api/course/appoint
+  courseAppoint (data) {
+    return post('course/appoint', data)
+  },
+  // 课程提交订单 /api/course/storeOrder
+  courseStoreOrder (data) {
+    return post('course/storeOrder', data)
+  },
+  // 创建订单 /api/course_order/store
+  courseOrderStore (data) {
+    return post('course_order/store', data)
+  },
   // 名师列表  /api/teacher/lists
   teacherList (data) {
     return post('teacher/lists', data)

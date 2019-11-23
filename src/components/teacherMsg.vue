@@ -30,12 +30,13 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-left: 4%;
-    padding-right: 4%;
+    // padding-left: 4%;
+    // padding-right: 4%;
     // margin: 40px 0;
     img{
       width: 85px;
       height: 85px;
+      border-radius: 50%;
     }
     div{
       width: 368px;

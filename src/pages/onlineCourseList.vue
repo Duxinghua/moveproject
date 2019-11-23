@@ -29,7 +29,7 @@ export default {
       finished: false,
       total: 0,
       current: 1,
-      recommend: 1
+      recommend: 0
     }
   },
   mounted () {

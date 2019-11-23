@@ -40,15 +40,15 @@
     </div>
     <div class="offdetail-course">
       <div class="offdetail-course-title">课程介绍</div>
-      <p>我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色</p>
+      <p class="offdetail-course-con">我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色我们通常会把能够给人予温暖的感觉得颜色称为暖色，暖色系列包括红色、紫色、黄等颜色</p>
       <div class="offdetail-course-sec">
         <p>
           <span>开课时间</span>
-          <span>{{courseOffline.open_time_text}}</span>
+          <!-- <span>{{courseOffline.open_time_text}}</span> -->
         </p>
         <p>
           <span>开课地址</span>
-          <span>{{courseOffline.address}}</span>
+          <!-- <span>{{courseOffline.address}}</span> -->
         </p>
         <p>
           <span>主办单位</span>
@@ -87,7 +87,7 @@
       <div class="goods-money">合计<span>￥</span></div>
       <div>
         <div class="goods-group-btn" >发起拼团</div>
-        <div class="goods-buy-btn" @click="onBuy">立即购买</div>
+        <div class="goods-buy-btn" @click="onBuy(courseId)">立即购买</div>
       </div>
     </div>
   </div>
@@ -184,8 +184,9 @@ export default {
     onLinkAll () {
       this.$router.push('/allGroup')
     },
-    onBuy () {
-      this.$router.push('/orderCommit')
+    onBuy (courseId) {
+      // const courseId = this.courseId
+      this.$router.push({path: '/orderCommit', query: {courseId}})
     }
   },
   components: {
@@ -272,7 +273,7 @@ export default {
       }
     }
     .goods-group{
-      margin-top: 15px;
+      // margin-top: 15px;
       background: #FBF8F5;
       padding: 40px 25px 35px 25px;
       border-bottom: 15px solid #F6F3EE;
@@ -316,24 +317,22 @@ export default {
     }
     .offdetail-course,.offdetail-teacher,.offdetail-set{
       margin: 0 auto;
-      padding-top: 10px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
+      padding: 40px 25px 35px 25px;
+      // display: flex;
+      // flex-direction: column;
+      // justify-content: space-around;
       border-bottom: 15px solid #F6F3EE;
     }
     .offdetail-set{
       border-bottom: 0 !important;
     }
     &-course{
-      min-height: 501px;
-      padding-left: 4%;
-      padding-right: 4%;
+      min-height: 300px;
       &-title{
         font-size: 36px;
         color: #6D8160;
       }
-      p{
+      &-con{
         font-size: 26px;
         line-height: 42px;
         color: #333333;
@@ -342,6 +341,7 @@ export default {
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 5;
+        margin: 35px 0;
       }
       &-sec{
         display: flex;
@@ -354,6 +354,7 @@ export default {
           span{
             margin-right: 30px;
             font-size: 26px;
+            line-height: 45px;
             color: #6D8160;
             // text-overflow: hidden;
             max-width: 500px;
@@ -362,26 +363,27 @@ export default {
       }
     }
     &-teacher{
-      min-height: 812px;
+      // min-height: 812px;
       &-title{
         font-size: 36px;
         color: #6D8160;
-        padding-left: 4%;
-        padding-right: 4%;
+        margin-bottom: 40px;
       }
       &-sec{
         display: flex;
         flex-direction: column;
         justify-content: space-around;
-        min-height: 550px;
-        padding-left: 4%;
-        padding-right: 4%;
+        margin-top: 40px;
+        // min-height: 550px;
+        // padding-left: 4%;
+        // padding-right: 4%;
         div:first-child{
           display: flex;
           flex-direction: row;
           justify-content: space-between;
           overflow: hidden;
           flex-wrap: nowrap;
+          margin-bottom: 40px;
           img{
             width: 216px;
             height: 287.3px;

@@ -16,15 +16,19 @@ export default {
     item: {
       type: Object,
       required: true
-    },
-    courseDetail: {
-      type: String,
-      required: true
     }
+    // courseDetail: {
+    //   type: String,
+    //   required: true
+    // }
   },
   methods: {
     courseDetailHandler (index) {
-      this.$router.push({path: this.courseDetail, query: {id: index}})
+      if (this.item.type == 2) {
+        this.$router.push({path: '/onlineCourseDetail', query: {id: index}})
+      } else if (this.item.type == 3) {
+        this.$router.push({path: '/offCourseDetail', query: {id: index}})
+      }
     }
   }
 }

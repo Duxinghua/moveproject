@@ -6,19 +6,19 @@
     </div>
     <div class="order-commit-content">
       <div>
-        <input type="text" placeholder="请输入真实姓名">
+        <input type="text" v-model="name" placeholder="请输入真实姓名">
         <img src="../assets/images/ordername.png" alt="">
       </div>
       <div>
-        <input type="text" placeholder="请输入身份证号">
+        <input type="text" ref="cardId" placeholder="请输入身份证号">
         <img src="../assets/images/ordercard.png" alt="">
       </div>
       <div>
-        <input type="text" placeholder="请确认您的身份证号">
+        <input type="text" ref="cardId_s" placeholder="请确认您的身份证号">
         <img src="../assets/images/ordercard.png" alt="">
       </div>
       <div>
-        <input type="tel" placeholder="请输入您的手机号码">
+        <input type="tel" v-model="phone" placeholder="请输入您的手机号码">
         <img src="../assets/images/ordertel.png" alt="">
       </div>
     </div>
@@ -38,10 +38,48 @@
 export default {
   name: 'OrderCommit',
   data () {
-    return {}
+    return {
+      name: "",
+      cardId: "",
+      cardId_s: "",
+      phone: "",
+      courseId: ""
+    }
+  },
+  mounted () {
+    this.courseId = this.$route.query.courseId
+    // console.log(this.$route.query.courseId)
   },
   methods: {
     onCommit () {
+      if (this.$refs.cardId_s.value != this.$refs.cardId.value) {
+        this.$toast('身份证号输入不一致')
+        this.$refs.cardId_s.focus()
+        return
+      }
+      const param = {
+        course_id: this.courseId,
+        true_name: this.name,
+        mobile: this.phone,
+        idcard: this.$refs.cardId_s.value
+      }
+      this.$api.courseAppoint(param).then((res) => {
+        if(res.code == 1) {
+          this.$toast({
+            message: res.msg,           
+            onClose: () => {
+              this.commitSuc()
+            }
+          })
+        } else {
+          this.$toast({
+            message: res.msg
+          })
+          return
+        }
+      })      
+    },
+    commitSuc () {
       this.$router.push('/submitCourseOrder')
     }
   }
