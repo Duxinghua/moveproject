@@ -171,25 +171,11 @@ export default {
                 type:0,
                 cart_id:this.cartIdChecked.join(',')
             }
-            this.$toast.loading({
-                duration:0,
-                message: '加载中...',
-                forbidClick: true
-            });
-            this.$api.goodsOrderCreate(param).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    this.$router.push({
-                        path:'/submitOrder',
-                        query:{
-                            orderId:res.data.order_id,
-                            type:0
-                        }
-                    })
-                }else{
-                    this.$toast(res.msg);
-                }
+            this.$router.push({
+                path:'/submitOrder',
+                query:param
             })
+
         }
 
     }

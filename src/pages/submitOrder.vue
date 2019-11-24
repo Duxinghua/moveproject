@@ -33,7 +33,7 @@
             </div>
             <div class="order-item">
                 <div class="left">商品合计</div>
-                <div class="right">￥{{goodsTotal.toFixed(2)}}</div>
+                <div class="right">￥{{goodsTotal}}</div>
             </div>
              <div class="order-item">
                 <div class="left">运费</div>
@@ -44,13 +44,13 @@
                 <div class="right">原价￥{{ orderData.goods ? orderData.goods[0].price_cost : '0.00'}}</div>
             </div>
             <div class="order-item" @click="toggle">
-                <div class="left">可用<span>0学分</span>抵用<span>0</span>元</div>
+                <div class="left">可用<span>{{ orderData.scoreDeduction ? orderData.scoreDeduction.score : 0}}学分</span>抵用<span>{{orderData.scoreDeduction ? orderData.scoreDeduction.deduction : 0}}</span>元</div>
                 <van-checkbox v-model="checked" ref="checkboxes" checked-color="#718063"></van-checkbox>
             </div>
         </div>
 
         <div class="buy-box">
-            <div class="money">需支付<span>￥{{goodsTotal.toFixed(2)}}</span></div>
+            <div class="money">需支付<span>￥{{goodsTotal}}</span></div>
             <div class="submit" @click="onBuy">立即购买</div>
         </div>
     </div>
@@ -89,7 +89,7 @@ export default {
                         goodsTotal += item.goods_num * item.price;
                     })
                 }
-                this.goodsTotal = goodsTotal;
+                this.goodsTotal = goodsTotal.toFixed(2);
             }
         }
     },
@@ -106,7 +106,6 @@ export default {
                 var wxConfig = res.data;
                 this.wxConfig = wxConfig;
                 wx.config({
-                    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
                     appId: wxConfig.appId, // 必填，公众号的唯一标识
                     timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
                     nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
@@ -125,19 +124,12 @@ export default {
         this.orderId = orderId;
         this.orderType = type;
         this.getAddressList();
-        // this.goodsOrder();
         this.goodsOrderCreate();
     },
     methods:{
         ...mapMutations('shop',['saveAddressData']),
         goodsOrderCreate(){
             const param = this.$route.query;
-            // const param = {
-            //     type,
-            //     goods_id:this.goodsId,
-            //     specs:JSON.stringify(this.skuList[this.skuIndex]),
-            //     goods_num:this.goodsNum
-            // }
             this.$toast.loading({
                 duration:0,
                 forbidClick: true
@@ -176,7 +168,7 @@ export default {
                 //单个商品购买
                 param = {
                     goods_id:this.orderData.goods[0].goods_id,
-                    specs:this.orderData.goods[0].specs,
+                    specs:JSON.stringify(this.orderData.specs),
                     goods_num:this.orderData.goods[0].goods_num,
                     address_id:this.addressData.id,
                     type:this.orderType
@@ -184,7 +176,8 @@ export default {
             }
             this.$api.goodsOrderStore(param).then((res) => {
                 if(res.code == 1){
-                    // this.wxPay()
+                    const pay_data = res.data.pay_data;
+                    this.wxPay(pay_data)
                 }else{
                     this.$toast(res.msg);
                 }
@@ -208,16 +201,6 @@ export default {
         toggle(){
             this.$refs.checkboxes.toggle();
         },
-        goodsOrder(){
-            const param = {
-                order_id:this.orderId
-            }
-            this.$api.goodsOrder(param).then((res) => {
-                if(res.code == 1){
-                    this.orderData = res.data;
-                }
-            })
-        },
         getAddressList(){
             const param = {
                 page:1,
@@ -240,21 +223,31 @@ export default {
             })
         },
         wxPay(wxmsg){
+            const _this = this;
             this.wx.chooseWXPay({
-                appId: this.wxConfig.appId,
-                timestamp: this.wxConfig.timeStamp,
-                nonceStr: this.wxConfig.nonceStr, // 支付签名随机串，不长于 32 位
+                appId: wxmsg.appId,
+                timestamp: wxmsg.timeStamp,
+                nonceStr: wxmsg.nonceStr, // 支付签名随机串，不长于 32 位
                 package: wxmsg.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
                 signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
                 paySign: wxmsg.paySign, // 支付签名
                 success: function (res) {
                     // 支付成功的回调函数
+                    _this.$router.push({
+                        path:'/orderlist'
+                    })
                 },
                 cancel: function (res) {
                     // 支付取消的回调函数
+                    _this.$router.push({
+                        path:'/orderlist'
+                    })
                 },
                 error: function (res) {
                     // 支付失败的回调函数
+                    _this.$router.push({
+                        path:'/orderlist'
+                    })
                 }
             })
         }
