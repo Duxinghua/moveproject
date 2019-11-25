@@ -316,8 +316,55 @@ const server = {
   // 图片上传 /common/wxUpload
   commonwxUpload (data) {
     return post('common/wxUpload', data)
+  },
+  // 课程列表 /api/course/lists
+  courseList (data) {
+    return post('course/lists', data)
+  },
+  // 课程详情 /api/course/indexindex/lists
+  courseDetail (data) {
+    return post('course/index', data)
+  },
+  // 课程拼团列表  /api/course_tuan/lists
+  courseTuanList (data) {
+    return post('course_tuan/lists', data)
+  },
+  // 相关花材 /api/course/materials
+  flowers (data) {
+    return post('course/materials', data)
+  },
+  // 课程评论 /api/course/comments
+  courseComment (data) {
+    return post('course/comments', data)
+  },
+  // 线下课程预约 /api/course/appoint
+  courseAppoint (data) {
+    return post('course/appoint', data)
+  },
+  // 课程提交订单 /api/course/storeOrder
+  courseStoreOrder (data) {
+    return post('course/storeOrder', data)
+  },
+  // 创建订单 /api/course_order/store
+  courseOrderStore (data) {
+    return post('course_order/store', data)
+  },
+  // 名师列表  /api/teacher/lists
+  teacherList (data) {
+    return post('teacher/lists', data)
+  },
+  // 名师详情  /api/teacher/index
+  teacherDetail (data) {
+    return post('teacher/index', data)
+  },
+  // 名师作品  /api/teacher/opusLists
+  teacherWorksList (data) {
+    return post('teacher/opusLists', data)
+  },
+  // 线上课程预览接口 /api/course_order/preview
+  courseOrderPreview (data) {
+    return get('course_order/preview', data)
   }
-
 }
 
 export default server

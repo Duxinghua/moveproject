@@ -3,9 +3,16 @@ import getSitem from '@/utils/storage'
 import Api from '@/api/index'
 import Router from 'vue-router'
 import Home from '@/pages/home'
+import HomeSearch from '@/pages/homeSearch'
 import TeacherDetail from '@/pages/teacherDetail'
+import OffCourseList from '@/pages/offCourseList'
 import OffCourseDetail from '@/pages/offCourseDetail'
 import OnlineCourseDetail from '@/pages/onlineCourseDetail'
+import OnlineCourseList from '@/pages/onlineCourseList'
+import OrderCommit from '@/pages/orderCommit'
+import SubmitCourseOrder from '@/pages/submitCourseOrder'
+import OrderSuccess from '@/pages/orderSuccess'
+import DoTask from '@/pages/doTask'
 import Huaban from '@/pages/huaban'
 import HuabanGroupDetail from '@/pages/huabanGroupDetail'
 import HuabanTzDetail from '@/pages/huabanTzDetail'
@@ -162,9 +169,25 @@ const router = new Router({
       }
     },
     {
+      path: '/homeSearch',
+      name: 'HomeSearch',
+      component: HomeSearch,
+      meta: {
+        title: '有梦不晚'
+      }
+    },
+    {
       path: '/offcoursedetail',
       name: 'OffCourseDetail',
       component: OffCourseDetail,
+      meta: {
+        title: '线下课程'
+      }
+    },
+    {
+      path: '/offcourselist',
+      name: 'OffCourseList',
+      component: OffCourseList,
       meta: {
         title: '线下课程'
       }
@@ -178,11 +201,51 @@ const router = new Router({
       }
     },
     {
+      path: '/onlinecourselist',
+      name: 'OnlineCourseList',
+      component: OnlineCourseList,
+      meta: {
+        title: '线上课程'
+      }
+    },
+    {
       path: '/teacherDetail',
       name: 'TeacherDetail',
       component: TeacherDetail,
       meta: {
         title: '名师详情'
+      }
+    },
+    {
+      path: '/ordercommit',
+      name: 'OrderCommit',
+      component: OrderCommit,
+      meta: {
+        title: '有梦不晚'
+      }
+    },
+    {
+      path: '/submitcourseorder',
+      name: 'SubmitCourseOrder',
+      component: SubmitCourseOrder,
+      meta: {
+        title: '提交订单'
+      }
+    },
+    {
+      path: '/orderSuccess',
+      name: 'OrderSuccess',
+      component: OrderSuccess,
+      meta: {
+        title: '有梦不晚'
+      }
+    },
+    {
+      path: '/dotask',
+      name: 'DoTask',
+      component: DoTask,
+      meta: {
+        title: '有梦不晚'
       }
     },
     {

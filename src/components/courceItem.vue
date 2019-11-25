@@ -1,10 +1,10 @@
 <template>
-    <div class="home-course-content-item" @click="courseDetailHandler(item.id)">
-          <img class="course-img" :src="item.img" alt="">
+    <div class="home-course-content-item" @click="courseDetailHandler(item.course_id)">
+          <img class="course-img" :src="item.image[0]" alt="">
           <span>{{item.title}}</span>
           <div class="course-people">
-            <img :src="item.avater" alt="">
-            <span>{{item.name}}</span>
+            <img :src="item.admin.avatar" alt="">
+            <span>{{item.admin.nickname}}</span>
           </div>
     </div>
 </template>
@@ -16,20 +16,19 @@ export default {
     item: {
       type: Object,
       required: true
-    },
-    onlineDetail: {
-      type: String,
-      required: true
-    },
-    offlineDetail: {
-      type: String,
-      required: true
     }
+    // courseDetail: {
+    //   type: String,
+    //   required: true
+    // }
   },
   methods: {
     courseDetailHandler (index) {
-      this.$router.push({path: this.onlineDetail, query: {id: index}})
-      this.$router.push({path: this.offlineDetail, query: {id: index}})
+      if (this.item.type == 2) {
+        this.$router.push({path: '/onlineCourseDetail', query: {id: index}})
+      } else if (this.item.type == 3) {
+        this.$router.push({path: '/offCourseDetail', query: {id: index}})
+      }
     }
   }
 }
