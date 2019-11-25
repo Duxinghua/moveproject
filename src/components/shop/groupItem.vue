@@ -3,7 +3,7 @@
         <div class="group-img">
             <div class="img-box">
                 <div class="img" v-for="(item, index) in groupData.users" :key="index">
-                    <img src="../../assets/images/img1.png" alt="">
+                    <img :src="item.avatar ? item.avatar : require('../../assets/images/useravatar.png')" alt="">
                 </div>
                 <div class="img active" v-for="(item, index) in (3 - groupData.users.length)" :key="'active' + index">
                     <img src="../../assets/images/doubt.png" alt="">

@@ -45,15 +45,15 @@
             </div>
 
             <div class="goods-list">
-                <!-- <div class="goods-item" v-for="(item, index) in groupList" :key="index" :groupTime="groupTime">
-                    <div class="img"><img src="../assets/images/770552.png" alt=""></div>
+                <div class="goods-item" v-for="(item, index) in groupList" :key="index" :groupTime="groupTime">
+                    <div class="img"><img :src="item.images && item.images[0]" alt=""></div>
                     <div class="content">
-                        <div class="title">玫瑰花泥面膜</div>
-                        <div class="price">单买价¥1599</div>
-                        <div class="money"><em>5人团</em>￥<span>1299</span></div>
-                        <div class="submit">去开团</div>
+                        <div class="title">{{item.goods_name}}</div>
+                        <div class="price">单买价¥{{item.price}}</div>
+                        <div class="money"><em>{{item.user_number}}人团</em>￥<span>{{item.price_tuan}}</span></div>
+                        <div class="submit" @click="onLinkDetails(item.goods_id)">去开团</div>
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
 
@@ -117,10 +117,17 @@ export default {
   mounted () {
     this.groupId = this.$route.query.id
     this.goodsTuan()
-    this.goodsTuanLists()
 
   },
   methods:{
+        onLinkDetails(id){
+            this.$router.push({
+                path:'/goodsDetails',
+                query:{
+                    goodsId:id
+                }
+            })
+        },
         goodsTuan(){
             this.$toast.loading({
                 duration:0,
@@ -133,6 +140,7 @@ export default {
                     this.groupDetails = res.data;
                     this.goodsData = res.data.goods || {};
                     this.skuList = res.data.goods.specs || [];
+                    this.groupList = res.data.hot || [];
                 }
             })
         },
@@ -152,17 +160,6 @@ export default {
         },
         showPopup(){
             this.popupStatus = true;
-        },
-        goodsTuanLists(){
-            const param = {
-                page:1,
-                pageSize:20
-            }
-            this.$api.goodsTuanLists(param).then((res) => {
-                if(res.code == 1){
-                    this.groupList = res.data.data;
-                }
-            })
         },
         goodsOrderCreate(type){
             //参加拼团到支付页面
@@ -383,8 +380,12 @@ export default {
                     margin-left: 20px;
                     position: relative;
                     .title{
+                        width: 5.7rem;
                         color: #333333;
                         font-size: 32px;
+                        overflow: hidden;
+                        text-overflow:ellipsis;
+                        white-space: nowrap;
                     }
                     .price{
                         text-decoration: line-through;

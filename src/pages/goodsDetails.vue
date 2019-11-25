@@ -120,10 +120,10 @@
                         >
                             <div class="comments-user">
                                 <div class="img"><img
-                                        :src="item.user.avatar ? item.user.avatar : require('../assets/images/img1.png')"
+                                        :src="(item.user && item.user.avatar) ? item.user.avatar : require('../assets/images/useravatar.png')"
                                         alt=""
                                     ></div>
-                                <span class="user">{{item.user.nickname}}</span>
+                                <span class="user">{{item.user && item.user.nickname}}</span>
                                 <span class="time">{{item.create_time}}</span>
                             </div>
                             <div class="comments-center">
@@ -160,7 +160,7 @@
             <div
                 class="goods-money"
                 v-if="!disabled"
-            >合计<span>￥{{skuList[skuIndex] ? (skuList[skuIndex].price * goodsNum) : '0.00'}}</span></div>
+            >合计<span>￥{{(skuList && skuList[skuIndex]) ? (skuList[skuIndex].price * goodsNum) : '0.00'}}</span></div>
             <div
                 class="goods-money"
                 v-if="disabled"
@@ -184,6 +184,7 @@
         </div>
 
         <van-popup
+            v-if="goodsData.specs && goodsData.specs.length > 0"
             v-model="popupStatus"
             round
             :safe-area-inset-bottom="true"
