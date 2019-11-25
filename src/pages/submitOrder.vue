@@ -27,7 +27,7 @@
                 <div class="info">
                     <div class="title">{{item.goods_name}}</div>
                     <div class="money" v-if="orderType != 1">￥<span>{{item.price}}</span> <em>{{item.specs}}</em></div>
-                    <div class="money" v-if="orderType == 1">￥<span>{{orderData.goodsTuan}}</span> <em>{{item.specs}}</em></div>
+                    <div class="money" v-if="orderType == 1">￥<span>{{orderData.goodsTuan && orderData.goodsTuan.goods_price}}</span> <em>{{item.specs}}</em></div>
                     <div class="num"><van-stepper disabled disable-input v-model="item.goods_num"/></div>
                 </div>
             </div>
@@ -82,7 +82,7 @@ export default {
                 let goodsTotal = 0;
                 if(data.goods && data.goods.length > 0){
                     if(this.orderType == 1){
-                        this.goodsTotal = data.goodsTuan;
+                        this.goodsTotal = orderData.goodsTuan ? orderData.goodsTuan.goods_price : '0.00';
                         return
                     }
                     data.goods.forEach((item) => {

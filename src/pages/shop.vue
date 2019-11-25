@@ -83,6 +83,9 @@ export default {
             this.shopList = shopList;
         }
     },
+    mounted(){
+        this.goodsCarts();
+    },
     methods:{
         onBuy(){
             if(this.checkedTotal == 0){
