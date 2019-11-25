@@ -20,7 +20,7 @@
               <span>{{item.course.admin.nickname}}</span>
             </div>
             <span class="time">预约时间：{{new String(item.create_time).split(" ")[0]}}</span>
-            <span class="btn" @click="cancelHandler">取消预约</span>
+            <span class="btn" @click="cancelHandler(item.course_id)">申请退款</span>
           </div>
         </div>
       </van-list>
@@ -53,13 +53,13 @@ export default {
     this.getOrderList()
   },
   methods: {
-    cancelHandler (order_id) {
+    cancelHandler (course_id) {
       var _this = this
-      this.$api.courseDelAppoint({order_id:order_id}).then((res)=>{
+      this.$api.courseDelAppoint({course_id:course_id}).then((res)=>{
         if(res.code == 1) {
           _this.$toast({
             message:res.msg,
-            onClick: () => {
+            onClose: () => {
               _this.finished = false
               _this.loading = false
               _this.current = 1
@@ -67,6 +67,8 @@ export default {
               _this.getOrderList()
             }
           })
+        }else{
+          _this.$toast(res.msg)
         }
       })
     },

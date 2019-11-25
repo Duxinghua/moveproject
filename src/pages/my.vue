@@ -196,10 +196,12 @@ export default {
           console.log(_this.formatTime(result.data.sign_time_text))
             if (_this.currentDate == _this.formatTime(result.data.sign_time_text)) {
               _this.qdcontrol = true
+              _this.qdText = '已经连续签到' + result.data.days + '天'
             }else{
               _this.qdcontrol = false
+              _this.qdText = '立即签到'
             }
-            _this.qdText = '已经连续签到' + result.data.days + '天'
+
             _this.qdList.map((item)=>{
               if(item.num <= result.data.days){
                 item.check = true
