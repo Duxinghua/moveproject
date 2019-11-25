@@ -20,6 +20,13 @@
             <span>{{item.status_text}}</span>
           </div>
           <div class="ordercontent" @click="orderDetailHandler(item.order_id)">
+            <div class="ordercontentimg">
+              <van-image :src="item.image">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+            </div>
             <img :src="item.image" alt="">
             <div class="ordercenter">
               <div class="ol">
@@ -57,8 +64,7 @@ export default {
       tabList: [
         {name: '全部', status: ''},
         {name: '线下课程', status: 3},
-        {name: '线上课程', status: 2},
-        {name: '直播课程', status: 1}
+        {name: '线上课程', status: 2}
       ],
       orderList: [],
       type: '',
@@ -162,8 +168,10 @@ export default {
     width:100%;
     background:white;
     align-items: center;
+    position: fixed;
+    z-index: 2;
     &-item{
-      width:25%;
+      width:33.33%;
       font-size: 32px;
       color:#999999;
       text-align: center;
@@ -187,6 +195,7 @@ export default {
   &-content{
     display: flex;
     flex-direction: column;
+    margin-top:98px;
     &-item{
       background:white;
       margin-top:20px;
@@ -207,11 +216,16 @@ export default {
         padding:30px 0px;
         width:100%;
         border-bottom:1px solid #F3F3F3;
-        img{
+        .ordercontentimg{
           width:156px;
           height:130px;
           border-radius: 8px;
           margin-right:15px;
+          overflow: hidden;
+          .van-image{
+            width:100%;
+            height:100%;
+          }
         }
         .ordercenter{
           display: flex;

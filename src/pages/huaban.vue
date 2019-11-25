@@ -4,7 +4,13 @@
       <button @click="test">222</button>
       <div class="huaban-top-wrap">
         <div class="huaban-top-item" v-for="(item,index) in huabanList" :key="index" @click="huabangdHandler(item.group_id)">
-          <img class="huaban-top-item-img1" :src="item.image" alt="">
+          <div class="huaban-top-item-img1">
+              <van-image :src="item.image">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+          </div>
           <div class="huaban-top-item-des">
             <span class="title">{{item.group_name}}</span>
             <span class="title subtitle">{{item.description}}</span>
@@ -23,7 +29,13 @@
             <span class="s1">更多圈子</span>
           </div>
           <div class="huaban-top-jwrap-item" v-for="(item,index) in huabanJoin" :key="index" @click="linkDetail(item.group_id)">
-            <img :src="item.image" alt="">
+            <div class="image-wrap-vant">
+              <van-image :src="item.image">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+            </div>
             <span class="s1">{{item.group_name}}</span>
             <span class="s2" v-if="item.recommend">推荐</span>
           </div>
@@ -35,6 +47,7 @@
       <TitleItem title="贴子讨论" />
       <div class="huaban-tz-wrap">
         <HuabantzItem v-for="(item,index) in huabantzlist" :key="index" :item="item" />
+        <NoData v-if="huabantzlist.length === 0"/>
       </div>
       <MoreText moreText="更多" moreName="HuabanTzList" />
     </div>
@@ -48,6 +61,7 @@ import Footer from '@/components/footer.vue'
 import MoreText from '@/components/moreItem.vue'
 import TitleItem from '@/components/titleItem.vue'
 import HuabantzItem from '@/components/huabantzItem.vue'
+import NoData from '@/components/nodata.vue'
 import WxSing from '@/utils/wxSing'
 export default {
   name: 'Huaban',
@@ -110,7 +124,8 @@ export default {
     Footer,
     MoreText,
     TitleItem,
-    HuabantzItem
+    HuabantzItem,
+    NoData
   }
 }
 </script>
@@ -161,6 +176,11 @@ display: none;
         width:117px;
         height:117px;
         margin-right:20px;
+        overflow: hidden;
+        .van-image{
+          width:100%;
+          height:100%;
+        }
       }
       &-des{
         width:265px;
@@ -222,10 +242,16 @@ display: none;
             transform: translate(-50%,-50%)
           }
         }
-        img{
+        .image-wrap-vant{
           width:117px;
           height:117px;
           border-radius: 8px;
+          overflow: hidden;
+          .van-image{
+            width: 100%;
+            height:100%;
+          }
+
         }
         .s1{
           font-size: 24px;
@@ -265,6 +291,10 @@ display: none;
     &-wrap{
       display: flex;
       flex-direction: column;
+      /deep/ .nodata{
+        position: relative;
+        margin-top:30%;
+      }
     }
   }
 }

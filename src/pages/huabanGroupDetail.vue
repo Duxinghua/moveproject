@@ -3,7 +3,14 @@
     <div class="huabangd-top">
       <div class="huabangd-top-detail">
         <div class="detail-top">
-          <img  class="detail-top-img" :src="tzDetail.image? tzDetail.image[0]:require('../assets/images/hgdi.png')" alt="">
+          <div class="detail-top-img">
+              <van-image :src="tzDetail.image? tzDetail.image[0]:require('../assets/images/hgdi.png')">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+          </div>
+          <!-- <img  class="detail-top-img" :src="tzDetail.image? tzDetail.image[0]:require('../assets/images/hgdi.png')" alt=""> -->
           <div class="detail-top-center">
             <span class="detail-title">{{tzDetail.group_name}}</span>
             <div class="detail-avatar">
@@ -301,6 +308,11 @@ export default {
           height:117px;
           border-radius: 8px;
           margin-right:26px;
+          overflow: hidden;
+          .van-image{
+            width:100%;
+            height:100%;
+          }
         }
         &-center{
           display: flex;

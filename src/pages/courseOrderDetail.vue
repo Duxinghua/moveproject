@@ -2,7 +2,13 @@
   <div class="orderdetail">
     <div class="orderdetail-top">
       <div class="ordercontent">
-          <img :src="detail.image" alt="">
+          <div class="ordercontentimg">
+              <van-image :src="detail.image">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+          </div>
           <div class="ordercenter">
             <div class="ol">
               <span class="s1">{{detail.title}}</span>
@@ -149,11 +155,16 @@ export default {
           padding:30px 0px;
           width:100%;
           // border-bottom:1px solid #F3F3F3;
-          img{
+          .ordercontentimg{
             width:156px;
             height:130px;
             border-radius: 8px;
             margin-right:15px;
+            overflow: hidden;
+            .van-image{
+              width:100%;
+              height:100%;
+            }
           }
           .ordercenter{
             display: flex;

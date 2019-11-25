@@ -1,5 +1,12 @@
 <template>
   <div class="huabanUserItem" >
+            <div class="avatar">
+              <van-image :src="item.avatar">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+            </div>
             <img class="avatar" :src="item.avatar" alt="" @click="userInfoHandler">
             <div class="huabanUserItem-center" @click="userInfoHandler">
                 <span class="user">{{item.nickname}}</span>
@@ -86,6 +93,11 @@ export default {
         height:107px;
         margin-right:25px;
         border-radius: 50%;
+        overflow: hidden;
+        .van-image{
+          width:100%;
+          height:100%;
+        }
       }
       &-center{
         width:336px;

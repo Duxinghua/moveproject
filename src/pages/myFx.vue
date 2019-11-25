@@ -204,6 +204,13 @@ export default {
   display: flex;
   flex-direction: column;
   min-height:100vh;
+  .myfooter{
+      position: fixed;
+      bottom: 0;
+      left:0;
+      width:100%;
+      height:164px;
+  }
   &-top{
     background:#FBF8F4;
     height:448px;
@@ -340,13 +347,6 @@ export default {
           margin-left:10px;
         }
       }
-    }
-    .myfooter{
-      position: fixed;
-      bottom: 0;
-      left:0;
-      width:100%;
-      height:164px;
     }
   }
   &-Fx{

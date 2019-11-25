@@ -2,7 +2,13 @@
   <div class="orderdetail">
     <div class="orderdetail-top">
       <div class="orderwlinfo">
-        <img :src="order_detail.tipsimage" alt="">
+        <div class="orderwlinfoimg">
+              <van-image :src="order_detail.tipsimage">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+        </div>
         <div class="orderwl">
           <span>{{order_detail.tipst1}}</span>
           <span>{{order_detail.tipst2}}</span>
@@ -10,7 +16,13 @@
       </div>
       <div class="orderlist">
         <div class="ordercontent" v-for="(goodsitem,index) in order_detail.goods" :key="index">
-            <img :src="goodsitem.images" alt="">
+            <div class="ordercontentimg">
+              <van-image :src="goodsitem.images">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+            </div>
             <div class="ordercenter">
               <div class="ol">
                 <span class="s1">{{goodsitem.goods_name}}</span>
@@ -220,10 +232,15 @@ export default {
       flex-direction: row;
       padding-bottom: 26px;
       border-bottom: 1px solid #F3F3F3;
-      img{
+      .orderwlinfoimg{
         width:91px;
         height:91px;
         margin-right:35px;
+        overflow: hidden;
+        .van-image{
+          width:100%;
+          height:100%;
+        }
       }
       .orderwl{
         display: flex;
@@ -250,11 +267,16 @@ export default {
             padding:30px 0px;
             width:100%;
             // border-bottom:1px solid #F3F3F3;
-            img{
+            .ordercontentimg{
               width:156px;
               height:130px;
               border-radius: 8px;
               margin-right:15px;
+              overflow: hidden;
+              .van-image{
+                width:100%;
+                height:100%;
+              }
             }
             .ordercenter{
               display: flex;

@@ -9,10 +9,10 @@
           <img :src="hb === true ? require('../assets/images/hbico-a.png') : require('../assets/images/hbico.png')" alt="" />
           <span :class="{active:hb}">花伴</span>
         </router-link>
-      <router-link class="menuitem" to="/company">
+      <!-- <router-link class="menuitem" to="/company">
         <img :src="zb === true ? require('../assets/images/zbico-a.png') : require('../assets/images/zbico.png')" alt="" />
         <span :class="{active:zb}">直播</span>
-      </router-link>
+      </router-link> -->
       <router-link class="menuitem" to="/shopHome">
         <img :src="sc === true ? require('../assets/images/scico-a.png') : require('../assets/images/scico.png')" alt="" />
         <span :class="{active:sc}">商城</span>
@@ -76,7 +76,7 @@ export default {
 .footer .menuitem{
   display: flex;
   flex-direction: column;
-  width:33.33%;
+  width:25%;
   height:100%;
   justify-content: center;
   align-items: center;

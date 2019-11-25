@@ -1,6 +1,12 @@
 <template>
         <div class="huaban-top-item">
-          <img class="huaban-top-item-img1" :src="item.image" alt="">
+          <div class="huaban-top-item-img1">
+            <van-image :src="item.image">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+            </van-image>
+          </div>
           <div class="huaban-top-item-des" @click="huabangdHandler">
             <span class="title">{{item.group_name}}</span>
             <span class="title subtitle">{{item.description}}</span>
@@ -47,6 +53,11 @@ export default {
         height:117px;
         border-radius: 8px;
         margin-right:20px;
+        overflow: hidden;
+        .van-image{
+            width: 100%;
+            height: 100%;
+        }
       }
       &-des{
         width:418px;
