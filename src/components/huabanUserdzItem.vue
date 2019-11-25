@@ -1,11 +1,23 @@
 <template>
   <div class="huabanUserItem huabanUserBottom" @click="userInfoHandler">
-            <img class="avatar" :src="item.avatar" alt="">
+            <div class="avatar">
+              <van-image :src="item.avatar">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+            </div>
             <div class="huabanUserItem-center">
                 <span class="user">{{item.nickname}}</span>
                 <span class="userinfo">{{autoTime(item.create_time)}}</span>
             </div>
-            <img class="huabandz" :src="auToImage(item)"/>
+            <div class="huabandz">
+              <van-image :src="auToImage(item)">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+            </div>
     </div>
 </template>
 
@@ -66,7 +78,12 @@ export default {
         width:107px;
         height:107px;
         border-radius: 50%;
+        overflow: hidden;
         margin-right:25px;
+        .van-image{
+          width:100%;
+          height:100%;
+        }
       }
       &-center{
         width:368px;
@@ -143,6 +160,12 @@ export default {
         width:171px;
         height:125px;
         border-radius:12px;
+        overflow: hidden;
+        .van-image{
+            width: 100%;
+            height: 100%;
+        }
+
       }
   }
   .huabanUserBottom{

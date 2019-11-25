@@ -84,7 +84,7 @@ export default {
         &-item{
           width:fit-content;
           padding:19px 40px;
-          border:1px solid #E7E7E7;
+          border:2px solid #E7E7E7;
           margin-right:11px;
           margin-top:20px;
           font-size:30px;

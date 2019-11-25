@@ -1,17 +1,26 @@
 <template>
   <div class="offdetail-teacher-msg">
-    <img :src="msgItem.img" alt="">
+    <img :src="msgItem.avatar" alt="">
     <div>
-      <span>{{msgItem.name}}</span>
-      <p>{{msgItem.msg}}</p>
+      <span>{{msgItem.nickname}}</span>
+      <p>{{msgItem.keywords}}</p>
     </div>
-    <span class="offdetail-teacher-btn">已关注</span>
+    <!-- <span class="offdetail-teacher-btn">已关注</span> -->
+    <div class="user-btn" :class="{active: msgItem.id == status}" @click="userFocusHandler(msgItem.id)">
+      <img src="../assets/images/userfocus.png" v-if="msgItem.id != status" alt="">
+      <span>{{msgItem.id == status ? '已' : '' }}关注</span>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'TeacherMsg',
+  data () {
+    return {
+      status: 0
+    }
+  },
   props: {
     msgItem: {
       type: Object,
@@ -20,6 +29,15 @@ export default {
   },
   mounted () {
     // console.log(msgItem.name);
+  },
+  methods: {
+    userFocusHandler (index) {
+      if (this.status === 0) {
+        this.status = index
+      } else {
+        this.status = 0
+      }
+    },
   }
 }
 </script>
@@ -30,12 +48,10 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding-left: 4%;
-    padding-right: 4%;
-    // margin: 40px 0;
     img{
       width: 85px;
       height: 85px;
+      border-radius: 50%;
     }
     div{
       width: 368px;
@@ -59,15 +75,30 @@ export default {
         -webkit-line-clamp: 1;
       }
     }
-    .offdetail-teacher-btn{
-      width: 172px;
-      height: 62px;
-      border: 1px solid #CDA871;
-      border-radius: 31px;
+    .user-btn{
+      width: 170px;
+      height: 58px;
+      // background-color: #6D8160;
+      border: 2px solid #CDA871;
+      border-radius: 28px;
       color: #CDA871;
-      font-size: 30px;
-      text-align: center;
-      line-height: 62px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      img{
+        width: 34px;
+        height: 30px;
+        margin-right: 16px;
+      }
+      span{
+        font-size: 30px;
+      }
+    }
+    div.active{
+      background-color: #6D8160;
+      border: none;
+      color: #F3D995;
     }
 }
 </style>

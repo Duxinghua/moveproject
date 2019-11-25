@@ -1,20 +1,26 @@
 <template>
   <div class="orderdetail">
     <div class="orderdetail-top">
-      <div class="ordercontent" @click="orderDetailHandler">
-          <img src="../assets/images/770552.png" alt="">
+      <div class="ordercontent">
+          <div class="ordercontentimg">
+              <van-image :src="detail.image">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+          </div>
           <div class="ordercenter">
             <div class="ol">
-              <span class="s1">花见小路·橄榄枝花见小路·橄榄枝花见小路·橄榄枝</span>
-              <span class="s1 s2">白色</span>
-              <div><span class="s3">¥</span><span class="s4">39</span></div>
+              <span class="s1">{{detail.title}}</span>
+              <span class="s1 s2">{{detail.nickname}}</span>
+              <div><span class="s3">¥</span><span class="s4">{{detail.price}}</span></div>
             </div>
-            <span class="s5">X2</span>
+            <span class="s5">x 1</span>
             <!-- <span class="btn">退款</span> -->
           </div>
       </div>
       <div class="orderItem">
-        <span>合计：¥158.20</span>
+        <span>合计：¥{{detail.price_pay}}</span>
         <span class="btn">取消预约</span>
       </div>
     </div>
@@ -23,10 +29,10 @@
         <span>
           核销码
         </span>
-        <span>未核销</span>
+        <span>{{detail.hx_status == 0 ? '未核销' : '已核销' }}</span>
       </div>
       <div class="orderkx">
-        <span>123456</span>
+        <span>{{detail.hx_code}}</span>
       </div>
 
     </div>
@@ -44,17 +50,17 @@
         <span>手机号码</span>
         <span>13407116260</span>
       </div>
-      <div class="orderother">
+      <div class="orderother" v-if="detail.type == 3">
         <span>身份证号</span>
         <span>420115199705063331</span>
       </div>
       <div class="orderother">
         <span>订单编号</span>
-        <span>201910291649</span>
+        <span>{{detail.order_code}}</span>
       </div>
       <div class="orderother">
         <span>下单时间</span>
-        <span>2019-10-10 17:30</span>
+        <span>{{formatTime(detail.create_time)}}</span>
       </div>
     </div>
     <!-- <div class="orderdetail-btns">
@@ -71,45 +77,38 @@
 
 <script>
 export default {
-  name: 'OrderDetail',
+  name: 'CourseOrderDetail',
   data () {
     return {
-      tips: [
-        {
-          image: require('../assets/images/ordersend.png'),
-          t1: '等待卖家发货',
-          t2: '卖家会尽快为您发货'
-        },
-        {
-          image: require('../assets/images/orderpay.png'),
-          t1: '等待买家付款',
-          t2: '剩23小时59分自动关闭'
-        },
-        {
-          image: require('../assets/images/ordersend.png'),
-          t1: '等待卖家发货',
-          t2: '卖家会尽快为您发货'
-        },
-        {
-          image: require('../assets/images/orderclose.png'),
-          t1: '订单已关闭',
-          t2: '订单已超过可支付时间，请重新购买。'
-        },
-        {
-          image: require('../assets/images/orderclose.png'),
-          t1: '订单已关闭',
-          t2: '订单已超过可支付时间，请重新购买。'
-        },
-        {
-          image: require('../assets/images/ordersuccess.png'),
-          t1: '交易成功',
-          t2: '买家已经确认收货'
-        }
-      ]
+      id: '',
+      detail: {}
     }
   },
   mounted () {
-
+    this.id = this.$route.query.id
+  },
+  methods:{
+    formatTime (time) {
+      var date  = ""
+      if (time) {
+        date = new Date(time*1000)
+      }else{
+        date = new Date()
+      }
+      var getyear = date.getFullYear()
+      var getmonth = date.getMonth() + 1
+      var getday = date.getDate()
+      var gethours = date.getHours()
+      var getminute = date.getMinutes()
+      return getyear + '-' + getmonth + '-' + getday + ' ' + gethours + ':'+ getminute
+    },
+    getCourseOrderIndex () {
+      this.$api.courseOrderIndex({order_id:this.order_id}).then((res)=>{
+        if(res.code == 1){
+          this.detail = res.data
+        }
+      })
+    }
   }
 }
 </script>
@@ -156,11 +155,16 @@ export default {
           padding:30px 0px;
           width:100%;
           // border-bottom:1px solid #F3F3F3;
-          img{
+          .ordercontentimg{
             width:156px;
             height:130px;
             border-radius: 8px;
             margin-right:15px;
+            overflow: hidden;
+            .van-image{
+              width:100%;
+              height:100%;
+            }
           }
           .ordercenter{
             display: flex;
@@ -226,7 +230,7 @@ export default {
         width:180px;
         height:62px;
         background:rgba(255,255,255,1);
-        border:1px solid rgba(227, 227, 227, 1);
+        border:2px solid rgba(227, 227, 227, 1);
         border-radius:31px;
         color:#666666;
         font-size: 30px;
@@ -291,7 +295,7 @@ export default {
         width:200px;
         height:62px;
         background:rgba(255,255,255,1);
-        border:1px solid rgba(205, 168, 113, 1);
+        border:2px solid rgba(205, 168, 113, 1);
         border-radius:31px;
         color:#CDA871;
         font-size: 32px;

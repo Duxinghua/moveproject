@@ -1,59 +1,155 @@
 <template>
   <div class="orderList">
     <div class="orderList-tab">
-      <div class="orderList-tab-item" v-for="(item,index) in tabList" :key="index" @click="tabClickHandler(index)">
-         <span :class="{active: current === index ? true : false}">{{item.name}}</span>
+      <div class="orderList-tab-item" v-for="(item,index) in tabList" :key="index" @click="tabClickHandler(index,item.status)">
+         <span :class="{active: currentIndex === index ? true : false}">{{item.name}}</span>
       </div>
     </div>
     <div class="orderList-content">
-      <div class="orderList-content-item">
-        <div class="ordertop">
-          <span>订单编号：86431995</span>
-          <span>待付款</span>
-        </div>
-        <div class="ordercontent" @click="orderDetailHandler">
-          <img src="../assets/images/770552.png" alt="">
-          <div class="ordercenter">
-            <div class="ol">
-              <span class="s1">花见小路·橄榄枝花见小路·橄榄枝花见小路·橄榄枝</span>
-              <span class="s1 s2">白色</span>
-              <div><span class="s3">¥</span><span class="s4">39</span></div>
+      <van-list
+            v-model="loading"
+            v-show="orderList.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+      >
+        <div class="orderList-content-item" v-for="(item,index) in orderList" :key="index">
+          <div class="ordertop">
+            <span>订单编号：{{item.order_code}}</span>
+            <span>{{item.status_text}}</span>
+          </div>
+          <div class="ordercontent" @click="orderDetailHandler(item.order_id)">
+            <div class="ordercontentimg">
+              <van-image :src="item.image">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
             </div>
-            <span class="s5">X200000</span>
+            <img :src="item.image" alt="">
+            <div class="ordercenter">
+              <div class="ol">
+                <span class="s1">{{item.title}}</span>
+                <span class="s1 s2">{{item.nickname}}</span>
+                <div><span class="s3">¥</span><span class="s4">{{item.price}}</span></div>
+              </div>
+              <span class="s5">x 1</span>
+            </div>
+          </div>
+          <div class="orderfooter">
+            <span>合计: ¥{{item.price_pay}}</span>
+            <div class="btns" >
+              <span class="cancel" @click="cancelHandler(item.order_id)">取消预约</span>
+            </div>
           </div>
         </div>
-        <div class="orderfooter">
-          <span>合计: ¥78</span>
-          <div class="btns">
-            <span class="cancel">取消预约</span>
-            <span>去付款</span>
-          </div>
-        </div>
-      </div>
+      </van-list>
+      <NoData v-if="orderList.length === 0" />
     </div>
+
   </div>
 </template>
 
 <script>
+import NoData from '@/components/nodata.vue'
 export default {
   name: 'CourseOrderList',
+  components: {
+    NoData
+  },
   data () {
     return {
-      current: 0,
+      currentIndex: 0,
       tabList: [
         {name: '全部', status: ''},
-        {name: '线下课程', status: 0},
-        {name: '线上课程', status: 1},
-        {name: '直播课程', status: 2}
-      ]
+        {name: '线下课程', status: 3},
+        {name: '线上课程', status: 2}
+      ],
+      orderList: [],
+      type: '',
+      finished: false,
+      loading: false,
+      status: '',
+      current: 1,
+      total: 0,
+      wxpay: {}
     }
   },
+  mounted() {
+    this.getOrderList()
+  },
   methods: {
-    tabClickHandler (index) {
-      this.current = index
+    cancelHandler (order_id) {
+      var _this = this
+      this.$api.courseDelAppoint({order_id:order_id}).then((res)=>{
+        if (res.code === 1) {
+          this.$toast({
+            message:res.msg,
+            onClose: () => {
+              _this.orderList = []
+              _this.finished = false
+              _this.loading = false
+              _this.current = 1
+              _this.getOrderList()
+
+            }
+
+          })
+        }else{
+          this.$toast(res.msg)
+        }
+      })
+    },
+    tabClickHandler (index,type) {
+      this.currentIndex = index
+      this.type = type
+      this.orderList = []
+      this.finished = false
+      this.loading = false
+      this.current = 1
+      this.getOrderList()
+
     },
     orderDetailHandler () {
       this.$router.push({name: 'CourseOrderDetail'})
+    },
+    getOrderList () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        type: this.type
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.courseOrderList(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+
+          if (this.orderList.length == 0) {
+            // 第一次加载
+            this.orderList = res.data.data || []
+            this.total = res.data.total
+          } else if (this.orderList.length < this.total) {
+            // 加载更多
+            this.orderList = this.orderList.concat(res.data.data)
+          }
+          if (this.orderList.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.orderList.length < this.total) {
+        this.current++
+        this.getOrderList()
+      }
     }
   }
 }
@@ -72,8 +168,10 @@ export default {
     width:100%;
     background:white;
     align-items: center;
+    position: fixed;
+    z-index: 2;
     &-item{
-      width:25%;
+      width:33.33%;
       font-size: 32px;
       color:#999999;
       text-align: center;
@@ -97,6 +195,7 @@ export default {
   &-content{
     display: flex;
     flex-direction: column;
+    margin-top:98px;
     &-item{
       background:white;
       margin-top:20px;
@@ -117,11 +216,16 @@ export default {
         padding:30px 0px;
         width:100%;
         border-bottom:1px solid #F3F3F3;
-        img{
+        .ordercontentimg{
           width:156px;
           height:130px;
           border-radius: 8px;
           margin-right:15px;
+          overflow: hidden;
+          .van-image{
+            width:100%;
+            height:100%;
+          }
         }
         .ordercenter{
           display: flex;
@@ -161,10 +265,14 @@ export default {
       .orderfooter{
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: flex-end;
         margin-top:15px;
         height:62px;
         align-items: center;
+        span{
+          display: flex;
+          flex:1;
+        }
         .btns{
           display: flex;
           flex-direction: row;
@@ -173,14 +281,16 @@ export default {
             height:62px;
             line-height:62px;
             text-align: center;
-            border:1px solid rgba(205, 168, 113, 1);
+            border:2px solid rgba(205, 168, 113, 1);
             border-radius:31px;
-            margin-right:16px;
-            margin-left:16px;
+            // margin-right:16px;
+            // margin-left:16px;
           }
           .cancel{
             color:#666666;
-            border:1px solid #E3E3E3;
+            border:2px solid #E3E3E3;
+            display: block;
+            margin: 0 auto;
           }
         }
       }

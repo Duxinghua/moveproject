@@ -3,9 +3,16 @@ import getSitem from '@/utils/storage'
 import Api from '@/api/index'
 import Router from 'vue-router'
 import Home from '@/pages/home'
+import HomeSearch from '@/pages/homeSearch'
 import TeacherDetail from '@/pages/teacherDetail'
+import OffCourseList from '@/pages/offCourseList'
 import OffCourseDetail from '@/pages/offCourseDetail'
 import OnlineCourseDetail from '@/pages/onlineCourseDetail'
+import OnlineCourseList from '@/pages/onlineCourseList'
+import OrderCommit from '@/pages/orderCommit'
+import SubmitCourseOrder from '@/pages/submitCourseOrder'
+import OrderSuccess from '@/pages/orderSuccess'
+import DoTask from '@/pages/doTask'
 import Huaban from '@/pages/huaban'
 import HuabanGroupDetail from '@/pages/huabanGroupDetail'
 import HuabanTzDetail from '@/pages/huabanTzDetail'
@@ -19,6 +26,8 @@ import HuabanSearch from '@/pages/huabanSearch'
 import HuabanUserInfo from '@/pages/huabanUserInfo'
 import OrderList from '@/pages/orderlist'
 import OrderDetail from '@/pages/OrderDetail'
+import OrderRefund from '@/pages/orderRefund'
+import OrderComment from '@/pages/orderComment'
 import CourseOrderList from '@/pages/courseOrderList'
 import CourseOrderDetail from '@/pages/courseOrderDetail'
 import MyEdit from '@/pages/myEdit'
@@ -160,9 +169,25 @@ const router = new Router({
       }
     },
     {
+      path: '/homeSearch',
+      name: 'HomeSearch',
+      component: HomeSearch,
+      meta: {
+        title: '有梦不晚'
+      }
+    },
+    {
       path: '/offcoursedetail',
       name: 'OffCourseDetail',
       component: OffCourseDetail,
+      meta: {
+        title: '线下课程'
+      }
+    },
+    {
+      path: '/offcourselist',
+      name: 'OffCourseList',
+      component: OffCourseList,
       meta: {
         title: '线下课程'
       }
@@ -176,11 +201,51 @@ const router = new Router({
       }
     },
     {
+      path: '/onlinecourselist',
+      name: 'OnlineCourseList',
+      component: OnlineCourseList,
+      meta: {
+        title: '线上课程'
+      }
+    },
+    {
       path: '/teacherDetail',
       name: 'TeacherDetail',
       component: TeacherDetail,
       meta: {
         title: '名师详情'
+      }
+    },
+    {
+      path: '/ordercommit',
+      name: 'OrderCommit',
+      component: OrderCommit,
+      meta: {
+        title: '有梦不晚'
+      }
+    },
+    {
+      path: '/submitcourseorder',
+      name: 'SubmitCourseOrder',
+      component: SubmitCourseOrder,
+      meta: {
+        title: '提交订单'
+      }
+    },
+    {
+      path: '/orderSuccess',
+      name: 'OrderSuccess',
+      component: OrderSuccess,
+      meta: {
+        title: '有梦不晚'
+      }
+    },
+    {
+      path: '/dotask',
+      name: 'DoTask',
+      component: DoTask,
+      meta: {
+        title: '有梦不晚'
       }
     },
     {
@@ -426,6 +491,22 @@ const router = new Router({
       }
     },
     {
+      path: '/orderrefund',
+      name: 'OrderRefund',
+      component: OrderRefund,
+      meta: {
+        title: '申请退款'
+      }
+    },
+    {
+      path: '/ordercomment',
+      name: 'OrderComment',
+      component: OrderComment,
+      meta: {
+        title: '订单评论'
+      }
+    },
+    {
       path: '/courseorderlist',
       name: 'CourseOrderList',
       component: CourseOrderList,
@@ -438,7 +519,7 @@ const router = new Router({
       name: 'CourseOrderDetail',
       component: CourseOrderDetail,
       meta: {
-        title: '商品订单详情'
+        title: '课程订单详情'
       }
     },
     {

@@ -1,9 +1,9 @@
 <template>
   <div class="orderdetail">
     <div class="orderdetail-top">
-      <span class="tip">退款商品</span>
       <div class="orderlist">
-        <div class="ordercontent" v-for="(goodsitem,index) in order_detail.goods" :key="index">
+        <div class="ordercontent-wrap" v-for="(goodsitem,index) in order_detail.goods" :key="index">
+          <div class="ordercontent">
             <img :src="goodsitem.images" alt="">
             <div class="ordercenter">
               <div class="ol">
@@ -13,11 +13,33 @@
               </div>
               <span class="s5">x {{goodsitem.goods_num}}</span>
             </div>
+          </div>
+                <div class="orderdetail-top-div">
+        <div class="rate-wrap">
+          <span>描述相符</span>
+           <van-rate
+            @change="rateChange"
+            v-model="value"
+            :size="20"
+            color="#ee0a24"
+            void-icon="star"
+            void-color="#eee"
+           />
         </div>
+        <div class="comment-wrap">
+          <span class="pl-item">
+          夜想就夜想就
+          </span>
+          <span class="pl-item">
+            日思夜
+          </span>
+          <span class="pl-item">
+            日思夜想就想再来一杯
+          </span>
+        </div>
+
       </div>
-      <textarea placeholder="请输入退货原因…"  class="orderdetail-top-textarea"/>
-      <div class="orderdetail-top-price">退款金额：<span>¥{{order_detail.price_pay}}</span></div>
-      <span class="orderdetail-top-span">上传凭证（{{0}}/3）</span>
+      <span class="orderdetail-top-span">上传照片（{{0}}/3）</span>
       <div class="orderdetail-top-uploads">
         <div class="uploadimgs-wrap" v-for="(item,index) in imgList" :key="index" @click="delImg(index)">
           <img :src="item.l" class="uploadimgs" alt="">
@@ -27,6 +49,9 @@
           <img src="../assets/images/uploadmores.png" class="uplaodmores" alt="" />
         </div>
       </div>
+        </div>
+      </div>
+
     </div>
 
 
@@ -37,14 +62,15 @@
 <script>
 import area from '@/utils/area'
 export default {
-  name: 'OrderRefund',
+  name: 'OrderComment',
   data () {
     return {
       order_id: null,
       order_detail: {},
       num: 3,//上传数量
       localIds: [],
-      imgList: []
+      imgList: [],
+      value: 3
     }
   },
   mounted () {
@@ -52,6 +78,19 @@ export default {
     this.getDetail()
   },
   methods: {
+    postSave () {
+
+    },
+    delImg () {
+
+    },
+    chooseImage () {
+
+    },
+    rateChange (i) {
+      console.log(i)
+      this.value = i
+    },
     getDetail () {
       this.$api.goodsOrderIndex({order_id:this.order_id}).then((res)=>{
         if(res.code === 1) {
@@ -104,6 +143,37 @@ export default {
       span{
         font-size: 36px;
         color:#995258;
+      }
+    }
+    &-div{
+      display: flex;
+      flex-direction: column;
+      width:100%;
+      .rate-wrap{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        span{
+          font-size: 32px;
+          color:#333;
+          margin-right: 32px;
+        }
+      }
+      .comment-wrap{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        .pl-item{
+          width:fit-content;
+          padding:19px 40px;
+          border:2px solid #E7E7E7;
+          margin-right:11px;
+          margin-top:20px;
+          font-size:30px;
+          color:#333;
+          border-radius: 44px;
+        }
       }
     }
     &-span{
@@ -179,6 +249,11 @@ export default {
       display: flex;
       width:100%;
       flex-direction: column;
+      .ordercontent-wrap{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
       .ordercontent{
             display: flex;
             flex-direction: row;

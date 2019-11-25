@@ -21,7 +21,13 @@
         </div>
         <div class="orderclist" @click="orderDetailHandler(item.order_id)">
           <div class="ordercontent" v-for="(goodsitem,index) in item.goods" :key="goodsitem.goods_id">
-            <img :src="goodsitem.images" alt="">
+            <div class="ordercontentimg">
+              <van-image :src="goodsitem.images">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+            </div>
             <div class="ordercenter">
               <div class="ol">
                 <span class="s1">{{goodsitem.goods_name}}</span>
@@ -37,6 +43,9 @@
           <div class="btns">
             <span class="cancel" v-if="item.status === 0" @click="cancelClickHandler(item.order_id)">取消订单</span>
             <span v-if="item.status === 0" @click="replayClickHandler(item.order_id)">去付款</span>
+            <span v-if="item.status === 1" @click="sendClickHandler(item.order_id)">提配发货</span>
+            <span v-if="item.status === 2" @click="confirmClickHandler(item.order_id)">确认收货</span>
+            <span v-if="item.status === 3 && item.is_comment === 0" @click="commentClickHandler(item.order_id)">评论</span>
           </div>
         </div>
       </div>
@@ -68,24 +77,102 @@ export default {
       loading: false,
       status: '',
       current: 1,
-      total: 0
+      total: 0,
+      wxpay: {}
     }
   },
   methods: {
-    replayClickHandler (order_id) {
-       var _this = this
-       this.$api.goodsOrderPayOrder({order_id:order_id}).then((res)=>{
-         if (res.code === 1) {
-           _this.$toast({
-             message: res.msg,
-             onClose: () => {
-               _this.orderList = []
+    onBridgeReady () {
+      var _this = this
+      WeixinJSBridge.invoke(
+        // 'getBrandWCPayRequest', {
+        //   'appId': data.appId, // 公众号名称，由商户传入
+        //   'timeStamp': data.timeStamp, // 时间戳，自1970年以来的秒数
+        //   'nonceStr': data.nonceStr, // 随机串
+        //   'package': data.package,
+        //   'signType': data.signType, // 微信签名方式：
+        //   'paySign': data.paySign // 微信签名
+        // },
+        'getBrandWCPayRequest', _this.wxpay,
+        function (res) {
+          console.log(res)
+          if (new String(res.err_msg).trim() === 'get_brand_wcpay_request:ok') {
+            // 使用以上方式判断前端返回,微信团队郑重提示：
+            // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+            // window.location.href = config.baseurl + '/tickOrderList'
+            alert(1)
+          } else {
+            // window.location.href = config.baseurl + '/tickOrderList'
+            alert(2)
+          }
+        })
+    },
+    confirmClickHandler (order_id) {
+      var _this = this
+      this.$api.goodsOrderReceiveGoods({order_id:order_id}).then((res)=>{
+        if(res.code == 1){
+          _this.$toast({
+            message:res.msg,
+            onClose:()=>{
+              _this.orderList = []
                _this.finished = false
                _this.loading = false
                _this.current = 1
                _this.getOrderList()
-             }
-           })
+            }
+          })
+        }else{
+          _this.$toast(res.msg)
+        }
+      })
+    },
+    sendClickHandler (order_id) {
+      var _this = this
+      this.$api.goodsOrderHastenOrder({order_id:order_id}).then((res)=>{
+        if(res.code === 1){
+          _this.$toast({
+            message:res.msg,
+            onClose:()=>{
+              _this.orderList = []
+               _this.finished = false
+               _this.loading = false
+               _this.current = 1
+               _this.getOrderList()
+            }
+          })
+        }else{
+          _this.$toast(res.msg)
+        }
+      })
+    },
+    commentClickHandler (order_id) {
+      this.$router.push({name:'OrderComment',query:{id:order_id}})
+    },
+    replayClickHandler (order_id) {
+       var _this = this
+       this.$api.goodsOrderPayOrder({order_id:order_id}).then((res)=>{
+         if (res.code === 1) {
+          //  _this.$toast({
+          //    message: res.msg,
+          //    onClose: () => {
+          //      _this.orderList = []
+          //      _this.finished = false
+          //      _this.loading = false
+          //      _this.current = 1
+          //      _this.getOrderList()
+          //    }
+          //  })
+            if (typeof WeixinJSBridge === 'undefined') {
+              if (document.addEventListener) {
+                document.addEventListener('WeixinJSBridgeReady', _this.onBridgeReady, false)
+              } else if (document.attachEvent) {
+                document.attachEvent('WeixinJSBridgeReady', _this.onBridgeReady)
+                document.attachEvent('onWeixinJSBridgeReady', _this.onBridgeReady)
+              }
+            } else {
+              _this.wxpay = res.data.pay_data
+              _this.onBridgeReady()
+            }
 
          }else{
            _this.$toast(res.msg)
@@ -183,6 +270,7 @@ export default {
     background:white;
     align-items: center;
     position: fixed;
+    z-index: 100;
     &-item{
       width:20%;
       font-size: 32px;
@@ -233,11 +321,16 @@ export default {
           padding:30px 0px;
           width:100%;
           border-bottom:1px solid #F3F3F3;
-          img{
+          .ordercontentimg{
             width:156px;
             height:130px;
             border-radius: 8px;
             margin-right:15px;
+            overflow: hidden;
+            .van-image{
+              width:100%;
+              height:100%;
+            }
           }
           .ordercenter{
             display: flex;
