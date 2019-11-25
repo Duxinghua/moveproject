@@ -8,12 +8,6 @@
         <img :src="qrurl" alt="" />
       </div>
     </div>
-    <div class="myYq-content">
-      <span>分享规则：分享邀请好友关注有梦微信号，进行商品购买可以获取一定的佣金奖励。</span>
-    </div>
-    <div class="myYq-btn">
-      分享邀请好友
-    </div>
   </div>
 </template>
 

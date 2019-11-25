@@ -18,7 +18,7 @@
               <span>{{tzDetail.user_count}}成员</span>
             </div>
           </div>
-          <img class="detail-top-imgmore" :src="tzDetail.is_join === 0 ? require('../assets/images/hgdg.png') : require('../assets/images/ygz.png')" alt="" @click="joinGroupHandler">
+          <img class="detail-top-imgmore" :src="tzDetail.is_join === 0 ? require('../assets/images/hgdg.png') : require('../assets/images/ggz.png')" alt="" @click="joinGroupHandler">
         </div>
         <span class="detail-bottom">
           {{tzDetail.description}}
@@ -84,7 +84,7 @@ export default {
           if (res.code === 1) {
             var wxpay = res.data
             wx.config({
-              debug: true,
+              debug: false,
               appId: wxpay.appId,
               timestamp: wxpay.timestamp,
               nonceStr: wxpay.nonceStr,

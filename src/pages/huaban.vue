@@ -1,7 +1,6 @@
 <template>
   <div class="huaban">
     <div class="huaban-top">
-      <button @click="test">222</button>
       <div class="huaban-top-wrap">
         <div class="huaban-top-item" v-for="(item,index) in huabanList" :key="index" @click="huabangdHandler(item.group_id)">
           <div class="huaban-top-item-img1">

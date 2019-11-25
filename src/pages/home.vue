@@ -49,7 +49,7 @@
         <MoreText moreText="更多课程" moreName="OnlineCourseList"/>
 
       </div>
-      <div class="home-video">
+      <div class="home-video" style="display:none">
         <TitleItem title="直播约课" />
         <el-carousel indicator-position="none" :interval="4000" type="card" id="home-video-carousel" @change="cardChange">
           <el-carousel-item v-for="item in videoList" :key="item.course_id">
@@ -278,7 +278,7 @@ export default {
   &-top{
     width:100%;
     height:98px;
-    background:#6D8260;
+    background:url("../assets/images/tab-bg.png") 100% 100% no-repeat;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -344,6 +344,7 @@ export default {
     display: flex;
     flex-direction: column;
     border-bottom: 15px solid #F6F3EE;
+    padding-bottom: 98px;
     &-content{
       display: flex;
       flex-direction: row;
