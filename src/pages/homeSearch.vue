@@ -9,19 +9,26 @@
       <div class="homeSearch-header-tab">
         <ul>
           <li :class="{active:cur == 0}" @click="tabHandler(0)">课程</li>
-          <li :class="{active:cur == 1}" @click="tabHandler(1)">用户</li>
+          <li :class="{active:cur == 1}" @click="tabHandler(1)">名师</li>
         </ul>
       </div>
     </div>
-    <div class="homeSearch-course-content" v-if="pageType == 0">
-      <div class="homeSearch-course">
-        <CourceItem v-for="(cource,index) in courceLists" :item="cource" :key="index" offlineDetail="/offcoursedetail"/>
+    <van-list
+      v-model="loading"
+      v-show="courceLists.length > 0 || teacherLists.length > 0"
+      :finished="finished"
+      finished-text="没有更多了"
+      :immediate-check="false"
+      @load="onLoad"
+    >
+      <div class="homeSearch-course-content" v-if="pageType == 0">
+        <div class="homeSearch-course">
+          <CourceItem v-for="(cource,index) in courceLists" :item="cource" :key="index" offlineDetail="/offcoursedetail"/>
+        </div>
       </div>
-    </div>
-    <div class="homeSearch-user-content" v-if="pageType == 1">
-      <div class="homeSearch-users">
-        <div class="homeSearch-users-item" v-for="item in userList" :key="item.id">
-          <img :src="item.img" alt="">
+      <div class="homeSearch-user-content" v-if="pageType == 1">
+        <div class="homeSearch-users" v-for="item in teacherLists" :key="item.id">
+          <!-- <img :src="item.avatar" alt="">
           <div class="user-msg">
             <p>{{item.title}}</p>
             <span>{{item.content}}</span>
@@ -29,15 +36,19 @@
           <div class="user-btn" :class="{active: item.id == status}">
             <img src="../assets/images/userfocus.png" v-if="item.id != status" alt="">
             <span @click="userFocusHandler(item.id)">{{item.id == status ? '已' : '' }}关注</span>
-          </div>
+          </div> -->
+          <TeacherMsg :msgItem="item"></TeacherMsg>
         </div>
       </div>
-    </div>
+    </van-list>
+    <!-- <NoData v-if="courceLists.length === 0 || teacherLists.length === 0" /> -->
   </div>
 </template>
 
 <script>
 import CourceItem from '@/components/courceItem.vue'
+import TeacherMsg from '@/components/teacherMsg.vue'
+import NoData from '@/components/nodata'
 
 export default {
   name: 'HomeSearch',
@@ -45,39 +56,15 @@ export default {
     return {
       status: 0,
       courceLists: [],
-      userList: [
-        {
-          id: 1,
-          img: require('../assets/images/useravatar.png'),
-          title: '花田喜事xibe',
-          content: '年少时向往远方，走的太匆忙'
-        },
-        {
-          id: 2,
-          img: require('../assets/images/useravatar.png'),
-          title: 'Anlebaby',
-          content: '年少时向往远方，走的太匆忙'
-        },
-        {
-          id: 3,
-          img: require('../assets/images/useravatar.png'),
-          title: '朝花夕拾zhanzhan',
-          content: '年少时向往远方，走的太匆忙'
-        },
-        {
-          id: 4,
-          img: require('../assets/images/useravatar.png'),
-          title: '花田喜事xibe',
-          content: '年少时向往远方，走的太匆忙'
-        }
-      ],
+      teacherLists: [],
       cur: 0,
       pageType: 0,
       current: 1,
       total: 0,
       recommend: 0,
       searchText: '',
-      loading: false
+      loading: false,
+      finished: false
     }
   },
   // mounted () {
@@ -85,10 +72,10 @@ export default {
   // },
   methods: {
     tabHandler (index) {
-      if(!this.searchText){
-        this.$toast('请输入搜索内容')
-        return
-      }
+      // if(!this.searchText){
+      //   this.$toast('请输入搜索内容')
+      //   return
+      // }
       this.cur = index
       this.pageType = index
       // this.currentIndex = arg
@@ -99,7 +86,7 @@ export default {
       this.recommend = 0
       this.total = 0
       this.getGroupLists()
-      console.log(arg,'arg')
+      // console.log(arg,'arg')
     },
     userFocusHandler (index) {
       if (this.status === 0) {
@@ -108,29 +95,17 @@ export default {
         this.status = 0
       }
     },
-    // courseList () {
-    //   const param = {
-    //     recommend: 0,
-    //     page: 1,
-    //     pageSize: 10
-    //   }
-    //   this.$api.courseList(param).then((res) => {
-    //     if (res.code === 1) {
-    //       this.courceLists = res.data.data
-    //       console.log(res.data)
-    //     }
-    //   })
-    // },
     searchHandler () {
       this.$router.push({name: 'Home'})
     },
     submit () {
-      // this.huabanList = []
+      this.courceLists= []
+      this.teacherLists= []
       this.finished = false
       this.loading = false
-      // this.current = 1
-      // this.total = 0
-      console.log(this.currentIndex,'ci')
+      this.current = 1
+      this.total = 0
+      // console.log(this.currentIndex,'ci')
       this.getGroupLists()
     },
     getGroupLists () {
@@ -151,7 +126,7 @@ export default {
           this.$toast.clear()
           if (res.code == 1) {
             this.loading = false
-            console.log(res.data)
+            // console.log(res.data)
             if (this.courceLists.length == 0) {
               // 第一次加载
               this.courceLists = res.data.data || []
@@ -165,12 +140,40 @@ export default {
               this.finished = true
             }
           }
+        }) 
+      } else if (this.pageType == 1) {
+        this.$api.teacherList(param).then((res) => {
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
+            console.log(res.data.data)
+            if (this.teacherLists.length == 0) {
+              // 第一次加载
+              this.teacherLists = res.data.data || []
+              this.total = res.data.total
+            } else if (this.teacherLists.length < this.total) {
+              // 加载更多
+              this.teacherLists = this.teacherLists.concat(res.data.data)
+            }
+            if (this.teacherLists.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
+          }
         })
+      }
+    },
+    onLoad () {
+      if (this.courceLists.length < this.total || this.teacherLists.length < this.total) {
+        this.current++
+        this.getGroupLists()
       }
     }
   },
   components: {
-    CourceItem
+    CourceItem,
+    TeacherMsg,
+    NoData
   }
 }
 </script>
@@ -178,6 +181,7 @@ export default {
 <style lang="scss" scoped>
 .homeSearch{
   background-color: #FBF8F4;
+  min-height: 100vh;
   &-header{
     width:100%;
     height:203px;
@@ -257,66 +261,12 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 25px;
-    &-item{
+    padding: 25px;
+    .offdetail-teacher-msg {
       width: 700px;
-      height: 179px;
-      background-color: #FFFFFF;
-      border-radius: 10px;
-      padding: 36px 20px;
-      margin-bottom: 15px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      img{
-        width: 107px;
-        height: 107px;
-      }
-      .user-msg{
-        width: 338px;
-        display: flex;
-        flex-direction: column;
-        p{
-          font-size: 32px;
-          color: #333333;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-        span{
-          font-size: 26px;
-          color: #999999;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-      div:last-child{
-        width: 170px;
-        height: 58px;
-        // background-color: #6D8160;
-        border: 1px solid #CDA871;
-        border-radius: 28px;
-        color: #CDA871;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        img{
-          width: 34px;
-          height: 30px;
-          margin-right: 16px;
-        }
-        span{
-          font-size: 30px;
-        }
-      }
-      div.active{
-        background-color: #6D8160;
-        border: none;
-        color: #F3D995;
-      }
+      height: 180px;
+      background-color: #fff;
+      justify-content: space-around !important;
     }
   }
 }
