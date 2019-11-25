@@ -15,7 +15,9 @@
     <div :class="autoMarge">
       <el-carousel id="huabantz-banner" :indicator-position="indicator" @change="changeTab">
         <el-carousel-item v-for="(item,index) in tzDetail.images" :key="index">
-          <img class="huabantzimg" :src="item" alt="">
+          <div class="huabantzimg" >
+          <img :src="item" alt="">
+          </div>
         </el-carousel-item>
       </el-carousel>
       <span class="huabantzind">{{(bannerLength == 1 ? 1 : index+1)+"/"+bannerLength}}</span>
@@ -284,6 +286,10 @@ export default {
     .huabantzimg{
       width:100%;
       height:552px;
+      overflow: hidden;
+      img{
+        width:100%;
+      }
     }
     .huabantzind{
       width:100px;

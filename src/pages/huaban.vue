@@ -75,6 +75,7 @@ export default {
     WxSing.init('花伴123','测试发的哈456',location.href,'https://youmeng.qixiuu.com/uploads/20191031/92c752479595ee8fbd07c3caca9dd434.png')
     this.getGroupLists({recommend:0},{data:1})
     this.getGroupLists({my:1},{data:2})
+    this.getGroupLists({recommend:1},{data:3})
     this.getPostsLists()
   },
   methods: {
@@ -92,6 +93,8 @@ export default {
             this.huabanList = res.data.data
           }else if(type.data === 2){
             this.huabanJoin = res.data.data
+          }else if(type.data === 3){
+            this.huabanJoin = this.huabanJoin.concat(res.data.data)
           }
         }
       })

@@ -215,7 +215,7 @@ export default {
       const param = {
         page: this.current,
         pageSize: 10,
-        gc_id: this.gc_id
+        group_id: this.id
       }
       this.$toast.loading({
         duration: 0,
@@ -226,14 +226,14 @@ export default {
         this.$toast.clear()
         if (res.code == 1) {
           this.loading = false
-
+          console.log(res,'list')
           if (this.huabantzlist.length == 0) {
             // 第一次加载
             var list =  res.data.data
             list.map((item)=>{
               item.image = item.images ? item.images[0]: ''
-              item.nickname = item.user.nickname
-              item.avatar = item.user.avatar
+              item.nickname = item.user ? item.user.nickname : ''
+              item.avatar = item.user ? item.user.avatar : ''
             })
 
             this.huabantzlist = list || []
@@ -243,8 +243,8 @@ export default {
             var list =  res.data.data
             list.map((item)=>{
               item.image = item.images ? item.images[0]: ''
-              item.nickname = item.user.nickname
-              item.avatar = item.user.avatar
+              item.nickname = item.user ? item.user.nickname : ''
+              item.avatar = item.user ? item.user.avatar: ''
             })
             this.huabantzlist = this.huabantzlist.concat(list)
           }

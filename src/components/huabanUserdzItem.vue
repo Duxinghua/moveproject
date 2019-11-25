@@ -163,7 +163,7 @@ export default {
         overflow: hidden;
         .van-image{
             width: 100%;
-            height: 100%;
+            // height: 100%;
         }
 
       }

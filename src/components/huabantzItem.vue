@@ -14,7 +14,9 @@
               </div>
             </div>
           </div>
-          <img class="tzright" :src="item.image" alt="">
+          <div class="tzright">
+               <img  :src="item.image" alt="">
+          </div>
   </div>
 </template>
 
@@ -98,7 +100,11 @@ export default {
       .tzright{
         width:169px;
         height:118px;
+        overflow: hidden;
         border-radius: 8px;
+        img{
+          width: 100%;
+        }
       }
 }
 </style>
