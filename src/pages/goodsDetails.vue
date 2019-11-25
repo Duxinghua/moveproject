@@ -442,6 +442,7 @@ export default {
                 return false
             }
             if (this.buyType == 'group') {
+                // this.goodsStoreCarts();//加入购物车
                 this.goodsOrderCreate(1)
             } else if(this.buyType == 'buy') {
                 this.goodsOrderCreate(2)

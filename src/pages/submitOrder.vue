@@ -41,7 +41,7 @@
             </div>
              <div class="order-item">
                 <div class="left">优惠活动</div>
-                <div class="right">原价￥{{ orderData.goods ? orderData.goods[0].price_cost : '0.00'}}</div>
+                <div class="right">原价￥{{ priceCost }}</div>
             </div>
             <div class="order-item" @click="toggle">
                 <div class="left">可用<span>{{ orderData.scoreDeduction ? orderData.scoreDeduction.score : 0}}学分</span>抵用<span>{{orderData.scoreDeduction ? orderData.scoreDeduction.deduction : 0}}</span>元</div>
@@ -72,7 +72,8 @@ export default {
             orderMoney:0,
             orderType:0,
             wx:null,
-            wxConfig:{}
+            wxConfig:{},
+            priceCost:0
         }
     },
     watch:{
@@ -80,6 +81,7 @@ export default {
             deep:true,
             handler(data){
                 let goodsTotal = 0;
+                let priceCost = 0;
                 if(data.goods && data.goods.length > 0){
                     if(this.orderType == 1){
                         this.goodsTotal = orderData.goodsTuan ? orderData.goodsTuan.goods_price : '0.00';
@@ -88,8 +90,12 @@ export default {
                     data.goods.forEach((item) => {
                         goodsTotal += item.goods_num * item.price;
                     })
+                    data.goods.forEach((item) => {
+                        priceCost += item.goods_num * item.price_cost;
+                    })
                 }
                 this.goodsTotal = goodsTotal.toFixed(2);
+                this.priceCost = priceCost.toFixed(2);
             }
         }
     },
