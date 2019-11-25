@@ -1,38 +1,48 @@
 <template>
   <div class="myTz myEdit">
-    <div class="myTz-item">
-      <div class="myTz-item-top">
-        <img class="avatar" src="../assets/images/people.png" alt="">
-        <div class="userinfo">
-          <span>朝花夕拾xixi</span>
-          <span>10小时前</span>
-        </div>
-        <img class="sd" src="../assets/images/sd.png" alt="">
-      </div>
-      <div class="myTz-item-banner">
-        <el-carousel id="huabantz-banner" indicator-position="outside" @change="changeTab">
-          <el-carousel-item v-for="item in bannerList" :key="item.id">
-            <img class="huabantzimg" :src="item.image" alt="">
-          </el-carousel-item>
-        </el-carousel>
-        <span class="huabantzind">{{(index+1)+"/"+bannerList.length}}</span>
-      </div>
-      <div class="myTz-item-detail">
-        <div class="myTz-item-detail-content">
-          <div class="des">
-            <span class="destitle">传统中式花道基础构图方式道基础构图方式道基础构图方式道基础构图方式道基础构图方式</span>
-            <div class="desico">
-              <img src="../assets/images/gzxico.png" alt="">
-              <img src="../assets/images/shareico.png" alt="">
+      <van-list
+            v-model="loading"
+            v-show="tzList.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+      >
+      <div class="myTz-item" >
+          <div class="myTz-item-top">
+            <img class="avatar" src="../assets/images/people.png" alt="">
+            <div class="userinfo">
+              <span>朝花夕拾xixi</span>
+              <span>10小时前</span>
+            </div>
+            <img class="sd" src="../assets/images/sd.png" alt="">
+          </div>
+          <div class="myTz-item-banner">
+            <el-carousel id="huabantz-banner" indicator-position="outside" @change="changeTab">
+              <el-carousel-item v-for="item in bannerList" :key="item.id">
+                <img class="huabantzimg" :src="item.image" alt="">
+              </el-carousel-item>
+            </el-carousel>
+            <span class="huabantzind">{{(index+1)+"/"+bannerList.length}}</span>
+          </div>
+        <div class="myTz-item-detail">
+          <div class="myTz-item-detail-content">
+            <div class="des">
+              <span class="destitle">传统中式花道基础构图方式道基础构图方式道基础构图方式道基础构图方式道基础构图方式</span>
+              <div class="desico">
+                <img src="../assets/images/gzxico.png" alt="">
+                <img src="../assets/images/shareico.png" alt="">
+              </div>
+            </div>
+            <div class="info">
+              相邻的花与花之间一定要注意面向的面不能出现平行线~
             </div>
           </div>
-          <div class="info">
-            相邻的花与花之间一定要注意面向的面不能出现平行线~
-          </div>
+          <input class="myTz-item-detail-input" placeholder="喜欢就评论"/>
         </div>
-        <input class="myTz-item-detail-input" placeholder="喜欢就评论"/>
-    </div>
-    </div>
+      </div>
+  </van-list>
+  <NoData v-if="tzList.length == 0" />
         <!-- 贴子 -->
     <van-popup
       v-model="tzShow"
@@ -54,11 +64,12 @@
 </template>
 
 <script>
+import NoData from '@/components/nodata.vue'
 export default {
   name: 'MyTz',
   data () {
     return {
-      tzShow: true,
+      tzShow: false,
       index: 1,
       bannerList: [
         {
@@ -77,13 +88,63 @@ export default {
           id: 4,
           image: require('../assets/images/770552.png')
         }
-      ]
+      ],
+      tzList: [],
+      finished: false,
+      loading: false,
+      current: 1,
+      total: 0
+
     }
+  },
+  components: {
+    NoData
+  },
+  mounted () {
+    this.getTzList()
   },
   methods: {
     changeTab (e) {
       this.index = e
+    },
+    getTzList () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        my: 1
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.postsLists(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
+
+          if (this.tzList.length == 0) {
+            // 第一次加载
+            this.tzList = res.data.data || []
+            this.total = res.data.total
+          } else if (this.tzList.length < this.total) {
+            // 加载更多
+            this.tzList = this.tzList.concat(res.data.data)
+          }
+          if (this.tzList.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.tzList.length < this.total) {
+        this.current++
+        this.getTzList()
+      }
     }
+
   }
 
 }

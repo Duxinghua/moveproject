@@ -1,8 +1,8 @@
 <template>
   <div class="huabanTzfp">
     <div class="huabanTzfp-top">
-      <input type="text" class="huabanTzfp-top-input" placeholder="请输入标题内容…">
-      <textarea placeholder="请输入帖子内容…"  class="huabanTzfp-top-textarea"/>
+      <input  v-model="titleName" type="text" class="huabanTzfp-top-input" placeholder="请输入标题内容…" >
+      <textarea  v-model="desContent" placeholder="请输入帖子内容…"  class="huabanTzfp-top-textarea"/>
       <span>添加图片（{{imgList.length}}/3）</span>
       <div class="huabanTzfp-top-uploads">
         <div class="uploadimgs-wrap" v-for="(item,index) in imgList" :key="index" @click="delImg(index)">
@@ -13,12 +13,6 @@
           <img src="../assets/images/uploadmores.png" class="uplaodmores" alt="" />
         </div>
       </div>
-    </div>
-    <div >
-      <ul>
-        <li v-for="(item,index) in imgList" :key="index">{{item.s}}
-        </li>
-      </ul>
     </div>
     <div class="huabanTzfp-btn" @click="postSave">确认发布</div>
   </div>
@@ -32,7 +26,11 @@ export default {
     return {
       num: 3,//上传数量
       localIds: [],
-      imgList: []
+      imgList: [],
+      titleName: '',
+      desContent: '',
+      group_id: ''
+
     }
   },
   mounted () {
@@ -44,7 +42,6 @@ export default {
     if(isiOS){
       data.url = config.shareurls
     }
-    alert(data.url)
     this.$api.userGetSignPackage(data).then((res) => {
       if (res.code === 1) {
         var wxpay = res.data
@@ -85,9 +82,49 @@ export default {
 
       }
     })
+    this.group_id = this.$route.query.id
   },
   methods: {
     postSave () {
+      var images = []
+      var _this = this
+      if(!this.titleName){
+        this.$toast('请输入标题')
+        return
+      }
+      if(!this.desContent){
+          this.$toast('请输入内容')
+          return
+      }
+      if(!this.imgList.length){
+        this.$toast('请上传图片')
+        return
+      }else{
+        this.imgList.map((item)=>{
+          images.push(item.url)
+        })
+
+      }
+      var params = {
+        title:this.titleName,
+        content:this.desContent,
+        group_id:this.group_id,
+        images:images.join()
+      }
+      alert(JSON.stringify(params))
+      this.$api.postsSave(params).then((res)=>{
+        if(res.code === 1){
+          _this.$toast({
+            message:res.msg,
+            onClose: ()=>{
+              _this.$router.go(-1)
+            }
+          })
+        }else{
+          _this.$toast(res.msg)
+        }
+      })
+
 
     },
     delImg (index) {
@@ -123,8 +160,8 @@ export default {
           isShowProgressTips: 1, // 默认为1，显示进度提示
           success: function (res) {
             var serverId = res.serverId; // 返回图片的服务器端ID
-            _this.$toast('serverId')
-            alert(res.serverId)
+            // _this.$toast('serverId')
+            // // alert(res.serverId)
             _this.getImgData(localId,serverId)
           }
       })
@@ -133,23 +170,30 @@ export default {
       const agent = navigator.userAgent
       const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
       var _this = this
-      this.$api.commonwxUpload({id:serverId}).then((res)=>{
-          alert(JSON.stringify(res))
-          alert(res.msg)
+      this.$api.commonwxUpload({id:serverId}).then((result)=>{
+          if(result.code === 1){
+            // _this.$toast({
+            //   message:result.msg,
+            //   onClose: ()=>{
+                      if(isiOS){
+                        wx.getLocalImgData({
+                              localId: localId, // 图片的localID
+                              success: function (res) {
+                                  var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
+                                  localData = localData.replace('jgp', 'jpeg');
+                                  _this.imgList.push({l:localData,s:serverId,url:result.data.url})
+                              }
+                        });
+                      }else{
+                        _this.imgList.push({l:localId,s:serverId,url:result.data.url})
+                      }
+                      _this.num --
+            //   }
+            // })
+          }else{
+            _this.$toast(result.msg)
+          }
       })
-      if(isiOS){
-        wx.getLocalImgData({
-              localId: localId, // 图片的localID
-              success: function (res) {
-                  var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
-                  localData = localData.replace('jgp', 'jpeg');
-                  _this.imgList.push({l:localData,s:serverId})
-              }
-        });
-      }else{
-        _this.imgList.push({l:localId,s:serverId})
-      }
-      _this.num --
     }
 
   }
