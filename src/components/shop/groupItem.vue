@@ -15,7 +15,8 @@
             <div class="lack">还差<em>{{groupData.user_number - groupData.current_number}}人</em>拼成</div>
             <div class="time">剩余<van-count-down :time="groupData.expire_time ? (groupData.expire_time - groupTime) * 1000 : 0" /></div>
         </div>
-        <div class="group-btn" @click="onLook">查看</div>
+        <div class="group-btn group-active" v-if="groupData.my == 1" @click="onLook">查看</div>
+        <div class="group-btn" v-if="groupData.my != 1" @click="onLook">去拼团</div>
     </div>
 </template>
 
@@ -131,11 +132,15 @@ export default {
     .group-btn{
         width: 170px;
         height: 60px;
-        background: url('../../assets/images/group-bg.png') 100%/100% no-repeat;
+        background: #CEAA76;
         text-align: center;
         line-height: 60px;
         color: #FFFFFF;
         font-size: 28px;
+        border-radius: 1rem;
+    }
+    .group-active{
+        background: #758769;
     }
 }
 </style>
