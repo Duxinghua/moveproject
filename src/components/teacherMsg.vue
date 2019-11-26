@@ -6,9 +6,9 @@
       <p>{{msgItem.keywords}}</p>
     </div>
     <!-- <span class="offdetail-teacher-btn">已关注</span> -->
-    <div class="user-btn" :class="{active: msgItem.id == status}" @click="userFocusHandler(msgItem.id)">
-      <img src="../assets/images/userfocus.png" v-if="msgItem.id != status" alt="">
-      <span>{{msgItem.id == status ? '已' : '' }}关注</span>
+    <div class="user-btn" :class="{active: msgItem.amity == status}" @click="userFocusHandler(msgItem.amity,msgItem.id)">
+      <img src="../assets/images/userfocus.png" v-if="msgItem.amity != status" alt="">
+      <span>{{msgItem.amity == status ? '已' : '' }}关注</span>
     </div>
   </div>
 </template>
@@ -18,7 +18,7 @@ export default {
   name: 'TeacherMsg',
   data () {
     return {
-      status: 0
+      status: 1
     }
   },
   props: {
@@ -31,11 +31,23 @@ export default {
     // console.log(msgItem.name);
   },
   methods: {
-    userFocusHandler (index) {
-      if (this.status === 0) {
-        this.status = index
+    userFocusHandler (amity,index) {
+      this.$api.teacherLike({teacher_id: index}).then(res => {
+        if (res.code === 1 ) {
+          this.$toast({
+            message: res.msg
+          })
+          // console.log(res)
+        }
+      })
+      if (this.status == amity) {
+        if (amity == 1) {
+          this.status = 0
+        }else if (amity == 0) {
+          this.status = 1
+        }
       } else {
-        this.status = 0
+        this.status = amity
       }
     },
   }

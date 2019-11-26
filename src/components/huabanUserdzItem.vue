@@ -58,7 +58,7 @@ export default {
       return tim.getFullYear() + '-' + (tim.getMonth() + 1) + '-' + (tim.getDate().length == 1 ? 0 + tim.getDate() : tim.getDate()) + ' ' + tim.getHours() + ':' + tim.getMinutes()
     },
     userInfoHandler () {
-      this.$router.push({name: 'HuabanUserInfo'})
+      this.$router.push({name: 'HuabanUserInfo',query:{id:this.item.user_id}})
     }
   }
 }
@@ -163,7 +163,7 @@ export default {
         overflow: hidden;
         .van-image{
             width: 100%;
-            height: 100%;
+            // height: 100%;
         }
 
       }

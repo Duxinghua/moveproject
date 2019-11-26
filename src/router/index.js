@@ -4,6 +4,7 @@ import Api from '@/api/index'
 import Router from 'vue-router'
 import Home from '@/pages/home'
 import HomeSearch from '@/pages/homeSearch'
+import TeacherList from '@/pages/teacherList'
 import TeacherDetail from '@/pages/teacherDetail'
 import OffCourseList from '@/pages/offCourseList'
 import OffCourseDetail from '@/pages/offCourseDetail'
@@ -206,6 +207,14 @@ const router = new Router({
       component: OnlineCourseList,
       meta: {
         title: '线上课程'
+      }
+    },
+    {
+      path: '/teacherList',
+      name: 'TeacherList',
+      component: TeacherList,
+      meta: {
+        title: '名师列表'
       }
     },
     {
@@ -439,7 +448,7 @@ const router = new Router({
       name: 'MyYy',
       component: MyYy,
       meta: {
-        title: '我的预约'
+        title: '课程中心'
       }
     },
     {
@@ -535,7 +544,7 @@ const router = new Router({
       name: 'shopHome',
       component: () => import('@/pages/shopHome'),
       meta: {
-        title: '有梦花居',
+        title: '商城',
         keepAlive: true
       }
     },
@@ -616,7 +625,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   // next()
-  // return
+  // return;
   console.log(to)
   // getSitem.remove('token')
   // getSitem.remove('mobile')

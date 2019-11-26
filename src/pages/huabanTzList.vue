@@ -61,8 +61,8 @@ export default {
               var list =  res.data.data
               list.map((item)=>{
               item.image = item.images ? item.images[0]: ''
-              item.nickname = item.user.nickname
-              item.avatar = item.user.avatar
+              item.nickname = item.user ? item.user.nickname : ''
+              item.avatar = item.user ? item.user.avatar : ''
             })
             this.huabanList = list
             this.total = res.data.total
@@ -71,8 +71,8 @@ export default {
             var list =  res.data.data
               list.map((item)=>{
               item.image = item.images ? item.images[0]: ''
-              item.nickname = item.user.nickname
-              item.avatar = item.user.avatar
+              item.nickname = item.user ? item.user.nickname : ''
+              item.avatar = item.user ? item.user.avatar : ''
             })
             this.huabanList = this.huabanList.concat(list)
           }
@@ -104,7 +104,7 @@ export default {
   background:#F9F5EE;
   min-height: 100vh;
   &-content{
-    margin-top:126px;
+    margin-top:26px;
     display: flex;
     flex-direction: column;
     padding-right:26px;

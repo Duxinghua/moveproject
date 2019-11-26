@@ -1,13 +1,13 @@
 <template>
   <div class="huabanUserItem" >
-            <div class="avatar">
+            <div class="avatar"  @click="userInfoHandler">
               <van-image :src="item.avatar">
                 <template v-slot:loading>
                     <van-loading type="spinner" size="20" />
                 </template>
               </van-image>
             </div>
-            <img class="avatar" :src="item.avatar" alt="" @click="userInfoHandler">
+            <!-- <img class="avatar" :src="item.avatar" alt=""> -->
             <div class="huabanUserItem-center" @click="userInfoHandler">
                 <span class="user">{{item.nickname}}</span>
                 <span class="userinfo">{{item.bio}}</span>

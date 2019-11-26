@@ -25,7 +25,7 @@
         <div class="right">¥{{detail.total}}</div>
       </div>
     </div>
-    <div class="submit-order-msg">
+    <div class="submit-order-msg" v-if="this.type == 1">
       <div class="title">订单信息</div>
       <div class="msg-info">
         <div class="lf">姓名</div>
@@ -47,6 +47,23 @@
         <div class="lf">下单时间</div>
         <div class="rg">2019-10-29 16:50</div>
       </div> -->
+    </div>
+    <div class="order-commit" v-if="this.type == 2">
+      <div class="order-commit-notice">本活动为实名制活动，如填写有误，您将无法参与所报名的活动。为保障您的自身利益，请仔细核对身份信息。</div>
+      <div class="order-commit-content">
+        <div>
+          <input type="text" placeholder="请输入真实姓名">
+          <img src="../assets/images/ordername.png" alt="">
+        </div>
+        <div>
+          <input type="tel" placeholder="请输入您的手机号码">
+          <img src="../assets/images/ordertel.png" alt="">
+        </div>
+        <div>
+          <input type="text" placeholder="请输入身份证号">
+          <img src="../assets/images/ordercard.png" alt="">
+        </div>
+      </div>
     </div>
     <div class="buy-box">
       <div class="money">需支付<span>￥{{detail.total}}</span></div>
@@ -98,7 +115,12 @@ export default {
         }
       })
     }else if(this.type == 2){
-
+      this.$api.courseOrderPreview({course_id:this.course_id}).then((res)=>{
+        if(res.code == 1){
+          this.detail = res.data
+          console.log(res.data)
+        }
+      })
     }
   },
   methods: {
@@ -264,6 +286,62 @@ export default {
       }
     }
   }
+  .order-commit{
+    // background: #F6F3EE;
+    // padding-bottom: 100px;
+    // height: 100vh;
+    overflow-x: hidden;
+    overflow: auto;
+    &-notice{
+      // width: 650px;
+      // height: 65px;
+      margin: 40px auto;
+      font-size: 26px;
+      color: #333333;
+      line-height: 38px;
+    }
+    &-content{
+      // width: 700px;
+      // height: 460px;
+      background-color: #fff;
+      border-radius: 12px;
+      // margin: 0 25px;
+      padding: 46px 34px;
+      // padding-top: 38px;
+      // padding-bottom: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      div{
+        width: 100%;
+        height: 73px;
+        border: 1px solid #F1F1F1;
+        border-radius: 36px;
+        font-size: 26px;
+        position: relative;
+        margin-bottom: 25px;
+        input{
+          width: 100%;
+          height: 100%;
+          padding-left: 90px;
+          border-radius: 36px;
+          background-color: #F8F8F8;
+          color: #999999;
+          border: none;
+        }
+        img{
+          width: 34px;
+          height: 34px;
+          position: absolute;
+          top:50%;
+          transform: translateY(-50%);
+          left: 30px;
+        }
+      }
+    }
+  }
+  
   .buy-box{
     position: fixed;
     left: 0px;

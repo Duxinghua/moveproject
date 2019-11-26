@@ -15,7 +15,9 @@
     <div :class="autoMarge">
       <el-carousel id="huabantz-banner" :indicator-position="indicator" @change="changeTab">
         <el-carousel-item v-for="(item,index) in tzDetail.images" :key="index">
-          <img class="huabantzimg" :src="item" alt="">
+          <div class="huabantzimg" >
+          <img :src="item" alt="">
+          </div>
         </el-carousel-item>
       </el-carousel>
       <span class="huabantzind">{{(bannerLength == 1 ? 1 : index+1)+"/"+bannerLength}}</span>
@@ -55,7 +57,8 @@
       </div>
     </div>
     <div class="huabantz-commit">
-      <input type="text" v-model="content" class="huabantz-commit-input" placeholder="喜欢就评论…" @keyup.enter="submit">
+      <input type="text" v-model="content" class="huabantz-commit-input" placeholder="喜欢就评论…" >
+      <span @click="submit">发送</span>
     </div>
   </div>
 </template>
@@ -284,6 +287,10 @@ export default {
     .huabantzimg{
       width:100%;
       height:552px;
+      overflow: hidden;
+      img{
+        width:100%;
+      }
     }
     .huabantzind{
       width:100px;
@@ -380,10 +387,20 @@ export default {
   }
   &-commit{
     display: flex;
-    flex-direction: column;
+    flex-direction: row ;
+    justify-content: space-between;
+    align-items: center;
     padding-bottom: 1rem;
+    padding-left:26px;
+    padding-right:26px;
+    width:100%;
+    span{
+      font-size: 26px;
+      color:#333;
+      margin-left:26px
+    }
     &-input{
-      width:700px;
+      flex:1;
       height:88px;
       background:rgba(242,239,234,1);
       border-radius:44px;

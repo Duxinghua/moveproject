@@ -22,6 +22,7 @@
       </div>
     </div>
     <div class="userinfo-content">
+      <!-- finished-text="没有更多了" -->
       <van-list
             v-model="loading"
             v-show="huabanList.length > 0"
@@ -31,7 +32,13 @@
             @load="onLoad"
       >
       <div class="userinfo-content-item" v-if="currentIndex === 0" v-for="(item,index) in huabanList" :key="index">
-        <img :src="item.image" alt="">
+         <div class="itemimg">
+              <van-image :src="item.image">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+         </div>
         <span class="title">{{item.title}}</span>
         <div class="like">
             <img class="avatar" :src="item.avatar" alt="">
@@ -41,8 +48,14 @@
         </div>
 
       </div>
-      <div class="userinfo-content-imgitem" v-if="currentIndex === 1">
-        <img src="../assets/images/userinfophoto.png" alt="">
+      <div class="userinfo-content-imgitem" v-if="currentIndex === 1"  v-for="(item,index) in huabanList" :key="index">
+        <div class="itemimg">
+              <van-image :src="item.url">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+         </div>
       </div>
       </van-list>
       <div class="no-more">
@@ -287,23 +300,40 @@ export default {
     box-sizing: border-box;
     flex-direction: column;
     .van-list{
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      flex-wrap: wrap;
+      // display: flex;
+      // flex-direction: row;
+      // justify-content: flex-start;
+      // flex-wrap: wrap;
+      -moz-column-count:2; /* Firefox */
+      -webkit-column-count:2; /* Safari 和 Chrome */
+      column-count:2;
+      -moz-column-gap: 24px;
+      -webkit-column-gap:24px;
+      column-gap: 24px;
+      column-width:339px;
+
     }
     &-item{
-      width:339px;
-      display: flex;
-      flex-direction: column;
+      // width:339px;
+      // display: flex;
+      // flex-direction: column;
+      // margin-bottom: 24px;
+      // margin-right: 24px;
+      // background:#FFFFFF;
+      // border-radius: 8px;
+      float: left;
       margin-bottom: 24px;
-      margin-right: 24px;
-      background:#FFFFFF;
-      border-radius: 8px;
-      img{
-        width:339px;
-        height:292px;
+      -moz-page-break-inside: avoid;
+      -webkit-column-break-inside: avoid;
+      break-inside: avoid;
+      .itemimg{
+        width:100%;
+        height:auto;
         border-radius: 8px 8px 0 0;
+        .van-image{
+          width: 100%;
+          height: auto;
+        }
       }
       .title{
         font-size: 30px;
@@ -351,13 +381,15 @@ export default {
       }
     }
     &-imgitem{
-      width:339px;
-      height:436px;
-      img{
+      .itemimg{
         width:100%;
-        height:100%;
+        height:auto;
         border-radius: 8px;
-      }
+        .van-image{
+          width: 100%;
+          height: auto;
+       }
+     }
     }
   }
 

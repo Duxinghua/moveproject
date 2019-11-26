@@ -3,10 +3,10 @@
     <div class="course-swiper">
       <van-swipe :autoplay="10000">
         <van-swipe-item
-            v-for="(image, index) in courseDetails.image"
+            v-for="(itemimg, index) in courseDetails.image"
             :key="index"
         >
-            <van-image :src="image">
+            <van-image :src="itemimg">
                 <template v-slot:loading>
                     <van-loading type="spinner" size="20" />
                 </template>
@@ -86,7 +86,7 @@
     <div class="goods-action">
       <div class="goods-money">合计<span>￥</span></div>
       <div>
-        <div class="goods-group-btn" >发起拼团</div>
+        <div class="goods-group-btn" @click="onBuy(courseId)">发起拼团</div>
         <div class="goods-buy-btn" @click="onBuy(courseId)">立即购买</div>
       </div>
     </div>
@@ -157,14 +157,16 @@ export default {
         forbidClick: true
       })
       this.$api.courseDetail(param).then((res) => {
+        console.log(res,'resdata')
         this.$toast.clear()
         if (res.code == 1) {
           this.courseDetails = res.data
+
           this.courseOffline = res.data.courseOffline
           this.msgItem = res.data.admin
-          this.tecImg = res.data.adminOpus
+          this.tecImg = res.data.adminOpus ? res.data.adminOpus : []
           // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
-          console.log(res.data)
+          // console.log(res.data.admin)
         }
       })
     },
@@ -186,7 +188,8 @@ export default {
     },
     onBuy (courseId) {
       // const courseId = this.courseId
-      this.$router.push({path: '/orderCommit', query: {courseId}})
+      // this.$router.push({path: '/orderCommit', query: {courseId}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2}})
     }
   },
   components: {

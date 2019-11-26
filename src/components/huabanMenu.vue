@@ -34,7 +34,7 @@ export default {
 .home-top{
     width:100%;
     height:98px;
-    background:#6D8260;
+    background: url('../assets/images/tab-bg.png') no-repeat;
     display: flex;
     flex-direction: row;
     align-items: center;

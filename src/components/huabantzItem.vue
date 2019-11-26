@@ -14,7 +14,14 @@
               </div>
             </div>
           </div>
-          <img class="tzright" :src="item.image" alt="">
+          <div class="tzright">
+               <!-- <img  :src="item.image" alt=""> -->
+              <van-image :src="item.image">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+          </div>
   </div>
 </template>
 
@@ -75,6 +82,7 @@ export default {
           color:#999999;
           font-size: 24px;
           margin-top: 16px;
+          align-items: center;
           .tzavatar{
             width:40px;
             height:40px;
@@ -98,7 +106,12 @@ export default {
       .tzright{
         width:169px;
         height:118px;
+        overflow: hidden;
         border-radius: 8px;
+        .van-image{
+          width: 100%;
+          // height: 100%;
+        }
       }
 }
 </style>

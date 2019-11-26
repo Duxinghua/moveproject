@@ -259,6 +259,10 @@ const server = {
   postsSaveLike (data) {
     return post('posts/saveLike', data)
   },
+  // 删除帖子 /api/posts/del
+  postsDel (data) {
+    return post('posts/del', data)
+  },
   // 贴子列表 posts/lists
   postsLists (data) {
     return post('posts/lists', data)
@@ -301,7 +305,15 @@ const server = {
   },
   // 确认收货 /api/goods_order/receiveGoods
   goodsOrderReceiveGoods (data) {
-    return post('goods_order/receiveGoods',data)
+    return post('goods_order/receiveGoods', data)
+  },
+  // 获取自定义评论 goods/getGoodsCommentWords
+  getGoodsCommentWords (data) {
+    return post('goods/getGoodsCommentWords', data)
+  },
+  // 商品评论 /goods/storeComments
+  goodsStoreComments (data) {
+    return post('goods/storeComments', data)
   },
   // 订单列表 /api/course_order/lists
   courseOrderList (data) {
@@ -327,7 +339,7 @@ const server = {
   courseList (data) {
     return post('course/lists', data)
   },
-  // 课程详情 /api/course/indexindex/lists
+  // 课程详情 /api/course/index
   courseDetail (data) {
     return post('course/index', data)
   },
@@ -339,9 +351,13 @@ const server = {
   flowers (data) {
     return post('course/materials', data)
   },
-  // 课程评论 /api/course/comments
+  // 线上课程评论 /api/course/comments
   courseComment (data) {
     return post('course/comments', data)
+  },
+  // 线上课程评论点赞 /api/course/saveLike
+  courseSaveLike (data) {
+    return post('course/saveLike', data)
   },
   // 线下课程预约 /api/course/appoint
   courseAppoint (data) {
@@ -367,9 +383,17 @@ const server = {
   teacherWorksList (data) {
     return post('teacher/opusLists', data)
   },
+  // 名师关注 /api/teacher/saveFollow
+  teacherLike (data) {
+    return post('teacher/saveFollow', data)
+  },
   // 线上课程预览接口 /api/course_order/preview
   courseOrderPreview (data) {
     return get('course_order/preview', data)
+  },
+  // 我加入的 api/group/getMyGroup
+  getMyGroup (data) {
+    return post('group/getMyGroup', data)
   }
 }
 

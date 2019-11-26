@@ -39,7 +39,7 @@
             </div>
           </el-carousel-item>
         </el-carousel>
-        <MoreText moreText="更多名师" />
+        <MoreText moreText="更多名师" moreName="TeacherList"/>
       </div>
       <div class="home-course home-onlinecourse">
         <TitleItem title="线上课程" />
@@ -49,11 +49,11 @@
         <MoreText moreText="更多课程" moreName="OnlineCourseList"/>
 
       </div>
-      <div class="home-video">
+      <div class="home-video" >
         <TitleItem title="直播约课" />
         <el-carousel indicator-position="none" :interval="4000" type="card" id="home-video-carousel" @change="cardChange">
-          <el-carousel-item v-for="item in videoList" :key="item.course_id">
-            <img  class="home-video-img" :src="item.image[0]" />
+          <el-carousel-item v-for="(item,index) in videoLists" :key="index">
+            <img  class="home-video-img" :src="item" />
           </el-carousel-item>
         </el-carousel>
         <div class="home-video-course">
@@ -133,6 +133,11 @@ export default {
       page: 1,
       loading: false,
       finished: false,
+      videoLists: [
+        require('../assets/images/1.png'),
+        require('../assets/images/2.png'),
+        require('../assets/images/3.png')
+      ]
     }
   },
   mounted () {
@@ -264,7 +269,7 @@ export default {
   height:380px !important;
 }
 #home-teacher-carousel{
-  height:212px !important;
+  height:230px !important;
   margin-bottom: 26px;
 }
 #home-video-carousel{
@@ -278,7 +283,7 @@ export default {
   &-top{
     width:100%;
     height:98px;
-    background:#6D8260;
+    background:url("../assets/images/tab-bg.png") 100% 100% no-repeat;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -344,6 +349,7 @@ export default {
     display: flex;
     flex-direction: column;
     border-bottom: 15px solid #F6F3EE;
+    padding-bottom: 30px;
     &-content{
       display: flex;
       flex-direction: row;
@@ -360,7 +366,24 @@ export default {
   &-teacher{
     display: flex;
     flex-direction: column;
+    padding-bottom: 30px;
     border-bottom: 15px solid #F6F3EE;
+    /deep/ .el-carousel__arrow {
+      font-size: 36px;
+      color:#697D5D;
+    }
+    /deep/ .el-carousel__arrow--left{
+      // width:21px;
+      // height:39px;
+      background: transparent;
+      // background:url('../assets/images/left.png') no-repeat;
+    }
+    /deep/ .el-carousel__arrow--right{
+      // width:21px;
+      // height:39px;
+      background: transparent;
+      // background:url('../assets/images/right.png') no-repeat;
+    }
     &-item{
       display: flex;
       flex-direction: row;

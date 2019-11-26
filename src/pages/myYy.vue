@@ -25,10 +25,10 @@
         </div>
       </van-list>
       <NoData v-if="orderList.length === 0" />
-      <video width="320"  controls="controls" poster="https://www.baidu.com/img/bd_logo1.png?qua=high">
+      <!-- <video width="320"  controls="controls" poster="https://www.baidu.com/img/bd_logo1.png?qua=high">
               <source src="http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4" type="video/mp4">
               Your browser does not support the video tag.
-      </video>
+      </video> -->
   </div>
 </template>
 
