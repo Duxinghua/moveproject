@@ -66,7 +66,6 @@ export default {
             num:1,
             radio:"2",
             checked:false,
-            orderId:0,
             orderData:{},
             goodsTotal:0,
             orderMoney:0,
@@ -84,7 +83,7 @@ export default {
                 let priceCost = 0;
                 if(data.goods && data.goods.length > 0){
                     if(this.orderType == 1){
-                        this.goodsTotal = orderData.goodsTuan ? orderData.goodsTuan.goods_price : '0.00';
+                        this.goodsTotal = this.orderData.goodsTuan ? this.orderData.goodsTuan.goods_price : '0.00';
                         return
                     }
                     data.goods.forEach((item) => {
@@ -126,8 +125,7 @@ export default {
         });
     },
     mounted(){
-        const {orderId,type} = this.$route.query;
-        this.orderId = orderId;
+        const {type} = this.$route.query;
         this.orderType = type;
         this.getAddressList();
         this.goodsOrderCreate();
@@ -183,7 +181,7 @@ export default {
             this.$api.goodsOrderStore(param).then((res) => {
                 if(res.code == 1){
                     const pay_data = res.data.pay_data;
-                    this.wxPay(pay_data)
+                    this.wxPay(pay_data,res.data.order_id)
                 }else{
                     this.$toast(res.msg);
                 }
@@ -228,8 +226,9 @@ export default {
                 }
             })
         },
-        wxPay(wxmsg){
+        wxPay(wxmsg,order_id){
             const _this = this;
+            // _this.tuanInfo(order_id)
             this.wx.chooseWXPay({
                 appId: wxmsg.appId,
                 timestamp: wxmsg.timeStamp,
@@ -239,9 +238,13 @@ export default {
                 paySign: wxmsg.paySign, // 支付签名
                 success: function (res) {
                     // 支付成功的回调函数
-                    _this.$router.push({
-                        path:'/orderlist'
-                    })
+                    if(_this.orderType == 1){
+                        _this.tuanInfo(order_id)
+                    }else{
+                        _this.$router.push({
+                            path:'/orderlist'
+                        })
+                    }
                 },
                 cancel: function (res) {
                     // 支付取消的回调函数
@@ -253,6 +256,19 @@ export default {
                     // 支付失败的回调函数
                     _this.$router.push({
                         path:'/orderlist'
+                    })
+                }
+            })
+        },
+        tuanInfo(order_id){
+            this.$api.tuanInfo({order_id}).then((res) => {
+                if(res.code == 1){
+                    this.$router.push({
+                        path:'/groupDetails',
+                        query:{
+                            id:this.orderData.goodsTuan.t_id,
+                            tuanStatus:res.data.success
+                        }
                     })
                 }
             })

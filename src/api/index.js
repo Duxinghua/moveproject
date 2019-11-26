@@ -90,7 +90,13 @@ const server = {
 	 */
 	goodsDelCarts(data) {
 		return post('/goods/delCarts', data);
-	},
+  },
+  /**
+	 * 拼团状态
+	 */
+  tuanInfo(data) {
+    return post('/goods_order/tuanInfo', data)
+  },
 	/**
 	 * 商品拼团详情
 	 */

@@ -45,7 +45,7 @@
             </div>
 
             <div class="goods-list">
-                <div class="goods-item" v-for="(item, index) in groupList" :key="index" :groupTime="groupTime">
+                <div class="goods-item" v-for="(item, index) in groupList" :key="index">
                     <div class="img"><img :src="item.images && item.images[0]" alt=""></div>
                     <div class="content">
                         <div class="title">{{item.goods_name}}</div>
@@ -94,6 +94,28 @@
                 </div>
             </div>
         </van-popup>
+
+        <van-overlay :show="overlayStatus" @click="hideOverlay">
+            <div class="wrapper" @click.stop>
+                <div class="tuan-wrapper">
+                    <div class="tuan-status"><img src="../assets/images/select.png" alt=""><span>{{tuanStatus == 0 ? '已支付' : '拼团成功'}}</span></div>
+                    <div :class="['group-list',{'list-active1':groupDetails.user_number == 2,'list-active':groupDetails.user_number == 3}]">
+                        <div class="group-item" v-for="(item, index) in groupDetails.users" :key="index">
+                            <div class="img"><img :src="item.avatar" alt=""></div>
+                            <div class="tag" v-if="index == 0">团长</div>
+                        </div>
+                        <div class="group-item active" v-for="(item, index) in ((groupDetails.user_number - groupDetails.users.length) || [])" :key="'active' + index">
+                            <img src="../assets/images/doubt.png" alt="">
+                        </div>
+                    </div>
+                    <div class="goods-time" v-if="tuanStatus == 0">
+                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="groupDetails.expire_time * 1000" />后结束
+                    </div>
+                    <div class="tuan-share" @click="onLink">{{tuanStatus == 0 ? '邀请好友拼团' : '继续逛逛'}}</div>
+                    <div class="tuan-link" @click="onLinkOrder"><span>查看订单</span><van-icon name="arrow" /></div>
+                </div>
+            </div>
+        </van-overlay>
     </div>
 </template>
 
@@ -101,6 +123,8 @@
 export default {
   data() {
         return {
+            tuanStatus:1,//1是拼团成功 0 是支付成功
+            overlayStatus:false,
             popupStatus:false,
             goodsNum:1,
             skuIndex:-1,
@@ -110,16 +134,38 @@ export default {
             groupDetails:{
               users:[]
             },
-            groupList:[]
-
+            groupList:[],
         }
   },
   mounted () {
-    this.groupId = this.$route.query.id
+    const {tuanStatus,id} = this.$route.query
+    this.groupId = id
+    this.tuanStatus = tuanStatus;
     this.goodsTuan()
 
+    if(tuanStatus){
+        setTimeout(() => {
+            this.overlayStatus = true;
+        },500)
+    }
+    
   },
   methods:{
+      onLink(){
+          if(this.tuanStatus == 1){
+              this.$router.push({
+                path:'/shopHome'
+            })
+          }
+      },
+      onLinkOrder(){
+          this.$router.push({
+                path:'/orderlist'
+            })
+      },
+        hideOverlay(){
+            this.overlayStatus = false;
+        },
         onLinkDetails(id){
             this.$router.push({
                 path:'/goodsDetails',
@@ -139,7 +185,7 @@ export default {
                 if(res.code == 1){
                     this.groupDetails = res.data;
                     this.goodsData = res.data.goods || {};
-                    this.skuList = res.data.goods.specs || [];
+                    this.skuList = res.data.goods ? res.data.goods.specs : [];
                     this.groupList = res.data.hot || [];
                 }
             })
@@ -181,6 +227,135 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  .tuan-wrapper{
+    width: 600px;
+    height: 585px;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 40px;
+    .tuan-status{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 50px;
+        img{
+            width: 40px;
+            height: 40px;
+        }
+        span{
+            color: #6D8160;
+            font-size: 30px;
+            margin-left: 10px;
+        }
+    }
+    .tuan-share{
+        width: 435px;
+        height: 88px;
+        line-height: 88px;
+        text-align: center;
+        border-radius: 50px;
+        color: #F3D995;
+        font-size: 36px;
+        margin: 0 auto;
+        margin-top: 70px;
+        margin-bottom: 35px;
+        background: #6B8162;
+    }
+    .tuan-link{
+        color: #333333;
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+  }
+}
+.group-list{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .group-item{
+        width: 100px;
+        height: 100px;
+        position: relative;
+        .img{
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            img{
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .tag{
+            position: absolute;
+            padding: 5px 9px;
+            color: #fff;
+            font-size: 24px;
+            background: #995258;
+            border-radius: 20px;
+            right: 0px;
+            top: -20px;
+        }
+    }
+    .active{
+        border: 1Px dotted #DCDCDC;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img{
+            width: 26px;
+            height: 42px;
+        }
+    }
+}
+.list-active{
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.list-active1{
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.goods-time{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333333;
+    font-size: 26px;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    img{
+        width: 28px;
+        height: 28px;
+        margin-right: 10px;
+    }
+    span{
+        color: #995258;
+    }
+}
+.goods-submit{
+    width: 625px;
+    height: 85px;
+    background: #738266;
+    border-radius: 50px;
+    text-align: center;
+    line-height: 85px;
+    font-size: 36px;
+    color: #F3D995;
+    margin-left: auto;
+    margin-right: auto;
+}
 .group-details{
     width: 100%;
     min-height: 100vh;
@@ -238,86 +413,10 @@ export default {
     .goods-group{
         background: #FBF8F5;
         margin-top: 20px;
-        padding: 60px;
-        .group-list{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            .group-item{
-                width: 100px;
-                height: 100px;
-                position: relative;
-                .img{
-                    width: 100px;
-                    height: 100px;
-                    border-radius: 50%;
-                    overflow: hidden;
-                    img{
-                        width: 100%;
-                        height: 100%;
-                    }
-                }
-                .tag{
-                    position: absolute;
-                    padding: 5px 9px;
-                    color: #fff;
-                    font-size: 24px;
-                    background: #995258;
-                    border-radius: 20px;
-                    right: 0px;
-                    top: -20px;
-                }
-            }
-            .active{
-                border: 1Px dotted #DCDCDC;
-                border-radius: 50%;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                img{
-                    width: 26px;
-                    height: 42px;
-                }
-            }
-        }
-        .list-active{
-            width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .list-active1{
-            width: 300px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .goods-time{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #333333;
-            font-size: 26px;
-            margin-top: 30px;
-            margin-bottom: 40px;
-            img{
-                width: 28px;
-                height: 28px;
-                margin-right: 10px;
-            }
-            span{
-                color: #995258;
-            }
-        }
-        .goods-submit{
-            width: 625px;
-            height: 85px;
-            background: #738266;
-            border-radius: 50px;
-            text-align: center;
-            line-height: 85px;
-            font-size: 36px;
-            color: #F3D995;
-        }
+        padding: 0px 30px;
+        padding-top: 60px;
+        padding-bottom: 60px;
+        
         .goods-process{
             color: #666666;
             font-size: 24px;
