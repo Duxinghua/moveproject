@@ -86,7 +86,7 @@
     <div class="goods-action">
       <div class="goods-money">合计<span>￥</span></div>
       <div>
-        <div class="goods-group-btn" >发起拼团</div>
+        <div class="goods-group-btn" @click="onBuy(courseId)">发起拼团</div>
         <div class="goods-buy-btn" @click="onBuy(courseId)">立即购买</div>
       </div>
     </div>
@@ -164,7 +164,7 @@ export default {
           this.msgItem = res.data.admin
           this.tecImg = res.data.adminOpus
           // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
-          console.log(res.data)
+          console.log(res.data.admin)
         }
       })
     },
@@ -186,7 +186,8 @@ export default {
     },
     onBuy (courseId) {
       // const courseId = this.courseId
-      this.$router.push({path: '/orderCommit', query: {courseId}})
+      // this.$router.push({path: '/orderCommit', query: {courseId}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2}})
     }
   },
   components: {
