@@ -54,6 +54,16 @@
           <span class="btn" v-if="order_detail.status == 3 && order_detail.is_comment == 0">评价</span>
       </div>
     </div>
+    <div class="orderdetail-tuan" v-if="order_detail.t_id != 0 && order_detail.goodsTuan">
+      <span>拼团成功</span>
+      <div class="avatars">
+        <img :src="itemav.avatars" alt="" v-for="(itemav,index) in order_detail.goodsTuan" :key="index">
+        <!-- <img src="../assets/images/img2.png" alt="">
+        <img src="../assets/images/img3.png" alt=""> -->
+        <img src="../assets/images/img4.png" alt="">
+      </div>
+      <img class="fx" src="../assets/images/fx.png" alt="">
+    </div>
     <div class="orderdetail-content">
       <div class="header">
         <span>
@@ -222,6 +232,62 @@ export default {
   flex-direction: column;
   min-height: 100vh;
   background: #FBF8F4;
+  &-tuan{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height:147px;
+    width:100%;
+    background: white;
+    margin-top:15px;
+    font-size: 30px;
+    color:#333333;
+    padding:0 26px;
+    .fx{
+      width:17px;
+      height:30px;
+    }
+    .avatars{
+      display: flex;
+      height:76px;
+      width:243px;
+      position: relative;
+      margin-left:269px;
+      img:nth-child(1){
+        width:76px;
+        height:76px;
+        position: absolute;
+        left:0;
+        top:0;
+        z-index: 1;
+      }
+      img:nth-child(2){
+        width:76px;
+        height:76px;
+        position: absolute;
+        left:52px;
+        top:0;
+        z-index: 2;
+      }
+      img:nth-child(3){
+        width:76px;
+        height:76px;
+        position: absolute;
+        left:111px;
+        top:0;
+        z-index: 3;
+      }
+      img:nth-child(4){
+        width:76px;
+        height:76px;
+        position: absolute;
+        left:167px;
+        top:0;
+        z-index: 4;
+      }
+    }
+  }
   &-top{
    display: flex;
    flex-direction: column;

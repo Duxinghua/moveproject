@@ -439,7 +439,7 @@ const router = new Router({
       name: 'MyYy',
       component: MyYy,
       meta: {
-        title: '我的预约'
+        title: '课程中心'
       }
     },
     {
@@ -615,8 +615,8 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
-  return;
+  // next()
+  // return;
   console.log(to)
   // getSitem.remove('token')
   // getSitem.remove('mobile')

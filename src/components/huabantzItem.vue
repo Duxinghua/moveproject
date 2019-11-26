@@ -15,7 +15,12 @@
             </div>
           </div>
           <div class="tzright">
-               <img  :src="item.image" alt="">
+               <!-- <img  :src="item.image" alt=""> -->
+              <van-image :src="item.image">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
           </div>
   </div>
 </template>
@@ -102,8 +107,9 @@ export default {
         height:118px;
         overflow: hidden;
         border-radius: 8px;
-        img{
+        .van-image{
           width: 100%;
+          // height: 100%;
         }
       }
 }

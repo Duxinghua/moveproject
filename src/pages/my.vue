@@ -60,7 +60,7 @@
     <div class="my-list">
       <div class="mlitem" @click="likeClickHandler('yy')">
         <img src="../assets/images/myy.png" alt="" />
-        <span>我的预约记录</span>
+        <span>课程中心</span>
       </div>
       <div class="mlitem" @click="likeClickHandler('xx')">
         <img src="../assets/images/mym.png" alt="" />
@@ -157,11 +157,7 @@ export default {
     next()
   },
   mounted () {
-    // var date = new Date()
-    // var getyear = date.getFullYear()
-    // var getmonth = date.getMonth() + 1
-    // var getday = date.getDate()
-    this.currentDate = this.formatTime(false)
+    this.currentDate = this.formatTime(1)
     this.$api.userIndex().then((result) => {
       if (result.code === 1) {
         this.userInfo = result.data
@@ -177,9 +173,11 @@ export default {
   methods: {
     formatTime (time) {
       var date  = ""
-      if (time) {
-        date = new Date(time)
-      }else{
+      if (time != 0 && time != 1) {
+        date = new Date(time*1000)
+      }else if(time == 0){
+        date = new Date(0)
+      }else if(time == 1){
         date = new Date()
       }
       var getyear = date.getFullYear()
@@ -192,16 +190,13 @@ export default {
       this.$api.userSignLists().then((result) => {
         console.log(result)
         if (result.code === 1) {
-          console.log(_this.currentDate)
-          console.log(_this.formatTime(result.data.sign_time_text))
-            if (_this.currentDate == _this.formatTime(result.data.sign_time_text)) {
+            if (_this.currentDate == _this.formatTime(result.data.sign_time)) {
               _this.qdcontrol = true
               _this.qdText = '已经连续签到' + result.data.days + '天'
             }else{
               _this.qdcontrol = false
               _this.qdText = '立即签到'
             }
-
             _this.qdList.map((item)=>{
               if(item.num <= result.data.days){
                 item.check = true
@@ -213,12 +208,13 @@ export default {
     qdFuClickHandler () {
       var _this = this
       this.$api.userSaveSign().then((result) => {
-        if (result.cdoe === 1) {
-          // this.qdText
-          this.$toast({message: result.msg,
+        if (result.code === 1) {
+          this.$toast({
+            message: result.msg,
             onClose: () => {
               _this.getUserSignLists()
-            }})
+            }
+          })
         } else {
           this.$toast(result.msg)
         }

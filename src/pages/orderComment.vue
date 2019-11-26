@@ -2,53 +2,47 @@
   <div class="orderdetail">
     <div class="orderdetail-top">
       <div class="orderlist">
-        <div class="ordercontent-wrap" v-for="(goodsitem,index) in order_detail.goods" :key="index">
-          <div class="ordercontent">
-            <img :src="goodsitem.images" alt="">
-            <div class="ordercenter">
-              <div class="ol">
-                <span class="s1">{{goodsitem.goods_name}}</span>
-                <span class="s1 s2">{{goodsitem.specs}}</span>
-                <div><span class="s3">¥</span><span class="s4">{{goodsitem.price}}</span></div>
+        <div class="ordercontent-wrap" v-for="(goodsitem,goodsindex) in order_detail.goods" :key="goodsindex">
+              <div class="ordercontent">
+                <img :src="goodsitem.images" alt="">
+                <div class="ordercenter">
+                  <div class="ol">
+                    <span class="s1">{{goodsitem.goods_name}}</span>
+                    <span class="s1 s2">{{goodsitem.specs}}</span>
+                    <div><span class="s3">¥</span><span class="s4">{{goodsitem.price}}</span></div>
+                  </div>
+                  <span class="s5">x {{goodsitem.goods_num}}</span>
+                </div>
               </div>
-              <span class="s5">x {{goodsitem.goods_num}}</span>
-            </div>
-          </div>
-                <div class="orderdetail-top-div">
-        <div class="rate-wrap">
-          <span>描述相符</span>
-           <van-rate
-            @change="rateChange"
-            v-model="value"
-            :size="20"
-            color="#ee0a24"
-            void-icon="star"
-            void-color="#eee"
-           />
-        </div>
-        <div class="comment-wrap">
-          <span class="pl-item">
-          夜想就夜想就
-          </span>
-          <span class="pl-item">
-            日思夜
-          </span>
-          <span class="pl-item">
-            日思夜想就想再来一杯
-          </span>
-        </div>
+              <div class="orderdetail-top-div">
+                <div class="rate-wrap">
+                  <span>描述相符</span>
+                  <van-rate class="van-rates"
+                    @change="rateChange"
+                    v-model="value"
+                    :size="20"
+                    color="#ee0a24"
+                    void-icon="star"
+                    void-color="#eee"
+                  />
+                </div>
+                <div class="comment-wrap">
+                  <span :class="autoClass(witem.check)" v-for="(witem,index) in goodsitem.commentList" :key="index" @click="plItemClick(goodsindex,witem.id)">
+                  {{witem.words}}
+                  </span>
+                </div>
 
-      </div>
-      <span class="orderdetail-top-span">上传照片（{{0}}/3）</span>
-      <div class="orderdetail-top-uploads">
-        <div class="uploadimgs-wrap" v-for="(item,index) in imgList" :key="index" @click="delImg(index)">
-          <img :src="item.l" class="uploadimgs" alt="">
-          <img src="../assets/images/uploadcloses.png" class="uploadclose" alt="">
-        </div>
-        <div class="orderdetail-wrap uploadborder" @click="chooseImage" v-if="imgList.length < 3">
-          <img src="../assets/images/uploadmores.png" class="uplaodmores" alt="" />
-        </div>
-      </div>
+              </div>
+              <span class="orderdetail-top-span">上传照片（{{goodsitem.imgList.length}}/3）</span>
+              <div class="orderdetail-top-uploads">
+                <div class="orderdetail-wrap" v-for="(iitem,index) in goodsitem.imgList" :key="index" @click="delImg(goodsindex,index)">
+                  <img :src="item.l" class="uploadimgs" alt="">
+                  <img src="../assets/images/uploadcloses.png" class="uploadclose" alt="">
+                </div>
+                <div class="orderdetail-wrap uploadborder" @click="chooseImage(goodsitem.goods_id)" v-if="goodsitem.imgList.length < 3">
+                  <img src="../assets/images/uploadmores.png" class="uplaodmores" alt="" />
+                </div>
+              </div>
         </div>
       </div>
 
@@ -60,7 +54,7 @@
 </template>
 
 <script>
-import area from '@/utils/area'
+import config from '@/utils/config'
 export default {
   name: 'OrderComment',
   data () {
@@ -70,31 +64,260 @@ export default {
       num: 3,//上传数量
       localIds: [],
       imgList: [],
-      value: 3
+      value: 3,
+      commentList:[],
+      json_comment: []
     }
+  },
+  created () {
+    var data = {
+      url:location.href
+    }
+    const agent = navigator.userAgent
+    const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+    if(isiOS){
+      data.url = config.shareurls
+    }
+    this.$api.userGetSignPackage(data).then((res) => {
+      if (res.code === 1) {
+        var wxpay = res.data
+        wx.config({
+          debug: true,
+          appId: wxpay.appId,
+          timestamp: wxpay.timestamp,
+          nonceStr: wxpay.nonceStr,
+          signature: wxpay.signature,
+          jsApiList: [
+            'checkJsApi',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'chooseImage',
+            'uploadImage',
+            'getLocalImgData'
+          ]
+        })
+        wx.error(function (res) {
+          console.log('出错了：' + res.errMsg)
+        })
+        // 在这里调用 API
+        wx.ready(function () {
+          wx.checkJsApi({
+            jsApiList: [
+              'checkJsApi',
+              'onMenuShareTimeline',
+              'onMenuShareAppMessage',
+              'chooseImage',
+              'uploadImage',
+              'getLocalImgData'
+            ],
+            success: function (res) {
+
+            }
+          })
+        })
+
+      }
+    })
+
   },
   mounted () {
     this.order_id = this.$route.query.id
-    this.getDetail()
+    this.getGoodsCommentWords()
+
   },
   methods: {
-    postSave () {
+    plItemClick (goodsIndex,id) {
+      var len = 0
+      console.log(this.order_detail.goods[goodsIndex])
+      // return;
+      var _this = this
+      var flag = false
+      var tip = false //提示
+      for(var i=0,l=this.order_detail.goods[goodsIndex].commentList.length;i<l;i++){
+        if(len<3){
+          if(this.order_detail.goods[goodsIndex].commentList[i].check){
+            len++
+          }
+        }else{
+          flag = true
+        }
+      }
+      if(!flag){
+        this.order_detail.goods[goodsIndex].commentList.map((item)=>{
+              if(item.id == id){
+                item.check = !item.check
+              }
+        })
+        console.log(this.order_detail.goods)
+      }else{
+        //说明已经超过三条
+        this.order_detail.goods[goodsIndex].commentList.map((item)=>{
+          if(item.id == id && item.check){
+            item.check = !item.check
+            tip = false
+          }else{
+            tip = true
+          }
+        })
+        if(tip){
+          this.$toast('只能选择三个')
+        }
+
+      }
+      console.log(this.order_detail)
 
     },
-    delImg () {
+    autoClass (check) {
+      return {
+        'pl-item':true,
+        'plActive': check
+      }
+    },
+    getGoodsCommentWords () {
+      this.$api.getGoodsCommentWords({}).then((res)=>{
+        if(res.code == 1) {
+          var list = []
+          res.data.map((item)=>{
+            item.check = false
+            list.push(item)
+          })
+          this.commentList = list
+          this.getDetail()
+        }
+      })
+    },
+    postSave () {
+      var _this = this
+      this.json_comment = []
+      var obj = {}
+      obj.score = this.value
+      var content = []
+      var images = []
+      var wordsLen = 0
+      this.commentList.map((item)=>{
+        if(item.check){
+          content.push(item.words)
+          wordsLen ++
+        }
+      })
+      if(wordsLen == 0){
+        this.$toast('必须选择一条评论')
+        return
+      }
+      obj.goods_id = this.order_detail.goods[0].goods_id
+      obj.content = content
+      if(this.imgList.length){
+        this.imgList.map((item)=>{
+          images.push(item.url)
+        })
 
+      }
+      obj.images = images.join(',')
+      this.json_comment.push(obj)
+      var json_comment = JSON.stringify(this.json_comment)
+      this.$api.goodsStoreComments({order_id:this.order_id,json_comment:json_comment}).then((res)=>{
+        if(res.code == 1) {
+          _this.$toast({
+            message:res.msg,
+            onClose: ()=>{
+              _this.$router.go(-1)
+            }
+          })
+        }else{
+          _this.$toast(res.msg)
+        }
+      })
+    },
+    delImg (index) {
+      this.imgList.splice(index,1)
+      this.localIds.splice(index,1)
+      this.num = this.imgList
+      console.log(this.imgList,'imgList')
     },
     chooseImage () {
+      var _this = this
+      if(this.imgList.length < 4){
+        wx.chooseImage({
+          count: this.num, // 默认9
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+            // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            _this.localIds = res.localIds
+            _this.localIds.map((item)=>{
+              _this.uploadImage(new String(item).toString())
+            })
+          }
+        })
+      }else{
+        this.$toast('只能上传三张')
+      }
 
     },
+    uploadImage (localId) {
+      var _this = this
+      wx.uploadImage({
+          localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+          isShowProgressTips: 1, // 默认为1，显示进度提示
+          success: function (res) {
+            var serverId = res.serverId; // 返回图片的服务器端ID
+            // _this.$toast('serverId')
+            // // alert(res.serverId)
+            _this.getImgData(localId,serverId)
+          }
+      })
+    },
+    getImgData (localId,serverId) {
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      var _this = this
+      this.$api.commonwxUpload({id:serverId}).then((result)=>{
+          if(result.code === 1){
+            // _this.$toast({
+            //   message:result.msg,
+            //   onClose: ()=>{
+                      if(isiOS){
+                        wx.getLocalImgData({
+                              localId: localId, // 图片的localID
+                              success: function (res) {
+                                  var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
+                                  localData = localData.replace('jgp', 'jpeg');
+                                  _this.imgList.push({l:localData,s:serverId,url:result.data.url})
+                              }
+                        });
+                      }else{
+                        _this.imgList.push({l:localId,s:serverId,url:result.data.url})
+                      }
+                      _this.num --
+            //   }
+            // })
+          }else{
+            _this.$toast(result.msg)
+          }
+      })
+    },
     rateChange (i) {
-      console.log(i)
       this.value = i
     },
     getDetail () {
+      var _this = this
       this.$api.goodsOrderIndex({order_id:this.order_id}).then((res)=>{
         if(res.code === 1) {
-          this.order_detail = res.data
+          var data = res.data
+          //       num: 3,//上传数量
+          // localIds: [],
+          // imgList: [],
+          // value: 3,
+          // commentList:[],
+          // json_comment: []
+          res.data.goods.map((item)=>{
+            item.commentList = _this.commentList
+            item.value = 3
+            item.localIds = []
+            item.imgList = []
+          })
+          _this.order_detail = res.data
+
         }
       })
     }
@@ -123,7 +346,8 @@ export default {
    display: flex;
    flex-direction: column;
    background:white;
-   padding:26px 26px 0px 26px;
+  //  padding:26px 26px 0px 26px;
+   padding-top:26px;
      &-textarea{
       margin-top:42px;
       width:100%;
@@ -148,15 +372,23 @@ export default {
     &-div{
       display: flex;
       flex-direction: column;
+      padding-left:26px;
+      padding-right:26px;
       width:100%;
+      .van-rates{
+       display: flex;
+      }
       .rate-wrap{
         display: flex;
         flex-direction: row;
         align-items: center;
+        height:80px;
         span{
           font-size: 32px;
           color:#333;
+          margin:auto 0;
           margin-right: 32px;
+
         }
       }
       .comment-wrap{
@@ -164,6 +396,9 @@ export default {
         flex-direction: row;
         justify-content: flex-start;
         flex-wrap: wrap;
+        height:320px;
+        overflow: hidden;
+        overflow-y: auto;
         .pl-item{
           width:fit-content;
           padding:19px 40px;
@@ -174,18 +409,25 @@ export default {
           color:#333;
           border-radius: 44px;
         }
+        .plActive{
+          border:2px solid #CDA871;
+          color:#CDA871;
+        }
+      }
+      .comment-wrap::-webkit-scrollbar{
+	        display:none
       }
     }
     &-span{
       font-size: 26px;
       color:#999;
-      padding:20px 0;
+      padding:20px 26px;
     }
     &-uploads{
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
-      padding-bottom: 40px;
+      padding:0 26px 40px 26px;
       .orderdetail-wrap{
         width:157px;
         height:157px;
@@ -253,12 +495,14 @@ export default {
         display: flex;
         flex-direction: column;
         width: 100%;
+        background:white;
+        border-bottom: 15px solid  #FBF8F4;
       }
       .ordercontent{
             display: flex;
             flex-direction: row;
             justify-content: space-between;
-            padding:30px 0px;
+            padding:30px 26px;
             width:100%;
             // border-bottom:1px solid #F3F3F3;
             img{

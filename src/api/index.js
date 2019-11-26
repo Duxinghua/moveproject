@@ -253,6 +253,10 @@ const server = {
   postsSaveLike (data) {
     return post('posts/saveLike', data)
   },
+  // 删除帖子 /api/posts/del
+  postsDel (data) {
+    return post('posts/del', data)
+  },
   // 贴子列表 posts/lists
   postsLists (data) {
     return post('posts/lists', data)
@@ -295,7 +299,15 @@ const server = {
   },
   // 确认收货 /api/goods_order/receiveGoods
   goodsOrderReceiveGoods (data) {
-    return post('goods_order/receiveGoods',data)
+    return post('goods_order/receiveGoods', data)
+  },
+  // 获取自定义评论 goods/getGoodsCommentWords
+  getGoodsCommentWords (data) {
+    return post('goods/getGoodsCommentWords', data)
+  },
+  // 商品评论 /goods/storeComments
+  goodsStoreComments (data) {
+    return post('goods/storeComments', data)
   },
   // 订单列表 /api/course_order/lists
   courseOrderList (data) {

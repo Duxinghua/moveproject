@@ -8,37 +8,44 @@
             :immediate-check="false"
             @load="onLoad"
       >
-      <div class="myTz-item" >
+      <div class="myTz-item" v-for="(item,index) in tzList" :key="index">
           <div class="myTz-item-top">
-            <img class="avatar" src="../assets/images/people.png" alt="">
+            <img class="avatar" :src="item.user.avatar" alt="">
             <div class="userinfo">
-              <span>朝花夕拾xixi</span>
-              <span>10小时前</span>
+              <span>{{item.user.nickname}}</span>
+              <span>{{autoTimer(item.create_time)}}小时前</span>
             </div>
-            <img class="sd" src="../assets/images/sd.png" alt="">
+            <img class="sd" src="../assets/images/sd.png" alt="" @click="delClickHandler(item.gp_id)">
           </div>
           <div class="myTz-item-banner">
             <el-carousel id="huabantz-banner" indicator-position="outside" @change="changeTab">
-              <el-carousel-item v-for="item in bannerList" :key="item.id">
-                <img class="huabantzimg" :src="item.image" alt="">
+              <el-carousel-item v-for="(imgitem,index) in item.images" :key="index">
+                <div class="huabantzimg">
+                  <!-- <img  :src="imgitem" alt=""> -->
+                  <van-image :src="imgitem">
+                    <template v-slot:loading>
+                        <van-loading type="spinner" size="20" />
+                    </template>
+                  </van-image>
+                </div>
               </el-carousel-item>
             </el-carousel>
-            <span class="huabantzind">{{(index+1)+"/"+bannerList.length}}</span>
+            <span class="huabantzind">{{(item.images.length === 1 ? 1 : (index+1))+"/"+item.images.length}}</span>
           </div>
         <div class="myTz-item-detail">
           <div class="myTz-item-detail-content">
             <div class="des">
-              <span class="destitle">传统中式花道基础构图方式道基础构图方式道基础构图方式道基础构图方式道基础构图方式</span>
+              <span class="destitle">{{item.title}}</span>
               <div class="desico">
-                <img src="../assets/images/gzxico.png" alt="">
+                <img :src="item.likes == 1 ? require('../assets/images/ydz.png') : require('../assets/images/gzxico.png')" alt=""  @click="gzClickHandler(item.gp_id,item.user_id)">
                 <img src="../assets/images/shareico.png" alt="">
               </div>
             </div>
             <div class="info">
-              相邻的花与花之间一定要注意面向的面不能出现平行线~
+              {{item.content}}
             </div>
           </div>
-          <input class="myTz-item-detail-input" placeholder="喜欢就评论"/>
+          <input class="myTz-item-detail-input" placeholder="喜欢就评论" @click="inputClick(item.gp_id)"/>
         </div>
       </div>
   </van-list>
@@ -52,10 +59,10 @@
       position="bottom"
     >
     <div class="grender">
-      <div class="grender-item">
+      <div class="grender-item" @click="delClick">
       删除
       </div>
-      <div class="grender-item">
+      <div class="grender-item" @click="cancelDelHandler">
       取消
       </div>
     </div>
@@ -71,6 +78,7 @@ export default {
     return {
       tzShow: false,
       index: 1,
+      gp_id: '',
       bannerList: [
         {
           id: 1,
@@ -104,6 +112,60 @@ export default {
     this.getTzList()
   },
   methods: {
+    delClick () {
+      var _this = this
+      this.$api.postsDel({gp_id:this.gp_id}).then((res)=>{
+        if(res.code === 1){
+          this.$toast({
+            message:res.msg,
+            onClose: ()=> {
+            _this.tzShow = false
+            _this.tzList = []
+            _this.finished = false
+            _this.loading = false
+            _this.current = 1
+            _this.getTzList()
+            }
+          })
+        }else{
+          _this.tzShow = false
+          _this.$toast(res.msg)
+        }
+      })
+    },
+    cancelDelHandler () {
+      this.gp_id = ''
+      this.tzShow = false
+    },
+    delClickHandler (id) {
+      this.gp_id = id
+      this.tzShow = true
+
+    },
+    inputClick (id) {
+      this.$router.push({name:'HuabanTzDetail',query:{id}})
+    },
+    gzClickHandler (gp_id,gp_user_id) {
+      this.$api.postsSaveLike({gp_id: gp_id, gp_user_id: gp_user_id}).then((res) => {
+        if (res.code === 1) {
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              this.tzList =  []
+              this.finished = false
+              this.loading = false
+              this.current = 1
+              this.getTzList()
+            }
+          })
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    autoTimer (timer) {
+      return parseInt((new Date().getTime() - timer*1000)/1000/3600)
+    },
     changeTab (e) {
       this.index = e
     },
@@ -154,9 +216,12 @@ export default {
 .myTz{
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
+  background:#FBF8F4;
   &-item{
     display: flex;
     flex-direction: column;
+    background: white;
     border-bottom: 15px solid #FBF8F4;
     &-top{
       margin:21px 0;
@@ -205,6 +270,10 @@ export default {
       .huabantzimg{
         width:100%;
         height:552px;
+        overflow: hidden;
+        .van-image{
+          width:100%;
+        }
       }
       .huabantzind{
         width:100px;

@@ -104,12 +104,14 @@ export default {
     },
     getPostsLists () {
       this.$api.postsLists({recommend:1}).then((result)=>{
+        console.log(result,'res')
         if(result.code === 1) {
         var list =  result.data.data.splice(0,3)
          list.map((item)=>{
-           item.image = item.images ? item.images[0]: ''
-           item.nickname = item.user.nickname
-           item.avatar = item.user.avatar
+           console.log(item,'item')
+           item.image = item.images  ? item.images[0]: ''
+           item.nickname = item.user ? item.user.nickname : ''
+           item.avatar = item.user ? item.user.avatar : ''
          })
          this.huabantzlist = list
         }
