@@ -3,10 +3,10 @@
     <div class="course-swiper">
       <van-swipe :autoplay="10000">
         <van-swipe-item
-            v-for="(image, index) in courseDetails.image"
+            v-for="(itemimg, index) in courseDetails.image"
             :key="index"
         >
-            <van-image :src="image">
+            <van-image :src="itemimg">
                 <template v-slot:loading>
                     <van-loading type="spinner" size="20" />
                 </template>
@@ -157,14 +157,16 @@ export default {
         forbidClick: true
       })
       this.$api.courseDetail(param).then((res) => {
+        console.log(res,'resdata')
         this.$toast.clear()
         if (res.code == 1) {
           this.courseDetails = res.data
+
           this.courseOffline = res.data.courseOffline
           this.msgItem = res.data.admin
-          this.tecImg = res.data.adminOpus
+          this.tecImg = res.data.adminOpus ? res.data.adminOpus : []
           // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
-          console.log(res.data.admin)
+          // console.log(res.data.admin)
         }
       })
     },

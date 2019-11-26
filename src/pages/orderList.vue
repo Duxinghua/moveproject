@@ -100,10 +100,10 @@ export default {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
             // window.location.href = config.baseurl + '/tickOrderList'
-            alert(1)
+           // alert(1)
           } else {
             // window.location.href = config.baseurl + '/tickOrderList'
-            alert(2)
+           // alert(2)
           }
         })
     },

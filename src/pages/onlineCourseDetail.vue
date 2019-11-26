@@ -176,6 +176,7 @@ export default {
         course_id: this.courseId
       }
       this.$api.courseDetail(param).then((res) => {
+
         // this.$toast.clear()
         if (res.code == 1) {
           this.onlineMsg = res.data
@@ -590,7 +591,7 @@ export default {
             font-size: 26px;
             color: #000;
             margin-right: 8px;
-            
+
           }
           span.active{
             color: #995258;

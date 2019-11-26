@@ -82,6 +82,7 @@ export default {
           color:#999999;
           font-size: 24px;
           margin-top: 16px;
+          align-items: center;
           .tzavatar{
             width:40px;
             height:40px;

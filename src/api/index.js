@@ -384,6 +384,10 @@ const server = {
   // 线上课程预览接口 /api/course_order/preview
   courseOrderPreview (data) {
     return get('course_order/preview', data)
+  },
+  // 我加入的 api/group/getMyGroup
+  getMyGroup (data) {
+    return post('group/getMyGroup', data)
   }
 }
 

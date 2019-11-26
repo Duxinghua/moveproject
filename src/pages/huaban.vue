@@ -4,11 +4,12 @@
       <div class="huaban-top-wrap">
         <div class="huaban-top-item" v-for="(item,index) in huabanList" :key="index" @click="huabangdHandler(item.group_id)">
           <div class="huaban-top-item-img1">
-              <van-image :src="item.image">
+              <!-- <van-image :src="item.image">
                 <template v-slot:loading>
                     <van-loading type="spinner" size="20" />
                 </template>
-              </van-image>
+              </van-image> -->
+              <img :src="item.image" alt="">
           </div>
           <div class="huaban-top-item-des">
             <span class="title">{{item.group_name}}</span>
@@ -19,7 +20,7 @@
         </div>
       </div>
       <div class="huaban-top-join">
-        <TitleItem title="加入我们" />
+        <TitleItem title="我的圈子" />
         <div class="huaban-top-jwrap">
           <div class="huaban-top-jwrap-item" @click="moreGroupHandler">
             <div class= "img-wrap">
@@ -29,14 +30,15 @@
           </div>
           <div class="huaban-top-jwrap-item" v-for="(item,index) in huabanJoin" :key="index" @click="linkDetail(item.group_id)">
             <div class="image-wrap-vant">
-              <van-image :src="item.image">
+              <!-- <van-image :src="item.image">
                 <template v-slot:loading>
                     <van-loading type="spinner" size="20" />
                 </template>
-              </van-image>
+              </van-image> -->
+              <img :src="item.image" alt="">
             </div>
             <span class="s1">{{item.group_name}}</span>
-            <span class="s2" v-if="item.recommend">推荐</span>
+            <span class="s2">{{item.s == 1 ? '已加入' : '推荐'}}</span>
           </div>
         </div>
         <MoreText moreText="更多" moreName="HuabanMyGroupList"/>
@@ -61,7 +63,7 @@ import MoreText from '@/components/moreItem.vue'
 import TitleItem from '@/components/titleItem.vue'
 import HuabantzItem from '@/components/huabantzItem.vue'
 import NoData from '@/components/nodata.vue'
-import WxSing from '@/utils/wxSing'
+// import WxSing from '@/utils/wxSing'
 export default {
   name: 'Huaban',
   data () {
@@ -72,13 +74,30 @@ export default {
     }
   },
   mounted () {
-    WxSing.init('花伴123','测试发的哈456',location.href,'https://youmeng.qixiuu.com/uploads/20191031/92c752479595ee8fbd07c3caca9dd434.png')
+    // WxSing.init('花伴123','测试发的哈456',location.href,'https://youmeng.qixiuu.com/uploads/20191031/92c752479595ee8fbd07c3caca9dd434.png')
     this.getGroupLists({recommend:0},{data:1})
-    this.getGroupLists({my:1},{data:2})
-    this.getGroupLists({recommend:1},{data:3})
+    // this.getGroupLists({my:1},{data:2})
+    // this.getGroupLists({recommend:1},{data:3})
+    this.getMyGroup()
     this.getPostsLists()
   },
   methods: {
+    getMyGroup(){
+      this.$api.getMyGroup({}).then((res)=>{
+        console.log(res,'res')
+        if(res.code === 1) {
+          var list = res.data.my
+          list.map((item)=>{
+            item.s = 1
+          })
+          var list2 = res.data.recommend
+          list2.map((item)=>{
+            item.s = 2
+          })
+          this.huabanJoin = list.concat(list2)
+        }
+      })
+    },
     test() {
   localStorage.removeItem('mobile')
   localStorage.removeItem('token')
@@ -91,10 +110,6 @@ export default {
         if(res.code === 1){
           if(type.data === 1) {
             this.huabanList = res.data.data
-          }else if(type.data === 2){
-            this.huabanJoin = res.data.data
-          }else if(type.data === 3){
-            this.huabanJoin = this.huabanJoin.concat(res.data.data)
           }
         }
       })
@@ -106,7 +121,7 @@ export default {
       this.$api.postsLists({recommend:1}).then((result)=>{
         console.log(result,'res')
         if(result.code === 1) {
-        var list =  result.data.data.splice(0,3)
+        var list =  result.data.data.splice(0,8)
          list.map((item)=>{
            console.log(item,'item')
            item.image = item.images  ? item.images[0]: ''
@@ -271,7 +286,8 @@ display: none;
         .s2{
           font-size: 24px;
           color:#E4CF8F;
-          width:63px;
+          width:90px;
+          text-align: center;
           height:32px;
           background:#6D8160;
           border-radius: 10px 0px 10px 0px;
