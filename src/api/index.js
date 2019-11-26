@@ -321,7 +321,7 @@ const server = {
   courseList (data) {
     return post('course/lists', data)
   },
-  // 课程详情 /api/course/indexindex/lists
+  // 课程详情 /api/course/index
   courseDetail (data) {
     return post('course/index', data)
   },
@@ -333,9 +333,13 @@ const server = {
   flowers (data) {
     return post('course/materials', data)
   },
-  // 课程评论 /api/course/comments
+  // 线上课程评论 /api/course/comments
   courseComment (data) {
     return post('course/comments', data)
+  },
+  // 线上课程评论点赞 /api/course/saveLike
+  courseSaveLike (data) {
+    return post('course/saveLike', data)
   },
   // 线下课程预约 /api/course/appoint
   courseAppoint (data) {
@@ -360,6 +364,10 @@ const server = {
   // 名师作品  /api/teacher/opusLists
   teacherWorksList (data) {
     return post('teacher/opusLists', data)
+  },
+  // 名师关注 /api/teacher/saveFollow
+  teacherLike (data) {
+    return post('teacher/saveFollow', data)
   },
   // 线上课程预览接口 /api/course_order/preview
   courseOrderPreview (data) {

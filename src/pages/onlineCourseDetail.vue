@@ -60,7 +60,7 @@
             <img :src="item.image" alt="">
             <p>{{item.title}}</p>
             <div>
-              <span v-for="(i,itemPl,index) in item.item_json">{{i}}:{{itemPl}}</span>
+              <span v-for="(i,itemPl,index) in item.item_json" :key="index">{{i}}:{{itemPl}}</span>
             </div>
           </div>
           <NoData v-if="flowerLists.length == 0"/>
@@ -76,8 +76,9 @@
                 <span>{{item.create_time}}</span>
               </div>
               <div>
-                <span>5</span>
-                <img src="../assets/images/taskheart.png" alt="">
+                <span :class="{active:item.amity == 1}">{{item.likes}}</span>
+                <img @click="likeHandler(item.amity,item.id)" :src="item.amity === 1 ? require('../assets/images/taskheart.png') : require('../assets/images/taskheart_cancell.png')" alt="">
+                <!-- <img v-show="like == item.amity" @click="likeHandler(item.amity,item.id)" src="../assets/images/taskheart_cancell.png" alt=""> -->
               </div>
             </div>
             <div class="task-content">{{item.content}}</div>
@@ -134,6 +135,7 @@ export default {
       pageType: 0,
       courseId: 0,
       id: "",
+      // like: 0,
       onlineMsg: {},
       msgItem: {},
       teacherWorks: [],
@@ -246,11 +248,10 @@ export default {
         pageSize: 9
       }
       this.$api.flowers(param).then((res) => {
-        console.log(res)
+        // console.log(res)
         if (res.code == 1) {
           // this.flowerLists = res.data.data
-          console.log(res.data.data)
-
+          // console.log(res.data.data)
           this.flowerLists = res.data.data
         }
       })
@@ -263,15 +264,34 @@ export default {
       }
       this.$api.courseComment(param).then((res) => {
         if (res.code == 1) {
-          // console.log(res.data.data)
+          console.log(res.data.data)
           var list = []
           res.data.data.map((item)=>{
+            item.id = item.id
+            item.amity = item.amity
+            item.likes = item.likes
             item.images = item.images
             item.nickname = item.user ? item.user.nickname : ''
             item.avatar = item.user ? item.user.avatar : ''
             list.push(item)
           })
           this.comments = list
+        }
+      })
+    },
+    likeHandler (amity,id) {
+      this.$api.courseSaveLike({comment_id:id}).then((res) => {
+        if (res.code === 1) {
+          console.log(res)
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              this.comments = []
+              // this.finished = false
+              // this.loading = false
+              this.courseComment()
+            }
+          })
         }
       })
     },
@@ -568,8 +588,12 @@ export default {
           align-items: center;
           span{
             font-size: 26px;
-            color: #995258;
+            color: #000;
             margin-right: 8px;
+            
+          }
+          span.active{
+            color: #995258;
           }
           img{
             width: 37px;

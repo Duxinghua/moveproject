@@ -39,7 +39,7 @@
             </div>
           </el-carousel-item>
         </el-carousel>
-        <MoreText moreText="更多名师" />
+        <MoreText moreText="更多名师" moreName="TeacherList"/>
       </div>
       <div class="home-course home-onlinecourse">
         <TitleItem title="线上课程" />
