@@ -143,7 +143,7 @@ export default {
     this.tuanStatus = tuanStatus;
     this.goodsTuan()
 
-    if(tuanStatus){
+    if(typeof tuanStatus == 'string'){
         setTimeout(() => {
             this.overlayStatus = true;
         },500)
