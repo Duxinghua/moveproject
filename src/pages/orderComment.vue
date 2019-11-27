@@ -26,7 +26,7 @@
               <span class="orderdetail-top-span">上传照片（{{goodsitem.imgList.length}}/3）</span>
               <div class="orderdetail-top-uploads">
                 <div class="orderdetail-wrap" v-for="(iitem,index) in goodsitem.imgList" :key="index" @click="delImg(goodsindex,index)">
-                  <img :src="item.l" class="uploadimgs" alt="">
+                  <img :src="iitem.l" class="uploadimgs" alt="">
                   <img src="../assets/images/uploadcloses.png" class="uploadclose" alt="">
                 </div>
                 <div class="orderdetail-wrap uploadborder" @click="chooseImage(goodsindex)" v-if="goodsitem.imgList.length < 3">
@@ -227,6 +227,7 @@ export default {
       goods.imgList.splice(index,1)
       goods.localIds.splice(index,1)
       goods.num = goods.imgList
+      this.$forceUpdate();
     },
     chooseImage (goodsindex) {
       var _this = this
@@ -269,9 +270,9 @@ export default {
       var _this = this
       this.$api.commonwxUpload({id:serverId}).then((result)=>{
           if(result.code === 1){
-            // _this.$toast({
-            //   message:result.msg,
-            //   onClose: ()=>{
+            _this.$toast({
+              message:result.msg,
+              onClose: ()=>{
                       if(isiOS){
                         wx.getLocalImgData({
                               localId: localId, // 图片的localID
@@ -279,14 +280,16 @@ export default {
                                   var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
                                   localData = localData.replace('jgp', 'jpeg');
                                   goods.imgList.push({l:localData,s:serverId,url:result.data.url})
+                                  _this.$forceUpdate();
                               }
                         });
                       }else{
                         goods.imgList.push({l:localId,s:serverId,url:result.data.url})
+                        _this.$forceUpdate();
                       }
                       goods.num --
-            //   }
-            // })
+              }
+            })
           }else{
             _this.$toast(result.msg)
           }
