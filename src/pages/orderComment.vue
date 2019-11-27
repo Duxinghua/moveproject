@@ -15,17 +15,7 @@
                 </div>
               </div>
               <div class="orderdetail-top-div">
-                <div class="rate-wrap">
-                  <span>描述相符</span>
-                  <van-rate class="van-rates"
-                    @change="rateChange"
-                    v-model="value"
-                    :size="20"
-                    color="#ee0a24"
-                    void-icon="star"
-                    void-color="#eee"
-                  />
-                </div>
+                <RateWrap :values="goodsitem.score" :goodsId="goodsindex" @rateChange="rateChange" />
                 <div class="comment-wrap">
                   <span :class="autoClass(witem.check)" v-for="(witem,index) in goodsitem.commentList" :key="index" @click="plItemClick(goodsindex,witem.id)">
                   {{witem.words}}
@@ -39,7 +29,7 @@
                   <img :src="item.l" class="uploadimgs" alt="">
                   <img src="../assets/images/uploadcloses.png" class="uploadclose" alt="">
                 </div>
-                <div class="orderdetail-wrap uploadborder" @click="chooseImage(goodsitem.goods_id)" v-if="goodsitem.imgList.length < 3">
+                <div class="orderdetail-wrap uploadborder" @click="chooseImage(goodsindex)" v-if="goodsitem.imgList.length < 3">
                   <img src="../assets/images/uploadmores.png" class="uplaodmores" alt="" />
                 </div>
               </div>
@@ -55,6 +45,7 @@
 
 <script>
 import config from '@/utils/config'
+import RateWrap from '@/components/ratewrap'
 export default {
   name: 'OrderComment',
   data () {
@@ -123,13 +114,13 @@ export default {
   mounted () {
     this.order_id = this.$route.query.id
     this.getGoodsCommentWords()
-
+  },
+  components: {
+    RateWrap
   },
   methods: {
     plItemClick (goodsIndex,id) {
       var len = 0
-      console.log(this.order_detail.goods[goodsIndex])
-      // return;
       var _this = this
       var flag = false
       var tip = false //提示
@@ -148,10 +139,11 @@ export default {
                 item.check = !item.check
               }
         })
-        console.log(this.order_detail.goods)
+        this.$forceUpdate();
       }else{
         //说明已经超过三条
         this.order_detail.goods[goodsIndex].commentList.map((item)=>{
+          console.log(item,'item')
           if(item.id == id && item.check){
             item.check = !item.check
             tip = false
@@ -162,10 +154,8 @@ export default {
         if(tip){
           this.$toast('只能选择三个')
         }
-
+        this.$forceUpdate();
       }
-      console.log(this.order_detail)
-
     },
     autoClass (check) {
       return {
@@ -189,31 +179,35 @@ export default {
     postSave () {
       var _this = this
       this.json_comment = []
-      var obj = {}
-      obj.score = this.value
-      var content = []
-      var images = []
-      var wordsLen = 0
-      this.commentList.map((item)=>{
-        if(item.check){
-          content.push(item.words)
-          wordsLen ++
-        }
+      var goods = this.order_detail.goods
+      var contentL = []
+      goods.map((item)=>{
+        var obj = {}
+        var content = []
+        var images = []
+        obj.score = item.score
+        obj.goods_id = item.goods_id
+        item.commentList.map((citem)=>{
+          if(citem.check){
+            content.push(citem.words)
+          }
+        })
+        obj.content = content
+        item.imgList.map((gitem)=>{
+          images.push(gitem.url)
+        })
+        obj.images = images.join(',')
+        this.json_comment.push(obj)
       })
-      if(wordsLen == 0){
-        this.$toast('必须选择一条评论')
+      for(var i in this.json_comment){
+        if(this.json_comment[i].content.length == 0){
+          contentL.push('第'+(parseInt(i)+1)+'个产品评论内容')
+        }
+      }
+      if(contentL.length != 0){
+        this.$toast('请选择'+contentL.join(','))
         return
       }
-      obj.goods_id = this.order_detail.goods[0].goods_id
-      obj.content = content
-      if(this.imgList.length){
-        this.imgList.map((item)=>{
-          images.push(item.url)
-        })
-
-      }
-      obj.images = images.join(',')
-      this.json_comment.push(obj)
       var json_comment = JSON.stringify(this.json_comment)
       this.$api.goodsStoreComments({order_id:this.order_id,json_comment:json_comment}).then((res)=>{
         if(res.code == 1) {
@@ -228,24 +222,25 @@ export default {
         }
       })
     },
-    delImg (index) {
-      this.imgList.splice(index,1)
-      this.localIds.splice(index,1)
-      this.num = this.imgList
-      console.log(this.imgList,'imgList')
+    delImg (goodsindex,index) {
+      var goods = this.order_detail.goods[goodsindex]
+      goods.imgList.splice(index,1)
+      goods.localIds.splice(index,1)
+      goods.num = goods.imgList
     },
-    chooseImage () {
+    chooseImage (goodsindex) {
       var _this = this
-      if(this.imgList.length < 4){
+      var goods = this.order_detail.goods[goodsindex]
+      if(goods.imgList.length < 4){
         wx.chooseImage({
-          count: this.num, // 默认9
+          count: goods.num, // 默认9
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
             // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-            _this.localIds = res.localIds
-            _this.localIds.map((item)=>{
-              _this.uploadImage(new String(item).toString())
+            goods.localIds = res.localIds
+            goods.localIds.map((item)=>{
+              _this.uploadImage(goodsindex,new String(item).toString())
             })
           }
         })
@@ -254,7 +249,7 @@ export default {
       }
 
     },
-    uploadImage (localId) {
+    uploadImage (goodsindex,localId) {
       var _this = this
       wx.uploadImage({
           localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
@@ -263,11 +258,12 @@ export default {
             var serverId = res.serverId; // 返回图片的服务器端ID
             // _this.$toast('serverId')
             // // alert(res.serverId)
-            _this.getImgData(localId,serverId)
+            _this.getImgData(goodsindex,localId,serverId)
           }
       })
     },
-    getImgData (localId,serverId) {
+    getImgData (goodsindex,localId,serverId) {
+      var goods = this.order_detail.goods[goodsindex]
       const agent = navigator.userAgent
       const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
       var _this = this
@@ -282,13 +278,13 @@ export default {
                               success: function (res) {
                                   var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
                                   localData = localData.replace('jgp', 'jpeg');
-                                  _this.imgList.push({l:localData,s:serverId,url:result.data.url})
+                                  goods.imgList.push({l:localData,s:serverId,url:result.data.url})
                               }
                         });
                       }else{
-                        _this.imgList.push({l:localId,s:serverId,url:result.data.url})
+                        goods.imgList.push({l:localId,s:serverId,url:result.data.url})
                       }
-                      _this.num --
+                      goods.num --
             //   }
             // })
           }else{
@@ -296,8 +292,9 @@ export default {
           }
       })
     },
-    rateChange (i) {
-      this.value = i
+    rateChange (i,goodsindex) {
+      var goods = this.order_detail.goods[goodsindex]
+      goods.score = i
     },
     getDetail () {
       var _this = this
@@ -311,8 +308,10 @@ export default {
           // commentList:[],
           // json_comment: []
           res.data.goods.map((item)=>{
-            item.commentList = _this.commentList
-            item.value = 3
+            // var lists = Object.assign([],_this.commentList)
+            item.commentList = JSON.parse(JSON.stringify(_this.commentList))
+            item.score = 5
+            item.num = 3
             item.localIds = []
             item.imgList = []
           })

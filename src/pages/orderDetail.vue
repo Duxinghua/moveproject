@@ -39,7 +39,7 @@
       </div>
       <div class="orderItem">
         <span>运费：</span>
-        <span>¥{{order_detail.express_price}}</span>
+        <span>¥{{order_detail.express_price ? order_detail.express_price : '0.00'}}</span>
       </div>
       <div class="orderItem">
         <span>优费：</span>

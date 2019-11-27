@@ -28,7 +28,7 @@
         <div class="goods-group">
           <div class="group-header">
             <h3>课程拼团</h3>
-            <div class="right" @click="onLinkAll">查看全部拼团<van-icon name="arrow" /></div>
+            <div class="right" @click="onLinkAll">查看全部拼团<img class="arrormore" src="../assets/images/fxend.png" alt=""/></div>
           </div>
           <div class="group-list">
             <GroupItem v-for="(item, index) in groupList" :key="index" :groupData="item"/>
@@ -434,6 +434,7 @@ export default {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      margin-top:10px;
     }
   }
   .goods-group{
@@ -447,16 +448,32 @@ export default {
       h3{
         color: #6D8160;
         font-size: 36px;
+        position: relative;
+        z-index: 1;
+      }
+      h3::before{
+          position: absolute;
+          content: '';
+          display: block;
+          width: 100%;
+          height: 16px;
+          background: #EEF1EC;
+          border-radius: 8px;
+          bottom: 8px;
+          z-index: -1;
       }
       .right{
         color: #999999;
         font-size: 26px;
         display: flex;
         align-items: center;
-        .van-icon{
-            font-size: 34px;
-            color: #D4B589;
-        }
+          .arrormore{
+            width:15px;
+            height:24px;
+            background:url('../assets/images/fxend.png') no-repeat;
+            background-size: 100% 100%;
+            margin-left:12px;
+          }
       }
     }
     .group-list{
@@ -504,6 +521,20 @@ export default {
       p{
         font-size: 36px;
         color: #6D8160;
+        position: relative;
+        z-index: 1;
+        width:fit-content;
+      }
+      p::before{
+          position: absolute;
+          content: '';
+          display: block;
+          width: 100%;
+          height: 16px;
+          background: #EEF1EC;
+          border-radius: 8px;
+          bottom: 8px;
+          z-index: -1;
       }
       .teacher-works{
         display: flex;

@@ -49,13 +49,13 @@
 
       </div>
       <div class="userinfo-content-imgitem" v-if="currentIndex === 1"  v-for="(item,index) in huabanList" :key="index">
-        <div class="itemimg">
-              <van-image :src="item.url">
-                <template v-slot:loading>
-                    <van-loading type="spinner" size="20" />
-                </template>
-              </van-image>
-         </div>
+          <div class="itemimg">
+                <van-image :src="item.url">
+                  <template v-slot:loading>
+                      <van-loading type="spinner" size="20" />
+                  </template>
+                </van-image>
+          </div>
       </div>
       </van-list>
       <div class="no-more">
@@ -296,7 +296,7 @@ export default {
   &-content{
     display: flex;
     width:100%;
-    padding:24px 24px 124px 24px;
+    padding:24px 24px 0px 24px;
     box-sizing: border-box;
     flex-direction: column;
     .van-list{
@@ -312,6 +312,9 @@ export default {
       column-gap: 24px;
       column-width:339px;
 
+    }
+    /deep/ .nodata{
+      position: relative;
     }
     &-item{
       // width:339px;
