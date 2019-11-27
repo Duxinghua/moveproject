@@ -17,7 +17,8 @@
       <div class="orderList-content-item" v-for="(item,index) in orderList" :key="index">
         <div class="ordertop">
           <span>订单编号：{{item.order_code}}</span>
-          <span>{{item.status_text}}</span>
+          <span v-if="item.status != 4">{{item.status_text}}</span>
+          <span v-if="item.status == 4" class="sharetext">待分享，差{{item.need}}人</span>
         </div>
         <div class="orderclist" @click="orderDetailHandler(item.order_id)">
           <div class="ordercontent" v-for="(goodsitem,index) in item.goods" :key="goodsitem.goods_id">
@@ -46,6 +47,7 @@
             <span v-if="item.status === 1" @click="sendClickHandler(item.order_id)">提配发货</span>
             <span v-if="item.status === 2" @click="confirmClickHandler(item.order_id)">确认收货</span>
             <span v-if="item.status === 3 && item.is_comment === 0" @click="commentClickHandler(item.order_id)">评论</span>
+            <span class="share" v-if="item.status === 4" @click="shareClickHandler(item.t_id)">邀请拼团</span>
           </div>
         </div>
       </div>
@@ -68,6 +70,7 @@ export default {
       tabList: [
         {name: '全部', status: ''},
         {name: '待付款', status: 0},
+        {name: '待分享', status: 4},
         {name: '待发货', status: 1},
         {name: '待收货', status: 2},
         {name: '评价', status: 3}
@@ -211,6 +214,15 @@ export default {
     orderDetailHandler (order_id) {
       this.$router.push({name: 'OrderDetail',query:{id:order_id}})
     },
+    shareClickHandler (t_id,tuanStatus) {
+                    this.$router.push({
+                        path:'/groupDetails',
+                        query:{
+                            id:t_id,
+                            tuanStatus:tuanStatus
+                        }
+                    })
+    },
     getOrderList () {
       const param = {
         page: this.current,
@@ -272,7 +284,7 @@ export default {
     position: fixed;
     z-index: 100;
     &-item{
-      width:20%;
+      width:16.67%;
       font-size: 32px;
       color:#999999;
       text-align: center;
@@ -309,6 +321,9 @@ export default {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        .sharetext{
+          color:rgba(205, 168, 113, 1)
+        }
       }
       .orderclist{
         width:100%;
@@ -391,6 +406,9 @@ export default {
           .cancel{
             color:#666666;
             border:2px solid #E3E3E3;
+          }
+          .share{
+            color:rgba(205, 168, 113, 1)
           }
         }
       }
