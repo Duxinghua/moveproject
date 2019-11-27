@@ -1,7 +1,7 @@
 <template>
   <div class="ondetail">
       <div class="ondetail-video">
-          <img src="../assets/images/offlinedetail.png" alt="">
+          <img :src="onlineMsg.image ? onlineMsg.image[0] : '' " alt="">
       </div>
       <div class="ondetail-top">
         <ul class="ondetail-top-list">
