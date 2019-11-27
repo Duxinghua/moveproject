@@ -11,7 +11,9 @@
       <div class="home-banner">
             <el-carousel :autoplay="true" :interval="5000" id="home-banner-carousel">
               <el-carousel-item v-for="(item, index) in slideList" :key="index">
-                <a :href="item.url"><img class="home-banner-item" :src="item.image" /></a>
+                <!-- <a :href="item.url"> -->
+                  <img class="home-banner-item" :src="item.image" />
+                <!-- </a> -->
               </el-carousel-item>
             </el-carousel>
       </div>

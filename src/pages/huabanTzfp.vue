@@ -46,7 +46,7 @@ export default {
       if (res.code === 1) {
         var wxpay = res.data
         wx.config({
-          debug: true,
+          debug: false,
           appId: wxpay.appId,
           timestamp: wxpay.timestamp,
           nonceStr: wxpay.nonceStr,
@@ -111,7 +111,7 @@ export default {
         group_id:this.group_id,
         images:images.join()
       }
-      alert(JSON.stringify(params))
+      // alert(JSON.stringify(params))
       this.$api.postsSave(params).then((res)=>{
         if(res.code === 1){
           _this.$toast({
@@ -153,7 +153,7 @@ export default {
       }
     },
     uploadImage (localId) {
-      this.$toast('uploadImage')
+      // this.$toast('uploadImage')
       var _this = this
       wx.uploadImage({
           localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
