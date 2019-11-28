@@ -1,7 +1,13 @@
 <template>
   <div class="ondetail">
       <div class="ondetail-video">
-          <img :src="onlineMsg.image ? onlineMsg.image[0] : '' " alt="">
+          <!-- <img :src="onlineMsg.image ? onlineMsg.image[0] : '' " alt=""> -->
+          <video-player class="video-player vjs-custom-skin"
+                      ref="videoPlayer"
+                      :playsinline="true"
+                      @play="onPlayerPlay($event)"
+                      :options="playerOptions">
+        </video-player>
       </div>
       <div class="ondetail-top">
         <ul class="ondetail-top-list">
@@ -93,7 +99,7 @@
       <div class="ondetail-action">
         <div class="ondetail-money">合计<span>￥{{onlineMsg.price}}</span></div>
         <div>
-            <div class="ondetail-group-btn" @click="onTrun(courseId)">发起拼团</div>
+            <div class="ondetail-group-btn" @click="onTuan(courseId)">发起拼团</div>
             <div class="ondetail-buy-btn" @click="onBuy(courseId)">立即购买</div>
         </div>
       </div>
@@ -134,6 +140,7 @@ export default {
       current: 0,
       pageType: 0,
       courseId: 0,
+      isBuy: 0,
       id: "",
       // like: 0,
       onlineMsg: {},
@@ -144,6 +151,29 @@ export default {
       comments: [],
       commentUser: {},
       commentsImg: [],
+      playerOptions: {
+        playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+        autoplay: false, //如果true,浏览器准备好时开始回放。
+        muted: false, // 默认情况下将会消除任何音频。
+        loop: false, // 导致视频一结束就重新开始。
+        preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+        language: 'zh-CN',
+        aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+        fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+        sources: [{
+          type: "video/mp4",
+          src: "http://mover.oss-cn-hangzhou.aliyuncs.com/moer/2019/0108/vd3ucmwn.mp4" //视频url地址
+        }],
+        poster: " ", //你的封面地址
+        // width: document.documentElement.clientWidth,
+        notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+        controlBar: {
+          timeDivider: true,
+          durationDisplay: true,
+          remainingTimeDisplay: false,
+          fullscreenToggle: true  //全屏按钮
+        }
+      },
       finished: false,
       loading: false,
       popupStatus: false
@@ -182,11 +212,9 @@ export default {
           this.onlineMsg = res.data
           this.msgItem = res.data.admin
           this.id = res.data.admin.id
-          // this.courseDetails = res.data
-          // this.courseOffline = res.data.courseOffline
-          // this.msgItem = res.data.admin
-          // this.tecImg = res.data.adminOpus
-          // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
+          this.isBuy = res.data.is_buy
+          this.playerOptions.sources[0].src = res.data.video
+          this.playerOptions.poster = res.data.image[0]
           // console.log(res.data)
           this.getWorksList()
         }
@@ -251,7 +279,6 @@ export default {
       this.$api.flowers(param).then((res) => {
         // console.log(res)
         if (res.code == 1) {
-          // this.flowerLists = res.data.data
           // console.log(res.data.data)
           this.flowerLists = res.data.data
         }
@@ -265,7 +292,7 @@ export default {
       }
       this.$api.courseComment(param).then((res) => {
         if (res.code == 1) {
-          console.log(res.data.data)
+          // console.log(res.data.data)
           var list = []
           res.data.data.map((item)=>{
             item.id = item.id
@@ -283,7 +310,7 @@ export default {
     likeHandler (amity,id) {
       this.$api.courseSaveLike({comment_id:id}).then((res) => {
         if (res.code === 1) {
-          console.log(res)
+          // console.log(res)
           this.$toast({
             message: res.msg,
             onClose: () => {
@@ -303,9 +330,25 @@ export default {
       // this.popupStatus = true
       this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1}})
     },
-    onTrun (courseId) {
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2}})
+    onTuan (courseId) {
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1}})
+    },
+    onPlayerPlay (player) {
+      // console.log('player play!', player)
+      if (this.isBuy == 0) {
+        this.$toast({
+          message: '此视频未购买，暂无法播放，请购买后再试'
+        })
+        this.playerOptions.sources[0].src = ''
+      } else if (this.isBuy == 1) {
+        this.$refs.videoPlayer.player.play()
+      }
     }
+  },
+  computed: {
+    player() {
+        return this.$refs.videoPlayer.player
+      }
   },
   components: {
     TeacherMsg,
@@ -332,11 +375,11 @@ export default {
   }
   &-video{
       width: 100%;
-      height: 500px;
-      img{
-        width:750px;
-        height: 500px;
-      }
+      // height: 500px;
+      // img{
+      //   width:750px;
+      //   height: 500px;
+      // }
   }
   &-top{
     width:100%;
@@ -345,8 +388,8 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-left:54px;
-    padding-right:54px;
+    // padding-left:54px;
+    // padding-right:54px;
     box-sizing: border-box;
     &-list{
       display: flex;
@@ -361,6 +404,7 @@ export default {
       }
     }
     &-list li {
+      // min-width: 180px;
       height: 98px;
       line-height: 100px;
       margin-left: 40px;

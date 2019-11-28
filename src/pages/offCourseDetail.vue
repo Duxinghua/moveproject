@@ -45,11 +45,11 @@
       <div class="offdetail-course-sec">
         <p>
           <span>开课时间</span>
-          <!-- <span>{{courseOffline.open_time_text}}</span> -->
+          <span>{{courseOffline.open_time_text}}</span>
         </p>
         <p>
           <span>开课地址</span>
-          <!-- <span>{{courseOffline.address}}</span> -->
+          <span>{{courseOffline.address}}</span>
         </p>
         <p>
           <span>主办单位</span>
@@ -167,7 +167,7 @@ export default {
           this.msgItem = res.data.admin
           this.tecImg = res.data.adminOpus ? res.data.adminOpus : []
           // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
-          // console.log(res.data.admin)
+          // console.log(res.data)
         }
       })
     },
