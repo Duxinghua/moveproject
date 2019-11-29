@@ -27,7 +27,7 @@
           </div>
           <div class="group-list">
             <GroupItem v-for="(item, index) in groupList" :key="index" :groupData="item"/>
-            <div class="group-no">
+            <div class="group-no" v-if="groupList.length == 0">
               <img src="../assets/images/tuan.png" alt="">
               <span>暂无拼团,快去拼团吧</span>
             </div>
@@ -124,6 +124,7 @@
 <script>
 import TeacherMsg from '@/components/teacherMsg.vue'
 import TeacherWorks from '@/components/teacherWorks.vue'
+import GroupItem from '@/components/cource/groupItem.vue'
 import NoData from '@/components/nodata'
 
 export default {
@@ -155,6 +156,7 @@ export default {
     this.onlineDetail()
     this.flowerList()
     this.courseComment()
+    this.courseTuanList()
   },
   methods: {
     menuHandler (index) {
@@ -236,6 +238,7 @@ export default {
         course_id: this.courseId
       }
       this.$api.courseTuanList(param).then((res) => {
+        console.log(res,'res detaul')
         if (res.code == 1) {
           this.groupList = res.data.data
           // console.log(res.data)
@@ -297,7 +300,7 @@ export default {
       })
     },
     onLinkAll () {
-      this.$router.push('/allGroup')
+      this.$router.push({name:'CourseAllGroup'})
     },
     onBuy (courseId) {
       // this.popupStatus = true
@@ -310,7 +313,8 @@ export default {
   components: {
     TeacherMsg,
     TeacherWorks,
-    NoData
+    NoData,
+    GroupItem
   },
   computed:{
     buyClass () {

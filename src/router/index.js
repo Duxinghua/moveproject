@@ -10,6 +10,8 @@ import OffCourseList from '@/pages/offCourseList'
 import OffCourseDetail from '@/pages/offCourseDetail'
 import OnlineCourseDetail from '@/pages/onlineCourseDetail'
 import OnlineCourseList from '@/pages/onlineCourseList'
+import CourseGroupDetails from '@/pages/courseGroupDetails'
+import CourseAllGroup from '@/pages/courseAllGroup'
 import OrderCommit from '@/pages/orderCommit'
 import SubmitCourseOrder from '@/pages/submitCourseOrder'
 import OrderSuccess from '@/pages/orderSuccess'
@@ -31,6 +33,7 @@ import OrderRefund from '@/pages/orderRefund'
 import OrderComment from '@/pages/orderComment'
 import CourseOrderList from '@/pages/courseOrderList'
 import CourseOrderDetail from '@/pages/courseOrderDetail'
+import Invite from '@/pages/invite'
 import MyEdit from '@/pages/myEdit'
 import MyModify from '@/pages/myModify'
 import MyBx from '@/pages/myBx'
@@ -356,6 +359,14 @@ const router = new Router({
       }
     },
     {
+      path: '/invite',
+      name: 'Invite',
+      component: Invite,
+      meta: {
+        title: '好友邀请'
+      }
+    },
+    {
       path: '/myedit',
       name: 'MyEdit',
       component: MyEdit,
@@ -384,7 +395,7 @@ const router = new Router({
       name: 'MyXf',
       component: MyXf,
       meta: {
-        title: '我的学分'
+        title: '我的学币'
       }
     },
     {
@@ -521,6 +532,22 @@ const router = new Router({
       component: CourseOrderList,
       meta: {
         title: '课程订单'
+      }
+    },
+    {
+      path: '/coursegroupdetails',
+      name: 'CourseGroupDetails',
+      component: CourseGroupDetails,
+      meta: {
+        title: '课程拼团详情'
+      }
+    },
+    {
+      path: '/courseallgroup',
+      name: 'CourseAllGroup',
+      component: CourseAllGroup,
+      meta: {
+        title: '课程拼团列表'
       }
     },
     {

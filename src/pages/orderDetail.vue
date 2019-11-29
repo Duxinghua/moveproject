@@ -50,7 +50,7 @@
         <span>¥{{order_detail.price_pay}}</span>
       </div>
       <div class="orderItem orderItemfix" v-if="order_detail.status == 1 || order_detail.status == 3 && order_detail.is_comment == 0 ">
-          <span class="btn" v-if="order_detail.status == 1" @click="refundHandler(order_detail.order_id)">退款</span>
+          <span class="btn" v-if="order_detail.status == 1 && order_detail.t_id == 0" @click="refundHandler(order_detail.order_id)">退款</span>
           <span class="btn" v-if="order_detail.status == 3 && order_detail.is_comment == 0" @click="commentClickHandler(order_detail.order_id)">评价</span>
       </div>
     </div>
@@ -96,13 +96,13 @@
       </div>
     </div>
     <div class="orderdetail-btns" v-if="order_detail.status == 0">
-      <span class="cancel" v-if="order_detail.status == 0" @click="cancelClickHandler(order_detail.order_id)">
+      <span class="cancel" v-if="order_detail.status == 0 && order_detail.t_id == 0" @click="cancelClickHandler(order_detail.order_id)">
         关闭订单
       </span>
-      <span class="success" v-if="order_detail.status == 0" @click="payClickHandler(order_detail.order_id)">
+      <span class="success" v-if="order_detail.status == 0 && order_detail.t_id == 0" @click="payClickHandler(order_detail.order_id)">
         立即付款
       </span>
-      <span class="repay" v-if="false">重新购买</span>
+      <span class="repay" v-if="order_detail.t_id == 0">重新购买</span>
     </div>
   </div>
 </template>
@@ -147,7 +147,10 @@ export default {
           t2: '参加人数越多，越容易成功'
         }
 
-      ]
+      ],
+      num: 3,//上传数量
+      localIds: [],
+      imgList: []
     }
   },
   mounted () {
@@ -264,6 +267,7 @@ export default {
         }
       })
     }
+
   }
 }
 </script>

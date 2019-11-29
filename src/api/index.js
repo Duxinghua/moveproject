@@ -347,6 +347,10 @@ const server = {
   courseTuanList (data) {
     return post('course_tuan/lists', data)
   },
+  // 课程拼团详情 /course_tuan/index
+  courseTuanIndex (data) {
+    return post('course_tuan/index', data)
+  },
   // 相关花材 /api/course/materials
   flowers (data) {
     return post('course/materials', data)
@@ -370,6 +374,10 @@ const server = {
   // 创建订单 /api/course_order/store
   courseOrderStore (data) {
     return post('course_order/store', data)
+  },
+  // 课程拼团信息查询 /api/course_order/tuaninfo
+  courseOrderTuaninfo (data) {
+    return post('course_order/tuaninfo', data)
   },
   // 名师列表  /api/teacher/lists
   teacherList (data) {
@@ -398,6 +406,14 @@ const server = {
   // 我评论过的商品 goods/myCommentedGoods
   myCommentedGoods (data) {
     return post('goods/myCommentedGoods', data)
+  },
+  // 添加订单退货单 /api/goods_order/storeRefund
+  goodsStoreRefund (data) {
+    return post('goods_order/storeRefund', data)
+  },
+  // 邀请注册新接口 api/wechat/qrcode
+  wechatQrcode (data) {
+    return post('wechat/qrcode', data)
   }
 
 }

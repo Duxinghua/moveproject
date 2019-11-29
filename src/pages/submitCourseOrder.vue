@@ -68,7 +68,7 @@
         </div>
       </div>
     </div>
-    <!-- <van-overlay :show="overlayStatus" @click="hideOverlay">
+    <van-popup v-model="overlayStatus"  @click="hideOverlay">
             <div class="wrapper" @click.stop>
                 <div class="tuan-wrapper">
                     <div class="tuan-status"><img src="../assets/images/select.png" alt=""><span>{{tuanStatus == 0 ? '已支付' : '拼团成功'}}</span></div>
@@ -82,13 +82,16 @@
                         </div>
                     </div>
                     <div class="goods-time" v-if="tuanStatus == 0">
-                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="groupDetails.expire_time * 1000" />后结束
+                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，
+                        <van-count-down format="HH:mm:ss" :time="groupDetails.expire_time" ></van-count-down>
+  后结束
                     </div>
+
                     <div class="tuan-share" @click="onLink">{{tuanStatus == 0 ? '邀请好友拼团' : '继续逛逛'}}</div>
                     <div class="tuan-link" @click="onLinkOrder"><span>查看订单</span><van-icon name="arrow" /></div>
                 </div>
             </div>
-    </van-overlay> -->
+    </van-popup>
   </div>
 </template>
 
@@ -106,7 +109,25 @@ export default {
       wx:null,
       overlayStatus:false,
       popupStatus:false,
-      tuanStatus:1,//1是拼团成功 0 是支付成功
+      tuanStatus: 0,//1是拼团成功 0 是支付成功
+      groupDetails: {
+        current_number:2,
+        user_number: 3,
+        expire_time: (1577851200*1000) - new Date().getTime(),
+        users:
+        [
+        {
+          "user_id":22,
+          "nickname":"杜兴华",
+          "avatar":'https://youmeng.qixiuu.com/uploads/wx/head_1.png'
+        },
+        {
+          "user_id":22,
+          "nickname":"杜兴华",
+          "avatar":'https://youmeng.qixiuu.com/uploads/wx/head_1.png'
+        }
+        ]
+      }
     }
   },
   created() {
@@ -144,6 +165,12 @@ export default {
     })
   },
   methods: {
+    onLink () {
+
+    },
+    onLinkOrder () {
+
+    },
     hideOverlay () {
 
     },
@@ -187,24 +214,33 @@ export default {
     cancelHandler () {
       this.reShow = false;
     },
+    tuanInfo (order_id) {
+      this.$api.courseOrderTuaninfo({order_id:order_id}).then((res)=>{
+
+      })
+    },
     onHandler () {
       var _this = this
       var params = {
         course_id: this.course_id,
         type: 0
       }
-      if(this.type == 1){
+      if(this.type == 2){
         params.type = 1
       }
+      alert(JSON.stringify(params))
       this.$api.courseOrderStore(params).then((res)=>{
         if(res.code == 1){
-          _this.wxPay(pay_data,res.data.order_id)
+          _this.wxPay(res.data.pay_data,res.data.order_id)
         }else{
           _this.$toast(res.msg)
         }
       })
 
     }
+  },
+  components: {
+
   }
 }
 </script>
@@ -257,6 +293,86 @@ export default {
         justify-content: center;
     }
   }
+}
+.group-list{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .group-item{
+        width: 100px;
+        height: 100px;
+        position: relative;
+        .img{
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            img{
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .tag{
+            position: absolute;
+            padding: 5px 9px;
+            color: #fff;
+            font-size: 24px;
+            background: #995258;
+            border-radius: 20px;
+            right: 0px;
+            top: -20px;
+        }
+    }
+    .active{
+        border: 1Px dotted #DCDCDC;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img{
+            width: 26px;
+            height: 42px;
+        }
+    }
+}
+.list-active{
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.list-active1{
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.goods-time{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333333;
+    font-size: 26px;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    img{
+        width: 28px;
+        height: 28px;
+        margin-right: 10px;
+    }
+    span{
+        color: #995258;
+    }
+}
+.goods-submit{
+    width: 625px;
+    height: 85px;
+    background: #738266;
+    border-radius: 50px;
+    text-align: center;
+    line-height: 85px;
+    font-size: 36px;
+    color: #F3D995;
+    margin-left: auto;
+    margin-right: auto;
 }
 .submit-order{
   width: 100%;

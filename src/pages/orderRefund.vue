@@ -17,7 +17,7 @@
       </div>
       <textarea placeholder="请输入退货原因…"  class="orderdetail-top-textarea" v-model="contents"/>
       <div class="orderdetail-top-price">退款金额：<span>¥{{order_detail.price_pay}}</span></div>
-      <span class="orderdetail-top-span">上传凭证（{{0}}/3）</span>
+      <span class="orderdetail-top-span">上传凭证（{{imgList.length}}/3）</span>
       <div class="orderdetail-top-uploads">
         <div class="uploadimgs-wrap" v-for="(item,index) in imgList" :key="index" @click="delImg(index)">
           <img :src="item.l" class="uploadimgs" alt="">
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import area from '@/utils/area'
+import config from '@/utils/config'
 export default {
   name: 'OrderRefund',
   data () {
@@ -45,7 +45,7 @@ export default {
       num: 3,//上传数量
       localIds: [],
       imgList: [],
-      content: ''
+      contents: ''
     }
   },
   created () {
@@ -115,17 +115,17 @@ export default {
       })
 
       var params = {
-        content:this.contents,
+        description:this.contents,
         order_id:this.order_id,
         images:images.join()
       }
       // alert(JSON.stringify(params))
-      this.$api.postsSave(params).then((res)=>{
+      this.$api.goodsStoreRefund(params).then((res)=>{
         if(res.code === 1){
           _this.$toast({
             message:res.msg,
             onClose: ()=>{
-              _this.$router.go(-1)
+              _this.$router.push({name:'OrderList'})
             }
           })
         }else{
