@@ -1,11 +1,11 @@
 <template>
     <div class="group-item">
         <div class="group-img">
-            <div class="img-box">
+            <div class="img-box" :class="{'img2':groupData.user_number == 2}">
                 <div class="img" v-for="(item, index) in groupData.users" :key="index">
                     <img :src="item.avatar ? item.avatar : require('../../assets/images/useravatar.png')" alt="">
                 </div>
-                <div class="img active" v-for="(item, index) in (3 - groupData.users.length)" :key="'active' + index">
+                <div class="img active" v-for="(item, index) in ((groupData.user_number == 2 ? 2 : 3) - groupData.users.length)" :key="'active' + index">
                     <img src="../../assets/images/doubt.png" alt="">
                 </div>
             </div>
@@ -87,7 +87,9 @@ export default {
                     width: 100%;
                     height: 100%;
                 }
+
             }
+            
             .active{
                 border: 1Px dotted #DCDCDC;
                 background: #fff;
@@ -100,8 +102,19 @@ export default {
                     height: 42px;
                 }
             }
+            
 
         }
+        .img2{
+                .img{
+                    &:nth-child(2){
+                        left: 0px !important;
+                    }
+                    &:nth-child(2){
+                        left: 130px !important;
+                    }
+                }
+            }
         span{
             margin-left: 20px;
             display: flex;

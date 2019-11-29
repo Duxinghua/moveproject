@@ -40,6 +40,7 @@
             </div>
             <div
                 class="goods-share"
+				@click="toggleShare"
             >
                 <img
                     src="../assets/images/share.png"
@@ -50,7 +51,7 @@
         </div>
         <div class="goods-group">
             <div class="group-header">
-                <h3>商品拼团</h3>
+                <h3>商品拼团<img src="../assets/images/tuan-bg.png" alt=""></h3>
                 <div
                     class="right"
                     @click="onLinkAll"
@@ -127,7 +128,18 @@
                                 <span class="time">{{item.create_time}}</span>
                             </div>
                             <div class="comments-center">
-                                {{item.content}}
+								<div class="rate">
+									<span>描述相符</span>
+									<van-rate
+										:value="item.score"
+										readonly
+										color="#9E5259"
+										void-color="#9E5259"
+									/>
+								</div>
+								<ul v-if="item.content">
+									<li v-for="(self, index) in item.content" :key="index">{{self}}</li>
+								</ul>
                             </div>
                             <div class="comments-img">
                                 <div
@@ -146,6 +158,14 @@
                                     </van-image>
                                 </div>
                             </div>
+
+							<div class="comments-reply-box" v-if="item.reply">
+								<div class="comments-reply">
+									<div class="reply-user"><span>{{item.reply.admin.nickname}}</span><span>{{item.reply.create_time}}</span></div>
+									<div class="reply-box"><span>回复  {{item.user && item.user.nickname}}:</span><em>{{item.reply.content}}
+								</em></div>
+								</div>
+							</div>
                         </div>
                     </div>
                 </van-list>
@@ -157,20 +177,20 @@
         </div>
 
         <div class="goods-action">
-            <div
+            <!-- <div
                 class="goods-money"
                 v-if="!disabled"
             >合计<span>￥{{(skuList && skuList[skuIndex]) ? (skuList[skuIndex].price * goodsNum) : '0.00'}}</span></div>
             <div
                 class="goods-money"
                 v-if="disabled"
-            >合计<span>￥{{ skuIndex != -1 ? goodsData.price_tuan : '0.00'}}</span></div>
-            <div>
+            >合计<span>￥{{ skuIndex != -1 ? goodsData.price_tuan : '0.00'}}</span></div> -->
+            <!-- <div> -->
                 <div
                     class="goods-group-btn"
                     @click="onBuy('group')"
                     v-if="goodsData.is_tuan == 1"
-                >发起拼团</div>
+                ><span>¥{{goodsData.price_tuan }}</span>发起拼团</div>
                 <div
                     class="goods-group-btn"
                     @click="onBuy('car')"
@@ -179,8 +199,8 @@
                 <div
                     class="goods-buy-btn"
                     @click="onBuy('buy')"
-                >立即购买</div>
-            </div>
+                ><span>¥{{(skuList && skuList[skuIndex]) ? (skuList[skuIndex].price * goodsNum) : goodsData.price}}</span>立即购买</div>
+            <!-- </div> -->
         </div>
 
         <van-popup
@@ -258,6 +278,10 @@
             :startPosition="startPosition"
         >
         </van-image-preview>
+
+		<van-overlay :show="overlayStatus" :z-index="100" @click="toggleShare">
+			<img src="../assets/images/shareimg.png" alt="">
+		</van-overlay>
     </div>
 </template>
 
@@ -267,6 +291,7 @@ import GroupItem from '@/components/shop/groupItem'
 export default {
     data() {
         return {
+			overlayStatus:false,
             goodsNum: 1,
             swiperCurrent: 0,
             tabIndex: 0,
@@ -323,6 +348,9 @@ export default {
         this.goodsTuanLists();
     },
     methods: {
+		toggleShare(){
+			this.overlayStatus = !this.overlayStatus;
+		},
         onShare() {
             const _this = this;
             const title = this.goodsData.goods_name;
@@ -498,6 +526,14 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.van-overlay{
+	img{
+		position: absolute;
+		width: 500px;
+		right: 0px;
+		top: 0px;
+	}
+}
 .goods-details {
   background: #f6f3ee;
   padding-bottom: 100px;
@@ -532,7 +568,7 @@ export default {
   }
   .goods-info {
     padding: 25px 25px 40px 25px;
-    background: #fbf8f5;
+    background: #FFFFFF;
     position: relative;
     overflow: hidden;
     .goods-share {
@@ -586,15 +622,24 @@ export default {
 
   .goods-group {
     margin-top: 15px;
-    background: #fbf8f5;
+    background: #FFFFFF;
     padding: 40px 25px 35px 25px;
     .group-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+	  
       h3 {
         color: #6d8160;
         font-size: 36px;
+		position: relative;
+		img{
+			width: 150px;
+			position:absolute;
+			bottom: 0px;
+			left: 0px;
+			opacity: 0.7;
+		}
       }
       .right {
         color: #999999;
@@ -629,7 +674,7 @@ export default {
 
   .goods-content {
     margin-top: 15px;
-    background: #fbf8f5;
+    background: #FFFFFF;
     .goods-tab {
       display: flex;
       justify-content: center;
@@ -649,7 +694,7 @@ export default {
           display: inline-block;
           width: 50px;
           height: 4px;
-          background: #fff;
+          background: #FFFFFF;
           position: absolute;
           left: 50%;
           transform: translateX(-50%);
@@ -732,7 +777,31 @@ export default {
             margin-top: 10px;
             font-size: 26px;
             padding-left: 85px;
+			.rate{
+				display: flex;
+				align-items: center;
+				span{
+					color: #999999;
+					font-size: 28px;
+					margin-right: 30px;
+				}
+			}
+			ul{
+				display: flex;
+				flex-wrap: wrap;
+				margin-top: 20px;
+				li{
+					border-radius: 33px;
+					border: 1Px solid #E7E7E7;
+					padding: 8px 30px;
+					font-size: 26px;
+					color: #333333;
+					margin-right: 10px;
+					margin-top: 10px;
+				}
+			}
           }
+
           .comments-img {
             margin-top: 20px;
             padding-left: 60px;
@@ -761,6 +830,44 @@ export default {
               }
             }
           }
+		  .comments-reply-box{
+			  margin-top: 20px;
+			padding-left: 60px;
+				margin-left: 30px;
+			}
+		  .comments-reply{
+			  padding:30px 20px 40px 20px;
+			  background: #F7F7F7;
+			  border-radius: 12px;
+			  .reply-user{
+				  display: flex;
+				  span{
+					  &:nth-child(1){
+						  color: #333333;
+						  font-size: 26px;
+						  margin-right: 25px;
+					  }
+					  &:nth-child(2){
+						  color: #999999;
+						  font-size: 26px;
+					  }
+				  }
+			  }
+			  .reply-box{
+				  line-height: 0.30rem;
+				  span{
+					  color: #666666;
+					  font-size: 26px;
+					  margin-right: 10px;
+				  }
+				  em{
+					  font-style: normal;
+					  color: #333;
+					  font-size: 26px;
+				  }
+			  }
+
+		  }
         }
       }
     }
@@ -793,7 +900,8 @@ export default {
       display: flex;
     }
     .goods-group-btn {
-      width: 220px;
+    //   width: 220px;
+		flex: 1;
       height: 80px;
       line-height: 80px;
       text-align: center;
@@ -801,9 +909,15 @@ export default {
       background: #dcc98b;
       border-radius: 40px 0px 0px 40px;
       font-size: 34px;
+	  display: flex;
+	  justify-content: center;
+	  span{
+		  margin-right: 10px;
+	  }
     }
     .goods-buy-btn {
-      width: 220px;
+    //   width: 220px;
+	flex: 1;
       height: 80px;
       line-height: 80px;
       text-align: center;
@@ -811,6 +925,11 @@ export default {
       background: #6d8160;
       font-size: 34px;
       border-radius: 0px 40px 40px 0px;
+	  display: flex;
+	  justify-content: center;
+	  span{
+		  margin-right: 10px;
+	  }
     }
   }
 

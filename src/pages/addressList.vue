@@ -63,8 +63,10 @@ export default {
             }
         },
         onChange(index,id){
-            this.defaultIndex = index;
-            this.saveAddress(id)
+            if(this.defaultIndex != index){
+                this.defaultIndex = index;
+                this.saveAddress(id)
+            }
         },
         saveAddress(id){
             const param = {
