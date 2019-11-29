@@ -72,7 +72,9 @@ export default {
             orderType:0,
             wx:null,
             wxConfig:{},
-            priceCost:0
+            priceCost:0,
+            specs: {},
+            goods_id: null
         }
     },
     watch:{
@@ -118,15 +120,18 @@ export default {
                     jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
                 });
             }
-            
+
             wx.ready(() => {
                 this.wx = wx;
             });
         });
     },
     mounted(){
-        const {type} = this.$route.query;
+        const {goods_id,specs,type} = this.$route.query;
         this.orderType = type;
+        this.goods_id = goods_id;
+        this.specs = specs;
+        console.log(this.specs,this.goods_id)
         this.getAddressList();
         this.goodsOrderCreate();
     },
@@ -167,6 +172,8 @@ export default {
                     t_id:this.orderData.t_id,
                     type:this.orderType,
                     address_id:this.addressData.id,
+                    goods_id:this.goods_id,
+                    specs:this.specs
                 }
             }else{
                 //单个商品购买

@@ -44,9 +44,9 @@
           <div class="btns">
             <span class="cancel" v-if="item.status === 0" @click="cancelClickHandler(item.order_id)">取消订单</span>
             <span v-if="item.status === 0" @click="replayClickHandler(item.order_id)">去付款</span>
-            <span v-if="item.status === 1" @click="sendClickHandler(item.order_id)">提配发货</span>
+            <span v-if="item.status === 1" @click="sendClickHandler(item.order_id)">提醒发货</span>
             <span v-if="item.status === 2" @click="confirmClickHandler(item.order_id)">确认收货</span>
-            <span  @click="commentClickHandler(item.order_id)">评论</span>
+            <span  v-if="item.status === 3 && item.is_comment === 0 " @click="commentClickHandler(item.order_id)">评论</span>
             <span class="share" v-if="item.status === 4" @click="shareClickHandler(item.t_id)">邀请拼团</span>
           </div>
         </div>
@@ -207,6 +207,7 @@ export default {
       this.currentIndex = index
       this.status = status
       this.orderList = []
+      this.current = 1
       this.finished = false
       this.loading = false
       this.getOrderList()
@@ -228,6 +229,9 @@ export default {
         page: this.current,
         pageSize: 10,
         status: this.status
+      }
+      if(this.status === 3) {
+        param.is_comment = 0
       }
       this.$toast.loading({
         duration: 0,

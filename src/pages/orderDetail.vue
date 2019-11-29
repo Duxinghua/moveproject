@@ -51,16 +51,16 @@
       </div>
       <div class="orderItem orderItemfix" v-if="order_detail.status == 1 || order_detail.status == 3 && order_detail.is_comment == 0 ">
           <span class="btn" v-if="order_detail.status == 1" @click="refundHandler(order_detail.order_id)">退款</span>
-          <span class="btn" v-if="order_detail.status == 3 && order_detail.is_comment == 0">评价</span>
+          <span class="btn" v-if="order_detail.status == 3 && order_detail.is_comment == 0" @click="commentClickHandler(order_detail.order_id)">评价</span>
       </div>
     </div>
-    <div class="orderdetail-tuan" v-if="order_detail.t_id != 0 && order_detail.goodsTuan">
-      <span>拼团成功</span>
+    <div class="orderdetail-tuan" v-if="order_detail.t_id != 0 " @click="onLook">
+      <span>拼团状态 {{goodsTuanText[order_detail.goodsTuan.status]}}</span>
       <div class="avatars">
-        <img :src="itemav.avatars" alt="" v-for="(itemav,index) in order_detail.goodsTuan" :key="index">
-        <!-- <img src="../assets/images/img2.png" alt="">
-        <img src="../assets/images/img3.png" alt=""> -->
-        <img src="../assets/images/img4.png" alt="">
+        <div :key="index" v-for="(itemav,index) in order_detail.goodsTuan.users">
+          <img :class="{active:itemav.active}" :src="itemav.avatar" alt="" />
+
+        </div>
       </div>
       <img class="fx" src="../assets/images/fx.png" alt="">
     </div>
@@ -115,11 +115,16 @@ export default {
     return {
       order_id: null,
       order_detail: {},
+      goodsTuanText:[
+        '进行中',
+        '成功',
+        '解散'
+      ],
       tips: [
         {
           image: require('../assets/images/orderpay.png'),
           t1: '等待买家付款',
-          t2: '剩23小时59分自动关闭'
+          t2: '24小时后自动关闭'
         },
         {
           image: require('../assets/images/ordersend.png'),
@@ -138,8 +143,8 @@ export default {
         },
         {
           image: require('../assets/images/orderclose.png'),
-          t1: '订单已关闭',
-          t2: '订单已超过可支付时间，请重新购买。'
+          t1: '拼团订单',
+          t2: '参加人数越多，越容易成功'
         }
 
       ]
@@ -150,6 +155,17 @@ export default {
     this.getDetail()
   },
   methods: {
+    onLook () {
+      this.$router.push({
+        path: '/groupDetails',
+        query: {
+          id: this.order_detail.t_id
+        }
+      })
+    },
+    commentClickHandler (order_id) {
+      this.$router.push({name:'OrderComment',query:{id:order_id}})
+    },
     refundHandler (order_id) {
       this.$router.push({name:'OrderRefund',query:{id:order_id}})
     },
@@ -176,7 +192,7 @@ export default {
              message: res.msg,
              onClose: () => {
 
-               _this.getDetail()
+               _this.$router.go(-1)
              }
            })
 
@@ -195,8 +211,8 @@ export default {
       var getyear = date.getFullYear()
       var getmonth = date.getMonth() + 1
       var getday = date.getDate()
-      var gethours = date.getHours()
-      var getminute = date.getMinutes()
+      var gethours = new String(date.getHours()).length == 1 ? (0+new String(date.getHours())) : date.getHours()
+      var getminute = new String(date.getMinutes()).length  == 1 ? (0+ new String(date.getMinutes())) : date.getMinutes()
       return getyear + '-' + getmonth + '-' + getday + ' ' + gethours + ':'+ getminute
     },
     getDetail () {
@@ -219,6 +235,32 @@ export default {
           this.order_detail.tipsimage = this.tips[status].image
           this.order_detail.tipst1 = this.tips[status].t1
           this.order_detail.tipst2 = this.tips[status].t2
+          var list = []
+          var arr = res.data.goodsTuan.users
+          for(var i=0,l=4;i<l;i++){
+            var obj = {}
+            if(i != 3){
+              if(arr[i]){
+                obj = arr[i]
+                obj.active = false
+              }else{
+                if(i == 0 || i == 1 || i == 2){
+                  obj.active = true
+                  obj.avatar = require('../assets/images/doubt.png')
+
+                }
+              }
+            }else{
+
+                obj.active = false
+                obj.avatar = require('../assets/images/img4.png')
+
+            }
+            list.push(obj)
+          }
+          this.order_detail.goodsTuan.users = list
+
+
         }
       })
     }
@@ -253,38 +295,74 @@ export default {
       height:76px;
       width:243px;
       position: relative;
-      margin-left:269px;
-      img:nth-child(1){
+      margin-left:200px;
+      div{
+        background:white;
+        .active{
+          position: relative;
+          left:50%;
+          top:50%;
+          width:60% !important;
+          height:60% !important;
+          transform: translate(-50%,-50%)
+        }
+      }
+      div:nth-child(1){
+        border-radius: 50%;
+        border:1px solid #DCDCDC;
         width:76px;
         height:76px;
         position: absolute;
         left:0;
         top:0;
         z-index: 1;
+        img{
+          width:100%;
+          height:100%;
+        }
       }
-      img:nth-child(2){
+      div:nth-child(2){
+        border-radius: 50%;
+        border:1px solid #DCDCDC;
         width:76px;
         height:76px;
         position: absolute;
         left:52px;
         top:0;
         z-index: 2;
+        img{
+          width:100%;
+          height:100%;
+        }
       }
-      img:nth-child(3){
+      div:nth-child(3){
         width:76px;
         height:76px;
         position: absolute;
         left:111px;
         top:0;
         z-index: 3;
+        border-radius: 50%;
+        border:1px solid #DCDCDC;
+        img{
+          width:100%;
+          height:100%;
+        }
       }
-      img:nth-child(4){
+      div:nth-child(4){
+        border-radius: 50%;
+        background: transparent!important;
+        border:1px solid #DCDCDC;
         width:76px;
         height:76px;
         position: absolute;
         left:167px;
         top:0;
         z-index: 4;
+        img{
+          width:100%;
+          height:100%;
+        }
       }
     }
   }
@@ -450,7 +528,7 @@ export default {
         background:#EEF1EC;
         border-radius: 8px;
         left:0;
-        bottom: 0;
+        bottom: 5px;
         z-index: -1;
       }
     }

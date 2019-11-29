@@ -22,7 +22,7 @@
           <TeacherWorks v-for="item in teacherWorks" :key="item.id" :item="item"></TeacherWorks>
         </div>
       </van-list>
-      <NoData v-if="teacherWorks.length == 0"/>
+      <!-- <NoData v-if="teacherWorks.length == 0"/> -->
     </div>
   </div>
 </template>

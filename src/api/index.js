@@ -394,7 +394,12 @@ const server = {
   // 我加入的 api/group/getMyGroup
   getMyGroup (data) {
     return post('group/getMyGroup', data)
+  },
+  // 我评论过的商品 goods/myCommentedGoods
+  myCommentedGoods (data) {
+    return post('goods/myCommentedGoods', data)
   }
+
 }
 
 export default server

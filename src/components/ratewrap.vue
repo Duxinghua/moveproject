@@ -8,6 +8,7 @@
           color="#ee0a24"
           void-icon="star"
           void-color="#eee"
+          :readonly="disabled"
         />
   </div>
 </template>
@@ -15,7 +16,18 @@
 <script>
 export default {
   name: 'RateWrap',
-  props: ['values','goodsId'],
+  props: {
+    values:{
+      type:Number
+    },
+    goodsId:{
+      type:Number
+    },
+    disabled:{
+      type:Boolean,
+      default:false
+    }
+  },
   data () {
     return {
       value:this.values

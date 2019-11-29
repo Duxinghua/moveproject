@@ -93,8 +93,8 @@
       <div class="ondetail-action">
         <div class="ondetail-money">合计<span>￥{{onlineMsg.price}}</span></div>
         <div>
-            <div class="ondetail-group-btn" @click="onTrun(courseId)">发起拼团</div>
-            <div class="ondetail-buy-btn" @click="onBuy(courseId)">立即购买</div>
+            <div class="ondetail-group-btn" @click="onTrun(courseId)" v-if="onlineMsg.is_tuan === 1">发起拼团</div>
+            <div :class="buyClass" @click="onBuy(courseId)">立即购买</div>
         </div>
       </div>
       <!-- <van-popup v-model="popupStatus" round :safe-area-inset-bottom="true" position="bottom">
@@ -301,16 +301,24 @@ export default {
     },
     onBuy (courseId) {
       // this.popupStatus = true
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1, courseType: 'online'}})
     },
     onTrun (courseId) {
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2, courseType: 'online'}})
     }
   },
   components: {
     TeacherMsg,
     TeacherWorks,
     NoData
+  },
+  computed:{
+    buyClass () {
+      return {
+        'ondetail-buy-btn':true,
+        'noTuan': this.onlineMsg.is_tuan == 0
+      }
+    }
   }
 }
 </script>
@@ -716,6 +724,9 @@ export default {
       background: #6D8160;
       font-size: 34px;
       border-radius:0px 40px 40px 0px;
+    }
+    .noTuan{
+      border-radius: 40px;
     }
   }
   // .sku-content{
