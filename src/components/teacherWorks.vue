@@ -2,7 +2,7 @@
   <div class="teacher-works-item">
     <img :src="item.image[0]" alt="">
     <div>{{item.title}}</div>
-    <span>{{item.description}} {{item.create_time}}</span>
+    <span>{{item.description}}</span>
   </div>
 
 </template>

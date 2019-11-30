@@ -1,7 +1,7 @@
 <template>
   <div class="orderdetail">
     <div class="orderdetail-top">
-      <span class="tip">退款商品</span>
+      <span class="tip">申请退款</span>
       <div class="orderlist">
         <div class="ordercontent" v-for="(goodsitem,index) in order_detail.goods" :key="index">
             <img :src="goodsitem.images" alt="">
@@ -15,9 +15,9 @@
             </div>
         </div>
       </div>
-      <textarea placeholder="请输入退货原因…"  class="orderdetail-top-textarea"/>
+      <textarea placeholder="请输入退货原因…"  class="orderdetail-top-textarea" v-model="contents"/>
       <div class="orderdetail-top-price">退款金额：<span>¥{{order_detail.price_pay}}</span></div>
-      <span class="orderdetail-top-span">上传凭证（{{0}}/3）</span>
+      <span class="orderdetail-top-span">上传凭证（{{imgList.length}}/3）</span>
       <div class="orderdetail-top-uploads">
         <div class="uploadimgs-wrap" v-for="(item,index) in imgList" :key="index" @click="delImg(index)">
           <img :src="item.l" class="uploadimgs" alt="">
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import area from '@/utils/area'
+import config from '@/utils/config'
 export default {
   name: 'OrderRefund',
   data () {
@@ -44,19 +44,170 @@ export default {
       order_detail: {},
       num: 3,//上传数量
       localIds: [],
-      imgList: []
+      imgList: [],
+      contents: ''
     }
+  },
+  created () {
+    var data = {
+      url:location.href
+    }
+    const agent = navigator.userAgent
+    const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+    if(isiOS){
+      data.url = config.shareurls
+    }
+    this.$api.userGetSignPackage(data).then((res) => {
+      if (res.code === 1) {
+        var wxpay = res.data
+        wx.config({
+          debug: false,
+          appId: wxpay.appId,
+          timestamp: wxpay.timestamp,
+          nonceStr: wxpay.nonceStr,
+          signature: wxpay.signature,
+          jsApiList: [
+            'checkJsApi',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'chooseImage',
+            'uploadImage',
+            'getLocalImgData'
+          ]
+        })
+        wx.error(function (res) {
+          console.log('出错了：' + res.errMsg)
+        })
+        // 在这里调用 API
+        wx.ready(function () {
+          wx.checkJsApi({
+            jsApiList: [
+              'checkJsApi',
+              'onMenuShareTimeline',
+              'onMenuShareAppMessage',
+              'chooseImage',
+              'uploadImage',
+              'getLocalImgData'
+            ],
+            success: function (res) {
+
+            }
+          })
+        })
+
+      }
+    })
   },
   mounted () {
     this.order_id = this.$route.query.id
     this.getDetail()
   },
   methods: {
+    postSave () {
+      var images = []
+      var _this = this
+      if(!this.contents){
+        this.$toast('请输入原因')
+        return
+      }
+      this.imgList.map((item)=>{
+          images.push(item.url)
+      })
+
+      var params = {
+        description:this.contents,
+        order_id:this.order_id,
+        images:images.join()
+      }
+      // alert(JSON.stringify(params))
+      this.$api.goodsStoreRefund(params).then((res)=>{
+        if(res.code === 1){
+          _this.$toast({
+            message:res.msg,
+            onClose: ()=>{
+              _this.$router.push({name:'OrderList'})
+            }
+          })
+        }else{
+          _this.$toast(res.msg)
+        }
+      })
+
+
+    },
     getDetail () {
       this.$api.goodsOrderIndex({order_id:this.order_id}).then((res)=>{
         if(res.code === 1) {
           this.order_detail = res.data
         }
+      })
+    },
+    delImg (index) {
+      this.imgList.splice(index,1)
+      this.localIds.splice(index,1)
+      this.num = this.imgList
+      console.log(this.imgList,'imgList')
+    },
+    chooseImage () {
+      var _this = this
+      if(this.imgList.length < 4){
+        wx.chooseImage({
+          count: this.num, // 默认9
+          sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+          sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+          success: function (res) {
+            // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+            _this.localIds = res.localIds
+            _this.localIds.map((item)=>{
+              _this.uploadImage(new String(item).toString())
+            })
+          }
+        })
+      }else{
+        this.$toast('只能上传三张')
+      }
+    },
+    uploadImage (localId) {
+      // this.$toast('uploadImage')
+      var _this = this
+      wx.uploadImage({
+          localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+          isShowProgressTips: 1, // 默认为1，显示进度提示
+          success: function (res) {
+            var serverId = res.serverId; // 返回图片的服务器端ID
+            // _this.$toast('serverId')
+            // // alert(res.serverId)
+            _this.getImgData(localId,serverId)
+          }
+      })
+    },
+    getImgData (localId,serverId) {
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      var _this = this
+      this.$api.commonwxUpload({id:serverId}).then((result)=>{
+          if(result.code === 1){
+            _this.$toast({
+              message:result.msg,
+              onClose: ()=>{
+                      if(isiOS){
+                        wx.getLocalImgData({
+                              localId: localId, // 图片的localID
+                              success: function (res) {
+                                  var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
+                                  localData = localData.replace('jgp', 'jpeg');
+                                  _this.imgList.push({l:localData,s:serverId,url:result.data.url})
+                              }
+                        });
+                      }else{
+                        _this.imgList.push({l:localId,s:serverId,url:result.data.url})
+                      }
+                      _this.num --
+              }
+            })
+          }else{
+            _this.$toast(result.msg)
+          }
       })
     }
   }

@@ -1,11 +1,11 @@
 <template>
     <div class="group-item">
         <div class="group-img">
-            <div class="img-box" :class="{'img2':groupData.user_number == 2}">
+            <div class="img-box">
                 <div class="img" v-for="(item, index) in groupData.users" :key="index">
                     <img :src="item.avatar ? item.avatar : require('../../assets/images/useravatar.png')" alt="">
                 </div>
-                <div class="img active" v-for="(item, index) in ((groupData.user_number == 2 ? 2 : 3) - groupData.users.length)" :key="'active' + index">
+                <div class="img active" v-for="(item, index) in (3 - groupData.users.length)" :key="'active' + index">
                     <img src="../../assets/images/doubt.png" alt="">
                 </div>
             </div>
@@ -13,10 +13,10 @@
         </div>
         <div class="group-info">
             <div class="lack">还差<em>{{groupData.user_number - groupData.current_number}}人</em>拼成</div>
-            <div class="time">剩余<van-count-down :time="groupData.expire_time ? (groupData.expire_time - groupTime) * 1000 : 0" /></div>
+            <div class="time">剩余<van-count-down :time="groupData.expire_time ? (groupData.expire_time - groupData.create_time) * 1000 : 0" /></div>
         </div>
-        <div class="group-btn group-active" v-if="groupData.my == 1" @click="onLook">查看</div>
-        <div class="group-btn" v-if="groupData.my != 1" @click="onLook">去拼团</div>
+        <div class="group-btn group-active" v-if="groupData.is_my == 1" @click="onLook">查看</div>
+        <div class="group-btn" v-if="groupData.is_my == 0" @click="onLook">去拼团</div>
     </div>
 </template>
 
@@ -40,7 +40,7 @@ export default {
   methods: {
     onLook () {
       this.$router.push({
-        path: '/groupDetails',
+        path: '/courseGroupDetails',
         query: {
           id: this.groupData.t_id
         }
@@ -87,9 +87,7 @@ export default {
                     width: 100%;
                     height: 100%;
                 }
-
             }
-
             .active{
                 border: 1Px dotted #DCDCDC;
                 background: #fff;
@@ -103,19 +101,7 @@ export default {
                 }
             }
 
-
-
         }
-        .img2{
-                .img{
-                    &:nth-child(2){
-                        left: 0px !important;
-                    }
-                    &:nth-child(2){
-                        left: 130px !important;
-                    }
-                }
-            }
         span{
             margin-left: 20px;
             display: flex;
@@ -154,7 +140,9 @@ export default {
         border-radius: 1rem;
     }
     .group-active{
-        background: #758769;
+        background: url('../../assets/images/goshare.png') no-repeat;
+        background-size: 100% 100%;
+
     }
 }
 </style>

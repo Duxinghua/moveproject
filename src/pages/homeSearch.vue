@@ -3,7 +3,7 @@
     <div class="homeSearch-header">
       <div class="homeSearch-header-input">
         <img src="../assets/images/homesearch.png" alt="">
-        <input type="text" v-model="searchText" placeholder="装饰" @keyup.enter="submit">
+        <input type="text" v-model="searchText" placeholder="请输入关键字" @keyup.enter="submit">
         <span @click="searchHandler">取消</span>
       </div>
       <div class="homeSearch-header-tab">

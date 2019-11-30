@@ -628,7 +628,6 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-	  
       h3 {
         color: #6d8160;
         font-size: 36px;

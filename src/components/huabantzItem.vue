@@ -58,10 +58,13 @@ export default {
         flex-direction: column;
         font-size: 26px;
         margin-right:26px;
+        span{
+          text-align: center;
+        }
         img{
           width:40px;
           height:34px;
-          margin-bottom: 16px;
+          margin-bottom: 10px;
         }
       }
       .tzcenter{
@@ -72,9 +75,13 @@ export default {
           font-size: 30px;
           line-height: 36px;
           width:calc(100% - 26px);
+          // overflow: hidden;
+          // text-overflow: ellipsis;
+          // white-space: nowrap;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
           overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
         }
         .tzcdes{
           display: flex;
@@ -84,17 +91,17 @@ export default {
           margin-top: 16px;
           align-items: center;
           .tzavatar{
-            width:40px;
-            height:40px;
+            width:30px;
+            height:30px;
             border-radius: 50%;
             margin-right:16px;
           }
           .tzcinfo{
             display: flex;
             width:calc(100% - 72px);
-            justify-content: space-between;
+            justify-content: flex-start;
             span{
-              width:calc(50% - 26px);
+              width:fit-content;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;

@@ -27,7 +27,6 @@
                 </template>
               </van-image>
             </div>
-            <img :src="item.image" alt="">
             <div class="ordercenter">
               <div class="ol">
                 <span class="s1">{{item.title}}</span>
