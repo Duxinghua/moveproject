@@ -1,5 +1,5 @@
 <template>
-    <div class="goods-item">
+    <div class="goods-item" @click="onLinkDetails(goodsData.goods_id)">
         <div class="goods-img">
             <van-image :src="goodsData.images[0]">
                 <template v-slot:loading>
@@ -11,7 +11,7 @@
             <div class="goods-title">{{goodsData.goods_name}}</div>
             <div class="goods-subtitle">{{goodsData.description}}</div>
             <div class="goods-price">¥{{goodsData.price}}</div>
-            <div class="shopping" @click="onLinkDetails(goodsData.goods_id)">
+            <div class="shopping">
                 <img class="shop" src="../../assets/images/shoping-bg.png" alt="">
                 <img class="bg" src="../../assets/images/shoping.png" alt="">
             </div>

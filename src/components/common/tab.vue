@@ -9,11 +9,11 @@
 					 alt=""
 					></li>
 				<li
-					v-for="(item, index) in tabList"
-					:key="index"
-					:class="tabIndex == item.id ? 'active' : ''"
-					@click="tabClick(item.id)"
-					>{{item.name}}</li>
+				 v-for="(item, index) in tabList"
+				 :key="index"
+				 :class="tabIndex == item.id ? 'active' : ''"
+				 @click="tabClick(item.id)"
+				>{{item.name}}</li>
 			</ul>
 		</div>
 	</div>
@@ -21,33 +21,33 @@
 
 <script>
 export default {
-  data () {
-    return {
-      tabIndex: 0
-    }
-  },
-  props: {
-    tabList: {
-      type: Array,
-      default: []
-    }
-  },
-  watch: {
-    tabList (data) {
-      if (data) {
-        this.tabIndex = data[0].id
-      }
-    }
-  },
-  methods: {
-    tabClick (id) {
-      this.tabIndex = id
-      this.$emit('on-change', id)
-    },
-    onSearch () {
-      this.$emit('on-search')
-    }
-  }
+	data() {
+		return {
+			tabIndex: 0
+		}
+	},
+	props: {
+		tabList: {
+			type: Array,
+			default: []
+		}
+	},
+	watch: {
+		tabList(data) {
+			if (data) {
+				this.tabIndex = data[0].id
+			}
+		}
+	},
+	methods: {
+		tabClick(id) {
+			this.tabIndex = id
+			this.$emit('on-change', id)
+		},
+		onSearch() {
+			this.$emit('on-search')
+		}
+	}
 }
 </script>
 
@@ -75,7 +75,7 @@ export default {
       overflow-x: auto;
       li {
         font-size: 28px;
-        margin-right: 50px;
+        margin-right: 40px;
         flex-shrink: 0;
         transition: all 0.3s;
         color: #fff;
