@@ -25,7 +25,7 @@
         <div class="right">¥{{detail.total}}</div>
       </div>
     </div>
-    <div class="submit-order-msg" v-if="this.type == 1">
+    <div class="submit-order-msg" v-if="courseType == 'online'">
       <div class="title">订单信息</div>
       <div class="msg-info">
         <div class="lf">姓名</div>
@@ -35,20 +35,8 @@
         <div class="lf">手机号码</div>
         <div class="rg">{{detail.mobile}}</div>
       </div>
-      <!-- <div class="msg-info">
-        <div class="lf">订单编号</div>
-        <div class="rg">201910291689</div>
-      </div> -->
-      <!-- <div class="msg-info">
-        <div class="lf">身份证号</div>
-        <div class="rg">420980199412309098</div>
-      </div> -->
-      <!-- <div class="msg-info">
-        <div class="lf">下单时间</div>
-        <div class="rg">2019-10-29 16:50</div>
-      </div> -->
     </div>
-    <div class="order-commit" v-if="this.type == 2">
+    <div class="order-commit" v-if="courseType == 'off'">
       <div class="order-commit-notice">本活动为实名制活动，如填写有误，您将无法参与所报名的活动。为保障您的自身利益，请仔细核对身份信息。</div>
       <div class="order-commit-content">
         <div>
@@ -80,6 +68,30 @@
         </div>
       </div>
     </div>
+    <van-popup v-model="overlayStatus"  @click="hideOverlay">
+            <div class="wrapper" @click.stop>
+                <div class="tuan-wrapper">
+                    <div class="tuan-status"><img src="../assets/images/select.png" alt=""><span>{{tuanStatus == 0 ? '已支付' : '拼团成功'}}</span></div>
+                    <div :class="['group-list',{'list-active1':groupDetails.user_number == 2,'list-active':groupDetails.user_number == 3}]">
+                        <div class="group-item" v-for="(item, index) in groupDetails.users" :key="index">
+                            <div class="img"><img :src="item.avatar" alt=""></div>
+                            <div class="tag" v-if="index == 0">团长</div>
+                        </div>
+                        <div class="group-item active" v-for="(item, index) in ((groupDetails.user_number - groupDetails.users.length) || [])" :key="'active' + index">
+                            <img src="../assets/images/doubt.png" alt="">
+                        </div>
+                    </div>
+                    <div class="goods-time" v-if="tuanStatus == 0">
+                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，
+                        <van-count-down format="HH:mm:ss" :time="groupDetails.expire_time" ></van-count-down>
+  后结束
+                    </div>
+
+                    <div class="tuan-share" @click="onLink">{{tuanStatus == 0 ? '邀请好友拼团' : '继续逛逛'}}</div>
+                    <div class="tuan-link" @click="onLinkOrder"><span>查看订单</span><van-icon name="arrow" /></div>
+                </div>
+            </div>
+    </van-popup>
   </div>
 </template>
 
@@ -91,67 +103,113 @@ export default {
       reShow: false,
       type: null,
       course_id: null,
+      user_number:null,
       detail:{},
-      wxpay:{}
+      wxpay:{},
+      courseType:null,
+      wx:null,
+      overlayStatus:false,
+      popupStatus:false,
+      tuanStatus: 0,//1是拼团成功 0 是支付成功
+      groupDetails: {
+        users: []
+      }
     }
+  },
+  created() {
+        const config = {
+            url:location.href.split('#')[0]
+        }
+        // 请求api返回sdk配置参数
+        this.$api.userGetSignPackage(config).then(res => {
+            if (res.code === 1) {
+                var wxConfig = res.data;
+                this.wxConfig = wxConfig;
+                wx.config({
+                    appId: wxConfig.appId, // 必填，公众号的唯一标识
+                    timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
+                    nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
+                    signature: wxConfig.signature,// 必填，签名
+                    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
+                });
+            }
+
+            wx.ready(() => {
+                this.wx = wx;
+            });
+        });
   },
   mounted () {
-    // const param = {
-    //   course_id: this.$route.query.courseId,
-    //   type: 0
-    // }
-    // if()
-    // this.$api.courseOrderStore(param).then((res) => {
-    //   if(res.code == 1) {
-    //     console.log(res.data)
-    //   }
-    // })
-    this.type = this.$route.query.type
-    this.course_id = this.$route.query.courseId
-    if(this.type == 1) {
-      this.$api.courseOrderPreview({course_id:this.course_id}).then((res)=>{
+    const {type,courseId,courseType,user_number} = this.$route.query
+    this.type = type
+    this.course_id = courseId
+    this.courseType = courseType
+    this.user_number = user_number
+    this.$api.courseOrderPreview({course_id:this.course_id,type:this.type}).then((res)=>{
         if(res.code == 1){
           this.detail = res.data
         }
-      })
-    }else if(this.type == 2){
-      this.$api.courseOrderPreview({course_id:this.course_id}).then((res)=>{
-        if(res.code == 1){
-          this.detail = res.data
-          console.log(res.data)
-        }
-      })
-    }
+    })
   },
   methods: {
-    onBridgeReady () {
-      var _this = this
-      WeixinJSBridge.invoke(
-        // 'getBrandWCPayRequest', {
-        //   'appId': data.appId, // 公众号名称，由商户传入
-        //   'timeStamp': data.timeStamp, // 时间戳，自1970年以来的秒数
-        //   'nonceStr': data.nonceStr, // 随机串
-        //   'package': data.package,
-        //   'signType': data.signType, // 微信签名方式：
-        //   'paySign': data.paySign // 微信签名
-        // },
-        'getBrandWCPayRequest', _this.wxpay,
-        function (res) {
-          console.log(res)
-          if (new String(res.err_msg).trim() === 'get_brand_wcpay_request:ok') {
-            // 使用以上方式判断前端返回,微信团队郑重提示：
-            // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-            window.location.href = config.baseurl + '/courseorderlist'
-          } else {
-            window.location.href = config.baseurl + '/courseorderlist'
-          }
-        })
+    onLink () {
+
+    },
+    onLinkOrder () {
+
+    },
+    hideOverlay () {
+
     },
     onBuy () {
       this.reShow = true;
     },
+    wxPay(wxmsg,order_id){
+            const _this = this;
+            // _this.tuanInfo(order_id)
+            this.wx.chooseWXPay({
+                appId: wxmsg.appId,
+                timestamp: wxmsg.timeStamp,
+                nonceStr: wxmsg.nonceStr, // 支付签名随机串，不长于 32 位
+                package: wxmsg.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+                signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+                paySign: wxmsg.paySign, // 支付签名
+                success: function (res) {
+                    // 支付成功的回调函数
+                    if(_this.type == 2){
+                        _this.tuanInfo(order_id)
+                    }else{
+                        _this.$router.push({
+                            path:'/orderlist'
+                        })
+                    }
+                },
+                cancel: function (res) {
+                    // 支付取消的回调函数
+                    _this.$router.push({
+                        path:'/orderlist'
+                    })
+                },
+                error: function (res) {
+                    // 支付失败的回调函数
+                    _this.$router.push({
+                        path:'/orderlist'
+                    })
+                }
+            })
+    },
     cancelHandler () {
       this.reShow = false;
+    },
+    tuanInfo (order_id) {
+      this.$api.courseOrderTuaninfo({order_id:order_id}).then((res)=>{
+        if(res.code == 1){
+          this.groupDetails = res.data
+          this.groupDetails.current_number = res.data.users ? res.data.users.length : 0
+          this.groupDetails.user_number = this.user_number
+          this.groupDetails.expire_time = (res.data.expire_time*1000) - new Date().getTime()
+        }
+      })
     },
     onHandler () {
       var _this = this
@@ -159,29 +217,154 @@ export default {
         course_id: this.course_id,
         type: 0
       }
+      if(this.type == 2){
+        params.type = 1
+      }
       this.$api.courseOrderStore(params).then((res)=>{
         if(res.code == 1){
-           if (typeof WeixinJSBridge === 'undefined') {
-              if (document.addEventListener) {
-                document.addEventListener('WeixinJSBridgeReady', _this.onBridgeReady, false)
-              } else if (document.attachEvent) {
-                document.attachEvent('WeixinJSBridgeReady', _this.onBridgeReady)
-                document.attachEvent('onWeixinJSBridgeReady', _this.onBridgeReady)
-              }
-            } else {
-              _this.wxpay = res.data.pay_data
-              _this.onBridgeReady()
-            }
-
+          _this.wxPay(res.data.pay_data,res.data.order_id)
+        }else{
+          _this.$toast(res.msg)
         }
       })
 
     }
+  },
+  components: {
+
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  .tuan-wrapper{
+    width: 600px;
+    height: 585px;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 40px;
+    .tuan-status{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 50px;
+        img{
+            width: 40px;
+            height: 40px;
+        }
+        span{
+            color: #6D8160;
+            font-size: 30px;
+            margin-left: 10px;
+        }
+    }
+    .tuan-share{
+        width: 435px;
+        height: 88px;
+        line-height: 88px;
+        text-align: center;
+        border-radius: 50px;
+        color: #F3D995;
+        font-size: 36px;
+        margin: 0 auto;
+        margin-top: 70px;
+        margin-bottom: 35px;
+        background: #6B8162;
+    }
+    .tuan-link{
+        color: #333333;
+        font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+  }
+}
+.group-list{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .group-item{
+        width: 100px;
+        height: 100px;
+        position: relative;
+        .img{
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            img{
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .tag{
+            position: absolute;
+            padding: 5px 9px;
+            color: #fff;
+            font-size: 24px;
+            background: #995258;
+            border-radius: 20px;
+            right: 0px;
+            top: -20px;
+        }
+    }
+    .active{
+        border: 1Px dotted #DCDCDC;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img{
+            width: 26px;
+            height: 42px;
+        }
+    }
+}
+.list-active{
+    width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.list-active1{
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.goods-time{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333333;
+    font-size: 26px;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    img{
+        width: 28px;
+        height: 28px;
+        margin-right: 10px;
+    }
+    span{
+        color: #995258;
+    }
+}
+.goods-submit{
+    width: 625px;
+    height: 85px;
+    background: #738266;
+    border-radius: 50px;
+    text-align: center;
+    line-height: 85px;
+    font-size: 36px;
+    color: #F3D995;
+    margin-left: auto;
+    margin-right: auto;
+}
 .submit-order{
   width: 100%;
   min-height: 100vh;
@@ -341,7 +524,7 @@ export default {
       }
     }
   }
-  
+
   .buy-box{
     position: fixed;
     left: 0px;

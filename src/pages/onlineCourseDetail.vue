@@ -33,7 +33,7 @@
           </div>
           <div class="group-list">
             <GroupItem v-for="(item, index) in groupList" :key="index" :groupData="item"/>
-            <div class="group-no">
+            <div class="group-no" v-if="groupList.length == 0">
               <img src="../assets/images/tuan.png" alt="">
               <span>暂无拼团,快去拼团吧</span>
             </div>
@@ -99,8 +99,8 @@
       <div class="ondetail-action">
         <div class="ondetail-money">合计<span>￥{{onlineMsg.price}}</span></div>
         <div>
-            <div class="ondetail-group-btn" @click="onTuan(courseId)">发起拼团</div>
-            <div class="ondetail-buy-btn" @click="onBuy(courseId)">立即购买</div>
+            <div class="ondetail-group-btn" @click="onTrun(courseId)" v-if="onlineMsg.is_tuan === 1">发起拼团</div>
+            <div :class="buyClass" @click="onBuy(courseId)">立即购买</div>
         </div>
       </div>
       <!-- <van-popup v-model="popupStatus" round :safe-area-inset-bottom="true" position="bottom">
@@ -130,6 +130,7 @@
 <script>
 import TeacherMsg from '@/components/teacherMsg.vue'
 import TeacherWorks from '@/components/teacherWorks.vue'
+import GroupItem from '@/components/cource/groupItem.vue'
 import NoData from '@/components/nodata'
 
 export default {
@@ -144,6 +145,7 @@ export default {
       id: "",
       // like: 0,
       onlineMsg: {},
+      user_number: null,
       msgItem: {},
       teacherWorks: [],
       flowerLists: [],
@@ -185,6 +187,7 @@ export default {
     this.onlineDetail()
     this.flowerList()
     this.courseComment()
+    this.courseTuanList()
   },
   methods: {
     menuHandler (index) {
@@ -210,6 +213,7 @@ export default {
         // this.$toast.clear()
         if (res.code == 1) {
           this.onlineMsg = res.data
+          this.user_number = res.data.user_number
           this.msgItem = res.data.admin
           this.id = res.data.admin.id
           this.isBuy = res.data.is_buy
@@ -264,6 +268,7 @@ export default {
         course_id: this.courseId
       }
       this.$api.courseTuanList(param).then((res) => {
+        console.log(res,'res detaul')
         if (res.code == 1) {
           this.groupList = res.data.data
           // console.log(res.data)
@@ -324,25 +329,14 @@ export default {
       })
     },
     onLinkAll () {
-      this.$router.push('/allGroup')
+      this.$router.push({name:'CourseAllGroup'})
     },
     onBuy (courseId) {
       // this.popupStatus = true
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1, courseType: 'online',user_number:this.user_number}})
     },
-    onTuan (courseId) {
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1}})
-    },
-    onPlayerPlay (player) {
-      // console.log('player play!', player)
-      if (this.isBuy == 0) {
-        this.$toast({
-          message: '此视频未购买，暂无法播放，请购买后再试'
-        })
-        this.playerOptions.sources[0].src = ''
-      } else if (this.isBuy == 1) {
-        this.$refs.videoPlayer.player.play()
-      }
+    onTrun (courseId) {
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2, courseType: 'online',user_number:this.user_number}})
     }
   },
   computed: {
@@ -353,7 +347,16 @@ export default {
   components: {
     TeacherMsg,
     TeacherWorks,
-    NoData
+    NoData,
+    GroupItem
+  },
+  computed:{
+    buyClass () {
+      return {
+        'ondetail-buy-btn':true,
+        'noTuan': this.onlineMsg.is_tuan == 0
+      }
+    }
   }
 }
 </script>
@@ -760,6 +763,9 @@ export default {
       background: #6D8160;
       font-size: 34px;
       border-radius:0px 40px 40px 0px;
+    }
+    .noTuan{
+      border-radius: 40px;
     }
   }
   // .sku-content{

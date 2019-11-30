@@ -85,9 +85,9 @@
       </div>
     </div>
     <div class="goods-action">
-      <div class="goods-money">合计<span>￥</span></div>
+      <div class="goods-money">合计<span>￥{{courseDetails.price}}</span></div>
       <div>
-        <div class="goods-group-btn" @click="onBuy(courseId)">发起拼团</div>
+        <div class="goods-group-btn" @click="onTuan(courseId)" v-if="courseDetails.is_tuan == 1">发起拼团</div>
         <div class="goods-buy-btn" @click="onBuy(courseId)">立即购买</div>
       </div>
     </div>
@@ -105,6 +105,7 @@ export default {
       bannerImg: [],
       courseDetails: {},
       courseOffline: {},
+      user_number:null,
       planList: [
         {
           id: 1,
@@ -162,7 +163,7 @@ export default {
         this.$toast.clear()
         if (res.code == 1) {
           this.courseDetails = res.data
-
+          this.user_number = res.data.user_number
           this.courseOffline = res.data.courseOffline
           this.msgItem = res.data.admin
           this.tecImg = res.data.adminOpus ? res.data.adminOpus : []
@@ -187,10 +188,13 @@ export default {
     onLinkAll () {
       this.$router.push('/allGroup')
     },
+    onTuan (courseId) {
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2, courseType: 'off',user_number:this.user_number}})
+    },
     onBuy (courseId) {
       // const courseId = this.courseId
       // this.$router.push({path: '/orderCommit', query: {courseId}})
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1, courseType: 'off',user_number:this.user_number}})
     }
   },
   components: {
