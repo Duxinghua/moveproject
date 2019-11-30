@@ -19,11 +19,18 @@
             @load="onLoad"
         >
         <div class="teacher-works">
-          <TeacherWorks v-for="item in teacherWorks" :key="item.id" :item="item"></TeacherWorks>
+          <TeacherWorks v-for="(item,index) in teacherWorks" :data="index" :key="item.id" :item="item"  @click.native="teacherInfo(imagePreview,index)"></TeacherWorks>
         </div>
       </van-list>
       <!-- <NoData v-if="teacherWorks.length == 0"/> -->
+
     </div>
+        <van-image-preview
+            v-model="imageShow"
+            :images="imagePreview"
+            :startPosition="startPosition"
+        >
+        </van-image-preview>
   </div>
 </template>
 
@@ -42,7 +49,10 @@ export default {
       finished: false,
       loading: false,
       msgItem: {},
-      teacherWorks: []
+      teacherWorks: [],
+      imageShow: false,
+      imagePreview: [],
+      startPosition: 0
     }
   },
   mounted () {
@@ -50,6 +60,11 @@ export default {
     this.getDetail()
   },
   methods: {
+    teacherInfo(data,index) {
+            this.imagePreview = data;
+            this.startPosition = index;
+            this.imageShow = true;
+    },
     getDetail () {
       const param ={
         id: this.id
@@ -81,10 +96,24 @@ export default {
           if (this.teacherWorks.length == 0) {
             // 第一次加载
             this.teacherWorks = res.data.data || []
+            var list = []
+            res.data.data.map((item)=>{
+              if(item.image){
+                list.push(item.image[0])
+              }
+            })
+            this.imagePreview = list || []
             this.total = res.data.total
           } else if (this.teacherWorks.length < this.total) {
             // 加载更多
             this.teacherWorks = this.teacherWorks.concat(res.data.data)
+            var list = []
+            res.data.data.map((item)=>{
+              if(item.image){
+                list.push(item.image[0])
+              }
+            })
+            this.imagePreview = this.imagePreview.concat(list)
           }
           if (this.teacherWorks.length >= this.total) {
             // 全部加载完成

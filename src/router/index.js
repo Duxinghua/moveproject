@@ -86,6 +86,7 @@ const getToken = (data) => {
         console.log(result)
         getSitem.setStr('mobile', result.data.info.mobile)
         getSitem.setStr('token', result.data.info.token)
+        getSitem.setStr('openid', result.data.info.openid)
         if (getSitem.getStr('open')) {
           location.reload()
         } else {
@@ -660,8 +661,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
-  return;
   console.log(to)
   // getSitem.remove('token')
   // getSitem.remove('mobile')

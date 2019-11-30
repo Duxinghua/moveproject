@@ -270,9 +270,9 @@ export default {
       var _this = this
       this.$api.commonwxUpload({id:serverId}).then((result)=>{
           if(result.code === 1){
-            _this.$toast({
-              message:result.msg,
-              onClose: ()=>{
+            // _this.$toast({
+            //   message:result.msg,
+            //   onClose: ()=>{
                       if(isiOS){
                         wx.getLocalImgData({
                               localId: localId, // 图片的localID
@@ -288,8 +288,8 @@ export default {
                         _this.$forceUpdate();
                       }
                       goods.num --
-              }
-            })
+            //   }
+            // })
           }else{
             _this.$toast(result.msg)
           }

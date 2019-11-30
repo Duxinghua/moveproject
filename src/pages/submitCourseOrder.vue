@@ -25,7 +25,7 @@
         <div class="right">¥{{detail.total}}</div>
       </div>
     </div>
-    <div class="submit-order-msg" v-if="courseType == 'online'">
+    <div class="submit-order-msg" v-if="detail.type == 2">
       <div class="title">订单信息</div>
       <div class="msg-info">
         <div class="lf">姓名</div>
@@ -36,20 +36,20 @@
         <div class="rg">{{detail.mobile}}</div>
       </div>
     </div>
-    <div class="order-commit" v-if="courseType == 'off'">
+    <div class="order-commit" v-if="detail.type == 3">
       <div class="order-commit-notice">本活动为实名制活动，如填写有误，您将无法参与所报名的活动。为保障您的自身利益，请仔细核对身份信息。</div>
       <div class="order-commit-content">
         <div>
-          <input type="text" placeholder="请输入真实姓名">
+          <input type="text" placeholder="请输入真实姓名" v-model="true_name">
           <img src="../assets/images/ordername.png" alt="">
         </div>
         <div>
-          <input type="tel" placeholder="请输入您的手机号码">
+          <input type="tel" placeholder="请输入您的手机号码" v-model="mobile">
           <img src="../assets/images/ordertel.png" alt="">
         </div>
         <div>
-          <input type="text" placeholder="请输入身份证号">
-          <img src="../assets/images/ordercard.png" alt="">
+          <input type="text" placeholder="请输入身份证号" v-model="idcard">
+          <img src="../assets/images/ordercard.png" alt="" >
         </div>
       </div>
     </div>
@@ -113,7 +113,10 @@ export default {
       tuanStatus: 0,//1是拼团成功 0 是支付成功
       groupDetails: {
         users: []
-      }
+      },
+      true_name: '',
+      idcard: '',
+      mobile: ''
     }
   },
   created() {
@@ -153,18 +156,19 @@ export default {
   },
   methods: {
     onLink () {
-
+     this.$router.push({name:'CourseGroupDetails',query:{id:this.groupDetails.t_id}})
     },
     onLinkOrder () {
-
+      this.$router.push({name:'CourseOrderList'})
     },
     hideOverlay () {
-
+      this.$router.push({name:'CourseGroupDetails'})
     },
     onBuy () {
       this.reShow = true;
     },
     wxPay(wxmsg,order_id){
+            this.reShow = false
             const _this = this;
             // _this.tuanInfo(order_id)
             this.wx.chooseWXPay({
@@ -180,20 +184,20 @@ export default {
                         _this.tuanInfo(order_id)
                     }else{
                         _this.$router.push({
-                            path:'/orderlist'
+                            path:'/courseorderlist'
                         })
                     }
                 },
                 cancel: function (res) {
                     // 支付取消的回调函数
                     _this.$router.push({
-                        path:'/orderlist'
+                        path:'/courseorderlist'
                     })
                 },
                 error: function (res) {
                     // 支付失败的回调函数
                     _this.$router.push({
-                        path:'/orderlist'
+                        path:'/courseorderlist'
                     })
                 }
             })
@@ -208,18 +212,40 @@ export default {
           this.groupDetails.current_number = res.data.users ? res.data.users.length : 0
           this.groupDetails.user_number = this.user_number
           this.groupDetails.expire_time = (res.data.expire_time*1000) - new Date().getTime()
+          this.groupDetails.tuanStatus = res.data.success
+          this.groupDetails.t_id = res.data.t_id
+          this.overlayStatus = true
         }
       })
     },
     onHandler () {
       var _this = this
+      if(!this.true_name){
+            this.$toast('请输入真实姓名')
+            return
+          }
+          if(!this.mobile){
+            this.$toast('请输入手机号')
+            return
+          }
+          if(!this.idcard){
+            this.$toast('请输入身份证号')
+            return
+      }
       var params = {
-        course_id: this.course_id,
-        type: 0
+        course_id: this.course_id
       }
       if(this.type == 2){
         params.type = 1
+      }else if(this.type == 1){
+        params.type = 0
       }
+      if(this.detail.type  == 3){
+          params.true_name = this.true_name
+          params.mobile = this.mobile
+          params.idcard = this.idcard
+      }
+
       this.$api.courseOrderStore(params).then((res)=>{
         if(res.code == 1){
           _this.wxPay(res.data.pay_data,res.data.order_id)

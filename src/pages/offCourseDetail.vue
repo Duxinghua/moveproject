@@ -20,7 +20,7 @@
         <!-- {{courseDetails.description}} -->
         <span class="description">{{courseDetails.description}}</span>
         <span class="price">¥{{courseDetails.price}}</span>
-        <div>
+        <div @click="shareOpen">
           <img src="../assets/images/offlinenjoy.png" alt="">
           <span>分享</span>
         </div>
@@ -88,15 +88,16 @@
       <div class="goods-money">合计<span>￥{{courseDetails.price}}</span></div>
       <div>
         <div class="goods-group-btn" @click="onTuan(courseId)" v-if="courseDetails.is_tuan == 1">发起拼团</div>
-        <div class="goods-buy-btn" @click="onBuy(courseId)">立即购买</div>
+        <div  :class="buyClass" @click="onBuy(courseId)">立即购买</div>
       </div>
     </div>
+    <WxShare :show="wxShare" @toShare="toShare" />
   </div>
 </template>
 
 <script>
 import TeacherMsg from '@/components/teacherMsg.vue'
-
+import WxShare from '@/components/wxshare.vue'
 export default {
   name: 'OffCourseDetail',
   data () {
@@ -106,6 +107,7 @@ export default {
       courseDetails: {},
       courseOffline: {},
       user_number:null,
+      wxShare: false,
       planList: [
         {
           id: 1,
@@ -149,6 +151,12 @@ export default {
     // onSwipeChange (index) {
     //   this.swiperCurrent = index
     // },
+    shareOpen () {
+      this.wxShare = true
+    },
+    toShare () {
+      this.wxShare = false
+    },
     courseDetail () {
       const param = {
         course_id: this.courseId
@@ -189,16 +197,25 @@ export default {
       this.$router.push('/allGroup')
     },
     onTuan (courseId) {
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2, courseType: 'off',user_number:this.user_number}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})
     },
     onBuy (courseId) {
       // const courseId = this.courseId
       // this.$router.push({path: '/orderCommit', query: {courseId}})
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1, courseType: 'off',user_number:this.user_number}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
     }
   },
   components: {
-    TeacherMsg
+    TeacherMsg,
+    WxShare
+  },
+    computed:{
+    buyClass () {
+      return {
+        'goods-buy-btn':true,
+        'noTuan': this.courseDetails.is_tuan == 0
+      }
+    }
   }
 }
 </script>
@@ -593,6 +610,9 @@ export default {
         background: #6D8160;
         font-size: 34px;
         border-radius:0px 40px 40px 0px;
+      }
+      .noTuan{
+        border-radius: 40px;
       }
     }
   }

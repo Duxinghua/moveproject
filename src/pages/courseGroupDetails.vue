@@ -27,7 +27,8 @@
             <div class="goods-time">
                 <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />后结束
             </div>
-            <div class="goods-submit" @click="showPopup">参与拼团</div>
+            <div class="goods-submit" @click="showPopup" v-if="groupDetails.is_my == 0">参与拼团</div>
+            <div class="goods-submit" @click="onShare" v-if="groupDetails.is_my == 1">邀请拼团</div>
             <div class="goods-process">
                 <span>邀请好友拼团</span>
                 <van-icon name="arrow" />
@@ -46,12 +47,12 @@
 
             <div class="goods-list">
                 <div class="goods-item" v-for="(item, index) in groupList" :key="index">
-                    <div class="img"><img :src="item.images && item.images[0]" alt=""></div>
+                    <div class="img"><img :src="item.image && item.image[0]" alt=""></div>
                     <div class="content">
-                        <div class="title">{{item.goods_name}}</div>
+                        <div class="title">{{item.title}}</div>
                         <div class="price">单买价¥{{item.price}}</div>
                         <div class="money"><em>{{item.user_number}}人团</em>￥<span>{{item.price_tuan}}</span></div>
-                        <div class="submit" @click="onLinkDetails(item.goods_id)">去开团</div>
+                        <div class="submit" @click="onLinkDetails(item.course_id,item.type)">去开团</div>
                     </div>
                 </div>
             </div>
@@ -60,35 +61,13 @@
         <van-popup v-model="popupStatus" round :safe-area-inset-bottom="true" position="bottom">
             <div class="sku-content">
                 <div class="sku-header">
-                    <img :src="goodsData.images && goodsData.images[0]" alt="">
+                    <img :src="goodsData.image && goodsData.image[0]" alt="">
                     <div class="price">
-                        <div class="money" v-if="skuIndex == -1"><span>￥{{goodsData.price}}</span><em>￥{{goodsData.price_cost}}</em></div>
-                        <div class="money" v-if="skuIndex != -1"><span>￥{{ goodsData.price_tuan }}</span><em>￥{{ goodsData.price_cost }}</em></div>
-                        <div class="attri" v-if="skuIndex == -1">请选择规格属性</div>
-                        <div class="attri" v-if="skuIndex != -1">{{skuList[skuIndex] ? skuList[skuIndex].specs : '请选择规格属性'}}</div>
+                        <div class="title"><span>{{goodsData.title}}</span></div>
+                        <div class="money"><span>￥{{ goodsData.price_tuan }}</span><em>单买价￥{{ goodsData.price }}</em></div>
                     </div>
                 </div>
-                <div class="sku-row">
-                    <div class="sku-title">
-                        规格
-                    </div>
-                    <div class="sku-list">
-                        <div
-                            v-for="(item, index) in skuList"
-                            :key="index"
-                            :class="['sku-item',{'active': skuIndex == index}]"
-                            @click="onSkuClick(index)"
-                        >{{item.specs}}</div>
-                    </div>
-                </div>
-                <div class="sku-row">
-                    <div class="sku-title">
-                        数量
-                    </div>
-                    <div class="sku-list">
-                        <van-stepper :disabled="true" disable-input v-model="goodsNum" />
-                    </div>
-                </div>
+
                 <div class="submit" @click="onSubmit">
                     确认
                 </div>
@@ -116,10 +95,12 @@
                 </div>
             </div>
         </van-overlay>
+        <WxShare :show="wxShare" @toShare="toShare" />
     </div>
 </template>
 
 <script>
+import WxShare from '@/components/wxshare.vue'
 export default {
   data() {
         return {
@@ -135,6 +116,7 @@ export default {
               users:[]
             },
             groupList:[],
+            wxShare: false
         }
   },
   mounted () {
@@ -150,7 +132,16 @@ export default {
     }
 
   },
+  components: {
+    WxShare
+  },
   methods:{
+      toShare () {
+        this.wxShare = false
+      },
+      onShare () {
+        this.wxShare = true
+      },
       onLink(){
           if(this.tuanStatus == 1){
               this.$router.push({
@@ -166,11 +157,17 @@ export default {
         hideOverlay(){
             this.overlayStatus = false;
         },
-        onLinkDetails(id){
+        onLinkDetails(id,type){
+            var path = ''
+            if(type == 2){
+              path = '/onlineCourseDetail'
+            }else if(type == 3) {
+              path = '/offcoursedetail'
+            }
             this.$router.push({
-                path:'/goodsDetails',
+                path: path,
                 query:{
-                    goodsId:id
+                    id
                 }
             })
         },
@@ -198,11 +195,7 @@ export default {
             }
         },
         onSubmit(){
-            if(this.skuIndex == -1){
-                this.$toast('请选择规格')
-                return false
-            }
-            this.goodsOrderCreate(1)
+            this.goodsOrderCreate(2)
         },
         showPopup(){
             this.popupStatus = true;
@@ -212,11 +205,10 @@ export default {
             const param = {
                 type,
                 t_id:this.groupId,
-                specs:JSON.stringify(this.skuList[this.skuIndex]),
-                goods_num:this.goodsNum
+                courseId:this.groupDetails.course_id
             }
             this.$router.push({
-                path:'/submitOrder',
+                path:'/submitcourseorder',
                 query:param
             })
         }
@@ -530,12 +522,22 @@ export default {
             display: flex;
             align-items: center;
             margin-bottom: 50px;
+            width:100%;
             img{
                 width: 200px;
                 height: 150px;
             }
+
             .price{
+                width: calc( 100% - 200px);
                 margin-left: 20px;
+                .title{
+                  font-size: 36px;
+                  color:#333;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                 }
                 .money{
                     span{
                         color: #995258;

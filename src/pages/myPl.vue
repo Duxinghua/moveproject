@@ -115,6 +115,7 @@ export default {
   display: flex;
   flex-direction: column;
   background:#FBF8F4;
+  min-height: 100vh;
   &-item{
     padding:26px 26px 45px 26px;
     display: flex;

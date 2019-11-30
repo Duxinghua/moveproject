@@ -11,7 +11,9 @@
               <div class="tzcinfo">
               <span>{{item.nickname}}</span>
               <span>{{autoTimer(item.create_time)}}小时前更新</span>
+              <span class="tzhits">浏览量: {{item.hits}}</span>
               </div>
+
             </div>
           </div>
           <div class="tzright">

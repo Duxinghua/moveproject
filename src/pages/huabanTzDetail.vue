@@ -13,14 +13,26 @@
       <span class="gz" v-else  @click="gzClickHandler(user.id)">已关注</span>
     </div>
     <div :class="autoMarge">
-      <el-carousel id="huabantz-banner" :indicator-position="indicator" @change="changeTab">
-        <el-carousel-item v-for="(item,index) in tzDetail.images" :key="index">
-          <div class="huabantzimg" >
-          <img :src="item" alt="">
-          </div>
-        </el-carousel-item>
-      </el-carousel>
-      <span class="huabantzind">{{(bannerLength == 1 ? 1 : index+1)+"/"+bannerLength}}</span>
+      <van-swipe @change="changeTab" :autoplay="3000">
+         <van-swipe-item  v-for="(item,index) in tzDetail.images" :key="index" @click="onImageView(tzDetail.images,index)">
+            <div class="huabantzimg" >
+                     <van-image :src="item"  >
+                        <template v-slot:loading>
+                            <van-loading
+                                type="spinner"
+                                size="20"
+                            />
+                        </template>
+                    </van-image>
+            </div>
+         </van-swipe-item>
+        <div class="custom-indicator" slot="indicator">
+          {{(bannerLength == 1 ? 1 : index+1)}}/{{bannerLength}}
+        </div>
+      </van-swipe>
+      <div class="dindex" v-if="bannerLength > 1">
+        <span :class="{active:index == aindex}" v-for="(item,aindex) in tzDetail.images" :key="aindex"></span>
+      </div>
     </div>
     <div class="huabantz-detail">
       <div class="huabantz-detail-content">
@@ -28,7 +40,7 @@
           <span class="destitle">{{tzDetail.title}}</span>
           <div class="desico">
             <img :src="tzDetail.likes == 0 ? require('../assets/images/gzxico.png') : require('../assets/images/ydz.png')" alt="" @click="dzClickHandler">
-            <img src="../assets/images/shareico.png" alt="">
+            <img src="../assets/images/shareico.png" alt="" @click="shareOpen">
           </div>
         </div>
         <div class="info">
@@ -60,15 +72,24 @@
       <input type="text" v-model="content" class="huabantz-commit-input" placeholder="喜欢就评论…" >
       <span @click="submit">发送</span>
     </div>
+    <WxShare :show="wxShare" @toShare="toShare" />
+    <van-image-preview
+            v-model="imageShow"
+            :images="imagePreview"
+            :startPosition="startPosition"
+        >
+    </van-image-preview>
   </div>
 </template>
 
 <script>
+import WxShare from '@/components/wxshare.vue'
 export default {
   name: 'HuabanTzDetail',
   data () {
     return {
       id: '',
+      wxShare:false,
       index: 1,
       user: {},
       tzDetail: {},
@@ -80,6 +101,9 @@ export default {
       indicator: 'none',
       finished: false,
       loading: false,
+      imageShow: false,
+      imagePreview: [],
+      startPosition: 0
     }
   },
   mounted () {
@@ -88,6 +112,17 @@ export default {
     this.getpostsComments()
   },
   methods: {
+    onImageView(data, index) {
+            this.imagePreview = data;
+            this.startPosition = index;
+            this.imageShow = true;
+    },
+    shareOpen () {
+      this.wxShare = true
+    },
+    toShare () {
+      this.wxShare = false
+    },
     getpostsComments () {
       const param = {
         page: this.current,
@@ -198,17 +233,45 @@ export default {
         'huabantz-marge': this.bannerLength == 1
       }
     }
+  },
+  components: {
+    WxShare
   }
 
 }
 </script>
 
 <style lang="scss" scoped>
-// #huabantz-banner{
-//   height:602px !important;
-//   padding-bottom: 50px;
-// }
-
+.dindex{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin:20px 0;
+  span{
+    width:14px;
+    height:14px;
+    background:#E3E3E3;
+    border-radius: 50%;
+    margin:0 7px;
+  }
+  .active{
+    background: #F3D995;
+  }
+}
+.custom-indicator {
+        position: absolute;
+        width: 100px;
+        height: 50px;
+        border-radius: 25px;
+        background: rgba(109, 129, 96, 0.7);
+        right: 10px;
+        bottom: 30px;
+        z-index: 10;
+        font-size: 24px;
+        color: #f3f3f3;
+        text-align: center;
+        line-height: 50px;
+ }
 .huabantz{
   background:#FBF8F4;
   display: flex;
@@ -288,9 +351,12 @@ export default {
       width:100%;
       height:552px;
       overflow: hidden;
-      img{
-        width:100%;
-      }
+      display: flex;
+      background:white;
+        .van-image {
+          width: 100%;
+          height: auto;
+        }
     }
     .huabantzind{
       width:100px;
@@ -374,12 +440,13 @@ export default {
           line-height:50px;
           height:50px;
           color:#333;
+          display:inline-block;
           span:nth-child(1){
             font-weight: bold;
             margin-right:10px;
           }
           span:nth-child(2){
-            font-weight: 500
+            font-weight: 500;
           }
         }
       }

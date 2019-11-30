@@ -103,6 +103,7 @@
             <div :class="buyClass" @click="onBuy(courseId)">立即购买</div>
         </div>
       </div>
+      <WxShare :show="wxShare" @toShare="toShare" />
       <!-- <van-popup v-model="popupStatus" round :safe-area-inset-bottom="true" position="bottom">
         <div class="sku-content">
             <div class="sku-header">
@@ -132,11 +133,12 @@ import TeacherMsg from '@/components/teacherMsg.vue'
 import TeacherWorks from '@/components/teacherWorks.vue'
 import GroupItem from '@/components/cource/groupItem.vue'
 import NoData from '@/components/nodata'
-
+import WxShare from '@/components/wxshare.vue'
 export default {
   name: 'OnlineCourseDetail',
   data () {
     return {
+      wxShare: false,
       num: 1,
       current: 0,
       pageType: 0,
@@ -190,6 +192,12 @@ export default {
     this.courseTuanList()
   },
   methods: {
+    shareOpen () {
+      this.wxShare = true
+    },
+    toShare () {
+      this.wxShare = false
+    },
     menuHandler (index) {
       this.current = index
       this.pageType = index
@@ -333,22 +341,23 @@ export default {
     },
     onBuy (courseId) {
       // this.popupStatus = true
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1, courseType: 'online',user_number:this.user_number}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
     },
     onTrun (courseId) {
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2, courseType: 'online',user_number:this.user_number}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})
     }
   },
   computed: {
     player() {
-        return this.$refs.videoPlayer.player
+        return this.$refs.videoPlnoTuanayer.player
       }
   },
   components: {
     TeacherMsg,
     TeacherWorks,
     NoData,
-    GroupItem
+    GroupItem,
+    WxShare
   },
   computed:{
     buyClass () {

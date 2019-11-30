@@ -5,7 +5,7 @@
           @change="rateChange(value)"
           v-model="value"
           :size="20"
-          color="#ee0a24"
+          color="#995258"
           void-icon="star"
           void-color="#eee"
           :readonly="disabled"

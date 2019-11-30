@@ -223,11 +223,13 @@ export default {
       width:650px;
       border-radius:12px;
       border:2px solid rgba(241, 241, 241, 1);
+      outline:none
     }
     &-textarea{
       width:650px;
       height:311px;
       resize:none;
+      outline:none;
       font-size:28px;
       border-radius:12px;
       margin-bottom: 28px;
