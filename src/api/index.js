@@ -363,6 +363,10 @@ const server = {
   courseSaveLike (data) {
     return post('course/saveLike', data)
   },
+  // 作业评论 course/storeComments
+  courseStoreComments (data){
+    return post('course/storeComments',data)
+  },
   // 线下课程预约 /api/course/appoint
   courseAppoint (data) {
     return post('course/appoint', data)
@@ -414,6 +418,14 @@ const server = {
   // 邀请注册新接口 api/wechat/qrcode
   wechatQrcode (data) {
     return post('wechat/qrcode', data)
+  },
+  // 组用户 group/users
+  groupUser (data) {
+    return post('group/users', data)
+  },
+  // 课程中心 course_order/courseCenter
+  courseOrderCourseCenter (data) {
+    return post('course_order/courseCenter', data)
   }
 
 }

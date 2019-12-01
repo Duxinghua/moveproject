@@ -13,7 +13,7 @@
           <!-- <img  class="detail-top-img" :src="tzDetail.image? tzDetail.image[0]:require('../assets/images/hgdi.png')" alt=""> -->
           <div class="detail-top-center">
             <span class="detail-title">{{tzDetail.group_name}}</span>
-            <div class="detail-avatar">
+            <div class="detail-avatar" @click="userContClick">
               <img src="../assets/images/hgdp.png" alt="">
               <span>{{tzDetail.user_count}}成员</span>
             </div>
@@ -69,7 +69,10 @@ export default {
     }
   },
   methods: {
-      init (title,description,image) {
+    userContClick () {
+      this.$router.push({name:'HuabanGroupMember',query:{id:this.id}})
+    },
+    init (title,description,image) {
         console.log('22')
         var shareUrl = config.baseurl + '/huabangroupdetail?id=' + this.id
         var data = {
@@ -207,7 +210,7 @@ export default {
         if (result.code === 1) {
           this.tzDetail = result.data
           var link = config.baseurl + '/huabangroupdetail?id=' + this.id
-          WxSing.init(result.data.group_name,result.data.description,link,result.data.image[0])
+          // WxSing.init(result.data.group_name,result.data.description,link,result.data.image[0])
         }
       })
     },

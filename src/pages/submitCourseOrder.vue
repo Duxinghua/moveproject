@@ -149,6 +149,7 @@ export default {
     this.courseType = courseType
     this.user_number = user_number
     this.$api.courseOrderPreview({course_id:this.course_id,type:this.type}).then((res)=>{
+        console.log(res,'res date')
         if(res.code == 1){
           this.detail = res.data
         }
@@ -220,17 +221,19 @@ export default {
     },
     onHandler () {
       var _this = this
-      if(!this.true_name){
-            this.$toast('请输入真实姓名')
-            return
-          }
-          if(!this.mobile){
-            this.$toast('请输入手机号')
-            return
-          }
-          if(!this.idcard){
-            this.$toast('请输入身份证号')
-            return
+      if(this.detail.type  == 3){
+        if(!this.true_name){
+              this.$toast('请输入真实姓名')
+              return
+            }
+            if(!this.mobile){
+              this.$toast('请输入手机号')
+              return
+            }
+            if(!this.idcard){
+              this.$toast('请输入身份证号')
+              return
+        }
       }
       var params = {
         course_id: this.course_id

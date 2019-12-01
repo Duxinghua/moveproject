@@ -188,13 +188,15 @@ export default {
       }
       this.$api.courseTuanList(param).then((res) => {
         if (res.code == 1) {
-          this.groupList = res.data.data
+          var list = res.data.data.slice(0,3)
+          console.log(list)
+          this.groupList = list
           // console.log(res.data)
         }
       })
     },
     onLinkAll () {
-      this.$router.push('/allGroup')
+      this.$router.push({path:'/courseallgroup',query:{courseId:this.courseId}})
     },
     onTuan (courseId) {
       this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})

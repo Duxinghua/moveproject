@@ -10,17 +10,24 @@
       >
         <div class="MyYy-item" v-for="(item,index) in orderList" :key="index">
           <div class="myleft">
-            <img class="img" :src="item.course.image ? item.course.image[0] : ''" alt="" />
-            <img class="play" src="../assets/images/myYyplay.png" alt="">
+            <!-- <img class="img" :src="item.image ? item.image[0] : ''" alt="" />
+            <img class="play" src="../assets/images/myYyplay.png" alt=""> -->
+            <video-player class="video-player vjs-custom-skin"
+                      ref="videoPlayer"
+                      :playsinline="true"
+                      @play="onPlayerPlay($event)"
+                      :options="playerOptions">
+            </video-player>
           </div>
           <div class="myright">
-            <span class="title">{{item.course.title}}</span>
+            <span class="title">{{item.title}}</span>
+            <span class="price">¥{{item.price}}</span>
             <div class="userinfo">
-              <img :src="item.course.admin.avatar" alt="">
-              <span>{{item.course.admin.nickname}}</span>
+              <img :src="item.admin.avatar" alt="">
+              <span>{{item.admin.nickname}}</span>
             </div>
-            <span class="time">预约时间：{{new String(item.create_time).split(" ")[0]}}</span>
-            <span class="btn" @click="cancelHandler(item.course_id)">申请退款</span>
+            <!-- <span class="time">预约时间：{{new String(item.create_time).split(" ")[0]}}</span> -->
+            <!-- <span class="btn" @click="cancelHandler(item.course_id)">申请退款</span> -->
           </div>
         </div>
       </van-list>
@@ -46,13 +53,39 @@ export default {
       loading: false,
       status: '',
       current: 1,
-      total: 0
+      total: 0,
+      playerOptions: {
+        playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+        autoplay: false, //如果true,浏览器准备好时开始回放。
+        muted: false, // 默认情况下将会消除任何音频。
+        loop: false, // 导致视频一结束就重新开始。
+        preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+        language: 'zh-CN',
+        aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+        fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+        sources: [{
+          type: "video/mp4",
+          src: "http://mover.oss-cn-hangzhou.aliyuncs.com/moer/2019/0108/vd3ucmwn.mp4" //视频url地址
+        }],
+        poster: " ", //你的封面地址
+        // width: document.documentElement.clientWidth,
+        notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+        controlBar: {
+          timeDivider: true,
+          durationDisplay: true,
+          remainingTimeDisplay: false,
+          fullscreenToggle: true  //全屏按钮
+        }
+      },
     }
   },
   mounted () {
     this.getOrderList()
   },
   methods: {
+    onPlayerPlay (e) {
+      console.log(e)
+    },
     cancelHandler (course_id) {
       var _this = this
       this.$api.courseDelAppoint({course_id:course_id}).then((res)=>{
@@ -82,18 +115,74 @@ export default {
         message: '加载中...',
         forbidClick: true
       })
-      this.$api.userAppoint(param).then((res) => {
+      this.$api.courseOrderCourseCenter(param).then((res) => {
         this.$toast.clear()
         if (res.code == 1) {
           this.loading = false
 
           if (this.orderList.length == 0) {
             // 第一次加载
-            this.orderList = res.data.data || []
+            var list = []
+            res.data.data.map((item)=>{
+              item.playerOptions = {
+                playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+                autoplay: false, //如果true,浏览器准备好时开始回放。
+                muted: false, // 默认情况下将会消除任何音频。
+                loop: false, // 导致视频一结束就重新开始。
+                preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+                language: 'zh-CN',
+                aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+                fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+                sources: [{
+                  type: "video/mp4",
+                  src: item.video //视频url地址
+                }],
+                poster: item.image ? item.image[0] : '', //你的封面地址
+                // width: document.documentElement.clientWidth,
+                notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+                controlBar: {
+                  timeDivider: true,
+                  durationDisplay: true,
+                  remainingTimeDisplay: false,
+                  fullscreenToggle: true  //全屏按钮
+
+                }
+              }
+              list.push(item)
+            })
+            this.orderList = list || []
             this.total = res.data.total
           } else if (this.orderList.length < this.total) {
             // 加载更多
-            this.orderList = this.orderList.concat(res.data.data)
+            var list = []
+            res.data.data.map((item)=>{
+              item.playerOptions = {
+                playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+                autoplay: false, //如果true,浏览器准备好时开始回放。
+                muted: false, // 默认情况下将会消除任何音频。
+                loop: false, // 导致视频一结束就重新开始。
+                preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+                language: 'zh-CN',
+                aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+                fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+                sources: [{
+                  type: "video/mp4",
+                  src: item.video //视频url地址
+                }],
+                poster: item.image ? item.image[0] : '', //你的封面地址
+                // width: document.documentElement.clientWidth,
+                notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+                controlBar: {
+                  timeDivider: true,
+                  durationDisplay: true,
+                  remainingTimeDisplay: false,
+                  fullscreenToggle: true  //全屏按钮
+
+                }
+              }
+              list.push(item)
+            })
+            this.orderList = this.orderList.concat(list)
           }
           if (this.orderList.length >= this.total) {
             // 全部加载完成
@@ -151,10 +240,17 @@ export default {
       .title{
         font-size: 30px;
         color: #333333;
-        display: block;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        // text-overflow: ellipsis;
+        // white-space: nowrap;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+      }
+      .price{
+        font-size: 30px;
+        color:#995258;
       }
       .userinfo{
         display: flex;
@@ -164,6 +260,7 @@ export default {
           width:38px;
           height:38px;
           margin-right:13px;
+          border-radius: 50%;
         }
         span{
           width:296px;

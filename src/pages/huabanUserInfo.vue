@@ -31,7 +31,7 @@
             :immediate-check="false"
             @load="onLoad"
       >
-      <div class="userinfo-content-item" v-if="currentIndex === 0" v-for="(item,index) in huabanList" :key="index">
+      <div class="userinfo-content-item" v-if="currentIndex === 0" v-for="(item,index) in huabanList" :key="index" @click="tzClickHandler(item.gp_id)">
          <div class="itemimg">
               <van-image :src="item.image">
                 <template v-slot:loading>
@@ -58,9 +58,9 @@
           </div>
       </div>
       </van-list>
-      <div class="no-more">
+      <!-- <div class="no-more">
         <NoData v-if="huabanList.length === 0" />
-      </div>
+      </div> -->
     </div>
 
   </div>
@@ -90,6 +90,9 @@ export default {
     NoData
   },
   methods: {
+    tzClickHandler (gp_id) {
+      this.$router.push({name:'HuabanTzDetail',query:{id:gp_id}})
+    },
     getUserInfoList () {
       const param = {
         page: this.current,
@@ -324,7 +327,7 @@ export default {
       // margin-right: 24px;
       // background:#FFFFFF;
       // border-radius: 8px;
-      float: left;
+      // float: left;
       margin-bottom: 24px;
       -moz-page-break-inside: avoid;
       -webkit-column-break-inside: avoid;

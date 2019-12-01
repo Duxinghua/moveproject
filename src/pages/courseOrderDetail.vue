@@ -21,10 +21,19 @@
       </div>
       <div class="orderItem">
         <span>合计：¥{{detail.price_pay}}</span>
-        <span class="btn">取消预约</span>
+        <!-- <span class="btn">取消预约</span> -->
       </div>
     </div>
-    <div class="orderdetail-content">
+    <div class="orderdetail-tuan" v-if="detail.t_id != 0 " @click="onLook">
+      <span>拼团状态 {{goodsTuanText[detail.courseTuan.status]}}</span>
+      <div class="avatars">
+        <div :key="index" v-for="(itemav,index) in detail.courseTuan.users">
+          <img :class="{active:itemav.active}" :src="itemav.avatar" alt="" />
+        </div>
+      </div>
+      <img class="fx" src="../assets/images/fx.png" alt="">
+    </div>
+    <div class="orderdetail-content" v-if="detail.type === 3">
       <div class="header kx">
         <span>
           核销码
@@ -80,14 +89,23 @@ export default {
   name: 'CourseOrderDetail',
   data () {
     return {
-      id: '',
-      detail: {}
+      order_id: '',
+      detail: {},
+      goodsTuanText:[
+        '进行中',
+        '成功',
+        '解散'
+      ]
     }
   },
   mounted () {
-    this.id = this.$route.query.id
+    this.order_id = this.$route.query.id
+    this.getCourseOrderIndex()
   },
   methods:{
+    onLook () {
+
+    },
     formatTime (time) {
       var date  = ""
       if (time) {
@@ -106,6 +124,30 @@ export default {
       this.$api.courseOrderIndex({order_id:this.order_id}).then((res)=>{
         if(res.code == 1){
           this.detail = res.data
+          var list = []
+          var arr = res.data.courseTuan.users
+          for(var i=0,l=4;i<l;i++){
+            var obj = {}
+            if(i != 3){
+              if(arr[i]){
+                obj = arr[i]
+                obj.active = false
+              }else{
+                if(i == 0 || i == 1 || i == 2){
+                  obj.active = true
+                  obj.avatar = require('../assets/images/doubt.png')
+
+                }
+              }
+            }else{
+
+                obj.active = false
+                obj.avatar = require('../assets/images/img4.png')
+
+            }
+            list.push(obj)
+          }
+          this.detail.courseTuan.users = list
         }
       })
     }
@@ -345,6 +387,98 @@ export default {
       border-bottom: 1px solid transparent;
     }
 
+  }
+  &-tuan{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height:147px;
+    width:100%;
+    background: white;
+    margin-top:15px;
+    font-size: 30px;
+    color:#333333;
+    padding:0 26px;
+    .fx{
+      width:17px;
+      height:30px;
+    }
+    .avatars{
+      display: flex;
+      height:76px;
+      width:243px;
+      position: relative;
+      margin-left:200px;
+      div{
+        background:white;
+        .active{
+          position: relative;
+          left:50%;
+          top:50%;
+          width:60% !important;
+          height:60% !important;
+          transform: translate(-50%,-50%)
+        }
+      }
+      div:nth-child(1){
+        border-radius: 50%;
+        border:1px solid #DCDCDC;
+        width:76px;
+        height:76px;
+        position: absolute;
+        left:0;
+        top:0;
+        z-index: 1;
+        img{
+          width:100%;
+          height:100%;
+        }
+      }
+      div:nth-child(2){
+        border-radius: 50%;
+        border:1px solid #DCDCDC;
+        width:76px;
+        height:76px;
+        position: absolute;
+        left:52px;
+        top:0;
+        z-index: 2;
+        img{
+          width:100%;
+          height:100%;
+        }
+      }
+      div:nth-child(3){
+        width:76px;
+        height:76px;
+        position: absolute;
+        left:111px;
+        top:0;
+        z-index: 3;
+        border-radius: 50%;
+        border:1px solid #DCDCDC;
+        img{
+          width:100%;
+          height:100%;
+        }
+      }
+      div:nth-child(4){
+        border-radius: 50%;
+        background: transparent!important;
+        border:1px solid #DCDCDC;
+        width:76px;
+        height:76px;
+        position: absolute;
+        left:167px;
+        top:0;
+        z-index: 4;
+        img{
+          width:100%;
+          height:100%;
+        }
+      }
+    }
   }
   &-btns{
     display: flex;

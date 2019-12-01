@@ -151,7 +151,7 @@ export default {
       },
       onLinkOrder(){
           this.$router.push({
-                path:'/orderlist'
+                path:'/courseorderlist'
             })
       },
         hideOverlay(){

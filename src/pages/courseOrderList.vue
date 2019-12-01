@@ -17,7 +17,8 @@
         <div class="orderList-content-item" v-for="(item,index) in orderList" :key="index">
           <div class="ordertop">
             <span>订单编号：{{item.order_code}}</span>
-            <span>{{item.status_text}}</span>
+            <span  v-if="item.t_id == 0">{{item.status_text}}</span>
+            <span  v-if="item.t_id != 0 " class="sharecorol">待分享，差{{item.need}}人</span>
           </div>
           <div class="ordercontent" @click="orderDetailHandler(item.order_id)">
             <div class="ordercontentimg">
@@ -39,7 +40,8 @@
           <div class="orderfooter">
             <span>合计: ¥{{item.price_pay}}</span>
             <div class="btns" >
-              <span class="cancel" @click="cancelHandler(item.order_id)">取消预约</span>
+              <span  style="display:none" class="cancel" v-if="item.t_id == 0" @click="cancelHandler(item.order_id)">取消预约</span>
+              <span class="share" v-if="item.t_id != 0" @click="sharelHandler(item.t_id)">邀请拼团</span>
             </div>
           </div>
         </div>
@@ -62,6 +64,7 @@ export default {
       currentIndex: 0,
       tabList: [
         {name: '全部', status: ''},
+        {name: '待分享',status : 4},
         {name: '线下课程', status: 3},
         {name: '线上课程', status: 2}
       ],
@@ -79,6 +82,9 @@ export default {
     this.getOrderList()
   },
   methods: {
+    sharelHandler (tid){
+      this.$router.push({path:'/coursegroupdetails',query:{id:tid}})
+    },
     cancelHandler (order_id) {
       var _this = this
       this.$api.courseDelAppoint({order_id:order_id}).then((res)=>{
@@ -110,14 +116,18 @@ export default {
       this.getOrderList()
 
     },
-    orderDetailHandler () {
-      this.$router.push({name: 'CourseOrderDetail'})
+    orderDetailHandler (id) {
+      this.$router.push({name: 'CourseOrderDetail',query:{id}})
     },
     getOrderList () {
       const param = {
         page: this.current,
         pageSize: 10,
         type: this.type
+      }
+      if(this.type == 4) {
+        param.status = 4
+        param.type = null
       }
       this.$toast.loading({
         duration: 0,
@@ -207,6 +217,9 @@ export default {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        .sharecorol{
+          color:#cda871;
+        }
       }
       .ordercontent{
         display: flex;
@@ -288,6 +301,12 @@ export default {
           .cancel{
             color:#666666;
             border:2px solid #E3E3E3;
+            display: block;
+            margin: 0 auto;
+          }
+          .share{
+            color:#cda871;
+            border:2px solid #cda871;
             display: block;
             margin: 0 auto;
           }

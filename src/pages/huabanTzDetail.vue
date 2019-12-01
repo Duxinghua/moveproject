@@ -440,7 +440,7 @@ export default {
           line-height:50px;
           height:50px;
           color:#333;
-          display:inline-block;
+          display:block;
           span:nth-child(1){
             font-weight: bold;
             margin-right:10px;

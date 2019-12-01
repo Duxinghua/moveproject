@@ -85,6 +85,7 @@ export default {
           padding-left:26px;
           padding-right:26px;
           border:2px solid #E3E3E3;
+          outline:none
       }
       img{
         width:32px;
@@ -97,6 +98,7 @@ export default {
     }
     textarea{
       resize:none;
+      outline:none;
       width:698px;
       height:312px;
       border-radius: 12px;

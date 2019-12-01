@@ -242,6 +242,7 @@ export default {
       padding:10px;
       height:311px;
       resize:none;
+      outline:none;
       font-size:28px;
       border-radius:12px;
       margin-bottom: 28px;

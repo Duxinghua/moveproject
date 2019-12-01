@@ -25,7 +25,8 @@ export default {
       finished: false,
       current: 1,
       total: 10,
-      groupTime: 0
+      groupTime: 0,
+      course_id: null
 
     }
   },
@@ -33,6 +34,7 @@ export default {
     GroupItem
   },
   mounted () {
+    this.course_id = this.$route.query.courseId
     this.goodsTuanLists()
   },
   methods: {
@@ -45,7 +47,8 @@ export default {
     goodsTuanLists () {
       const param = {
         page: this.current,
-        pageSize: 10
+        pageSize: 10,
+        course_id: this.course_id
       }
       this.$api.courseTuanList(param).then((res) => {
         if (res.code == 1) {
