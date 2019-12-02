@@ -38,7 +38,13 @@ export default {
       yx: true,
       tipmessage: false,
       phone:null,
-      captcha:null
+      captcha:null,
+      name:''
+    }
+  },
+  mounted () {
+    if(this.$route.query.name){
+      this.name = this.$route.query.name
     }
   },
   methods: {
@@ -98,7 +104,11 @@ export default {
             message: res.msg,
             onClose: () => {
               getSitem.setStr('mobile', res.data.mobile)
-              _this.$router.go(-1)
+              if(_this.name){
+                _this.$router.push({name:_this.name})
+              }else{
+                _this.$router.go(-1)
+              }
             }
           })
         }else{

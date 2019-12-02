@@ -4,13 +4,13 @@
       <img class="card" src="../assets/images/myxf.png" alt="">
       <div class="cardInfo">
         <div class="cardInfo-c">
-          <span>学币</span>
+          <span>花币</span>
           <span>{{score}}</span>
         </div>
       </div>
       <div class="myXf-top-menu">
-        <span :class="{active: currentIndex === 0 ? true : false}" @click="tabClickHandler(0)">学币记录</span>
-        <span :class="{active: currentIndex === 1 ? true : false}" @click="tabClickHandler(1)">学币规则</span>
+        <span :class="{active: currentIndex === 0 ? true : false}" @click="tabClickHandler(0)">花币记录</span>
+        <span :class="{active: currentIndex === 1 ? true : false}" @click="tabClickHandler(1)">花币规则</span>
       </div>
     </div>
     <div class="myXf-content">

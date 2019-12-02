@@ -1,5 +1,5 @@
 <template>
-  <div class="offdetail-teacher-msg">
+  <div class="offdetail-teacher-msg" @click="detailHandler">
     <img :src="msgItem.avatar" alt="">
     <div>
       <span class="teachername">{{msgItem.nickname}}</span>
@@ -32,6 +32,9 @@ export default {
     // console.log(msgItem.name);
   },
   methods: {
+    detailHandler () {
+      this.$router.push({path: '/teacherDetail',query:{index:this.msgItem.id}})
+    },
     userFocusHandler (amity,index) {
       this.$api.teacherLike({teacher_id: index}).then(res => {
         if (res.code === 1 ) {

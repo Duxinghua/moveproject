@@ -11,20 +11,23 @@
     <div class="myYq-content">
       <span>分享规则：{{description}}</span>
     </div>
-    <div class="myYq-btn">
+    <div class="myYq-btn" @click="shareOpen">
       分享邀请好友
     </div>
+    <WxShare :show="wxShare" @toShare="toShare" />
   </div>
 </template>
 
 <script>
+import WxShare from '@/components/wxshare.vue'
 import config from '@/utils/config'
 export default {
   data () {
     return {
+      wxShare: false,
       qrurl: '',
       description: '',
-      logo:require('../assets/images/logo.jpg')
+      logo: require('../assets/images/logo.jpg')
     }
   },
   mounted () {
@@ -34,11 +37,18 @@ export default {
         this.qrurl = result.data.ticket
         this.description = result.data.description
         this.openid = result.data.openid
+        this.logo = result.data.logo
         this.wxs()
       }
     })
   },
   methods: {
+    shareOpen () {
+      this.wxShare = true
+    },
+    toShare () {
+      this.wxShare = false
+    },
     wxs () {
       var data = {
         url:location.href
@@ -132,6 +142,9 @@ export default {
       })
 
     }
+  },
+  components: {
+    WxShare
   }
 }
 </script>
@@ -145,7 +158,7 @@ export default {
   &-content{
     position: fixed;
     width:90%;
-    top:887px;
+    top: calc(40% + 460px);
     left:50%;
     transform: translateX(-50%);
     span{
@@ -161,18 +174,19 @@ export default {
   }
   &-qrcode{
     position: fixed;
-    top:432px;
+    top:40%;
     left:50%;
-    transform: translateX(-50%);
+    transform:translate(-50%,-40%);
     width:448px;
     height:440px;
     z-index: 1;
   }
+  // 432px;
   &-wrap{
     position: fixed;
-    top:432px;
+    top:40%;
     left:50%;
-    transform: translateX(-50%);
+    transform: translate(-50%,-40%);
     width:448px;
     height:440px;
     z-index: 2;

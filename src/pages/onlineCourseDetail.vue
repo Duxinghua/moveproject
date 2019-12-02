@@ -1,7 +1,8 @@
 <template>
   <div class="ondetail">
-      <div class="ondetail-video">
+      <div class="ondetail-video" @click="playVideo">
           <img :src="onlineMsg.image ? onlineMsg.image[0] : '' " alt="">
+          <img class="playVideo" src="../assets/images/zbico.png" alt="">
       </div>
       <div class="ondetail-top">
         <ul class="ondetail-top-list">
@@ -20,7 +21,7 @@
           <div>{{onlineMsg.title}}</div>
           <p>{{onlineMsg.description}}</p>
         </div>
-        <div class="goods-group">
+        <div class="goods-group"  v-if="onlineMsg.is_tuan == 1">
           <div class="group-header">
             <h3>课程拼团</h3>
             <div class="right" @click="onLinkAll">查看全部拼团<img class="arrormore" src="../assets/images/fxend.png" alt=""/></div>
@@ -91,10 +92,19 @@
         </div>
       </div>
       <div class="ondetail-action">
-        <div class="ondetail-money">合计<span>￥{{onlineMsg.price}}</span></div>
+        <div class="ondetail-money" @click="homeClick">
+          <img src="../assets/images/carhome.png" alt="">
+          <span>首页</span>
+        </div>
         <div>
-            <div class="ondetail-group-btn" @click="onTrun(courseId)" v-if="onlineMsg.is_tuan === 1">发起拼团</div>
-            <div :class="buyClass" @click="onBuy(courseId)">立即购买</div>
+            <div class="ondetail-group-btn" @click="onTrun(courseId)" v-if="onlineMsg.is_tuan === 1">
+              <span>￥{{onlineMsg.price_tuan}}</span>
+              <span>发起拼团</span>
+            </div>
+            <div :class="buyClass" @click="onBuy(courseId)">
+              <span>￥{{onlineMsg.price}}</span>
+              <span>立即购买</span>
+            </div>
         </div>
       </div>
       <WxShare :show="wxShare" @toShare="toShare" />
@@ -119,6 +129,17 @@
             <div class="submit" @click="onSubmit">确认</div>
         </div>
       </van-popup> -->
+    <div class="submit-order-reconfirm" v-if="reShow">
+      <div class="re-mb"></div>
+      <div class="re-body">
+        <div class="pt">提示</div>
+        <div class="pb">{{tipText}}</div>
+        <div  class="btns">
+          <span @click="cancelHandler">取消</span>
+          <span @click="onHandler">确定</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -128,6 +149,8 @@ import TeacherWorks from '@/components/teacherWorks.vue'
 import GroupItem from '@/components/cource/groupItem.vue'
 import NoData from '@/components/nodata'
 import WxShare from '@/components/wxshare.vue'
+import config from '@/utils/config'
+import getSitem from '@/utils/storage'
 export default {
   name: 'OnlineCourseDetail',
   data () {
@@ -151,18 +174,144 @@ export default {
       commentsImg: [],
       finished: false,
       loading: false,
-      popupStatus: false
+      popupStatus: false,
+      reShow:false,
+      tipText: '你的课程已购买？是否再次购买'
     }
   },
   mounted () {
-    console.log(this.$route.query.id)
     this.courseId = this.$route.query.id
+    if (this.$route.query.openid) {
+      getSitem.setStr('pudd', this.$route.query.openid)
+    }
     this.onlineDetail()
     this.flowerList()
     this.courseComment()
     this.courseTuanList()
   },
   methods: {
+    wxs (title,description,image) {
+      var data = {
+        url:location.href
+      }
+      var that = this
+      let shareurl = config.baseurl + '/onlinecoursedetail?id=' + that.courseId + '&openid=' + getSitem.getStr('openid')
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      if(isiOS){
+        data.url = config.shareurls
+      }
+      this.$api.userGetSignPackage(data).then((res) => {
+        if (res.code === 1) {
+          var wxpay = res.data
+          wx.config({
+            debug: true,
+            appId: wxpay.appId,
+            timestamp: wxpay.timestamp,
+            nonceStr: wxpay.nonceStr,
+            signature: wxpay.signature,
+            jsApiList: [
+              'checkJsApi',
+              'onMenuShareTimeline',
+              'onMenuShareAppMessage',
+              'chooseImage',
+              'uploadImage',
+              'getLocalImgData'
+            ]
+          })
+          wx.error(function (res) {
+            console.log('出错了：' + res.errMsg)
+          })
+          // 在这里调用 API
+          wx.ready(function () {
+            wx.checkJsApi({
+              jsApiList: [
+                'checkJsApi',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'chooseImage',
+                'uploadImage',
+                'getLocalImgData'
+              ],
+              success: function (res) {
+
+              }
+            })
+          })
+
+          // 点击分享到朋友圈
+          wx.onMenuShareTimeline({
+            title: title, // 分享标题
+            desc: description, // 分享描述
+            link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: image, // 分享图标
+            trigger: function (res) {
+              // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+              alert('用户点击分享到朋友圈')
+            },
+            success: function () {
+              that.wxShare = false
+              // 用户确认分享后执行的回调函数
+              alert('分享成功')
+            },
+            cancel: function () {
+              that.wxShare = false
+              // 用户取消分享后执行的回调函数
+              alert('分享取消')
+            },
+            fail: function (res) {
+              alert(JSON.stringify(res))
+            }
+          })
+          wx.onMenuShareAppMessage({
+            title: title, // 分享标题
+            desc: description, // 分享描述
+            link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: image, // 分享图标
+            type: 'link', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+              that.wxShare = false
+              // 用户确认分享后执行的回调函数
+              // alert('分享成功');
+
+            },
+            cancel: function () {
+              that.wxShare = false
+              // 用户取消分享后执行的回调函数
+              // alert('分享取消');
+            }
+          })
+
+        }
+      })
+
+    },
+    homeClick () {
+      this.$router.push({name:'Home'})
+    },
+    cancelHandler () {
+      if(this.isBuy == 1){
+        this.$router.push({name:'MyYy'})
+      }else{
+        this.reShow = false
+      }
+    },
+    onHandler () {
+    //  if(this.isBuy == 1){
+    //      this.reShow = false
+    //  }else{
+         this.reShow = false
+    //  }
+    },
+    playVideo () {
+      if(this.isBuy == 1){
+        this.tipText = '此课程已购买？是否再次购买'
+      }else{
+        this.tipText = '此课程未购买，请选择下方的立即购买或拼团'
+      }
+      this.reShow = true
+    },
     shareOpen () {
       this.wxShare = true
     },
@@ -196,8 +345,11 @@ export default {
           this.msgItem = res.data.admin
           this.id = res.data.admin.id
           this.isBuy = res.data.is_buy
-          // console.log(res.data)
           this.getWorksList()
+          var title = res.data.title
+          var description = res.data.description
+          var image = res.data.image ? res.data.image[0]: ''
+          this.wxs(title,description,image)
         }
       })
     },
@@ -340,6 +492,66 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.submit-order-reconfirm{
+    .re-mb{
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 999;
+      background: rgba(1,1,1,0.6);
+      width: 100%;
+      height: 100%;
+    }
+    .re-body{
+      position: fixed;
+      margin: auto;
+      left: 0;
+      right: 0;
+      top: 345px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      // transform: translate(-30%,-50%);
+      width: 578px;
+      height: 350px;
+      padding: 47px 0;
+      background: #FFFFFF;
+      border-radius: 12px;
+      z-index: 1000;
+      .pt,.pb{
+        font-size: 32px;
+        color: #333333;
+      }
+      .pb{
+        font-weight: Bold;
+        padding-left:26px;
+        padding-right:26px;
+      }
+      .btns{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        span{
+          width: 209px;
+          height: 72px;
+          line-height: 72px;
+          text-align: center;
+          font-size: 30px;
+          border-radius: 36px;
+          border: 2px solid #E3E3E3;
+          color: #999999;
+          background-color: #fff;
+          margin: 0 13px;
+        }
+        :last-child{
+          border: 2px solid #738666;
+          background-color: #738666;
+          color: #F3D995;
+        }
+      }
+    }
+}
 .ondetail{
   display: flex;
   flex-direction: column;
@@ -356,11 +568,20 @@ export default {
   }
   &-video{
       width: 100%;
-      // height: 500px;
-      // img{
-      //   width:750px;
-      //   height: 500px;
-      // }
+      position: relative;
+      height: 500px;
+      img{
+        width:750px;
+        height: 500px;
+      }
+      .playVideo{
+        position: absolute;
+        width:73px;
+        height:73px;
+        left:50%;
+        top:50%;
+        transform: translate(-50%,-50%)
+      }
   }
   &-top{
     width:100%;
@@ -712,35 +933,54 @@ export default {
       color: #333333;
       font-size: 30px;
       display: flex;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      img{
+        width:48px;
+        height:48px;
+      }
       span{
         color: #995258;
-        font-size: 36px;
-        margin-left: 15px;
+        font-size: 16px;
+        padding-top:2px;
+        display:flex;
       }
     }
     >div{
       display: flex;
     }
     .ondetail-group-btn{
-      width: 220px;
-      height: 80px;
-      line-height: 80px;
+      width: 243px;
+      padding:10px;
+      height: 100px;
       text-align: center;
       color: #fff;
       background: #DCC98B;
-      border-radius:40px 0px 0px 40px;
-      font-size: 34px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      // border-radius:40px 0px 0px 40px;
+      // font-size: 34px;
+      span{
+        font-size: 30px;
+      }
     }
     .ondetail-buy-btn{
-      width: 220px;
-      height: 80px;
-      line-height: 80px;
+      width: 243px;
+      padding:10px;
+      height: 100px;
+      // line-height: 80px;
       text-align: center;
       color: #F3D995;
       background: #6D8160;
-      font-size: 34px;
-      border-radius:0px 40px 40px 0px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      // border-radius:0px 40px 40px 0px;
+      span{
+        font-size: 30px;
+      }
     }
     .noTuan{
       border-radius: 40px;

@@ -12,7 +12,10 @@
             <span>{{detail.likes}}</span>
           </div>
         </div>
-        <span class="userinfo-top-btn">已关注</span>
+        <span class="userinfo-top-btn" @click="shareHandler(detail.id)">
+           <van-icon size="20" name="like-o" v-if="detail.subscribe == 0" />
+          {{detail.subscribe == 0 ? '' :'已'}}关注
+        </span>
       </div>
       <div class="userinfo-tab">
         <ul>
@@ -90,6 +93,18 @@ export default {
     NoData
   },
   methods: {
+    shareHandler (id) {
+      this.$api.userSaveFollow({user_id: id}).then((res) => {
+        if (res.code === 1) {
+          this.$toast({
+            message: res.msg,
+            onClose: () => {
+              this.getUserInfo()
+            }
+          })
+        }
+      })
+    },
     tzClickHandler (gp_id) {
       this.$router.push({name:'HuabanTzDetail',query:{id:gp_id}})
     },
@@ -259,6 +274,10 @@ export default {
       text-align: center;
       border-radius:31px;
       margin-right:26px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
     }
   }
   &-tab{

@@ -1,6 +1,13 @@
 <template>
     <div class="home-course-content-item" @click="courseDetailHandler(item.course_id)">
-          <img class="course-img" :src="item.image[0]" alt="">
+          <div class="course-img">
+              <van-image :src="item.image[0]">
+                <template v-slot:loading>
+                    <van-loading type="spinner" size="20" />
+                </template>
+              </van-image>
+          </div>
+          <!-- <img class="course-img" :src="item.image[0]" alt=""> -->
           <span>{{item.title}}</span>
           <div class="course-people">
             <img :src="item.admin.avatar" alt="">
@@ -44,7 +51,13 @@ export default {
         .course-img{
           width:336px;
           height:225px;
+          overflow: hidden;
           border-radius:8px;
+         .van-image {
+            width: 100%;
+            height: 100%;
+          }
+
         }
         span{
           width:100%;

@@ -84,7 +84,8 @@ const getToken = (data) => {
       getSitem.setStr('open', true)
       if (result.code === 1) {
         console.log(result)
-        getSitem.setStr('mobile', result.data.info.mobile)
+        getSitem.remove('mobile')
+        // getSitem.setStr('mobile', result.data.info.mobile)
         getSitem.setStr('token', result.data.info.token)
         getSitem.setStr('openid', result.data.info.openid)
         if (getSitem.getStr('open')) {
@@ -95,6 +96,16 @@ const getToken = (data) => {
       } else {
         // alert(222)
         console.log(result)
+      }
+    })
+  }
+  if (getSitem.getStr('pudd')) {
+    var params = {
+      openid: getSitem.getStr('pudd')
+    }
+    Api.userBindTopUserId(params).then((res) => {
+      if (res.code === 1) {
+        getSitem.remove('pudd')
       }
     })
   }
@@ -199,7 +210,7 @@ const router = new Router({
       }
     },
     {
-      path: '/onlineCourseDetail',
+      path: '/onlinecoursedetail',
       name: 'OnlineCourseDetail',
       component: OnlineCourseDetail,
       meta: {
@@ -405,7 +416,7 @@ const router = new Router({
       name: 'MyXf',
       component: MyXf,
       meta: {
-        title: '我的学币'
+        title: '我的花币'
       }
     },
     {
@@ -661,8 +672,8 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
-  return;
+  // next()
+  // return;
   console.log(to)
   // getSitem.remove('token')
   // getSitem.remove('mobile')
@@ -701,8 +712,8 @@ router.beforeEach((to, from, next) => {
     }
     getToken(data)
     if (!getSitem.getStr('mobile')) {
-      if (to.name === 'My' || to.name === 'goodsDetails') {
-        next('/login')
+      if (to.name === 'My' || to.name === 'goodsDetails' || to.name === 'CourseGroupDetails' || to.name === 'OffCourseDetail' || to.name === 'OnlineCourseDetail') {
+        next({path: '/login', query: {name: to.name}})
       } else {
         next()
       }

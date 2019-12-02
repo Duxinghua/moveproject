@@ -364,8 +364,8 @@ const server = {
     return post('course/saveLike', data)
   },
   // 作业评论 course/storeComments
-  courseStoreComments (data){
-    return post('course/storeComments',data)
+  courseStoreComments (data) {
+    return post('course/storeComments', data)
   },
   // 线下课程预约 /api/course/appoint
   courseAppoint (data) {
@@ -426,8 +426,15 @@ const server = {
   // 课程中心 course_order/courseCenter
   courseOrderCourseCenter (data) {
     return post('course_order/courseCenter', data)
+  },
+  // 我的分销 /api/user/distribution
+  userDistribution (data) {
+    return post('user/distribution', data)
+  },
+  // 绑定下上级 user/bindTopUserId
+  userBindTopUserId (data) {
+    return post('user/bindTopUserId', data)
   }
-
 }
 
 export default server

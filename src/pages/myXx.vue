@@ -12,7 +12,7 @@
       <img class="ico" src="../assets/images/xxico.png" alt="">
       <div class="content">
         <span class="s1">{{item.type}}</span>
-        <span :class="autoCss">{{item.content}}</span>
+        <span :class="autoCss(item.upFlag)">{{item.content}}</span>
       </div>
       <img class="down" :src="item.upFlag ? require('../assets/images/xxup.png') : require('../assets/images/xxdown.png')" alt="" @click="zkClickHandler(item.id)">
     </div>
@@ -39,13 +39,20 @@ export default {
     this.xqListList()
   },
   methods: {
+    autoCss (upFlag) {
+      return {
+        s2: true,
+        s3: !upFlag
+      }
+    },
     zkClickHandler (e) {
-      this.upFlag = !this.upFlag
       this.xqList.map((item) => {
         if (item.id === e) {
           item.upFlag = !item.upFlag
         }
       })
+      console.log(this.xqList)
+      this.$forceUpdate()
     },
     onLoad () {
       if (this.xqList.length < this.total) {
@@ -98,12 +105,7 @@ export default {
     NoData
   },
   computed: {
-    autoCss () {
-      return {
-        s2: true,
-        s3: !this.upFlag
-      }
-    }
+
   }
 }
 </script>

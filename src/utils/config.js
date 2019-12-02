@@ -1,5 +1,5 @@
 var url = 'https://youmengwx.qixiuu.com'
-var pro = 'pro'
+var pro = 'dev'
 if (pro === 'dev') {
   url = 'https://youmengtest.qixiuu.com'
 }

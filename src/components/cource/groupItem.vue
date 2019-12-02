@@ -40,7 +40,7 @@ export default {
   methods: {
     onLook () {
       this.$router.push({
-        path: '/courseGroupDetails',
+        path: '/coursegroupdetails',
         query: {
           id: this.groupData.t_id
         }

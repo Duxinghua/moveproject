@@ -5,6 +5,8 @@
       <ul class="home-top-list">
         <li :class="{active:current == 0}" @click="menuHandler(0)">推荐</li>
         <li :class="{active:current == 1}" @click="menuHandler(1)">名师</li>
+        <li :class="{active:current == 2}" @click="menuHandler(2)">线上课程</li>
+        <li :class="{active:current == 3}" @click="menuHandler(3)">线下课程</li>
       </ul>
     </div>
     <div class="home-tj-content" v-if="pageType == 0">
@@ -16,6 +18,8 @@
                 <!-- </a> -->
               </el-carousel-item>
             </el-carousel>
+
+
       </div>
       <div class="home-course">
         <TitleItem title="线下课程" />
@@ -94,6 +98,19 @@
       </van-list>
       <NoData v-if="TeacherLists.length == 0"/>
     </div>
+    <div class="home-onlinecontent" v-if="pageType == 2 || pageType == 3">
+      <van-list
+        v-model="Onlinesloading"
+        v-show="OnlinesLists.length > 0"
+        :finished="Onlinesfinished"
+        finished-text="没有更多了"
+        :immediate-check="false"
+        @load="onLoadOn"
+      >
+      <CourceItem v-for="(cource,index) in OnlinesLists" :item="cource" :key="index"/>
+      </van-list>
+    </div>
+
     <Footer :mrt="true" />
   </div>
 </template>
@@ -129,7 +146,12 @@ export default {
       videoList:[],
       schoolList: [], // 推荐页名师
       TeacherLists: [], // 名师列表页名师
+      OnlinesLists: [],
+      Onlinestotal: 0,
       current: 0,
+      OnlinesCurrent: 1,
+      Onlinesloading: false,
+      Onlinesfinished: false,
       pageType: 0,
       total: 0,
       page: 1,
@@ -150,6 +172,14 @@ export default {
     menuHandler (index) {
       this.current = index
       this.pageType = index
+      if(index == 2 || index == 3){
+        this.Onlinestotal = 0
+        this.OnlinesLists = []
+        this.OnlinesCurrent = 1
+        this.Onlinesloading = false
+        this.Onlinesfinished = false
+        this.getOfCourseList()
+      }
     },
     cardChange (index) {
       // console.log(index, 'cardindex')
@@ -230,6 +260,7 @@ export default {
         type: 1, // 直播
         recommend: 1
       }
+
       this.$api.courseList(paramOff).then((res) => {
         if (res.code === 1) {
           this.offcourseList = res.data.data
@@ -248,6 +279,53 @@ export default {
           // console.log(res.data.data)
         }
       })
+    },
+    getOfCourseList () {
+      var param = {}
+      const paramOff = {
+        page: this.OnlinesCurrent,
+        pageSize: 10,
+        type: 3 // 线下
+      }
+      const paramOn = {
+        page: this.OnlinesCurrent,
+        pageSize: 10,
+        type: 2 // 线上
+      }
+      if(this.pageType == 2) {
+        param = paramOn
+      }else if(this.pageType == 3){
+        param = paramOff
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.courseList(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.Onlinesloading = false
+          if (this.OnlinesLists.length == 0) {
+            // 第一次加载
+            this.OnlinesLists = res.data.data || []
+            this.Onlinestotal = res.data.total
+          } else if (this.OnlinesLists.length < this.Onlinestotal) {
+            // 加载更多
+            this.OnlinesLists = this.OnlinesLists.concat(res.data.data)
+          }
+          if (this.OnlinesLists.length >= this.Onlinestotal) {
+            // 全部加载完成
+            this.Onlinesfinished = true
+          }
+        }
+      })
+    },
+    onLoadOn () {
+      if (this.OnlinesLists.length < this.Onlinestotal) {
+        this.OnlinesCurrent++
+        this.getOfCourseList()
+      }
     },
     onLoad () {
       if (this.TeacherLists.length < this.total) {
@@ -282,6 +360,24 @@ export default {
   flex-direction: column;
   width:100%;
   background:#FBF8F4;
+  min-height: 100vh;
+  &-onlinecontent{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      box-sizing: border-box;
+      padding-left:26px;
+      padding-right:26px;
+      margin:126px 0px;
+      .van-list{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+      }
+      &-item:nth-child(2n){
+        margin-right:0px !important;
+      }
+  }
   &-top{
     width:100%;
     height:98px;

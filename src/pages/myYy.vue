@@ -16,7 +16,7 @@
                       ref="videoPlayer"
                       :playsinline="true"
                       @play="onPlayerPlay($event)"
-                      :options="playerOptions">
+                      :options="item.playerOptions">
             </video-player>
           </div>
           <div class="myright">
@@ -53,30 +53,7 @@ export default {
       loading: false,
       status: '',
       current: 1,
-      total: 0,
-      playerOptions: {
-        playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
-        autoplay: false, //如果true,浏览器准备好时开始回放。
-        muted: false, // 默认情况下将会消除任何音频。
-        loop: false, // 导致视频一结束就重新开始。
-        preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
-        language: 'zh-CN',
-        aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
-        fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
-        sources: [{
-          type: "video/mp4",
-          src: "http://mover.oss-cn-hangzhou.aliyuncs.com/moer/2019/0108/vd3ucmwn.mp4" //视频url地址
-        }],
-        poster: " ", //你的封面地址
-        // width: document.documentElement.clientWidth,
-        notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
-        controlBar: {
-          timeDivider: true,
-          durationDisplay: true,
-          remainingTimeDisplay: false,
-          fullscreenToggle: true  //全屏按钮
-        }
-      },
+      total: 0
     }
   },
   mounted () {
@@ -137,7 +114,7 @@ export default {
                   type: "video/mp4",
                   src: item.video //视频url地址
                 }],
-                poster: item.image ? item.image[0] : '', //你的封面地址
+                poster: item.image[0], //你的封面地址
                 // width: document.documentElement.clientWidth,
                 notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
                 controlBar: {
@@ -209,13 +186,11 @@ export default {
   background:#FBF8F4;
   &-item{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     background:white;
     padding:43px 0px;
     border-bottom: 15px solid #FBF8F4;
     .myleft{
-      width:325px;
-      height:216px;
       margin-left:26px;
       margin-right:26px;
       position: relative;
@@ -235,8 +210,9 @@ export default {
     .myright{
       display: flex;
       flex-direction: column;
+      margin-top:26px;
       margin-right:26px;
-      width:347px;
+      margin-left:26px;
       .title{
         font-size: 30px;
         color: #333333;

@@ -15,7 +15,15 @@
       </div>
     </div>
     <div class="myXf-content" v-if="currentIndex === 0">
-      <div class="myXf-content-item" v-for="(item, index) in xflist" :key="index" >
+      <van-list
+            v-model="loading"
+            v-show="fxlist.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+      >
+      <div class="myXf-content-item" v-for="(item, index) in fxlist" :key="index" >
         <div class="myXf-content-item-top">
             <img class="userIco" :src="item.avatar" alt="">
             <div class="userInfo">
@@ -24,12 +32,11 @@
             </div>
         </div>
         <div class="myXf-content-item-bottom">
-          <div>累计消费金额:<span class="sl">¥{{item.fxnum}}</span></div>
-          <div>返还金额:<span class="sr">¥{{item.srnum}}</span></div>
+          <div>累计消费金额:<span class="sl">¥{{item.price}}</span></div>
+          <div>返还金额:<span class="sr">¥{{item.price_to_top}}</span></div>
         </div>
-
       </div>
-      <NoData v-if="xflist.length === 0"/>
+      </van-list>
     </div>
     <div class="myXf-Fx" v-if="currentIndex === 1">
       <div class="myXf-Fx-top">
@@ -72,37 +79,7 @@ export default {
       current: 1,
       total: 0,
       userInfo: {},
-      xflist: [
-        {
-          avatar: require('../assets/images/people.png'),
-          username: 'XXX肖战',
-          date: '2019.10.11 15:28',
-          fxnum: 6800,
-          srnum: 250
-        },
-        {
-          avatar: require('../assets/images/people.png'),
-          username: 'XXX肖战',
-          date: '2019.10.11 15:28',
-          fxnum: 6800,
-          srnum: 250
-        },
-        {
-          avatar: require('../assets/images/people.png'),
-          username: 'XXX肖战',
-          date: '2019.10.11 15:28',
-          fxnum: 6800,
-          srnum: 250
-        },
-        {
-          avatar: require('../assets/images/people.png'),
-          username: 'XXX肖战',
-          date: '2019.10.11 15:28',
-          fxnum: 6800,
-          srnum: 250
-        }
-
-      ],
+      xflist: [],
       fxlist: []
 
     }
@@ -115,6 +92,7 @@ export default {
     }
   },
   methods: {
+
     getuserTakeout () {
       console.log(this.$api)
       const param = {
@@ -126,25 +104,47 @@ export default {
         message: '加载中...',
         forbidClick: true
       })
-      this.$api.userTakeout(param).then((res) => {
-        this.$toast.clear()
-        if (res.code == 1) {
-          this.loading = false
+      if(this.currentIndex === 1){
+        this.$api.userTakeout(param).then((res) => {
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
 
-          if (this.fxlist.length == 0) {
-            // 第一次加载
-            this.fxlist = res.data.data || []
-            this.total = res.data.total
-          } else if (this.fxlist.length < this.total) {
-            // 加载更多
-            this.fxlist = this.fxlist.concat(res.data.data)
+            if (this.fxlist.length == 0) {
+              // 第一次加载
+              this.fxlist = res.data.data || []
+              this.total = res.data.total
+            } else if (this.fxlist.length < this.total) {
+              // 加载更多
+              this.fxlist = this.fxlist.concat(res.data.data)
+            }
+            if (this.fxlist.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
           }
-          if (this.fxlist.length >= this.total) {
-            // 全部加载完成
-            this.finished = true
+        })
+      }else if(this.currentIndex === 0){
+        this.$api.userDistribution(param).then((res) => {
+          this.$toast.clear()
+          if (res.code == 1) {
+            this.loading = false
+
+            if (this.fxlist.length == 0) {
+              // 第一次加载
+              this.fxlist = res.data.data || []
+              this.total = res.data.total
+            } else if (this.fxlist.length < this.total) {
+              // 加载更多
+              this.fxlist = this.fxlist.concat(res.data.data)
+            }
+            if (this.fxlist.length >= this.total) {
+              // 全部加载完成
+              this.finished = true
+            }
           }
-        }
-      })
+        })
+      }
     },
     onLoad () {
       if (this.fxlist.length < this.total) {
@@ -161,9 +161,12 @@ export default {
     },
     tabClickHandler (e) {
       this.currentIndex = e
-      if (e === 1) {
-        this.getuserTakeout()
-      }
+      this.finished = false
+      this.loading = false
+      this.current = 1
+      this.fxlist = []
+      this.getuserTakeout()
+
     },
     linkClickHandler () {
       this.$router.push({name: 'MyTx', params: {money: this.userInfo.money}})
@@ -308,6 +311,7 @@ export default {
           .userIco{
             width:77px;
             height:77px;
+            border-radius: 50%;
             margin-right:26px;
           }
           .userInfo{

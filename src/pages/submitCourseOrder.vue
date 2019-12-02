@@ -116,7 +116,8 @@ export default {
       },
       true_name: '',
       idcard: '',
-      mobile: ''
+      mobile: '',
+      tid: 0
     }
   },
   created() {
@@ -143,11 +144,12 @@ export default {
         });
   },
   mounted () {
-    const {type,courseId,courseType,user_number} = this.$route.query
+    const {type,courseId,courseType,user_number,tid} = this.$route.query
     this.type = type
     this.course_id = courseId
     this.courseType = courseType
     this.user_number = user_number
+    this.tid = tid
     this.$api.courseOrderPreview({course_id:this.course_id,type:this.type}).then((res)=>{
         console.log(res,'res date')
         if(res.code == 1){
@@ -240,6 +242,9 @@ export default {
       }
       if(this.type == 2){
         params.type = 1
+        if(this.tid){
+          params.t_id = this.tid
+        }
       }else if(this.type == 1){
         params.type = 0
       }

@@ -14,7 +14,7 @@
     </div>
     <div :class="autoMarge">
       <van-swipe @change="changeTab" :autoplay="3000">
-         <van-swipe-item  v-for="(item,index) in tzDetail.images" :key="index" @click="onImageView(tzDetail.images,index)">
+         <van-swipe-item   v-for="(item,index) in tzDetail.images" :key="index" @click="onImageView(tzDetail.images,index)">
             <div class="huabantzimg" >
                      <van-image :src="item"  >
                         <template v-slot:loading>
@@ -242,6 +242,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.van-swipe-item{
+  width:50%
+}
 .dindex{
   display: flex;
   flex-direction: row;
@@ -440,7 +443,7 @@ export default {
           line-height:50px;
           height:50px;
           color:#333;
-          display:block;
+          display:table;
           span:nth-child(1){
             font-weight: bold;
             margin-right:10px;
@@ -448,6 +451,9 @@ export default {
           span:nth-child(2){
             font-weight: 500;
           }
+        }
+        /deep/ .van-list__finished-text{
+          margin-top:15px;
         }
       }
     }

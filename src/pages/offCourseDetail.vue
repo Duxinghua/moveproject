@@ -26,14 +26,14 @@
         </div>
       </div>
     </div>
-    <div class="goods-group">
+    <div class="goods-group" v-if="courseDetails.is_tuan == 1">
       <div class="group-header">
         <h3>课程拼团</h3>
         <div class="right" @click="onLinkAll">查看全部拼团<img class="arrormore" src="../assets/images/fxend.png" alt=""/></div>
       </div>
       <div class="group-list">
         <GroupItem v-for="(item, index) in groupList" :key="index" :groupData="item"/>
-        <div class="group-no">
+        <div class="group-no" v-if="groupList.length == 0">
           <img src="../assets/images/tuan.png" alt="">
           <span>暂无拼团,快去拼团吧</span>
         </div>
@@ -61,10 +61,11 @@
       <div class="offdetail-teacher-title">讲师介绍</div>
       <TeacherMsg :msgItem="msgItem" />
       <div class="offdetail-teacher-sec">
-        <div v-for="(item,index) in tecImg.image" :key="index">
-          <img :src="item" alt="">
+        <div v-for="(item,index) in tecImg" :key="index">
+          <img :src="item.image ? item.image[0] : ''" alt="">
+          <span>{{item.description}}</span>
         </div>
-        <div>{{tecImg.description}}</div>
+
       </div>
     </div>
     <div class="offdetail-set">
@@ -85,10 +86,19 @@
       </div>
     </div>
     <div class="goods-action">
-      <div class="goods-money">合计<span>￥{{courseDetails.price}}</span></div>
+      <div class="goods-money" @click="homeClick">
+          <img src="../assets/images/carhome.png" alt="">
+          <span>首页</span>
+      </div>
       <div>
-        <div class="goods-group-btn" @click="onTuan(courseId)" v-if="courseDetails.is_tuan == 1">发起拼团</div>
-        <div  :class="buyClass" @click="onBuy(courseId)">立即购买</div>
+        <div class="goods-group-btn" @click="onTuan(courseId)" v-if="courseDetails.is_tuan == 1">
+          <span>￥{{courseDetails.price_tuan}}</span>
+          <span>发起拼团</span>
+        </div>
+        <div  :class="buyClass" @click="onBuy(courseId)">
+          <span>￥{{courseDetails.price}}</span>
+          <span>立即购买</span>
+        </div>
       </div>
     </div>
     <WxShare :show="wxShare" @toShare="toShare" />
@@ -97,7 +107,10 @@
 
 <script>
 import TeacherMsg from '@/components/teacherMsg.vue'
+import GroupItem from '@/components/cource/groupItem.vue'
 import WxShare from '@/components/wxshare.vue'
+import config from '@/utils/config'
+import getSitem from '@/utils/storage'
 export default {
   name: 'OffCourseDetail',
   data () {
@@ -144,6 +157,9 @@ export default {
   mounted () {
     console.log(this.$route.query.id)
     this.courseId = this.$route.query.id
+    if (this.$route.query.openid) {
+      getSitem.setStr('pudd', this.$route.query.openid)
+    }
     this.courseDetail()
     this.courseTuanList()
   },
@@ -151,6 +167,12 @@ export default {
     // onSwipeChange (index) {
     //   this.swiperCurrent = index
     // },
+    teacherDetail (a) {
+      console.log(a)
+    },
+    homeClick () {
+      this.$router.push({name:'Home'})
+    },
     shareOpen () {
       this.wxShare = true
     },
@@ -174,9 +196,14 @@ export default {
           this.user_number = res.data.user_number
           this.courseOffline = res.data.courseOffline
           this.msgItem = res.data.admin
-          this.tecImg = res.data.adminOpus ? res.data.adminOpus : []
+          this.tecImg = res.data.adminOpus ? res.data.adminOpus.slice(0,3) : []
           // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
           // console.log(res.data)
+          console.log(res.data.title,res.data.description,'title','des')
+          var title = res.data.title
+          var description = res.data.description
+          var image = res.data.image ? res.data.image[0] : ''
+          this.wxs(title,description,image)
         }
       })
     },
@@ -205,11 +232,109 @@ export default {
       // const courseId = this.courseId
       // this.$router.push({path: '/orderCommit', query: {courseId}})
       this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
+    },
+    wxs (title,description,image) {
+      var data = {
+        url:location.href
+      }
+      var that = this
+      let shareurl = config.baseurl + '/offcoursedetail?id=' + that.courseId + '&openid=' + getSitem.getStr('openid')
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      if(isiOS){
+        data.url = config.shareurls
+      }
+      this.$api.userGetSignPackage(data).then((res) => {
+        if (res.code === 1) {
+          var wxpay = res.data
+          wx.config({
+            debug: true,
+            appId: wxpay.appId,
+            timestamp: wxpay.timestamp,
+            nonceStr: wxpay.nonceStr,
+            signature: wxpay.signature,
+            jsApiList: [
+              'checkJsApi',
+              'onMenuShareTimeline',
+              'onMenuShareAppMessage',
+              'chooseImage',
+              'uploadImage',
+              'getLocalImgData'
+            ]
+          })
+          wx.error(function (res) {
+            console.log('出错了：' + res.errMsg)
+          })
+          // 在这里调用 API
+          wx.ready(function () {
+            wx.checkJsApi({
+              jsApiList: [
+                'checkJsApi',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'chooseImage',
+                'uploadImage',
+                'getLocalImgData'
+              ],
+              success: function (res) {
+
+              }
+            })
+          })
+
+          // 点击分享到朋友圈
+          wx.onMenuShareTimeline({
+            title: title, // 分享标题
+            desc: description, // 分享描述
+            link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: image, // 分享图标
+            trigger: function (res) {
+              // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+              alert('用户点击分享到朋友圈')
+            },
+            success: function () {
+              that.wxShare = false
+              // 用户确认分享后执行的回调函数
+              alert('分享成功')
+            },
+            cancel: function () {
+              that.wxShare = false
+              // 用户取消分享后执行的回调函数
+              alert('分享取消')
+            },
+            fail: function (res) {
+              alert(JSON.stringify(res))
+            }
+          })
+          wx.onMenuShareAppMessage({
+            title: title, // 分享标题
+            desc: description, // 分享描述
+            link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: image, // 分享图标
+            type: 'link', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+              that.wxShare = false
+              // 用户确认分享后执行的回调函数
+              // alert('分享成功');
+
+            },
+            cancel: function () {
+              that.wxShare = false
+              // 用户取消分享后执行的回调函数
+              // alert('分享取消');
+            }
+          })
+
+        }
+      })
+
     }
   },
   components: {
     TeacherMsg,
-    WxShare
+    WxShare,
+    GroupItem
   },
     computed:{
     buyClass () {
@@ -447,15 +572,15 @@ export default {
       }
       &-sec{
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: space-around;
         margin-top: 40px;
         // min-height: 550px;
         // padding-left: 4%;
         // padding-right: 4%;
-        div:first-child{
+        div{
           display: flex;
-          flex-direction: row;
+          flex-direction: column;
           justify-content: space-between;
           overflow: hidden;
           flex-wrap: nowrap;
@@ -464,8 +589,7 @@ export default {
             width: 216px;
             height: 287.3px;
           }
-        }
-        div:last-child{
+          span{
           font-size: 26px;
           line-height: 36px;
           color: #333333;
@@ -475,6 +599,8 @@ export default {
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 5;
         }
+        }
+
       }
     }
     &-set{
@@ -583,38 +709,55 @@ export default {
         color: #333333;
         font-size: 30px;
         display: flex;
+        flex-direction: column;
         align-items: center;
+        justify-content: center;
+        img{
+          width:48px;
+          height:48px;
+        }
         span{
           color: #995258;
-          font-size: 36px;
-          margin-left: 15px;
+          font-size: 16px;
+          padding-top:2px;
+          display:flex;
         }
       }
       >div{
         display: flex;
       }
       .goods-group-btn{
-        width: 220px;
-        height: 80px;
-        line-height: 80px;
+        width: 243px;
+        // padding-top:10px;
+        padding: 10px;
+        height: 100px;
         text-align: center;
         color: #fff;
         background: #DCC98B;
-        border-radius:40px 0px 0px 40px;
-        font-size: 34px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        span{
+          font-size: 30px;
+        }
       }
       .goods-buy-btn{
-        width: 220px;
-        height: 80px;
-        line-height: 80px;
+        width: 243px;
+        // padding-top:10px;
+        padding:10px;
+        height: 100px;
         text-align: center;
         color: #F3D995;
         background: #6D8160;
-        font-size: 34px;
-        border-radius:0px 40px 40px 0px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        span{
+          font-size: 30px;
+        }
       }
       .noTuan{
-        border-radius: 40px;
+        // border-radius: 40px;
       }
     }
   }

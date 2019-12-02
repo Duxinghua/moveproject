@@ -24,7 +24,7 @@
         </div>
         <div class="tabitem" @click="likeClickHandler('xf')">
           <span>{{userInfo.score}}</span>
-          <span>学币</span>
+          <span>花币</span>
         </div>
         <div class="tabitem" @click="likeClickHandler('fs')">
           <span>{{userInfo.by_follow}}</span>
@@ -89,12 +89,12 @@
       <div class="t-body">
         <div class="t-body-h">
           <img class="img1" src="../assets/images/qdico.png" alt="">
-          <span>每日签到得学币</span>
+          <span>每日签到得花币</span>
           <img class="img2" src="../assets/images/qdclose.png" alt="" @click="qdCloseHandler">
         </div>
         <div class="t-body-b">
           <div class="title">
-              今日签到可获得<img src="../assets/images/qdda.png" alt=""> {{signValue}}学币
+              今日签到可获得<img src="../assets/images/qdda.png" alt=""> {{signValue}}花币
           </div>
           <div class="list">
             <div class="litem" v-for="(item,index) in qdList" :key="index">
@@ -297,6 +297,8 @@ export default {
   display: flex;
   flex-direction:column;
   padding-top:34px;
+  min-height: 100vh;
+  background:#fff;
   &-header{
     display: flex;
     flex-direction: column;
@@ -457,7 +459,7 @@ export default {
     height:229px;
     left:0;
     bottom: 0;
-    z-index: -1;
+    // z-index: -1;
   }
   .myqd{
     .t-mb{
