@@ -84,8 +84,7 @@ const getToken = (data) => {
       getSitem.setStr('open', true)
       if (result.code === 1) {
         console.log(result)
-        getSitem.remove('mobile')
-        // getSitem.setStr('mobile', result.data.info.mobile)
+        getSitem.setStr('mobile', result.data.info.mobile)
         getSitem.setStr('token', result.data.info.token)
         getSitem.setStr('openid', result.data.info.openid)
         if (getSitem.getStr('open')) {
@@ -712,12 +711,15 @@ router.beforeEach((to, from, next) => {
     }
     getToken(data)
     if (!getSitem.getStr('mobile')) {
+
       if (to.name === 'My' || to.name === 'goodsDetails' || to.name === 'CourseGroupDetails' || to.name === 'OffCourseDetail' || to.name === 'OnlineCourseDetail') {
-        next({path: '/login', query: {name: to.name}})
+        alert('next')
+        next({path: '/login', query: {name: to.name, arg:to.fullPath}})
       } else {
         next()
       }
     } else {
+      alert('next2')
       next()
     }
   }

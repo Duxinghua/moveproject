@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import config from '@/utils/config'
 import getSitem from '@/utils/storage'
 export default {
   name: 'Login',
@@ -39,12 +40,16 @@ export default {
       tipmessage: false,
       phone:null,
       captcha:null,
-      name:''
+      name:'',
+      arg: ''
     }
   },
   mounted () {
     if(this.$route.query.name){
       this.name = this.$route.query.name
+    }
+    if(this.$route.query.arg){
+      this.arg = this.$route.query.arg
     }
   },
   methods: {
@@ -105,8 +110,10 @@ export default {
             onClose: () => {
               getSitem.setStr('mobile', res.data.mobile)
               if(_this.name){
-                _this.$router.push({name:_this.name})
+
+                location.href = config.baseurl+arg
               }else{
+
                 _this.$router.go(-1)
               }
             }
@@ -155,6 +162,7 @@ export default {
   flex-direction: column;
   padding-left:26px;
   padding-right:26px;
+  background:white;
   min-height: 100vh;
   .loginTip{
     font-size: 36px;

@@ -161,6 +161,9 @@ export default {
     next()
   },
   mounted () {
+    if(!getSitem.getStr('mobile')){
+      this.$router.push({name:'Login'})
+    }
     this.currentDate = this.formatTime(1)
     this.$api.userIndex().then((result) => {
       if (result.code === 1) {

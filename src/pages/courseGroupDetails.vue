@@ -122,7 +122,13 @@ export default {
         }
   },
   mounted () {
-    getSitem.remove('mobile')
+    alert(getSitem.getStr('mobile'))
+    if(!getSitem.getStr('mobile')){
+          this.$router.push({name:'Login'})
+    }else {
+      alert('111')
+    }
+
     const {tuanStatus,id} = this.$route.query
     this.groupId = id
     this.tuanStatus = tuanStatus;
