@@ -222,7 +222,7 @@ export default {
             //参加拼团到支付页面
             const param = {
                 type,
-                goods_id:this.groupDetails.goodsId,
+                goods_id:this.groupDetails.goods_id,
                 t_id:this.groupId,
                 specs:JSON.stringify(this.skuList[this.skuIndex]),
                 goods_num:this.goodsNum
