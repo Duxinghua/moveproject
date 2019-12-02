@@ -51,7 +51,7 @@
         </div>
         <div class="goods-group">
             <div class="group-header">
-                <h3>商品拼团<img src="../assets/images/tuan-bg.png" alt=""></h3>
+                <h3><span>商品拼团</span><img src="../assets/images/tuan-bg.png" alt=""></h3>
                 <div
                     class="right"
                     @click="onLinkAll"
@@ -633,6 +633,10 @@ export default {
         color: #6d8160;
         font-size: 36px;
 		position: relative;
+		span{
+			position: relative;
+			z-index: 1;
+		}
 		img{
 			width: 150px;
 			position:absolute;
