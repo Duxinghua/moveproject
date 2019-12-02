@@ -16,9 +16,10 @@
     </div>
     <div class="offdetail-top">
       <div class="offdetail-top-rec">
-        <div>{{courseDetails.title}}</div>
-        <p>{{courseDetails.description}}</p>
-        <span>¥{{courseDetails.price}}</span>
+        <span class="title">{{courseDetails.title}}</span>
+        <!-- {{courseDetails.description}} -->
+        <span class="description">{{courseDetails.description}}</span>
+        <span class="price">¥{{courseDetails.price}}</span>
         <div>
           <img src="../assets/images/offlinenjoy.png" alt="">
           <span>分享</span>
@@ -28,7 +29,7 @@
     <div class="goods-group">
       <div class="group-header">
         <h3>课程拼团</h3>
-        <div class="right" @click="onLinkAll">查看全部拼团<van-icon name="arrow" /></div>
+        <div class="right" @click="onLinkAll">查看全部拼团<img class="arrormore" src="../assets/images/fxend.png" alt=""/></div>
       </div>
       <div class="group-list">
         <GroupItem v-for="(item, index) in groupList" :key="index" :groupData="item"/>
@@ -44,11 +45,11 @@
       <div class="offdetail-course-sec">
         <p>
           <span>开课时间</span>
-          <!-- <span>{{courseOffline.open_time_text}}</span> -->
+          <span>{{courseOffline.open_time_text}}</span>
         </p>
         <p>
           <span>开课地址</span>
-          <!-- <span>{{courseOffline.address}}</span> -->
+          <span>{{courseOffline.address}}</span>
         </p>
         <p>
           <span>主办单位</span>
@@ -84,9 +85,9 @@
       </div>
     </div>
     <div class="goods-action">
-      <div class="goods-money">合计<span>￥</span></div>
+      <div class="goods-money">合计<span>￥{{courseDetails.price}}</span></div>
       <div>
-        <div class="goods-group-btn" @click="onBuy(courseId)">发起拼团</div>
+        <div class="goods-group-btn" @click="onTuan(courseId)" v-if="courseDetails.is_tuan == 1">发起拼团</div>
         <div class="goods-buy-btn" @click="onBuy(courseId)">立即购买</div>
       </div>
     </div>
@@ -104,6 +105,7 @@ export default {
       bannerImg: [],
       courseDetails: {},
       courseOffline: {},
+      user_number:null,
       planList: [
         {
           id: 1,
@@ -161,12 +163,12 @@ export default {
         this.$toast.clear()
         if (res.code == 1) {
           this.courseDetails = res.data
-
+          this.user_number = res.data.user_number
           this.courseOffline = res.data.courseOffline
           this.msgItem = res.data.admin
           this.tecImg = res.data.adminOpus ? res.data.adminOpus : []
           // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
-          // console.log(res.data.admin)
+          // console.log(res.data)
         }
       })
     },
@@ -186,10 +188,13 @@ export default {
     onLinkAll () {
       this.$router.push('/allGroup')
     },
+    onTuan (courseId) {
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2, courseType: 'off',user_number:this.user_number}})
+    },
     onBuy (courseId) {
       // const courseId = this.courseId
       // this.$router.push({path: '/orderCommit', query: {courseId}})
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2}})
+      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1, courseType: 'off',user_number:this.user_number}})
     }
   },
   components: {
@@ -227,9 +232,9 @@ export default {
         flex-direction: column;
         justify-content: space-around;
         width: 100%;
-        height: 221px;
-        padding: 14px 154px 0 25px;
-        div:first-child{
+        // height: 221px;
+        padding: 22px 154px 22px 25px;
+        .title{
           font-size: 36px;
           color: #333333;
           font-weight: 500;
@@ -237,18 +242,21 @@ export default {
           text-overflow: ellipsis;
           white-space: nowrap;
         }
-        p{
+        .description{
           font-size: 26px;
+          line-height: 36px;
           color: #999999;
           overflow: hidden;
           text-overflow: ellipsis;
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 2;
+          margin-top:15px;
         }
-        span{
+       .price{
           font-size: 32px;
           color: #995258;
+          margin-top:18px;
         }
         div:last-child{
         position: absolute;
@@ -278,24 +286,42 @@ export default {
     .goods-group{
       // margin-top: 15px;
       background: #FBF8F5;
-      padding: 40px 25px 35px 25px;
+      padding: 33px 25px;
       border-bottom: 15px solid #F6F3EE;
       .group-header{
         display: flex;
         justify-content: space-between;
         align-items: center;
+        height:45px;
         h3{
           color: #6D8160;
           font-size: 36px;
+          position: relative;
+          width: fit-content;
+          z-index: 2;
+        }
+        h3::before{
+          position: absolute;
+          content: '';
+          display: block;
+          width: 100%;
+          height: 16px;
+          background: #EEF1EC;
+          border-radius: 8px;
+          bottom: 8px;
+          z-index: -1;
         }
         .right{
           color: #999999;
           font-size: 26px;
           display: flex;
           align-items: center;
-          .van-icon{
-              font-size: 34px;
-              color: #D4B589;
+          .arrormore{
+            width:15px;
+            height:24px;
+            background:url('../assets/images/fxend.png') no-repeat;
+            background-size: 100% 100%;
+            margin-left:12px;
           }
         }
       }
@@ -334,6 +360,20 @@ export default {
       &-title{
         font-size: 36px;
         color: #6D8160;
+        position: relative;
+        z-index: 1;
+        width:fit-content;
+      }
+      &-title::before{
+        position: absolute;
+        content: '';
+        display: block;
+        width: 100%;
+        height: 16px;
+        background: #EEF1EC;
+        border-radius: 8px;
+        bottom: 8px;
+        z-index: -1;
       }
       &-con{
         font-size: 26px;
@@ -371,6 +411,20 @@ export default {
         font-size: 36px;
         color: #6D8160;
         margin-bottom: 40px;
+        position: relative;
+        z-index: 1;
+        width:fit-content;
+      }
+      &-title::before{
+        position: absolute;
+        content: '';
+        display: block;
+        width: 100%;
+        height: 16px;
+        background: #EEF1EC;
+        border-radius: 8px;
+        bottom: 8px;
+        z-index: -1;
       }
       &-sec{
         display: flex;
@@ -406,13 +460,27 @@ export default {
     }
     &-set{
       min-height: 600px;
-      padding-left: 4%;
-      padding-right: 4%;
+      padding-left: 25px;
+      padding-right: 25px;
       margin: 0 !important;
       &-title{
         font-size: 36px;
         color: #6D8160;
-        padding: 20px 0 30px 0;
+        position: relative;
+        z-index: 1;
+        width:fit-content;
+        margin-bottom: 25px;
+      }
+      &-title::before{
+        position: absolute;
+        content: '';
+        display: block;
+        width: 100%;
+        height: 16px;
+        background: #EEF1EC;
+        border-radius: 8px;
+        bottom: 8px;
+        z-index: -1;
       }
       .timeline{
         width: 100%;
@@ -440,6 +508,7 @@ export default {
           margin: 0;
           list-style: none;
           position: relative;
+          z-index: 2;
       }
       .timeline ul::before{
           content: ' ';
@@ -449,7 +518,7 @@ export default {
           position: absolute;
           top: 0;
           left: 36px;
-          z-index: 0;
+          z-index: -1;
       }
       .timeline ul li{
         height: 65px;

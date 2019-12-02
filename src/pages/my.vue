@@ -24,7 +24,7 @@
         </div>
         <div class="tabitem" @click="likeClickHandler('xf')">
           <span>{{userInfo.score}}</span>
-          <span>学分</span>
+          <span>学币</span>
         </div>
         <div class="tabitem" @click="likeClickHandler('fs')">
           <span>{{userInfo.by_follow}}</span>
@@ -78,6 +78,10 @@
         <img src="../assets/images/myp.png" alt="" />
         <span>我的评论</span>
       </div>
+      <div class="mlitem" @click="likeClickHandler('ad')">
+        <img src="../assets/images/address.png" alt="" />
+        <span>地址管理</span>
+      </div>
     </div>
     <img src="../assets/images/myfooter.png" class="myfooter">
     <div class="myqd" v-if="qdShow">
@@ -85,12 +89,12 @@
       <div class="t-body">
         <div class="t-body-h">
           <img class="img1" src="../assets/images/qdico.png" alt="">
-          <span>每日签到得学分</span>
+          <span>每日签到得学币</span>
           <img class="img2" src="../assets/images/qdclose.png" alt="" @click="qdCloseHandler">
         </div>
         <div class="t-body-b">
           <div class="title">
-              今日签到可获得<img src="../assets/images/qdda.png" alt=""> {{signValue}}学分
+              今日签到可获得<img src="../assets/images/qdda.png" alt=""> {{signValue}}学币
           </div>
           <div class="list">
             <div class="litem" v-for="(item,index) in qdList" :key="index">
@@ -272,6 +276,8 @@ export default {
         case 'zt':
           Links = 'CourseOrderList'
           break
+        case 'ad':
+          Links = 'addressList'
       }
       if(arg === 'xf'){
       this.$router.push({name: Links,query:{score:this.userInfo.score}})

@@ -22,7 +22,7 @@
           <TeacherWorks v-for="item in teacherWorks" :key="item.id" :item="item"></TeacherWorks>
         </div>
       </van-list>
-      <NoData v-if="teacherWorks.length == 0"/>
+      <!-- <NoData v-if="teacherWorks.length == 0"/> -->
     </div>
   </div>
 </template>
@@ -125,10 +125,11 @@ export default {
       font-size: 26px;
       color: #333333;
       line-height: 38px;
+      overflow: hidden;
       text-overflow: ellipsis;
       display: -webkit-box;
       -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 4;
       margin-bottom: 29px;
     }
     img{

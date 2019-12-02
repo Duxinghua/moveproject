@@ -251,7 +251,8 @@ display: none;
           height:117px;
           border-radius: 8px;
           position: relative;
-          background:#6D8160;
+          background:url('../assets/images/joinmore.png') no-repeat;
+          background-size: 100% 100%;
           img{
             position: absolute;
             left:50%;

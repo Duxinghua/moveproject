@@ -5,9 +5,12 @@ import App from './App'
 import router from './router'
 import 'amfe-flexible/index.js'
 import Vant from 'vant'
+import VideoPlayer from 'vue-video-player'
 import ElementUI from 'element-ui'
 import VueWechatTitle from 'vue-wechat-title'
 import 'vant/lib/index.css'
+import 'vue-video-player/src/custom-theme.css'
+import 'video.js/dist/video-js.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/minireset.min.css'
 import store from './store'
@@ -25,6 +28,8 @@ Vue.use(ElementUI)
 Vue.use(VueWechatTitle)
 
 Vue.use(Vant)
+
+Vue.use(VideoPlayer)
 
 new Vue({
   el: '#app',

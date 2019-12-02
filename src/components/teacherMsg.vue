@@ -2,12 +2,13 @@
   <div class="offdetail-teacher-msg">
     <img :src="msgItem.avatar" alt="">
     <div>
-      <span>{{msgItem.nickname}}</span>
+      <span class="teachername">{{msgItem.nickname}}</span>
       <p>{{msgItem.keywords}}</p>
     </div>
     <!-- <span class="offdetail-teacher-btn">已关注</span> -->
     <div class="user-btn" :class="{active: msgItem.amity == status}" @click="userFocusHandler(msgItem.amity,msgItem.id)">
-      <img src="../assets/images/userfocus.png" v-if="msgItem.amity != status" alt="">
+      <!-- <img src="../assets/images/userfocus.png"  alt=""> -->
+      <van-icon size="20" name="like-o" v-if="msgItem.amity != status" />
       <span>{{msgItem.amity == status ? '已' : '' }}关注</span>
     </div>
   </div>
@@ -70,7 +71,7 @@ export default {
       display: flex;
       flex-direction: column;
       // padding: 50px 0;
-      span{
+      .teachername{
         font-size: 32px;
         color: #333333;
         margin-bottom: 6px;
@@ -108,9 +109,9 @@ export default {
       }
     }
     div.active{
-      background-color: #6D8160;
-      border: none;
-      color: #F3D995;
+      // background-color: #6D8160;
+      border: 2px solid #CDA871;
+      color: #CDA871;
     }
 }
 </style>

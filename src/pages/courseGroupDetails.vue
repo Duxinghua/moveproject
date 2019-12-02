@@ -2,10 +2,10 @@
     <div class="group-details">
         <div class="goods-header">
             <div class="goods-img">
-                <img :src="goodsData.images && goodsData.images[0]" alt="">
+                <img :src="goodsData.image && goodsData.image[0]" alt="">
             </div>
             <div class="goods-info">
-                <div class="title">{{goodsData.goods_name}}</div>
+                <div class="title">{{goodsData.title}}</div>
                 <div class="num">{{groupDetails.user_number}}人团</div>
                 <div class="money">
                     <div class="price">￥<span>{{goodsData.price_tuan}}</span></div>
@@ -25,10 +25,9 @@
                 </div>
             </div>
             <div class="goods-time">
-                <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="groupDetails.expire_time * 1000" />后结束
+                <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />后结束
             </div>
-            <div class="goods-submit" @click="showPopup" v-if="groupDetails.is_my == 0">参与拼团</div>
-            <div class="goods-submit" @click="toggleShare" v-if="groupDetails.is_my == 1">邀请拼团</div>
+            <div class="goods-submit" @click="showPopup">参与拼团</div>
             <div class="goods-process">
                 <span>邀请好友拼团</span>
                 <van-icon name="arrow" />
@@ -117,10 +116,6 @@
                 </div>
             </div>
         </van-overlay>
-
-        <van-overlay :show="overlayStatus1" :z-index="100" @click="toggleShare">
-			<img class="share" src="../assets/images/shareimg.png" alt="">
-		</van-overlay>
     </div>
 </template>
 
@@ -128,7 +123,6 @@
 export default {
   data() {
         return {
-            overlayStatus1:false,
             tuanStatus:1,//1是拼团成功 0 是支付成功
             overlayStatus:false,
             popupStatus:false,
@@ -157,16 +151,11 @@ export default {
 
   },
   methods:{
-      toggleShare(){
-            this.overlayStatus1 = !this.overlayStatus1;
-        },
       onLink(){
           if(this.tuanStatus == 1){
               this.$router.push({
                 path:'/shopHome'
             })
-          }else{
-              this.toggleShare();
           }
       },
       onLinkOrder(){
@@ -191,11 +180,11 @@ export default {
                 message: '加载中...',
                 forbidClick: true
             });
-            this.$api.goodsTuan({t_id:this.groupId}).then((res) => {
+            this.$api.courseTuanIndex({t_id:this.groupId}).then((res) => {
                 this.$toast.clear();
                 if(res.code == 1){
                     this.groupDetails = res.data;
-                    this.goodsData = res.data.goods || {};
+                    this.goodsData = res.data.course || {};
                     this.skuList = res.data.goods ? res.data.goods.specs : [];
                     this.groupList = res.data.hot || [];
                 }
@@ -238,14 +227,6 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.van-overlay{
-	.share{
-		position: absolute;
-		width: 500px;
-		right: 0px;
-		top: 0px;
-	}
-}
 .wrapper {
   display: flex;
   align-items: center;

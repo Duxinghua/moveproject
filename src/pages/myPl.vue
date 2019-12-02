@@ -1,42 +1,110 @@
 <template>
   <div class="myPl">
-    <div class="myPl-item">
-      <img class="myPl-item-left" src="../assets/images/people.png" alt="" />
+    <van-list
+            v-model="loading"
+            v-show="Lklist.length > 0"
+            :finished="finished"
+            finished-text="没有更多了"
+            :immediate-check="false"
+            @load="onLoad"
+    >
+    <div class="myPl-item" v-for="(item,index) in Lklist" :key="index" @click="clickHandler(item.goods_id)">
+      <img class="myPl-item-left" :src="item.user.avatar" alt="" />
       <div class="myPl-item-right">
         <div class="top">
-          <span>陌上花开135</span>
-          <span>2019-10-06</span>
+          <span>{{item.user.nickname}}</span>
+          <span>{{item.create_time}}</span>
+        </div>
+        <div class="des">
+          <RateWrap :values="item.score" :disabled="true" />
         </div>
         <div class="pl">
-          <span class="pl-item">
-          夜想就夜想就
-          </span>
-          <span class="pl-item">
-            日思夜
-          </span>
-          <span class="pl-item">
-            日思夜想就想再来一杯
+          <span class="pl-item" v-for="(pitem,pid) in item.content" :key="pid">
+            {{pitem}}
           </span>
         </div>
         <div class="goods">
-          <img class="img" src="../assets/images/770552.png" alt="">
+          <img class="img" :src="item.goods.images[0]" alt="">
           <div class="goodsinfo">
-            <span>青梅菊花酒</span>
-            <span>绵甜低度健康酒，清火养生养生养生养生养生养生养生</span>
-            <span>¥99</span>
+            <span>{{item.goods.goods_name}}</span>
+            <span>{{item.goods.description}}</span>
+            <span>¥{{item.goods.price}}</span>
           </div>
         </div>
       </div>
     </div>
+    </van-list>
+    <NoData v-if="Lklist.length === 0" />
   </div>
 </template>
 
 <script>
+import RateWrap from '@/components/ratewrap'
+import NoData from '@/components/nodata'
 export default {
   name: 'MyPl',
   data () {
     return {
+      Lklist: [],
+      finished: false,
+      loading: false,
+      current: 1,
+      total: 0
+    }
+  },
+  mounted () {
+    this.getuserLikes()
+  },
+  components: {
+    RateWrap,
+    NoData
+  },
+  methods: {
+    clickHandler (goodsId) {
+      this.$router.push({
+        path: '/goodsDetails',
+        query: {
+          goodsId
+        }
+      })
+    },
+    getuserLikes () {
+      const param = {
+        page: this.current,
+        pageSize: 10
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.myCommentedGoods(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
 
+          if (this.Lklist.length == 0) {
+            // 第一次加载
+
+            this.Lklist = res.data.data
+            this.total = res.data.total
+          } else if (this.Lklist.length < this.total) {
+            // 加载更多
+
+            this.Lklist = this.Lklist.concat(res.data.data)
+          }
+          if (this.Lklist.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
+    },
+    onLoad () {
+      if (this.Lklist.length < this.total) {
+        this.current++
+        this.getuserLikes()
+      }
     }
   }
 }
@@ -46,12 +114,15 @@ export default {
 .myPl{
   display: flex;
   flex-direction: column;
+  background:#FBF8F4;
   &-item{
     padding:26px 26px 45px 26px;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-between;
+    background:white;
+    border-bottom: 15px solid#FBF8F4;
     &-left{
       width:65px;
       height:65px;
