@@ -112,7 +112,7 @@ export default {
                     left: 10px !important;
                 }
                 &:nth-child(2){
-                    left: 120px !important;
+                    left: 110px !important;
                 }
             }
             }
