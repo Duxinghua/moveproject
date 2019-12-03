@@ -116,8 +116,6 @@ export default {
       tuanStatus: 0,//1是拼团成功 0 是支付成功
       groupDetails: {
         users: [
-        {user_id: 22, nickname: "杜兴华", avatar: "https://youmeng.qixiuu.com/uploads/wx/head_1.png", open: 1},
-        {user_id: 26, nickname: "韩韩", avatar: "https://youmeng.qixiuu.com/uploads/wx/head_4.png", open: 0}
         ]
       },
       tid: 0
@@ -148,13 +146,15 @@ export default {
   },
   mounted () {
     const {type,courseId,courseType,user_number,tid} = this.$route.query
+    alert(JSON.stringify(this.$route.query))
     this.type = type
     this.course_id = courseId
     this.courseType = courseType
-    this.user_number = (user_number > 5 ? 5 : user_number)
+    this.user_number = user_number ? (user_number > 5 ? 5 : user_number) : 0
     this.tid = tid
     this.$api.courseOrderPreview({course_id:this.course_id,type:this.type}).then((res)=>{
         if(res.code == 1){
+          alert(1)
           this.detail = res.data
         }
     })
@@ -238,15 +238,15 @@ export default {
     onHandler () {
       var _this = this
       if(this.detail.type  == 3){
-        if(!this.true_name){
+        if(!this.detail.true_name){
               this.$toast('请输入真实姓名')
               return
             }
-            if(!this.mobile){
+            if(!this.detail.mobile_ap){
               this.$toast('请输入手机号')
               return
             }
-            if(!this.idcard){
+            if(!this.detail.idcard){
               this.$toast('请输入身份证号')
               return
         }
@@ -263,9 +263,9 @@ export default {
         params.type = 0
       }
       if(this.detail.type  == 3){
-          params.true_name = detail.true_name
-          params.mobile = detail.mobile
-          params.idcard = detail.idcard
+          params.true_name = this.detail.true_name
+          params.mobile = this.detail.mobile_ap
+          params.idcard = this.detail.idcard
       }
 
       this.$api.courseOrderStore(params).then((res)=>{

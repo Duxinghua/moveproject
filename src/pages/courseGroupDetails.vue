@@ -336,7 +336,8 @@ export default {
             const param = {
                 type,
                 tid:this.groupId,
-                courseId:this.groupDetails.course_id
+                courseId:this.groupDetails.course_id,
+                user_number:this.groupDetails.user_number
             }
             this.$router.push({
                 path:'/submitcourseorder',
