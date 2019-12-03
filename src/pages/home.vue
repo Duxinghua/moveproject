@@ -373,6 +373,9 @@ export default {
             display: flex;
             flex-direction: row;
             flex-wrap: wrap;
+            /deep/ .van-list__finished-text{
+              width:100%;
+            }
       }
       &-item:nth-child(2n){
         margin-right:0px !important;

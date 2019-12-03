@@ -333,6 +333,9 @@ export default {
       -webkit-column-gap:24px;
       column-gap: 24px;
       column-width:339px;
+      /deep/ .van-list__finished-text{
+        width:100%;
+      }
 
     }
     /deep/ .nodata{

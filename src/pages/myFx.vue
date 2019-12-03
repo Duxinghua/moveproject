@@ -55,8 +55,8 @@
             @load="onLoad"
         >
         <div class="myXf-Fx-content-item" v-for="(item, index) in fxlist" :key="index">
-          <span class="time">{{item.create_time}}</span>
-          <span class="des">{{item.remark}}</span>
+          <span class="time">{{item.create_time.split(" ")[0]}}</span>
+          <span class="des">{{item.type == 0 ? '转至支付宝' : '转至银行卡'}}</span>
           <span class="money">¥{{item.money}}</span>
           <span class="status">{{item.status_text}}</span>
         </div>
@@ -81,15 +81,15 @@ export default {
       userInfo: {},
       xflist: [],
       fxlist: []
-
     }
   },
   mounted () {
     this.getuserIndex()
     if (this.$route.query.current) {
       this.currentIndex = this.$route.query.current
-      this.getuserTakeout()
+
     }
+    this.getuserTakeout()
   },
   methods: {
 
@@ -294,6 +294,7 @@ export default {
     display: flex;
     flex-direction: column;
     width:100%;
+    background:white;
     &-item{
       display: flex;
       flex-direction: column;

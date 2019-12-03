@@ -39,7 +39,7 @@
         <div class="des">
           <span class="destitle">{{tzDetail.title}}</span>
           <div class="desico">
-            <img :src="tzDetail.likes == 0 ? require('../assets/images/gzxico.png') : require('../assets/images/ydz.png')" alt="" @click="dzClickHandler">
+            <img :src="tzDetail.likes == 1 ? require('../assets/images/gzxico.png') : require('../assets/images/ydz.png')" alt="" @click="dzClickHandler">
             <img src="../assets/images/shareico.png" alt="" @click="shareOpen">
           </div>
         </div>
@@ -49,7 +49,7 @@
       </div>
       <div class="huabantz-detail-pl">
         <div class="plnum">
-          共{{commentsList.length}}条评论
+          共{{total}}条评论
         </div>
         <div class="plcontent">
           <van-list
@@ -142,7 +142,7 @@ export default {
           if (this.commentsList.length == 0) {
             // 第一次加载
             this.commentsList = res.data.data || []
-
+            this.total = res.data.total
           } else if (this.commentsList.length < this.total) {
             // 加载更多
             this.commentsList = this.commentsList.concat(res.data.data)
@@ -219,6 +219,10 @@ export default {
             message: res.msg,
             onClose: () => {
               this.content = ''
+              this.finished = false
+              this.loading = false
+              this.current = 1
+              this.commentsList = []
               this.getpostsComments()
             }
           })

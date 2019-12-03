@@ -956,17 +956,17 @@ export default {
       display: flex;
     }
     .ondetail-group-btn{
-      line-height: 1.3;
+      line-height: 1.2;
       width: 243px;
       padding:10px;
-      height: 100px;
+      height: 90px;
       text-align: center;
       color: #fff;
       background: #DCC98B;
       display: flex;
       flex-direction: column;
       align-items: center;
-      // border-radius:40px 0px 0px 40px;
+      border-radius:50px 0px 0px 50px;
       // font-size: 34px;
       span{
         font-size: 30px;
@@ -977,10 +977,10 @@ export default {
       }
     }
     .ondetail-buy-btn{
-      line-height: 1.3;
+      line-height: 1.2;
       width: 243px;
       padding:10px;
-      height: 100px;
+      height: 90px;
       // line-height: 80px;
       text-align: center;
       color: #F3D995;
@@ -988,7 +988,7 @@ export default {
       display: flex;
       flex-direction: column;
       align-items: center;
-      // border-radius:0px 40px 40px 0px;
+      border-radius:0px 50px 50px 0px;
       span{
         font-size: 30px;
       }

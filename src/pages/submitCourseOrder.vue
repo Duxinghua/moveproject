@@ -40,15 +40,15 @@
       <div class="order-commit-notice">本活动为实名制活动，如填写有误，您将无法参与所报名的活动。为保障您的自身利益，请仔细核对身份信息。</div>
       <div class="order-commit-content">
         <div>
-          <input type="text" placeholder="请输入真实姓名" v-model="true_name">
+          <input type="text" placeholder="请输入真实姓名" v-model="detail.true_name">
           <img src="../assets/images/ordername.png" alt="">
         </div>
         <div>
-          <input type="tel" placeholder="请输入您的手机号码" v-model="mobile">
+          <input type="tel" placeholder="请输入您的手机号码" v-model="detail.mobile_ap">
           <img src="../assets/images/ordertel.png" alt="">
         </div>
         <div>
-          <input type="text" placeholder="请输入身份证号" v-model="idcard">
+          <input type="text" placeholder="请输入身份证号" v-model="detail.idcard">
           <img src="../assets/images/ordercard.png" alt="" >
         </div>
       </div>
@@ -115,11 +115,11 @@ export default {
       popupStatus:false,
       tuanStatus: 0,//1是拼团成功 0 是支付成功
       groupDetails: {
-        users: []
+        users: [
+        {user_id: 22, nickname: "杜兴华", avatar: "https://youmeng.qixiuu.com/uploads/wx/head_1.png", open: 1},
+        {user_id: 26, nickname: "韩韩", avatar: "https://youmeng.qixiuu.com/uploads/wx/head_4.png", open: 0}
+        ]
       },
-      true_name: '',
-      idcard: '',
-      mobile: '',
       tid: 0
     }
   },
@@ -151,7 +151,7 @@ export default {
     this.type = type
     this.course_id = courseId
     this.courseType = courseType
-    this.user_number = user_number
+    this.user_number = (user_number > 5 ? 5 : user_number)
     this.tid = tid
     this.$api.courseOrderPreview({course_id:this.course_id,type:this.type}).then((res)=>{
         if(res.code == 1){
@@ -193,6 +193,7 @@ export default {
                 paySign: wxmsg.paySign, // 支付签名
                 success: function (res) {
                     // 支付成功的回调函数
+
                     if(_this.type == 2){
                         _this.tuanInfo(order_id)
                     }else{
@@ -220,6 +221,7 @@ export default {
     },
     tuanInfo (order_id) {
       this.$api.courseOrderTuaninfo({order_id:order_id}).then((res)=>{
+
         if(res.code == 1){
           this.groupDetails = res.data
           this.groupDetails.current_number = res.data.users.length
@@ -230,6 +232,7 @@ export default {
           this.groupDetails.t_id = res.data.t_id
           this.overlayStatus = true
         }
+        this.$forceUpdate()
       })
     },
     onHandler () {
@@ -260,9 +263,9 @@ export default {
         params.type = 0
       }
       if(this.detail.type  == 3){
-          params.true_name = this.true_name
-          params.mobile = this.mobile
-          params.idcard = this.idcard
+          params.true_name = detail.true_name
+          params.mobile = detail.mobile
+          params.idcard = detail.idcard
       }
 
       this.$api.courseOrderStore(params).then((res)=>{
@@ -332,7 +335,7 @@ export default {
 }
 .group-list{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     .group-item{
         width: 100px;
