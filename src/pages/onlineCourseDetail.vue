@@ -98,12 +98,12 @@
         </div>
         <div>
             <div class="ondetail-group-btn" @click="onTrun(courseId)" v-if="onlineMsg.is_tuan === 1">
-              <span>￥{{onlineMsg.price_tuan}}</span>
-              <span>发起拼团</span>
+              <span>￥{{onlineMsg.price_tuan}}<br/>
+              发起拼团</span>
             </div>
             <div :class="buyClass" @click="onBuy(courseId)">
-              <span>￥{{onlineMsg.price}}</span>
-              <span>立即购买</span>
+              <span>￥{{onlineMsg.price}}<br/>
+              立即购买</span>
             </div>
         </div>
       </div>
@@ -210,7 +210,7 @@ export default {
         if (res.code === 1) {
           var wxpay = res.data
           wx.config({
-            debug: true,
+            debug: false,
             appId: wxpay.appId,
             timestamp: wxpay.timestamp,
             nonceStr: wxpay.nonceStr,

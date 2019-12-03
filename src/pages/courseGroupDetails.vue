@@ -1,6 +1,5 @@
 <template>
     <div class="group-details">
-        <button @click="test">测试</button>
         <div class="goods-header">
             <div class="goods-img">
                 <img :src="goodsData.image && goodsData.image[0]" alt="">

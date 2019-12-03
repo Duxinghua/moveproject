@@ -92,12 +92,12 @@
       </div>
       <div>
         <div class="goods-group-btn" @click="onTuan(courseId)" v-if="courseDetails.is_tuan == 1">
-          <span>￥{{courseDetails.price_tuan}}</span>
-          <span>发起拼团</span>
+          <span>￥{{courseDetails.price_tuan}}<br/>
+          发起拼团</span>
         </div>
         <div  :class="buyClass" @click="onBuy(courseId)">
-          <span>￥{{courseDetails.price}}</span>
-          <span>立即购买</span>
+          <span>￥{{courseDetails.price}}<br/>
+          立即购买</span>
         </div>
       </div>
     </div>
@@ -740,9 +740,9 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        span{
-          font-size: 30px;
-        }
+          span{
+            font-size: 30px;
+          }
       }
       .goods-buy-btn{
         width: 243px;
@@ -756,8 +756,9 @@ export default {
         flex-direction: column;
         align-items: center;
         span{
-          font-size: 30px;
+        font-size: 30px;
         }
+
       }
       .noTuan{
         // border-radius: 40px;
