@@ -456,7 +456,7 @@ export default {
         goodsTuanLists() {
             const param = {
                 page: 1,
-                pageSize: 10,
+                pageSize: 3,
                 goods_id: this.goodsId
             }
             this.$api.goodsTuanLists(param).then((res) => {
@@ -507,7 +507,12 @@ export default {
             }
         },
         onLinkAll() {
-            this.$router.push('/allGroup')
+            this.$router.push({
+              path:'/allGroup',
+              query:{
+                goodsId:this.goodsId
+              }
+            })
         },
         goodsStoreCarts() {
             const param = {

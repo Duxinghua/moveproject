@@ -148,8 +148,7 @@ export default {
     this.groupId = id
     this.tuanStatus = tuanStatus;
     this.goodsTuan()
-
-    if(typeof tuanStatus == 'string'){
+    if(tuanStatus == 0 || tuanStatus == 1){
         setTimeout(() => {
             this.overlayStatus = true;
         },500)
@@ -216,7 +215,12 @@ export default {
             this.goodsOrderCreate(1)
         },
         showPopup(){
-            this.popupStatus = true;
+            if(this.groupDetails.is_buy == 1){
+                this.$toast('该团已支付')
+            }else{
+                this.popupStatus = true;
+            }
+            
         },
         goodsOrderCreate(type){
             //参加拼团到支付页面
