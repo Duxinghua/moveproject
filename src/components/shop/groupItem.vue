@@ -107,14 +107,14 @@ export default {
 
         }
         .img2{
-                .img{
-                    &:nth-child(2){
-                        left: 0px !important;
-                    }
-                    &:nth-child(2){
-                        left: 130px !important;
-                    }
+            .img{
+                &:nth-child(1){
+                    left: 10px !important;
                 }
+                &:nth-child(2){
+                    left: 110px !important;
+                }
+            }
             }
         span{
             margin-left: 20px;
