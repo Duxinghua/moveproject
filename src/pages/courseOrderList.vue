@@ -18,7 +18,8 @@
           <div class="ordertop">
             <span>订单编号：{{item.order_code}}</span>
             <span  v-if="item.t_id == 0">{{item.status_text}}</span>
-            <span  v-if="item.t_id != 0 " class="sharecorol">待分享，差{{item.need}}人</span>
+            <span  v-if="item.t_id != 0 && status === 4" class="sharecorol">{{item.need == 0 ? '拼团成功' :`待分享，差`+item.need+`人`}}</span>
+            <span v-if="item.need ==0 && item.t_id != 0 && (type == 3 || type == 2)">拼团成功</span>
           </div>
           <div class="ordercontent" @click="orderDetailHandler(item.order_id)">
             <div class="ordercontentimg">
@@ -41,7 +42,7 @@
             <span>合计: ¥{{item.price_pay}}</span>
             <div class="btns" >
               <span  style="display:none" class="cancel" v-if="item.t_id == 0" @click="cancelHandler(item.order_id)">取消预约</span>
-              <span class="share" v-if="item.t_id != 0" @click="sharelHandler(item.t_id)">邀请拼团</span>
+              <span class="share" v-if="status === 4 && item.t_id != 0" @click="sharelHandler(item.t_id)">{{item.need == 0 ? `查看详情` : `邀请拼团`}}</span>
             </div>
           </div>
         </div>
@@ -109,6 +110,7 @@ export default {
     tabClickHandler (index,type) {
       this.currentIndex = index
       this.type = type
+      this.status = type
       this.orderList = []
       this.finished = false
       this.loading = false

@@ -51,6 +51,8 @@ export default {
     if(this.$route.query.arg){
       this.arg = this.$route.query.arg
     }
+    // alert(arg)
+    // alert(name)
   },
   methods: {
     xyClickHandler () {
@@ -111,7 +113,7 @@ export default {
               getSitem.setStr('mobile', res.data.mobile)
               if(_this.name){
 
-                location.href = config.baseurl+arg
+                location.href = config.baseurl+_this.arg
               }else{
 
                 _this.$router.go(-1)

@@ -13,7 +13,6 @@
                 </div>
             </div>
         </div>
-
         <div class="goods-group">
             <div :class="['group-list',{'list-active1':groupDetails.user_number == 2,'list-active':groupDetails.user_number == 3}]">
                 <div class="group-item" v-for="(item, index) in groupDetails.users" :key="index">
@@ -24,11 +23,15 @@
                     <img src="../assets/images/doubt.png" alt="">
                 </div>
             </div>
-            <div class="goods-time">
+            <div class="goods-time" v-if="tuanStatus == 0">
                 <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />后结束
             </div>
-            <div class="goods-submit" @click="showPopup" v-if="groupDetails.is_my == 0">参与拼团</div>
-            <div class="goods-submit" @click="onShare" v-if="groupDetails.is_my == 1">邀请拼团</div>
+            <div class="goods-time" v-if="tuanStatus == 1">
+              <span>拼团成功</span>
+            </div>
+            <div class="goods-submit" @click="showPopup" v-if="groupDetails.is_my == 0 && tuanStatus == 0">参与拼团</div>
+            <div class="goods-submit" @click="onShare" v-if="groupDetails.is_my == 1 && tuanStatus == 0">邀请拼团</div>
+            <div class="goods-submit" @click="onLook" v-if="tuanStatus == 1">继续逛逛</div>
             <div class="goods-process">
                 <span>邀请好友拼团</span>
                 <van-icon name="arrow" />
@@ -88,7 +91,7 @@
                         </div>
                     </div>
                     <div class="goods-time" v-if="tuanStatus == 0">
-                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="groupDetails.expire_time * 1000" />后结束
+                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />后结束
                     </div>
                     <div class="tuan-share" @click="onLink">{{tuanStatus == 0 ? '邀请好友拼团' : '继续逛逛'}}</div>
                     <div class="tuan-link" @click="onLinkOrder"><span>查看订单</span><van-icon name="arrow" /></div>
@@ -106,7 +109,7 @@ import getSitem from '@/utils/storage'
 export default {
   data() {
         return {
-            tuanStatus:1,//1是拼团成功 0 是支付成功
+            tuanStatus:0,//1是拼团成功 0 是支付成功
             overlayStatus:false,
             popupStatus:false,
             goodsNum:1,
@@ -118,6 +121,7 @@ export default {
               users:[]
             },
             groupList:[],
+            tuanInfos:[],
             wxShare: false
         }
   },
@@ -125,27 +129,28 @@ export default {
     // alert(getSitem.getStr('mobile'))
     if(!getSitem.getStr('mobile')){
           this.$router.push({name:'Login'})
-    }else {
-      // alert('111')
     }
 
     const {tuanStatus,id} = this.$route.query
     this.groupId = id
     this.tuanStatus = tuanStatus;
     this.goodsTuan()
-
-    // if(typeof tuanStatus == 'string'){
-    //     setTimeout(() => {
-    //         this.overlayStatus = true;
-    //     },500)
-    // }
-
   },
   components: {
     WxShare
   },
   methods:{
+      onLook () {
+        var type = this.groupDetails.course.type
+        if(type == 2){
+          this.$router.push({path:'/onlinecourselist'})
+        }else if(type == 3){
+          this.$router.push({path:'/offcourselist'})
+        }
+      },
       test () {
+        alert(getSitem.getStr('mobile'))
+        getSitem.remove('token')
         getSitem.remove('mobile')
       },
       wxs (title,description,image) {
@@ -163,7 +168,7 @@ export default {
             if (res.code === 1) {
               var wxpay = res.data
               wx.config({
-                debug: true,
+                debug: false,
                 appId: wxpay.appId,
                 timestamp: wxpay.timestamp,
                 nonceStr: wxpay.nonceStr,
@@ -300,8 +305,18 @@ export default {
                     var image = obj.image ? obj.image[0] : ''
                     console.log(title,description,image)
                     this.wxs(title,description,image)
+                    this.tuanInfo(res.data.order_id)
                 }
             })
+        },
+        tuanInfo (order_id) {
+          this.$api.courseOrderTuaninfo({order_id:order_id}).then((res)=>{
+            console.log(res)
+            if(res.code == 1){
+              this.tuanInfos = res.data
+              this.tuanStatus = res.data.success
+            }
+          })
         },
         onSkuClick(index){
             if(this.skuIndex == index){

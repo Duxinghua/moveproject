@@ -25,9 +25,9 @@
       </div>
     </div>
     <div class="orderdetail-tuan" v-if="detail.t_id != 0 " @click="onLook">
-      <span>拼团状态 {{goodsTuanText[detail.courseTuan.status]}}</span>
+      <span>拼团状态 {{goodsTuanText[detail.courseTuanStatus]}}</span>
       <div class="avatars">
-        <div :key="index" v-for="(itemav,index) in detail.courseTuan.users">
+        <div :key="index" v-for="(itemav,index) in detail.courseTuanUsers">
           <img :class="{active:itemav.active}" :src="itemav.avatar" alt="" />
         </div>
       </div>
@@ -124,6 +124,8 @@ export default {
       this.$api.courseOrderIndex({order_id:this.order_id}).then((res)=>{
         if(res.code == 1){
           this.detail = res.data
+          this.detail.courseTuanStatus = res.data.courseTuan.status
+          this.detail.courseTuanUsers = res.data.courseTuan.users
           var list = []
           var arr = res.data.courseTuan.users
           for(var i=0,l=4;i<l;i++){
@@ -433,6 +435,7 @@ export default {
         img{
           width:100%;
           height:100%;
+          border-radius: 50%;
         }
       }
       div:nth-child(2){
@@ -447,6 +450,7 @@ export default {
         img{
           width:100%;
           height:100%;
+          border-radius: 50%;
         }
       }
       div:nth-child(3){
@@ -461,6 +465,7 @@ export default {
         img{
           width:100%;
           height:100%;
+          border-radius: 50%;
         }
       }
       div:nth-child(4){
@@ -476,6 +481,7 @@ export default {
         img{
           width:100%;
           height:100%;
+          border-radius: 50%;
         }
       }
     }

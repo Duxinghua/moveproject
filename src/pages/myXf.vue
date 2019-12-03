@@ -21,6 +21,7 @@
             finished-text="没有更多了"
             :immediate-check="false"
             @load="onLoad"
+            v-if="currentIndex === 0"
       >
       <div class="myXf-content-item" v-if="currentIndex === 0" v-for="(item,index) in xflist" :key="index">
         <img class="userIco" src="../assets/images/myxfzl.png" alt="">

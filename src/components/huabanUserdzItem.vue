@@ -12,7 +12,7 @@
                 <span class="userinfo">{{autoTime(item.create_time)}}</span>
             </div>
             <div class="huabandz">
-              <van-image :src="auToImage(item)">
+              <van-image :src="auToImage(item+'')">
                 <template v-slot:loading>
                     <van-loading type="spinner" size="20" />
                 </template>

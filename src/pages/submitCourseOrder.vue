@@ -82,9 +82,12 @@
                         </div>
                     </div>
                     <div class="goods-time" v-if="tuanStatus == 0">
-                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，
+                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{groupDetails.need}}人</span>，
                         <van-count-down format="HH:mm:ss" :time="groupDetails.expire_time" ></van-count-down>
   后结束
+                    </div>
+                    <div class="goods-time" v-if="tuanStatus == 1">
+                       <span>拼团成功</span>
                     </div>
 
                     <div class="tuan-share" @click="onLink">{{tuanStatus == 0 ? '邀请好友拼团' : '继续逛逛'}}</div>
@@ -151,7 +154,6 @@ export default {
     this.user_number = user_number
     this.tid = tid
     this.$api.courseOrderPreview({course_id:this.course_id,type:this.type}).then((res)=>{
-        console.log(res,'res date')
         if(res.code == 1){
           this.detail = res.data
         }
@@ -159,7 +161,15 @@ export default {
   },
   methods: {
     onLink () {
-     this.$router.push({name:'CourseGroupDetails',query:{id:this.groupDetails.t_id}})
+      if(this.tuanStatus == 1 ){
+        if(this.detail.type == 2){
+          this.$router.push({path:'/onlinecourselist'})
+        }else if(this.detail.type == 3){
+          this.$router.push({path:'/offcourselist'})
+        }
+      }else{
+        this.$router.push({name:'CourseGroupDetails',query:{id:this.groupDetails.t_id}})
+      }
     },
     onLinkOrder () {
       this.$router.push({name:'CourseOrderList'})
@@ -212,10 +222,11 @@ export default {
       this.$api.courseOrderTuaninfo({order_id:order_id}).then((res)=>{
         if(res.code == 1){
           this.groupDetails = res.data
-          this.groupDetails.current_number = res.data.users ? res.data.users.length : 0
+          this.groupDetails.current_number = res.data.users.length
           this.groupDetails.user_number = this.user_number
           this.groupDetails.expire_time = (res.data.expire_time*1000) - new Date().getTime()
           this.groupDetails.tuanStatus = res.data.success
+          this.tuanStatus = res.data.success
           this.groupDetails.t_id = res.data.t_id
           this.overlayStatus = true
         }

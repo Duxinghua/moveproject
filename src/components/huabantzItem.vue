@@ -6,12 +6,12 @@
           </div>
           <div class="tzcenter">
             <span class="tztitle cleartext">{{item.title}}</span>
+            <span class="tzhits">浏览量: {{item.hits}}</span>
             <div class="tzcdes">
               <img class="tzavatar" :src="item.avatar" alt="">
               <div class="tzcinfo">
               <span>{{item.nickname}}</span>
               <span>{{autoTimer(item.create_time)}}小时前更新</span>
-              <span class="tzhits">浏览量: {{item.hits}}</span>
               </div>
 
             </div>
@@ -85,12 +85,17 @@ export default {
           -webkit-line-clamp: 2;
           overflow: hidden;
         }
+        .tzhits{
+          font-size: 24px;
+          margin-top:10px;
+          color:#999;
+        }
         .tzcdes{
           display: flex;
           flex-direction: row;
           color:#999999;
           font-size: 24px;
-          margin-top: 16px;
+          margin-top: 10px;
           align-items: center;
           .tzavatar{
             width:30px;
@@ -114,12 +119,12 @@ export default {
       }
       .tzright{
         width:169px;
-        height:118px;
+        height:138px;
         overflow: hidden;
         border-radius: 8px;
         .van-image{
           width: 100%;
-          // height: 100%;
+          height: 100%;
         }
       }
 }

@@ -301,7 +301,7 @@ const server = {
   },
   // 提醒发货  /api/goods_order/hastenOrder
   goodsOrderHastenOrder (data) {
-    return post('goods_order/hastenOrder',data)
+    return post('goods_order/hastenOrder', data)
   },
   // 确认收货 /api/goods_order/receiveGoods
   goodsOrderReceiveGoods (data) {
@@ -350,6 +350,10 @@ const server = {
   // 课程拼团详情 /course_tuan/index
   courseTuanIndex (data) {
     return post('course_tuan/index', data)
+  },
+  // 课程拼团状态 course_order/tuanInfo
+  courseorderTuanInfo (data) {
+    return post('course_order/tuanInfo', data)
   },
   // 相关花材 /api/course/materials
   flowers (data) {

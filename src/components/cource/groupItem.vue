@@ -11,9 +11,13 @@
             </div>
             <span><van-icon name="ellipsis" /></span>
         </div>
-        <div class="group-info">
+        <div class="group-info" v-if="groupData.status == 0">
             <div class="lack">还差<em>{{groupData.user_number - groupData.current_number}}人</em>拼成</div>
             <div class="time">剩余<van-count-down :time="groupData.expire_time ? (groupData.expire_time - groupData.create_time) * 1000 : 0" /></div>
+        </div>
+        <div class="group-info" v-if="groupData.status == 1">
+            <div class="lack">拼团{{groupData.status == 1 ?'完成' : '解散'}}</div>
+            <div class="time">00:00:00</div>
         </div>
         <div class="group-btn group-active" v-if="groupData.is_my == 1" @click="onLook">查看</div>
         <div class="group-btn" v-if="groupData.is_my == 0" @click="onLook">去拼团</div>

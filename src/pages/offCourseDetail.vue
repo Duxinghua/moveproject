@@ -92,12 +92,12 @@
       </div>
       <div>
         <div class="goods-group-btn" @click="onTuan(courseId)" v-if="courseDetails.is_tuan == 1">
-          <span>￥{{courseDetails.price_tuan}}<br/>
-          发起拼团</span>
+          <span>￥{{courseDetails.price_tuan}}</span>
+          <em>发起拼团</em>
         </div>
         <div  :class="buyClass" @click="onBuy(courseId)">
-          <span>￥{{courseDetails.price}}<br/>
-          立即购买</span>
+          <span>￥{{courseDetails.price}}</span>
+          <em>立即购买</em>
         </div>
       </div>
     </div>
@@ -251,7 +251,7 @@ export default {
         if (res.code === 1) {
           var wxpay = res.data
           wx.config({
-            debug: true,
+            debug: false,
             appId: wxpay.appId,
             timestamp: wxpay.timestamp,
             nonceStr: wxpay.nonceStr,
@@ -730,6 +730,7 @@ export default {
         display: flex;
       }
       .goods-group-btn{
+        line-height: 1.3;
         width: 243px;
         // padding-top:10px;
         padding: 10px;
@@ -743,8 +744,13 @@ export default {
           span{
             font-size: 30px;
           }
+                em{
+        font-size: 30px;
+        font-style: normal;
+       }
       }
       .goods-buy-btn{
+        line-height: 1.3;
         width: 243px;
         // padding-top:10px;
         padding:10px;
@@ -758,6 +764,10 @@ export default {
         span{
         font-size: 30px;
         }
+              em{
+        font-size: 30px;
+        font-style: normal;
+      }
 
       }
       .noTuan{

@@ -397,7 +397,7 @@ export default {
       height:42px;
     }
     &-list{
-      font-size: 28px;
+      font-size: 32px;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -410,6 +410,7 @@ export default {
       }
     }
     &-list li{
+      font-size: 32px;
       margin-right:40px;
     }
   }

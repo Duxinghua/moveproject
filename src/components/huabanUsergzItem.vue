@@ -1,7 +1,7 @@
 <template>
   <div class="huabanUserItem" >
             <div class="avatar"  @click="userInfoHandler">
-              <van-image :src="item.avatar">
+              <van-image :src="item.avatar+''">
                 <template v-slot:loading>
                     <van-loading type="spinner" size="20" />
                 </template>

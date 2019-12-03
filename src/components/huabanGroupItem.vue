@@ -1,7 +1,7 @@
 <template>
         <div class="huaban-top-item">
           <div class="huaban-top-item-img1">
-            <van-image :src="item.image">
+            <van-image :src="item.image+''">
                 <template v-slot:loading>
                     <van-loading type="spinner" size="20" />
                 </template>

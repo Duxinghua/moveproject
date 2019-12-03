@@ -41,17 +41,17 @@
           </div>
           <div class="ondetail-teacher-works">
             <p>作品</p>
-            <van-list
+            <!-- <van-list
               v-model="loading"
               :finished="finished"
               finished-text="没有更多了"
               :immediate-check="false"
               @load="onLoad"
-            >
+            > -->
               <div class="teacher-works">
                 <TeacherWorks v-for="item in teacherWorks" :key="item.id" :item="item"></TeacherWorks>
               </div>
-            </van-list>
+            <!-- </van-list> -->
           </div>
         </div>
       </div>
@@ -98,12 +98,12 @@
         </div>
         <div>
             <div class="ondetail-group-btn" @click="onTrun(courseId)" v-if="onlineMsg.is_tuan === 1">
-              <span>￥{{onlineMsg.price_tuan}}<br/>
-              发起拼团</span>
+              <span>￥{{onlineMsg.price_tuan}}</span>
+              <em>发起拼团</em>
             </div>
             <div :class="buyClass" @click="onBuy(courseId)">
-              <span>￥{{onlineMsg.price}}<br/>
-              立即购买</span>
+              <span>￥{{onlineMsg.price}}</span>
+              <em>立即购买</em>
             </div>
         </div>
       </div>
@@ -374,18 +374,18 @@ export default {
         if (res.code == 1) {
           this.loading = false
           // console.log(res.data)
-          if (this.teacherWorks.length == 0) {
+          // if (this.teacherWorks.length == 0) {
             // 第一次加载
-            this.teacherWorks = res.data.data || []
+            this.teacherWorks = res.data.data.slice(0,3) || []
             this.total = res.data.total
-          } else if (this.teacherWorks.length < this.total) {
-            // 加载更多
-            this.teacherWorks = this.teacherWorks.concat(res.data.data)
-          }
-          if (this.teacherWorks.length >= this.total) {
-            // 全部加载完成
-            this.finished = true
-          }
+          // } else if (this.teacherWorks.length < this.total) {
+          //   // 加载更多
+          //   this.teacherWorks = this.teacherWorks.concat(res.data.data)
+          // }
+          // if (this.teacherWorks.length >= this.total) {
+          //   // 全部加载完成
+          //   this.finished = true
+          // }
         }
       })
     },
@@ -956,6 +956,7 @@ export default {
       display: flex;
     }
     .ondetail-group-btn{
+      line-height: 1.3;
       width: 243px;
       padding:10px;
       height: 100px;
@@ -970,8 +971,13 @@ export default {
       span{
         font-size: 30px;
       }
+      em{
+        font-size: 30px;
+        font-style: normal;
+      }
     }
     .ondetail-buy-btn{
+      line-height: 1.3;
       width: 243px;
       padding:10px;
       height: 100px;
@@ -985,6 +991,10 @@ export default {
       // border-radius:0px 40px 40px 0px;
       span{
         font-size: 30px;
+      }
+            em{
+        font-size: 30px;
+        font-style: normal;
       }
     }
     .noTuan{

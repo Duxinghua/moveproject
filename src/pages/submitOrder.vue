@@ -44,7 +44,7 @@
                 <div class="right">原价￥{{ priceCost }}</div>
             </div>
             <div class="order-item" @click="toggle">
-                <div class="left">可用<span>{{ orderData.scoreDeduction ? orderData.scoreDeduction.score : 0}}学分</span>抵用<span>{{orderData.scoreDeduction ? orderData.scoreDeduction.deduction : 0}}</span>元</div>
+                <div class="left">可用<span>{{ orderData.scoreDeduction ? orderData.scoreDeduction.score : 0}}花币</span>抵用<span>{{orderData.scoreDeduction ? orderData.scoreDeduction.deduction : 0}}</span>元</div>
                 <van-checkbox v-model="checked" ref="checkboxes" checked-color="#718063"></van-checkbox>
             </div>
         </div>
