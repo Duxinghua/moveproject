@@ -155,11 +155,9 @@ export default {
     }
   },
   mounted () {
-    if (getSitem.getStr('token')){
-        if(!getSitem.getStr('mobile')){
+    if(!getSitem.getStr('mobile')){
           this.$router.push({name:'Login'})
-        }
-     }
+    }
     console.log(this.$route.query.id)
     this.courseId = this.$route.query.id
     if (this.$route.query.openid) {

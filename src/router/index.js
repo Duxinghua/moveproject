@@ -711,15 +711,12 @@ router.beforeEach((to, from, next) => {
     }
     getToken(data)
     if (!getSitem.getStr('mobile')) {
-
       if (to.name === 'My' || to.name === 'goodsDetails' || to.name === 'CourseGroupDetails' || to.name === 'OffCourseDetail' || to.name === 'OnlineCourseDetail') {
-        alert('next')
-        next({path: '/login', query: {name: to.name, arg:to.fullPath}})
+        next({path: '/login', query: {name: to.name, arg: to.fullPath}})
       } else {
         next()
       }
     } else {
-      alert('next2')
       next()
     }
   }

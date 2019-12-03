@@ -1,5 +1,6 @@
 <template>
     <div class="group-details">
+        <button @click="test">测试</button>
         <div class="goods-header">
             <div class="goods-img">
                 <img :src="goodsData.image && goodsData.image[0]" alt="">
@@ -122,11 +123,11 @@ export default {
         }
   },
   mounted () {
-    alert(getSitem.getStr('mobile'))
+    // alert(getSitem.getStr('mobile'))
     if(!getSitem.getStr('mobile')){
           this.$router.push({name:'Login'})
     }else {
-      alert('111')
+      // alert('111')
     }
 
     const {tuanStatus,id} = this.$route.query
@@ -145,6 +146,9 @@ export default {
     WxShare
   },
   methods:{
+      test () {
+        getSitem.remove('mobile')
+      },
       wxs (title,description,image) {
           var data = {
             url:location.href

@@ -115,6 +115,7 @@
 
 <script>
 import Footer from '@/components/footer.vue'
+import getSitem from '@/utils/storage'
 export default {
   name: 'My',
   data () {

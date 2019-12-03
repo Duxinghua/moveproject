@@ -180,11 +180,11 @@ export default {
     }
   },
   mounted () {
-     if(getSitem.getStr('token')){
-        if(!getSitem.getStr('mobile')){
+
+    if(!getSitem.getStr('mobile')){
           this.$router.push({name:'Login'})
-        }
-     }
+    }
+
     this.courseId = this.$route.query.id
     if (this.$route.query.openid) {
       getSitem.setStr('pudd', this.$route.query.openid)
