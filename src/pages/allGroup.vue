@@ -25,7 +25,8 @@ export default {
       finished: false,
       current: 1,
       total: 10,
-      groupTime: 0
+      groupTime: 0,
+      goodsId:0
 
     }
   },
@@ -33,6 +34,7 @@ export default {
     GroupItem
   },
   mounted () {
+    this.goodsId = this.$route.query.goodsId;
     this.goodsTuanLists()
   },
   methods: {
@@ -44,6 +46,7 @@ export default {
     },
     goodsTuanLists () {
       const param = {
+        goods_id:this.goodsId,
         page: this.current,
         pageSize: 10
       }

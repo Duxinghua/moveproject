@@ -273,7 +273,7 @@ export default {
                     this.$router.push({
                         path:'/groupDetails',
                         query:{
-                            id:this.orderData.t_id,
+                            id:res.data.t_id,
                             tuanStatus:res.data.success
                         }
                     })
