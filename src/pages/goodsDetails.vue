@@ -202,7 +202,7 @@
 						@click="onBuy('buy')"
 					><span>¥{{(skuList && skuList[skuIndex]) ? (skuList[skuIndex].price * goodsNum) : goodsData.price}}</span><em>立即购买</em></div>
 				</div>
-                
+
 				<div class="car-box" v-if="goodsData.is_tuan != 1">
 					<div
 						class="goods-group-btn"
@@ -214,8 +214,8 @@
 						@click="onBuy('buy')"
 					><em>立即购买</em></div>
 				</div>
-                
-                
+
+
             <!-- </div> -->
         </div>
 
