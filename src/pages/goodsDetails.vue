@@ -49,7 +49,8 @@
                 <span>分享</span>
             </div>
         </div>
-        <div class="goods-group">
+
+        <div class="goods-group" v-if="goodsData.is_tuan == 1">
             <div class="group-header">
                 <h3><span>商品拼团</span><img src="../assets/images/tuan-bg.png" alt=""></h3>
                 <div
@@ -176,6 +177,10 @@
             </div>
         </div>
 
+		<div class="shop-car" @click="onLinkCar" v-if="goodsData.is_tuan != 1">
+			<img src="../assets/images/car.png" alt="">
+		</div>
+
         <div class="goods-action">
             <!-- <div
                 class="goods-money"
@@ -186,20 +191,31 @@
                 v-if="disabled"
             >合计<span>￥{{ skuIndex != -1 ? goodsData.price_tuan : '0.00'}}</span></div> -->
             <!-- <div> -->
-                <div
-                    class="goods-group-btn"
-                    @click="onBuy('group')"
-                    v-if="goodsData.is_tuan == 1"
-                ><span>¥{{goodsData.price_tuan }}</span>发起拼团</div>
-                <div
-                    class="goods-group-btn"
-                    @click="onBuy('car')"
-                    v-if="goodsData.is_tuan != 1"
-                >加入购物车</div>
-                <div
-                    class="goods-buy-btn"
-                    @click="onBuy('buy')"
-                ><span>¥{{(skuList && skuList[skuIndex]) ? (skuList[skuIndex].price * goodsNum) : goodsData.price}}</span>立即购买</div>
+				<div class="home" @click="onLinkHome"><img src="../assets/images/home.png" alt=""><span>首页</span></div>
+				<div class="tuan-box" v-if="goodsData.is_tuan == 1">
+					<div
+						class="goods-group-btn"
+						@click="onBuy('group')"
+						><span>¥{{goodsData.price_tuan }}</span><em>发起拼团</em></div>
+					<div
+						class="goods-buy-btn"
+						@click="onBuy('buy')"
+					><span>¥{{(skuList && skuList[skuIndex]) ? (skuList[skuIndex].price * goodsNum) : goodsData.price}}</span><em>立即购买</em></div>
+				</div>
+                
+				<div class="car-box" v-if="goodsData.is_tuan != 1">
+					<div
+						class="goods-group-btn"
+						@click="onBuy('car')"
+
+					><em>加入购物车</em></div>
+					<div
+						class="goods-buy-btn"
+						@click="onBuy('buy')"
+					><em>立即购买</em></div>
+				</div>
+                
+                
             <!-- </div> -->
         </div>
 
@@ -348,6 +364,16 @@ export default {
         this.goodsTuanLists();
     },
     methods: {
+		onLinkHome(){
+			this.$router.push({
+                path: '/shopHome',
+            })
+		},
+		onLinkCar(){
+			this.$router.push({
+                path: '/shop',
+            })
+		},
 		toggleShare(){
 			this.overlayStatus = !this.overlayStatus;
 		},
@@ -875,6 +901,15 @@ export default {
       }
     }
   }
+  .shop-car{
+	  position: fixed;
+	  bottom: 120px;
+	  right: 12px;
+	  img{
+		  width: 120px;
+		  height: 120px;
+	  }
+  }
 
   .goods-action {
     position: fixed;
@@ -888,6 +923,26 @@ export default {
     align-items: center;
     padding: 0px 20px 0px 25px;
     background: #fff;
+	.home{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		img{
+			width: 46px;
+			height: 46px;
+		}
+		span{
+			color: #995258;
+			font-size: 22px;
+		}
+	}
+	.tuan-box,.car-box{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
     .goods-money {
       color: #333333;
       font-size: 30px;
@@ -899,39 +954,40 @@ export default {
         margin-left: 15px;
       }
     }
-    > div {
-      display: flex;
-    }
     .goods-group-btn {
-    //   width: 220px;
-		flex: 1;
-      height: 80px;
-      line-height: 80px;
-      text-align: center;
+		line-height: 1.3;
+		width: 240px;
+      height: 100px;
       color: #fff;
       background: #dcc98b;
-      border-radius: 40px 0px 0px 40px;
-      font-size: 34px;
+      font-size: 30px;
 	  display: flex;
 	  justify-content: center;
+	  flex-direction: column;
+	  align-items: center;
 	  span{
 		  margin-right: 10px;
 	  }
+	  em{
+		  font-style: normal;
+	  }
     }
     .goods-buy-btn {
-    //   width: 220px;
-	flex: 1;
-      height: 80px;
-      line-height: 80px;
-      text-align: center;
+		line-height: 1.3;
+	width: 240px;
+      height: 100px;
       color: #f3d995;
       background: #6d8160;
-      font-size: 34px;
-      border-radius: 0px 40px 40px 0px;
+      font-size: 30px;
 	  display: flex;
 	  justify-content: center;
+	  flex-direction: column;
+	  align-items: center;
 	  span{
 		  margin-right: 10px;
+	  }
+	  em{
+		  font-style: normal;
 	  }
     }
   }
