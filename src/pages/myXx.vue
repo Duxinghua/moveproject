@@ -117,6 +117,8 @@ export default {
   padding-left:26px;
   padding-right:26px;
   padding-top:51px;
+  min-height: 100vh;
+  background:white;
   &-item{
     display: flex;
     flex-direction: row;

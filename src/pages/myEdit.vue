@@ -162,6 +162,8 @@ export default {
 .myEdit{
   display: flex;
   flex-direction: column;
+  min-height:100vh;
+  background:white;
   .avatar{
     width:172px;
     height:172px;
