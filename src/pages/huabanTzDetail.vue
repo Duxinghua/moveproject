@@ -338,7 +338,7 @@ export default {
     .gz{
       width:170px;
       height:58px;
-      background:white;
+      // background:white;
       border:2px solid rgba(205, 168, 113, 1);
       border-radius:28px;
       display: flex;
@@ -359,7 +359,7 @@ export default {
       height:552px;
       overflow: hidden;
       display: flex;
-      background:white;
+      // background:white;
         .van-image {
           width: 100%;
           height: auto;

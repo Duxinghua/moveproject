@@ -673,6 +673,8 @@ router.beforeEach((to, from, next) => {
   // getSitem.remove('token')
   // getSitem.remove('mobile')
   // getSitem.remove('open')
+  next()
+  return;
   if (to.name === 'Invite') {
     next()
   } else {
