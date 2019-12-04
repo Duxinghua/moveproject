@@ -303,6 +303,7 @@
 
 <script>
 import GroupItem from '@/components/shop/groupItem'
+import config from '@/utils/config'
 
 export default {
     data() {
@@ -335,11 +336,16 @@ export default {
         GroupItem,
     },
     created() {
-        const config = {
+        const data = {
             url: location.href.split('#')[0]
-        }
+		}
+		const agent = navigator.userAgent
+		const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+		if(isiOS){
+			data.url = config.shareurls
+		}
         // 请求api返回sdk配置参数
-        this.$api.userGetSignPackage(config).then(res => {
+        this.$api.userGetSignPackage(data).then(res => {
             if (res.code === 1) {
                 var wxConfig = res.data;
                 this.wxConfig = wxConfig;
@@ -353,7 +359,8 @@ export default {
             }
 
             wx.ready(() => {
-                this.wx = wx;
+				this.wx = wx;
+				this.onShare();
             });
         });
     },
@@ -382,25 +389,27 @@ export default {
             const title = this.goodsData.goods_name;
             const description = this.goodsData.description;
             const link = location.href;
-            const imgUrl = this.goodsData.images[0];
-            wx.updateAppMessageShareData({
+			const imgUrl = this.goodsData.images[0];
+			let shareurl = config.baseurl + '/goodsDetails?goodsId=' + this.goodsId
+            this.wx.updateAppMessageShareData({
                 title: title, // 分享标题
                 desc: description, // 分享描述
-                link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                 imgUrl: imgUrl, // 分享图标
                 success: function () {
                     // _this.$toast('分享成功')
                 }
             })
 
-            wx.updateTimelineShareData({
+            this.wx.updateTimelineShareData({
                 title: title, // 分享标题
-                link: link, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
                 imgUrl: imgUrl, // 分享图标
                 success: function () {
                     // _this.$toast('分享成功')
                 }
-            })
+			})
+			
 
         },
         onImageView(data, index) {
@@ -426,7 +435,6 @@ export default {
                 if (res.code == 1) {
                     this.goodsData = res.data;
                     this.skuList = res.data.specs;
-                    this.onShare()
                 }
             })
         },
