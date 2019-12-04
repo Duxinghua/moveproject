@@ -181,9 +181,9 @@ export default {
   },
   mounted () {
 
-    if(!getSitem.getStr('mobile')){
-          this.$router.push({name:'Login'})
-    }
+    // if(!getSitem.getStr('mobile')){
+    //       this.$router.push({name:'Login'})
+    // }
 
     this.courseId = this.$route.query.id
     if (this.$route.query.openid) {
@@ -998,7 +998,7 @@ export default {
       }
     }
     .noTuan{
-      border-radius: 40px;
+      border-radius: 50px;
     }
   }
   // .sku-content{

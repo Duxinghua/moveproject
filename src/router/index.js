@@ -80,7 +80,6 @@ const getToken = (data) => {
     })
   } else {
     Api.wxLogin(data).then((result) => {
-      // alert(JSON.stringify(result))
       getSitem.setStr('open', true)
       if (result.code === 1) {
         console.log(result)
@@ -93,8 +92,7 @@ const getToken = (data) => {
           getSitem.setStr('open', false)
         }
       } else {
-        // alert(222)
-        console.log(result)
+
       }
     })
   }
@@ -671,55 +669,57 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  // next()
-  // return;
   // console.log(to)
   // getSitem.remove('token')
   // getSitem.remove('mobile')
   // getSitem.remove('open')
-  const agent = navigator.userAgent
-  const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-  if (isiOS) {
-    getSitem.setStr('iosurl', location.href)
-  }
-  console.log(to.fullPath, 'tofullpaty')
-  var localurl = window.location.href
-  console.log(localurl, 'localurl')
-  var goback = encodeURIComponent(localurl)
-  var code = GetUrlParame('code')
-  console.log(code, 'code')
-  console.log(window.location.href)
-  var appid = 'wxd2a255476bf18aec'
-  var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + goback + '&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect'
-  console.log('当前url', url)
-  console.log('获取code码')
-  console.log(getSitem.getStr('token'))
-  if (!code) {
+  if(to.name === 'Invite'){
+    next()
+  }else{
+    const agent = navigator.userAgent
+    const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+    if (isiOS) {
+      getSitem.setStr('iosurl', location.href)
+    }
+    console.log(to.fullPath, 'tofullpaty')
+    var localurl = window.location.href
+    console.log(localurl, 'localurl')
+    var goback = encodeURIComponent(localurl)
+    var code = GetUrlParame('code')
+    console.log(code, 'code')
+    console.log(window.location.href)
+    var appid = 'wxd2a255476bf18aec'
+    var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + goback + '&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect'
+    console.log('当前url', url)
+    console.log('获取code码')
     console.log(getSitem.getStr('token'))
-    if (!getSitem.getStr('token')) {
-      window.location.href = url
-      next()
-    } else {
-      console.log(getSitem.getStr('token'), 'token')
-      next()
-    }
-  } else {
-    console.log('已拿到code', code)
-    console.log('111')
-    var data = {
-      code: code
-    }
-    getToken(data)
-    if (!getSitem.getStr('mobile')) {
-      // alert(getSitem.getStr('token'))
-      if (to.name === 'My' || to.name === 'goodsDetails' || to.name === 'CourseGroupDetails' || to.name === 'OffCourseDetail' || to.name === 'OnlineCourseDetail') {
-        next({path: '/login', query: {name: to.name, arg: to.fullPath}})
-        // alert(getSitem.getStr('token'))
+    if (!code) {
+      console.log(getSitem.getStr('token'))
+      if (!getSitem.getStr('token')) {
+        window.location.href = url
+        next()
       } else {
+        console.log(getSitem.getStr('token'), 'token')
         next()
       }
     } else {
-      next()
+      console.log('已拿到code', code)
+      console.log('111')
+      var data = {
+        code: code
+      }
+      getToken(data)
+      if (!getSitem.getStr('mobile')) {
+        // alert(getSitem.getStr('token'))
+        if (to.name === 'My' || to.name === 'goodsDetails' || to.name === 'CourseGroupDetails' || to.name === 'OffCourseDetail' || to.name === 'OnlineCourseDetail') {
+          next({path: '/login', query: {name: to.name, arg: to.fullPath}})
+          // alert(getSitem.getStr('token'))
+        } else {
+          next()
+        }
+      } else {
+        next()
+      }
     }
   }
 })

@@ -46,7 +46,7 @@ export default {
       if (res.code === 1) {
         var wxpay = res.data
         wx.config({
-          debug: false,
+          debug: true,
           appId: wxpay.appId,
           timestamp: wxpay.timestamp,
           nonceStr: wxpay.nonceStr,
@@ -143,17 +143,21 @@ export default {
           success: function (res) {
             // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
             _this.localIds = res.localIds
-            _this.localIds.map((item)=>{
-              _this.uploadImage(new String(item).toString())
-            })
+
+            // _this.localIds.map((item)=>{
+
+            _this.uploadImage()
+
+            // })
           }
         })
       }else{
         this.$toast('只能上传三张')
       }
     },
-    uploadImage (localId) {
+    uploadImage () {
       // this.$toast('uploadImage')
+      var localId = this.localIds.pop()
       var _this = this
       wx.uploadImage({
           localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
@@ -161,7 +165,7 @@ export default {
           success: function (res) {
             var serverId = res.serverId; // 返回图片的服务器端ID
             // _this.$toast('serverId')
-            // // alert(res.serverId)
+            // alert(res.serverId)
             _this.getImgData(localId,serverId)
           }
       })
@@ -171,6 +175,7 @@ export default {
       const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
       var _this = this
       this.$api.commonwxUpload({id:serverId}).then((result)=>{
+          // alert(JSON.stringify(result))
           if(result.code === 1){
             // _this.$toast({
             //   message:result.msg,
@@ -190,6 +195,9 @@ export default {
                       _this.num --
             //   }
             // })
+                if (localIds.length > 0) {
+                    _this.uploadImage();
+                }
           }else{
             _this.$toast(result.msg)
           }

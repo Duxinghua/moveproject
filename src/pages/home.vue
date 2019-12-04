@@ -11,15 +11,20 @@
     </div>
     <div class="home-tj-content" v-if="pageType == 0">
       <div class="home-banner">
-            <el-carousel :autoplay="true" :interval="5000" id="home-banner-carousel">
-              <el-carousel-item v-for="(item, index) in slideList" :key="index">
-                <!-- <a :href="item.url"> -->
-                  <img class="home-banner-item" :src="item.image" />
-                <!-- </a> -->
-              </el-carousel-item>
-            </el-carousel>
-
-
+            <van-swipe :autoplay="3000" id="home-banner-carousel" indicator-color="#F3D995"	>
+              <van-swipe-item v-for="(item, index) in slideList" :key="index">
+                <div class="home-banner-item">
+                    <van-image :src="item.image">
+                        <template v-slot:loading>
+                            <van-loading
+                                type="spinner"
+                                size="20"
+                            />
+                        </template>
+                    </van-image>
+                </div>
+              </van-swipe-item>
+            </van-swipe>
       </div>
       <div class="home-course">
         <TitleItem title="线下课程" />
@@ -30,21 +35,24 @@
       </div>
       <div class="home-teacher">
         <TitleItem title="名师推荐" />
-        <el-carousel :autoplay="true" :interval="4000" indicator-position="none" id="home-teacher-carousel" arrow="always">
-          <el-carousel-item  v-for="item in schoolList" :key="item.id">
-            <div class="home-teacher-item" >
-              <img  :src="item.avatar" alt="">
-              <div class="teacherinfo">
-                <span class="teacher-name">{{item.nickname}}</span>
-                <span class="teacher-des">{{item.keywords}}</span>
-                <div class="teacher-btn">
-                  <span @click="teacherInfoHandle(item.id)">详情</span>
-                  <img src="../assets/images/teachersq.png" alt="">
+        <van-swipe :autoplay="3000" id="home-teacher-carousel" >
+              <van-swipe-item v-for="(item, index) in schoolList" :key="index">
+                <div class="home-teacher-item" >
+                  <img  :src="item.avatar" alt="">
+                  <div class="teacherinfo">
+                    <span class="teacher-name">{{item.nickname}}</span>
+                    <span class="teacher-des">{{item.keywords}}</span>
+                    <div class="teacher-btn">
+                      <span @click="teacherInfoHandle(item.id)">详情</span>
+                      <img src="../assets/images/teachersq.png" alt="">
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </el-carousel-item>
-        </el-carousel>
+              </van-swipe-item>
+              <div class="custom-indicator" slot="indicator">
+                {{ current + 1 }}/4
+              </div v-if="false">
+        </van-swipe>
         <MoreText moreText="更多名师" moreName="TeacherList"/>
       </div>
       <div class="home-course home-onlinecourse">
@@ -425,6 +433,11 @@ export default {
     &-item{
       width:100%;
       height:370px;
+      overflow: hidden;
+      .van-image{
+        width:100%;
+        height:100%;
+      }
     }
     &-indicator{
       display: flex;

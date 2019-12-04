@@ -1,6 +1,6 @@
 <template>
     <div class="group-details">
-        <div class="goods-header">
+        <div class="goods-header" @click="viewHandler">
             <div class="goods-img">
                 <img :src="goodsData.image && goodsData.image[0]" alt="">
             </div>
@@ -15,11 +15,11 @@
         </div>
         <div class="goods-group">
             <div :class="['group-list',{'list-active1':groupDetails.user_number == 2,'list-active':groupDetails.user_number == 3}]">
-                <div class="group-item" v-for="(item, index) in groupDetails.users" :key="index">
+                <div class="group-item" v-for="(item, index) in tuanInfos.users" :key="index">
                     <div class="img"><img :src="item.avatar" alt=""></div>
                     <div class="tag" v-if="index == 0">团长</div>
                 </div>
-                <div class="group-item active" v-for="(item, index) in ((groupDetails.user_number - groupDetails.users.length) || [])" :key="'active' + index">
+                <div class="group-item active" v-for="(item, index) in ((groupDetails.user_number - tuanInfos.users.length) || [])" :key="'active' + index">
                     <img src="../assets/images/doubt.png" alt="">
                 </div>
             </div>
@@ -122,7 +122,10 @@ export default {
             },
             groupList:[],
             tuanInfos:[],
-            wxShare: false
+            wxShare: false,
+            courseId: 0,
+            orderId:0,
+            timer:null
         }
   },
   mounted () {
@@ -140,6 +143,14 @@ export default {
     WxShare
   },
   methods:{
+      viewHandler () {
+        var type = this.groupDetails.course.type
+        if(type == 2){
+          this.$router.push({name:'OffCourseDetail',query:{id:courseId}})
+        }else if(type == 3){
+          this.$router.push({name:'OnlineCourseDetail',query:{id:courseId}})
+        }
+      },
       onLook () {
         var type = this.groupDetails.course.type
         if(type == 2){
@@ -150,6 +161,7 @@ export default {
       },
       test () {
         alert(getSitem.getStr('mobile'))
+        alert(getSitem.getStr('token'))
         getSitem.remove('token')
         getSitem.remove('mobile')
       },
@@ -287,25 +299,32 @@ export default {
             })
         },
         goodsTuan(){
+
             this.$toast.loading({
                 duration:0,
                 message: '加载中...',
                 forbidClick: true
             });
+            var that = this
             this.$api.courseTuanIndex({t_id:this.groupId}).then((res) => {
                 this.$toast.clear();
                 if(res.code == 1){
                     this.groupDetails = res.data;
                     this.goodsData = res.data.course || {};
-                    this.skuList = res.data.goods ? res.data.goods.specs : [];
+                    this.courseId = res.data.course_id
                     this.groupList = res.data.hot || [];
                     var obj = res.data.course
                     var title = obj.title
                     var description = obj.description
                     var image = obj.image ? obj.image[0] : ''
-                    console.log(title,description,image)
+                    this.orderId = res.data.order_id
                     this.wxs(title,description,image)
                     this.tuanInfo(res.data.order_id)
+                    //定时刷新对应的数据
+                    this.timer = null
+                    this.timer = setInterval(() => {
+                        that.tuanInfo(that.orderId)
+                    }, 2000);
                 }
             })
         },
@@ -345,6 +364,10 @@ export default {
             })
         }
 
+  },
+  destroyed(){
+    clearInterval(this.timer)
+    this.timer = null
   }
 }
 

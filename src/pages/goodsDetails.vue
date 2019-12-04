@@ -409,7 +409,7 @@ export default {
                     // _this.$toast('分享成功')
                 }
 			})
-			
+
 
         },
         onImageView(data, index) {
@@ -968,9 +968,9 @@ export default {
       }
     }
     .goods-group-btn {
-		line-height: 1.3;
+		line-height: 1.2;
 		width: 240px;
-      height: 100px;
+      height: 90px;
       color: #fff;
       background: #dcc98b;
       font-size: 30px;
@@ -978,6 +978,7 @@ export default {
 	  justify-content: center;
 	  flex-direction: column;
 	  align-items: center;
+    border-radius: 50px 0 0 50px;
 	  span{
 		  margin-right: 10px;
 	  }
@@ -986,9 +987,9 @@ export default {
 	  }
     }
     .goods-buy-btn {
-		line-height: 1.3;
+		line-height: 1.2;
 	width: 240px;
-      height: 100px;
+      height: 90px;
       color: #f3d995;
       background: #6d8160;
       font-size: 30px;
@@ -996,6 +997,7 @@ export default {
 	  justify-content: center;
 	  flex-direction: column;
 	  align-items: center;
+    border-radius: 0 50px 50px 0;
 	  span{
 		  margin-right: 10px;
 	  }

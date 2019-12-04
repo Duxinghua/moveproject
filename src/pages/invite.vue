@@ -14,6 +14,7 @@
 <script>
 import Api from '@/api/index'
 export default {
+  name: 'Invite',
   data () {
     return {
       qrurl: ''
