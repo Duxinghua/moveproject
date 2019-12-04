@@ -15,8 +15,10 @@ export default {
 
 <style>
 #app {
-  /* font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; */
+  /* @font-face
+  {
+  font-family: myFirstFont;
+  src: url('/assets/css/PingFang Regular.tff')
+  } */
 }
 </style>

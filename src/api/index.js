@@ -438,6 +438,10 @@ const server = {
   // 绑定下上级 user/bindTopUserId
   userBindTopUserId (data) {
     return post('user/bindTopUserId', data)
+  },
+  // 用户打开 user/qrcodeByOpenid
+  userQrcodeByOpenid (data) {
+    return post('user/qrcodeByOpenid', data)
   }
 }
 

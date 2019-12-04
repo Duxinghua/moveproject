@@ -501,7 +501,7 @@ const router = new Router({
       name: 'MyPl',
       component: MyPl,
       meta: {
-        title: '我的贴子'
+        title: '我的评论'
       }
     },
     {
@@ -673,8 +673,6 @@ router.beforeEach((to, from, next) => {
   // getSitem.remove('token')
   // getSitem.remove('mobile')
   // getSitem.remove('open')
-  next()
-  return;
   if (to.name === 'Invite') {
     next()
   } else {
