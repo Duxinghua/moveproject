@@ -35,24 +35,21 @@
       </div>
       <div class="home-teacher">
         <TitleItem title="名师推荐" />
-        <van-swipe :autoplay="3000" id="home-teacher-carousel" >
-              <van-swipe-item v-for="(item, index) in schoolList" :key="index">
-                <div class="home-teacher-item" >
-                  <img  :src="item.avatar" alt="">
-                  <div class="teacherinfo">
-                    <span class="teacher-name">{{item.nickname}}</span>
-                    <span class="teacher-des">{{item.keywords}}</span>
-                    <div class="teacher-btn">
-                      <span @click="teacherInfoHandle(item.id)">详情</span>
-                      <img src="../assets/images/teachersq.png" alt="">
-                    </div>
-                  </div>
+        <el-carousel :autoplay="true" :interval="4000" indicator-position="none" id="home-teacher-carousel" arrow="always">
+          <el-carousel-item  v-for="item in schoolList" :key="item.id">
+            <div class="home-teacher-item" >
+              <img  :src="item.avatar" alt="">
+              <div class="teacherinfo">
+                <span class="teacher-name">{{item.nickname}}</span>
+                <span class="teacher-des">{{item.keywords}}</span>
+                <div class="teacher-btn">
+                  <span @click="teacherInfoHandle(item.id)">详情</span>
+                  <img src="../assets/images/teachersq.png" alt="">
                 </div>
-              </van-swipe-item>
-              <div class="custom-indicator" slot="indicator">
-                {{ current + 1 }}/4
-              </div v-if="false">
-        </van-swipe>
+              </div>
+            </div>
+          </el-carousel-item>
+        </el-carousel>
         <MoreText moreText="更多名师" moreName="TeacherList"/>
       </div>
       <div class="home-course home-onlinecourse">

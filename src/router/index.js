@@ -673,9 +673,9 @@ router.beforeEach((to, from, next) => {
   // getSitem.remove('token')
   // getSitem.remove('mobile')
   // getSitem.remove('open')
-  if(to.name === 'Invite'){
+  if (to.name === 'Invite') {
     next()
-  }else{
+  } else {
     const agent = navigator.userAgent
     const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
     if (isiOS) {

@@ -144,20 +144,17 @@ export default {
             // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
             _this.localIds = res.localIds
 
-            // _this.localIds.map((item)=>{
-
-            _this.uploadImage()
-
-            // })
+            _this.localIds.map((item)=>{
+              _this.uploadImage(new String(item).toString())
+            })
           }
         })
       }else{
         this.$toast('只能上传三张')
       }
     },
-    uploadImage () {
+    uploadImage (localId) {
       // this.$toast('uploadImage')
-      var localId = this.localIds.pop()
       var _this = this
       wx.uploadImage({
           localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
@@ -195,9 +192,9 @@ export default {
                       _this.num --
             //   }
             // })
-                if (localIds.length > 0) {
-                    _this.uploadImage();
-                }
+                // if (localIds.length > 0) {
+                //     _this.uploadImage();
+                // }
           }else{
             _this.$toast(result.msg)
           }

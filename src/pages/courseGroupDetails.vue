@@ -121,7 +121,9 @@ export default {
               users:[]
             },
             groupList:[],
-            tuanInfos:[],
+            tuanInfos:{
+              users: []
+            },
             wxShare: false,
             courseId: 0,
             orderId:0,

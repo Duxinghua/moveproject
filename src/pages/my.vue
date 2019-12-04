@@ -210,6 +210,7 @@ export default {
                 item.check = true
               }
             })
+            _this.$forceUpdate()
         }
       })
     },
@@ -221,6 +222,7 @@ export default {
             message: result.msg,
             onClose: () => {
               _this.getUserSignLists()
+
             }
           })
         } else {

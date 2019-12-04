@@ -74,7 +74,11 @@ export default {
             wxConfig:{},
             priceCost:0,
             specs: {},
-            goods_id: null
+            goods_id: null,
+            deduction: '',
+            oldGoodsTotal:0,
+            score:0,
+            payScore:false,
         }
     },
     watch:{
@@ -96,6 +100,7 @@ export default {
                     })
                 }
                 this.goodsTotal = goodsTotal.toFixed(2);
+                this.oldGoodsTotal = goodsTotal.toFixed(2);
                 this.priceCost = priceCost.toFixed(2);
             }
         }
@@ -147,12 +152,42 @@ export default {
                 this.$toast.clear();
                 if(res.code == 1){
                     this.orderData = res.data;
+                    this.deduction = res.data.scoreDeduction.deduction
+                    this.score = res.data.scoreDeduction.score
                 }else{
                     this.$toast(res.msg);
                 }
             })
         },
+        accSub(arg1, arg2) {
+            if (isNaN(arg1)) {
+                arg1 = 0;
+            }
+            if (isNaN(arg2)) {
+                arg2 = 0;
+            }
+            arg1 = Number(arg1);
+            arg2 = Number(arg2);
+
+            var r1, r2, m, n;
+            try {
+                r1 = arg1.toString().split(".")[1].length;
+            }
+            catch (e) {
+                r1 = 0;
+            }
+            try {
+                r2 = arg2.toString().split(".")[1].length;
+            }
+            catch (e) {
+                r2 = 0;
+            }
+            m = Math.pow(10, Math.max(r1, r2)); //last modify by deeka //动态控制精度长度
+            n = (r1 >= r2) ? r1 : r2;
+            return ((arg1 * m - arg2 * m) / m).toFixed(n);
+        },
         goodsOrderStore(){
+            var that = this
             // 微信支付
             let param = {}
             if(this.orderType == 0){
@@ -166,6 +201,10 @@ export default {
                     type:this.orderType,
                     address_id:this.addressData.id,
                 }
+                if(this.payScore){
+                  param.deduction = this.score
+                }
+
             }else if(this.orderType == 1){
                 //拼团购买
                 param = {
@@ -184,11 +223,25 @@ export default {
                     address_id:this.addressData.id,
                     type:this.orderType
                 }
+                if(this.payScore){
+                  param.deduction = this.score
+                }
             }
             this.$api.goodsOrderStore(param).then((res) => {
                 if(res.code == 1){
+                  if(res.data.pay_type != 3){
                     const pay_data = res.data.pay_data;
                     this.wxPay(pay_data,res.data.order_id)
+                  }else{
+                    this.$toast({
+                      message:res.msg,
+                      onClose:()=>{
+                        that.$router.push({
+                            path:'/orderlist'
+                        })
+                      }
+                    })
+                  }
                 }else{
                     this.$toast(res.msg);
                 }
@@ -211,6 +264,23 @@ export default {
         },
         toggle(){
             this.$refs.checkboxes.toggle();
+            console.log(this.checked)
+            //使用花币
+            if(!this.checked){
+              this.payScore = true
+              var lenr1 = this.deduction.toString().indexOf('.') > -1 ? this.deduction.toString().split(".")[1].length : 0
+              var lenr2 = this.goodsTotal.toString().indexOf(".") > -1 ? this.goodsTotal.toString().split(".")[1].length : 0
+              var l = lenr1 > lenr2 ? lenr1 : lenr2
+              if(this.deduction*Math.pow(10,l) > this.goodsTotal*Math.pow(10,l)){
+                this.goodsTotal = 0
+              }else{
+                this.goodsTotal = this.accSub(this.goodsTotal,this.deduction)
+              }
+            }else{
+              this.payScore = false
+              this.goodsTotal = this.oldGoodsTotal
+            }
+
         },
         getAddressList(){
             const param = {
