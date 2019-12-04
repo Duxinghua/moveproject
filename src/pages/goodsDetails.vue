@@ -535,9 +535,10 @@ export default {
             this.$api.goodsStoreCarts(param).then((res) => {
                 this.$toast.clear();
                 if (res.code == 1) {
+					this.popupStatus = true;
                     this.$toast({
                         type: 'success',
-                        message: '添加购物车成功',
+                        message: '添加成功',
                         forbidClick: true
                     });
                 } else {
