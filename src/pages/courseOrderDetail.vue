@@ -409,7 +409,7 @@ export default {
     .avatars{
       display: flex;
       height:76px;
-      width:243px;
+      // width:243px;
       position: relative;
       margin-left:200px;
       div{

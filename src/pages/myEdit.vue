@@ -20,9 +20,9 @@
         <span>{{userInfo.gender}}</span>
         <img src="../assets/images/fx.png" alt="" style="display:none">
       </div>
-      <div class="infoItem" >
+      <div class="infoItem"  @click="dataChange()">
         <span>生日</span>
-        <span>{{userInfo.birthday}}</span>
+        <span>{{userInfo.birthday ? userInfo.birthday : '请您选择生日'}}</span>
         <img src="../assets/images/fx.png" alt="" style="display:none">
       </div>
       <div class="infoItem" style="display:none">
@@ -83,12 +83,7 @@ export default {
     }
   },
   mounted () {
-    this.$api.userInfo().then((result) => {
-      console.log(result)
-      if (result.code === 1) {
-        this.userInfo = result.data
-      }
-    })
+    this.getIndex()
   },
   computed: {
     autoCity (item) {
@@ -98,6 +93,16 @@ export default {
     }
   },
   methods: {
+    getIndex () {
+      this.$api.userInfo().then((result) => {
+        if (result.code === 1) {
+          this.userInfo = result.data
+        }
+      })
+    },
+    dataChange () {
+      this.dateShow = true
+    },
     imgUploadHandler () {
 
     },
@@ -115,16 +120,28 @@ export default {
       let year = time.getFullYear()
       let month = time.getMonth() + 1
       let day = time.getDate()
-      return year + '-' + month + '-' + day + '-'
+      return year + '-' + month + '-' + day
     },
     dateChangeHandler () {
-      console.log(this.currentDate)
+
     },
     dateConfirmHandler () {
-      console.log(this.currentDate)
+      this.$api.userEdit({birthday:this.timeFormat(this.currentDate)}).then((result) => {
+        if (result.code === 1) {
+          this.$toast({
+            message: result.msg,
+            onClose: () => {
+               this.getIndex()
+               this.dateShow = false
+            }
+          })
+        } else {
+          this.$toast(result.msg)
+        }
+      })
     },
     dateCancelHandler () {
-      console.log(this.currentDate)
+       this.dateShow = false
     },
     infoEditHandler () {
       this.$router.push({name: 'MyModify', params: {bio: this.userInfo ? this.userInfo.bio : null}})
@@ -138,6 +155,9 @@ export default {
 .my-van-popup{
   padding-left:25px;
   padding-right:25px;
+  /deep/ .van-popup__close-icon--top-right{
+    display: none
+  }
 }
 .myEdit{
   display: flex;

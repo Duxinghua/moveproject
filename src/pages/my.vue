@@ -371,7 +371,7 @@ export default {
           text-align: center;
           font-size: 28px;
           color:#CDA871;
-          margin-top:40px;
+          margin-top:20px;
         }
       }
     }
@@ -379,7 +379,7 @@ export default {
       display: flex;
       flex-direction: row;
       width:100%;
-      margin-top:59px;
+      margin-top:20px;
       .tabitem{
         width:calc(25% - 1px);
         display: flex;
