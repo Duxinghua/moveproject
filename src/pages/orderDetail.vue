@@ -82,11 +82,11 @@
         <span>订单编号</span>
         <span>{{order_detail.order_code}}</span>
       </div>
-      <div class="orderother">
+      <div class="orderother" v-if="order_detail.express_cp">
         <span>快递公司</span>
         <span>{{order_detail.express_cp}}</span>
       </div>
-      <div class="orderother">
+      <div class="orderother" v-if="order_detail.express_num">
         <span>快递单号</span>
         <span>{{order_detail.express_num}}</span>
       </div>
@@ -102,7 +102,7 @@
       <span class="success" v-if="order_detail.status == 0 && order_detail.t_id == 0" @click="payClickHandler(order_detail.order_id)">
         立即付款
       </span>
-      <span class="repay" v-if="order_detail.t_id == 0">重新购买</span>
+      <span style="display:none" class="repay" v-if="order_detail.status == 99">重新购买</span>
     </div>
   </div>
 </template>
@@ -114,7 +114,11 @@ export default {
   data () {
     return {
       order_id: null,
-      order_detail: {},
+      order_detail: {
+        goodsTuan: {
+          users: []
+        }
+      },
       goodsTuanText:[
         '进行中',
         '成功',
@@ -297,17 +301,19 @@ export default {
     .avatars{
       display: flex;
       height:76px;
-      width:243px;
+      // width:243px;
       position: relative;
       margin-left:200px;
       div{
         background:white;
+        border-radius: 50%;
         .active{
           position: relative;
           left:50%;
           top:50%;
           width:60% !important;
           height:60% !important;
+          border-radius: 50%;
           transform: translate(-50%,-50%)
         }
       }
@@ -323,6 +329,7 @@ export default {
         img{
           width:100%;
           height:100%;
+          border-radius: 50%;
         }
       }
       div:nth-child(2){
@@ -337,6 +344,7 @@ export default {
         img{
           width:100%;
           height:100%;
+          border-radius: 50%;
         }
       }
       div:nth-child(3){
@@ -351,10 +359,10 @@ export default {
         img{
           width:100%;
           height:100%;
+          border-radius: 50%;
         }
       }
       div:nth-child(4){
-        border-radius: 50%;
         background: transparent!important;
         border:1px solid #DCDCDC;
         width:76px;
@@ -366,6 +374,7 @@ export default {
         img{
           width:100%;
           height:100%;
+          border-radius: 50%;
         }
       }
     }

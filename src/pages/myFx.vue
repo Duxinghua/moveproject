@@ -28,7 +28,7 @@
             <img class="userIco" :src="item.avatar" alt="">
             <div class="userInfo">
               <span>{{item.username}}</span>
-              <span>注册时间:{{item.date}}</span>
+              <span>注册时间:{{item.create_time_txt}}</span>
             </div>
         </div>
         <div class="myXf-content-item-bottom">

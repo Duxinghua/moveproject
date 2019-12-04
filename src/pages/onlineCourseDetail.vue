@@ -7,7 +7,7 @@
       <div class="ondetail-top">
         <ul class="ondetail-top-list">
           <li :class="{active:current == 0}" @click="menuHandler(0)">视频介绍</li>
-          <li :class="{active:current == 1}" @click="menuHandler(1)">相关花材</li>
+          <li :class="{active:current == 1}" @click="menuHandler(1)">相关周边</li>
           <li :class="{active:current == 2}" @click="menuHandler(2)">作业交流</li>
         </ul>
         <div class="ondetail-top-list">
@@ -56,6 +56,12 @@
         </div>
       </div>
       <div class="ondetail-flower-content" v-if="pageType == 1">
+        <div class="ondetail-list" style="display:none">
+          <span>花材</span>
+          <span>枝条</span>
+          <span>花器</span>
+          <span>工具</span>
+        </div>
         <div class="ondetail-flowers">
           <div class="ondetail-flowers-item" v-for="(item,index) in flowerLists" :key="index">
             <img :src="item.image" alt="">
@@ -501,6 +507,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.ondetail-flower-content{
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  .ondetail-list{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    span{
+      font-size: 36px;
+    }
+  }
+}
 .submit-order-reconfirm{
     .re-mb{
       position: fixed;

@@ -29,7 +29,7 @@
           <span>{{item.memo}}</span>
           <span>{{item.createtime}}</span>
         </div>
-        <span class="userNum">+{{item.score}}</span>
+        <span class="userNum">{{item.type == 1 ?'+' :'-'}}{{item.score}}</span>
       </div>
       </van-list>
       <div class="aids" style="font-size: initial;" v-if="currentIndex === 1" v-html="points_rule">

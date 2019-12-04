@@ -39,7 +39,7 @@
         <div class="des">
           <span class="destitle">{{tzDetail.title}}</span>
           <div class="desico">
-            <img :src="tzDetail.likes == 1 ? require('../assets/images/gzxico.png') : require('../assets/images/ydz.png')" alt="" @click="dzClickHandler">
+            <img :src="tzDetail.is_like == 0 ? require('../assets/images/gzxico.png') : require('../assets/images/ydz.png')" alt="" @click="dzClickHandler">
             <img src="../assets/images/shareico.png" alt="" @click="shareOpen">
           </div>
         </div>
