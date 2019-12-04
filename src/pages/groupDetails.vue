@@ -24,11 +24,13 @@
                     <img src="../assets/images/doubt.png" alt="">
                 </div>
             </div>
-            <div class="goods-time">
+            <div class="goods-time" v-if="groupDetails.user_number != groupDetails.current_number">
                 <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="groupDetails.expire_time * 1000" />后结束
             </div>
-            <div class="goods-submit" @click="showPopup" v-if="groupDetails.is_my == 0">参与拼团</div>
-            <div class="goods-submit" @click="toggleShare" v-if="groupDetails.is_my == 1">邀请拼团</div>
+            <div class="goods-time" v-if="groupDetails.user_number == groupDetails.current_number">拼团成功</div>
+            <div class="goods-submit" @click="onLinkHome" v-if="groupDetails.user_number == groupDetails.current_number">随便逛逛</div>
+            <div class="goods-submit" @click="showPopup" v-if="(groupDetails.user_number != groupDetails.current_number) && groupDetails.is_my == 0">参与拼团</div>
+            <div class="goods-submit" @click="toggleShare" v-if="(groupDetails.user_number != groupDetails.current_number) && groupDetails.is_my == 1">邀请拼团</div>
             <div class="goods-process">
                 <span>邀请好友拼团</span>
                 <van-icon name="arrow" />
@@ -185,6 +187,11 @@ export default {
 
   },
   methods:{
+      onLinkHome(){
+          this.$router.push({
+            path:'/shopHome'
+        })
+      },
       onShare() {
             const _this = this;
             const title = this.goodsData.goods_name;
@@ -253,6 +260,8 @@ export default {
                     this.goodsData = res.data.goods || {};
                     this.skuList = res.data.goods ? res.data.goods.specs : [];
                     this.groupList = res.data.hot || [];
+                }else{
+                    this.$toast(res.msg)
                 }
             })
         },
@@ -457,9 +466,14 @@ export default {
             }
         }
         .goods-info{
+            height: 175px;
             .title{
+                width: 400px;
                 color: #333333;
                 font-size: 30px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
             .num{
                 border: 1Px solid #CDA871;
