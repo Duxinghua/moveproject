@@ -158,9 +158,9 @@ export default {
   &-content{
     position: fixed;
     width:90%;
-    top: calc(40% + 460px);
+    top: calc(40% + 440px);
     left:50%;
-    transform: translateX(-50%);
+    transform: translate(-50%,-40%);
     span{
       display: inline-flex;
       font-size: 26px;

@@ -1,7 +1,7 @@
 <template>
   <div class="huabanUserItem huabanUserBottom" @click="userInfoHandler">
             <div class="avatar">
-              <van-image :src="item.avatar">
+              <van-image :src="item.avatar+''">
                 <template v-slot:loading>
                     <van-loading type="spinner" size="20" />
                 </template>
@@ -12,7 +12,7 @@
                 <span class="userinfo">{{autoTime(item.create_time)}}</span>
             </div>
             <div class="huabandz">
-              <van-image :src="auToImage(item+'')">
+              <van-image :src="auToImage(item)">
                 <template v-slot:loading>
                     <van-loading type="spinner" size="20" />
                 </template>
@@ -51,7 +51,7 @@ export default {
   },
   methods: {
     auToImage (item) {
-      return item.post.images ? item.post.images[0] : ''
+      return item.post ? (item.post.images ? item.post.images[0]+'' : '') : require('../assets/images/courseimg.png')
     },
     autoTime (time) {
       var tim = new Date(time * 1000)
