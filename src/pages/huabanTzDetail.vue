@@ -7,7 +7,7 @@
         <span>{{user.logintime}}小时前</span>
       </div>
       <div class="gzbtn" v-if="user.amity == 0" @click="gzClickHandler(user.id)">
-        <img src="../assets/images/gzico.png" alt="">
+         <van-icon size="20" name="like-o" />
         <span>关注</span>
       </div>
       <span class="gz" v-else  @click="gzClickHandler(user.id)">已关注</span>
@@ -321,8 +321,8 @@ export default {
     .gzbtn{
       width:170px;
       height:58px;
-      background:#6D8160;
-      // border:2px solid rgba(205, 168, 113, 1);
+      // background:#6D8160;
+      border:2px solid rgba(205, 168, 113, 1);
       border-radius:28px;
       display: flex;
       justify-content: center;
@@ -338,7 +338,7 @@ export default {
     .gz{
       width:170px;
       height:58px;
-      background:white;
+      // background:white;
       border:2px solid rgba(205, 168, 113, 1);
       border-radius:28px;
       display: flex;
@@ -359,7 +359,7 @@ export default {
       height:552px;
       overflow: hidden;
       display: flex;
-      background:white;
+      // background:white;
         .van-image {
           width: 100%;
           height: auto;

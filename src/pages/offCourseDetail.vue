@@ -155,9 +155,9 @@ export default {
     }
   },
   mounted () {
-    if(!getSitem.getStr('mobile')){
-          this.$router.push({name:'Login'})
-    }
+    // if(!getSitem.getStr('mobile')){
+    //       this.$router.push({name:'Login'})
+    // }
     console.log(this.$route.query.id)
     this.courseId = this.$route.query.id
     if (this.$route.query.openid) {
@@ -734,13 +734,14 @@ export default {
         width: 243px;
         // padding-top:10px;
         padding: 10px;
-        height: 100px;
+        height: 90px;
         text-align: center;
         color: #fff;
         background: #DCC98B;
         display: flex;
         flex-direction: column;
         align-items: center;
+        border-radius:50px 0px 0px 50px;
           span{
             font-size: 30px;
           }
@@ -754,13 +755,14 @@ export default {
         width: 243px;
         // padding-top:10px;
         padding:10px;
-        height: 100px;
+        height: 90px;
         text-align: center;
         color: #F3D995;
         background: #6D8160;
         display: flex;
         flex-direction: column;
         align-items: center;
+        border-radius:0px 50px 50px 0px;
         span{
         font-size: 30px;
         }
@@ -771,7 +773,7 @@ export default {
 
       }
       .noTuan{
-        // border-radius: 40px;
+        border-radius: 50px;
       }
     }
   }

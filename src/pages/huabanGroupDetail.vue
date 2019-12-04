@@ -165,7 +165,11 @@ export default {
         })
     },
     fptzClickHandler () {
-      this.$router.push({name: 'HuabanTzfp', query: {id: this.id}})
+      if(this.tzDetail.is_join === 1){
+        this.$router.push({name: 'HuabanTzfp', query: {id: this.id}})
+      }else{
+        this.$toast('请先加入小组才可以发贴')
+      }
     },
     joinGroupHandler () {
       var is_join = this.tzDetail.is_join

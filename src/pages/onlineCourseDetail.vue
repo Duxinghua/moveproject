@@ -181,9 +181,9 @@ export default {
   },
   mounted () {
 
-    if(!getSitem.getStr('mobile')){
-          this.$router.push({name:'Login'})
-    }
+    // if(!getSitem.getStr('mobile')){
+    //       this.$router.push({name:'Login'})
+    // }
 
     this.courseId = this.$route.query.id
     if (this.$route.query.openid) {
@@ -335,7 +335,11 @@ export default {
       this.$router.push('/submitCourseOrder')
     },
     doTask () {
-      this.$router.push({path:'doTask',query:{courseId:this.courseId}})
+      if(this.isBuy == 1){
+        this.$router.push({path:'doTask',query:{courseId:this.courseId}})
+      }else{
+        this.$toast('购买课程后,才可以添加作业')
+      }
     },
     onlineDetail () {
       const param ={
@@ -998,7 +1002,7 @@ export default {
       }
     }
     .noTuan{
-      border-radius: 40px;
+      border-radius: 50px;
     }
   }
   // .sku-content{

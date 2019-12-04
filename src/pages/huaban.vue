@@ -63,6 +63,7 @@ import MoreText from '@/components/moreItem.vue'
 import TitleItem from '@/components/titleItem.vue'
 import HuabantzItem from '@/components/huabantzItem.vue'
 import NoData from '@/components/nodata.vue'
+import getSitem from '@/utils/storage'
 // import WxSing from '@/utils/wxSing'
 export default {
   name: 'Huaban',
@@ -98,9 +99,11 @@ export default {
         }
       })
     },
-    test() {
-  localStorage.removeItem('mobile')
-  localStorage.removeItem('token')
+    test () {
+        alert(getSitem.getStr('mobile'))
+        alert(getSitem.getStr('token'))
+        getSitem.remove('token')
+        getSitem.remove('mobile')
     },
     linkDetail (id) {
       this.$router.push({name:'HuabanGroupDetail', query:{id:id}})

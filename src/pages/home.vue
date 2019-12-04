@@ -11,15 +11,20 @@
     </div>
     <div class="home-tj-content" v-if="pageType == 0">
       <div class="home-banner">
-            <el-carousel :autoplay="true" :interval="5000" id="home-banner-carousel">
-              <el-carousel-item v-for="(item, index) in slideList" :key="index">
-                <!-- <a :href="item.url"> -->
-                  <img class="home-banner-item" :src="item.image" />
-                <!-- </a> -->
-              </el-carousel-item>
-            </el-carousel>
-
-
+            <van-swipe :autoplay="3000" id="home-banner-carousel" indicator-color="#F3D995"	>
+              <van-swipe-item v-for="(item, index) in slideList" :key="index">
+                <div class="home-banner-item">
+                    <van-image :src="item.image">
+                        <template v-slot:loading>
+                            <van-loading
+                                type="spinner"
+                                size="20"
+                            />
+                        </template>
+                    </van-image>
+                </div>
+              </van-swipe-item>
+            </van-swipe>
       </div>
       <div class="home-course">
         <TitleItem title="线下课程" />
@@ -425,6 +430,11 @@ export default {
     &-item{
       width:100%;
       height:370px;
+      overflow: hidden;
+      .van-image{
+        width:100%;
+        height:100%;
+      }
     }
     &-indicator{
       display: flex;
