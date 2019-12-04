@@ -8,7 +8,7 @@
               </van-image>
             </div>
             <div class="huabanUserItem-center">
-                <span class="user">{{item.nickname}}</span>
+                <span class="user">{{item.nickname}} 点赞了你</span>
                 <span class="userinfo">{{autoTime(item.create_time)}}</span>
             </div>
             <div class="huabandz">

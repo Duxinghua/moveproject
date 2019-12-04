@@ -359,6 +359,7 @@ export default {
     flex-direction: column;
     padding-left: 26px;
     padding-right: 26px;
+    background:white;
     &-top{
       display: flex;
       flex-direction: row;
