@@ -40,15 +40,15 @@
       <div class="order-commit-notice">本活动为实名制活动，如填写有误，您将无法参与所报名的活动。为保障您的自身利益，请仔细核对身份信息。</div>
       <div class="order-commit-content">
         <div>
-          <input type="text" placeholder="请输入真实姓名" v-model="detail.true_name">
+          <input type="text" placeholder="请输入真实姓名" v-model="true_name">
           <img src="../assets/images/ordername.png" alt="">
         </div>
         <div>
-          <input type="tel" placeholder="请输入您的手机号码" v-model="detail.mobile_ap">
+          <input type="tel" placeholder="请输入您的手机号码" v-model="mobile_ap">
           <img src="../assets/images/ordertel.png" alt="">
         </div>
         <div>
-          <input type="text" placeholder="请输入身份证号" v-model="detail.idcard">
+          <input type="text" placeholder="请输入身份证号" v-model="idcard">
           <img src="../assets/images/ordercard.png" alt="" >
         </div>
       </div>
@@ -118,7 +118,11 @@ export default {
         users: [
         ]
       },
-      tid: 0
+      tid: 0,
+      true_name: '',
+      mobile_ap: '',
+      idcard:''
+
     }
   },
   created() {
@@ -146,7 +150,6 @@ export default {
   },
   mounted () {
     const {type,courseId,courseType,user_number,tid} = this.$route.query
-    alert(JSON.stringify(this.$route.query))
     this.type = type
     this.course_id = courseId
     this.courseType = courseType
@@ -154,8 +157,16 @@ export default {
     this.tid = tid
     this.$api.courseOrderPreview({course_id:this.course_id,type:this.type}).then((res)=>{
         if(res.code == 1){
-          alert(1)
           this.detail = res.data
+          if(res.data.true_name){
+            this.true_name = res.data.true_name
+          }
+          if(res.data.mobile_ap) {
+            this.mobile_ap = res.data.mobile_ap
+          }
+          if(res.data.idcard){
+            this.idcard = res.data.idcard
+          }
         }
     })
   },
@@ -238,15 +249,15 @@ export default {
     onHandler () {
       var _this = this
       if(this.detail.type  == 3){
-        if(!this.detail.true_name){
+        if(!this.true_name){
               this.$toast('请输入真实姓名')
               return
             }
-            if(!this.detail.mobile_ap){
+            if(!this.mobile_ap){
               this.$toast('请输入手机号')
               return
             }
-            if(!this.detail.idcard){
+            if(!this.idcard){
               this.$toast('请输入身份证号')
               return
         }
@@ -263,9 +274,9 @@ export default {
         params.type = 0
       }
       if(this.detail.type  == 3){
-          params.true_name = this.detail.true_name
-          params.mobile = this.detail.mobile_ap
-          params.idcard = this.detail.idcard
+          params.true_name = this.true_name
+          params.mobile = this.mobile_ap
+          params.idcard = this.idcard
       }
 
       this.$api.courseOrderStore(params).then((res)=>{
