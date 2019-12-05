@@ -1,6 +1,6 @@
 <template>
   <div class="huabantz">
-    <div class="huabantz-top">
+    <div class="huabantz-top" @click="userInfoClick(tzDetail.user_id)">
       <img class="avatar" :src="user.avatar ? user.avatar : require('../assets/images/people.png')" alt="">
       <div class="userdes">
         <span>{{user.nickname ? user.nickname : ''}}</span>
@@ -46,6 +46,7 @@
         <div class="info">
          {{tzDetail.content}}
         </div>
+        <span class="hits">浏览量: {{tzDetail.hits}}</span>
       </div>
       <div class="huabantz-detail-pl">
         <div class="plnum">
@@ -112,6 +113,9 @@ export default {
     this.getpostsComments()
   },
   methods: {
+    userInfoClick (id) {
+      this.$router.push({name:'HuabanUserInfo',query:{id:id}})
+    },
     onImageView(data, index) {
             this.imagePreview = data;
             this.startPosition = index;
@@ -424,6 +428,11 @@ export default {
         color:#999;
         font-size:26px;
         margin-top:14px;
+      }
+      .hits{
+        color:#999;
+        font-size: 18px;
+        margin-top:7px;
       }
     }
     &-pl{

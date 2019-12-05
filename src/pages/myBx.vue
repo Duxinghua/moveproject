@@ -32,6 +32,9 @@ export default {
     this.getuserLikes()
   },
   methods: {
+    userTz(){
+
+    },
     getuserLikes () {
       const param = {
         page: this.current,

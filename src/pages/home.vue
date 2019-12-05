@@ -174,6 +174,13 @@ export default {
     this.getTeacherRec()
   },
   methods: {
+    indexBanner () {
+      // this.$api.indexBanner({}).then((res)=>{
+      //   if(res.code == 1) {
+      //     this.slideList = res.msg
+      //   }
+      // })
+    },
     menuHandler (index) {
       this.current = index
       this.pageType = index
@@ -413,13 +420,14 @@ export default {
       color:white;
       .active{
         font-weight: 500;
-        font-size: 36px;
+        transform: scale(1.3);
         color:#E3D29C;
       }
     }
     &-list li{
       font-size: 32px;
       margin-right:40px;
+      transition: all 0.3s;
     }
   }
   &-banner{

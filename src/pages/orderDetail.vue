@@ -49,7 +49,7 @@
         <span>实付款（含运费）</span>
         <span>¥{{order_detail.price_pay}}</span>
       </div>
-      <div class="orderItem orderItemfix" v-if="order_detail.status == 1 || order_detail.status == 3 && order_detail.is_comment == 0 ">
+      <div class="orderItem orderItemfix" v-if="order_detail.status == 1 && order_detail.t_id == 0 || order_detail.status == 3 && order_detail.is_comment == 0 ">
           <span class="btn" v-if="order_detail.status == 1 && order_detail.t_id == 0" @click="refundHandler(order_detail.order_id)">退款</span>
           <span class="btn" v-if="order_detail.status == 3 && order_detail.is_comment == 0" @click="commentClickHandler(order_detail.order_id)">评价</span>
       </div>
@@ -59,10 +59,11 @@
       <div class="avatars">
         <div :key="index" v-for="(itemav,index) in order_detail.goodsTuan.users">
           <img :class="{active:itemav.active}" :src="itemav.avatar" alt="" />
-
         </div>
+
       </div>
       <img class="fx" src="../assets/images/fx.png" alt="">
+
     </div>
     <div class="orderdetail-content">
       <div class="header">
@@ -244,27 +245,30 @@ export default {
           this.order_detail.tipst2 = this.tips[status].t2
           var list = []
           var arr = res.data.goodsTuan.users
-          for(var i=0,l=4;i<l;i++){
+          var l = res.data.goodsTuan.user_number > 4 ? 4 : res.data.goodsTuan.user_number
+          for(var i=0,l=l;i<l;i++){
             var obj = {}
             if(i != 3){
               if(arr[i]){
                 obj = arr[i]
                 obj.active = false
               }else{
-                if(i == 0 || i == 1 || i == 2){
+                if(i == 0 || i == 1 || i == 2 || i == 3){
                   obj.active = true
                   obj.avatar = require('../assets/images/doubt.png')
 
                 }
               }
-            }else{
-
-                obj.active = false
-                obj.avatar = require('../assets/images/img4.png')
-
             }
+            // }else{
+
+            //     obj.active = false
+            //     obj.avatar = require('../assets/images/img4.png')
+
+            // }
             list.push(obj)
           }
+          console.log(list)
           this.order_detail.goodsTuan.users = list
 
 
@@ -301,9 +305,8 @@ export default {
     .avatars{
       display: flex;
       height:76px;
-      // width:243px;
+      margin-right:26px;
       position: relative;
-      margin-left:200px;
       div{
         background:white;
         border-radius: 50%;

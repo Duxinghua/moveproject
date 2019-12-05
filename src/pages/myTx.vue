@@ -173,11 +173,11 @@ export default {
     margin-top:15px;
     background:white;
     input{
-      font-size: 26px;
-      color:#999999;
+      font-size: 32px;
+      color:#333333;
       height:90px;
       border:none;
-      border-bottom:1px solid #F3F3F3;
+      border-bottom:1Px solid #F3F3F3;
       padding-left:26px;
       padding-right:26px;
     }

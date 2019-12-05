@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="goods-time" v-if="groupDetails.user_number != groupDetails.current_number">
-                <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="groupDetails.expire_time * 1000" />后结束
+                <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />后结束
             </div>
             <div class="goods-time" v-if="groupDetails.user_number == groupDetails.current_number">拼团成功</div>
             <div class="goods-submit" @click="onLinkHome" v-if="groupDetails.user_number == groupDetails.current_number">随便逛逛</div>
@@ -285,7 +285,7 @@ export default {
             }else{
                 this.popupStatus = true;
             }
-            
+
         },
         goodsOrderCreate(type){
             //参加拼团到支付页面

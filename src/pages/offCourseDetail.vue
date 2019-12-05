@@ -45,7 +45,7 @@
       <div class="offdetail-course-sec">
         <p>
           <span>开课时间</span>
-          <span>{{courseOffline.open_time_text}}</span>
+          <span>{{datatime}}</span>
         </p>
         <p>
           <span>开课地址</span>
@@ -121,6 +121,7 @@ export default {
       courseOffline: {},
       user_number:null,
       wxShare: false,
+      datatime: null,
       planList: [
         {
           id: 1,
@@ -198,6 +199,17 @@ export default {
           this.courseDetails = res.data
           this.user_number = res.data.user_number
           this.courseOffline = res.data.courseOffline
+          var t1 = res.data.courseOffline.open_time_end
+          var text = ''
+          var t2 = res.data.courseOffline.open_time_text.split(" ")[0]
+          var t3 =''
+          if(t1 == 0){
+            text = t2
+          }else{
+            t3 = res.data.courseOffline.open_time_end_text.split(" ")[0]
+            text = t2 + ' 至 '+t3
+          }
+          this.datatime = text
           this.msgItem = res.data.admin
           this.tecImg = res.data.adminOpus ? res.data.adminOpus.slice(0,3) : []
           // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
@@ -741,6 +753,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         border-radius:50px 0px 0px 50px;
           span{
             font-size: 30px;
@@ -762,6 +775,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         border-radius:0px 50px 50px 0px;
         span{
         font-size: 30px;

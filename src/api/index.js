@@ -442,6 +442,10 @@ const server = {
   // 用户打开 user/qrcodeByOpenid
   userQrcodeByOpenid (data) {
     return post('user/qrcodeByOpenid', data)
+  },
+  // banner index/banner
+  indexBanner(data){
+    return post('index/banner',data)
   }
 }
 

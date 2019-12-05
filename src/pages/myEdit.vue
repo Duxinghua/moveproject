@@ -1,8 +1,8 @@
 <template>
   <div class="myEdit">
     <div class="avatar">
-      <img src="../assets/images/avatar.png" alt="">
-      <img style="display:none" :src="userInfo.avatar ? userInfo.avatar :require('../assets/images/apic.png')" alt="" @click="imgUploadHandler">
+      <!-- <img style="display:none" src="../assets/images/avatar.png" alt=""> -->
+      <img :src="userInfo.avatar ? userInfo.avatar :require('../assets/images/apic.png')" alt="">
     </div>
     <div class="info">
       <div class="infoItem" >
@@ -172,6 +172,7 @@ export default {
     img:nth-child(1){
       width:100%;
       height:100%;
+      border-radius: 50%;
     }
     img:nth-child(2){
       position: absolute;
@@ -179,6 +180,7 @@ export default {
       bottom: 0;
       width:58px;
       height:58px;
+      border-radius: 50%;
     }
   }
   .info{

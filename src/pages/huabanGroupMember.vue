@@ -113,6 +113,9 @@ export default {
     flex-wrap: nowrap;
     align-items: center;
     border-bottom: 15px solid #FBF8F4;
+    img{
+      border-radius: 50%;
+    }
     span{
       font-size: 32px;
       color: #333333;

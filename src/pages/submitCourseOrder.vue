@@ -237,11 +237,12 @@ export default {
           this.groupDetails = res.data
           this.groupDetails.current_number = res.data.users.length
           this.groupDetails.user_number = this.user_number
-          this.groupDetails.expire_time = (res.data.expire_time*1000) - new Date().getTime()
+          this.groupDetails.expire_time = (res.data.expire_time - res.data.create_time)*1000
           this.groupDetails.tuanStatus = res.data.success
           this.tuanStatus = res.data.success
           this.groupDetails.t_id = res.data.t_id
-          this.overlayStatus = true
+          this.$router.push({name:'CourseGroupDetails',query:{id:res.data.t_id,tuanStatus:res.data.tuanStatus}})
+          // this.overlayStatus = true
         }
         this.$forceUpdate()
       })

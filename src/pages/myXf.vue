@@ -27,7 +27,7 @@
         <img class="userIco" src="../assets/images/myxfzl.png" alt="">
         <div class="userInfo">
           <span>{{item.memo}}</span>
-          <span>{{item.createtime}}</span>
+          <span>{{item.create_time}}</span>
         </div>
         <span class="userNum">{{item.type == 1 ?'+' :'-'}}{{item.score}}</span>
       </div>
@@ -224,7 +224,7 @@ export default {
       .userInfo{
         display: flex;
         flex-direction: column;
-        width:476px;
+        width:400px;
         span:nth-child(1){
           font-size: 32px;
           color:#333;
@@ -242,7 +242,7 @@ export default {
       .userNum{
         font-size:38px;
         color:#CDA871;
-        width:119px;
+        width:219px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

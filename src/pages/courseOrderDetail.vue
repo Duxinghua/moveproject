@@ -24,7 +24,7 @@
         <!-- <span class="btn">取消预约</span> -->
       </div>
     </div>
-    <div class="orderdetail-tuan" v-if="detail.t_id != 0 " @click="onLook">
+    <div class="orderdetail-tuan" v-if="detail.t_id != 0 " @click="sharelHandler(detail.t_id)">
       <span>拼团状态 {{goodsTuanText[detail.courseTuanStatus]}}</span>
       <div class="avatars">
         <div :key="index" v-for="(itemav,index) in detail.courseTuanUsers">
@@ -53,15 +53,15 @@
       </div>
       <div class="orderother">
         <span>姓名</span>
-        <span>王一博 </span>
+        <span>{{detail.true_name}}</span>
       </div>
       <div class="orderother">
         <span>手机号码</span>
-        <span>13407116260</span>
+        <span>{{detail.mobile_ap}}</span>
       </div>
       <div class="orderother" v-if="detail.type == 3">
         <span>身份证号</span>
-        <span>420115199705063331</span>
+        <span>{{detail.idcard}}</span>
       </div>
       <div class="orderother">
         <span>订单编号</span>
@@ -103,6 +103,9 @@ export default {
     this.getCourseOrderIndex()
   },
   methods:{
+    sharelHandler (tid){
+      this.$router.push({path:'/coursegroupdetails',query:{id:tid}})
+    },
     onLook () {
 
     },
@@ -125,10 +128,12 @@ export default {
         if(res.code == 1){
           this.detail = res.data
           this.detail.courseTuanStatus = res.data.courseTuan.status
-          this.detail.courseTuanUsers = res.data.courseTuan.users
           var list = []
           var arr = res.data.courseTuan.users
-          for(var i=0,l=4;i<l;i++){
+          var l = res.data.courseTuan.user_number
+          console.log(l,'l')
+
+          for(var i=0;i<l;i++){
             var obj = {}
             if(i != 3){
               if(arr[i]){
@@ -149,7 +154,9 @@ export default {
             }
             list.push(obj)
           }
-          this.detail.courseTuan.users = list
+          console.log(list)
+          this.detail.courseTuanUsers = list
+          this.$forceUpdate()
         }
       })
     }
@@ -411,7 +418,7 @@ export default {
       height:76px;
       // width:243px;
       position: relative;
-      margin-left:200px;
+      // margin-left:200px;
       div{
         background:white;
         .active{

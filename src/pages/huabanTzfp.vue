@@ -228,7 +228,9 @@ export default {
       width:650px;
       border-radius:12px;
       border:2px solid rgba(241, 241, 241, 1);
-      outline:none
+      outline:none;
+      box-shadow:0px 0px 0px rgba(0,0,0,0);
+      -webkit-appearance:none;
     }
     &-textarea{
       width:650px;
@@ -239,6 +241,8 @@ export default {
       border-radius:12px;
       margin-bottom: 28px;
       border:2px solid rgba(241, 241, 241, 1);
+      box-shadow:0px 0px 0px rgba(0,0,0,0);
+     -webkit-appearance:none;
     }
     span{
       color:#999999;

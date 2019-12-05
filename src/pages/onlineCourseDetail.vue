@@ -1,8 +1,16 @@
 <template>
   <div class="ondetail">
-      <div class="ondetail-video" @click="playVideo">
+      <div :class="['ondetail-video',{videofix:onlineMsg.is_buy == 1}]">
+        <div v-if="onlineMsg.is_buy == 0" @click="playVideo">
           <img :src="onlineMsg.image ? onlineMsg.image[0] : '' " alt="">
           <img class="playVideo" src="../assets/images/zbico.png" alt="">
+        </div>
+        <video-player class="video-player vjs-custom-skin"
+                      ref="videoPlayer"
+                      :playsinline="true"
+                      @play="onPlayerPlay($event)"
+                      :options="onlineMsg.playerOptions" v-if="onlineMsg.is_buy == 1">
+        </video-player>
       </div>
       <div class="ondetail-top">
         <ul class="ondetail-top-list">
@@ -56,21 +64,29 @@
         </div>
       </div>
       <div class="ondetail-flower-content" v-if="pageType == 1">
-        <div class="ondetail-list" style="display:none">
-          <span>花材</span>
-          <span>枝条</span>
-          <span>花器</span>
-          <span>工具</span>
+        <div class="ondetail-list">
+          <span :class="{active: huaTypeIndex === 1}" @click="changeType(1)">花材</span>
+          <span :class="{active: huaTypeIndex === 2}" @click="changeType(2)">枝条</span>
+          <span :class="{active: huaTypeIndex === 3}" @click="changeType(3)">花器</span>
+          <span :class="{active: huaTypeIndex === 4}" @click="changeType(4)">工具</span>
         </div>
         <div class="ondetail-flowers">
-          <div class="ondetail-flowers-item" v-for="(item,index) in flowerLists" :key="index">
-            <img :src="item.image" alt="">
+          <div class="ondetail-flowers-item" v-for="(item,index) in flowerLists[huaType]" :key="index" @click="goGoodMall(item.goods_id)">
+            <div class="itemimg">
+              <van-image :src="item.image">
+                  <template v-slot:loading>
+                      <van-loading type="spinner" size="20" />
+                  </template>
+              </van-image>
+            </div>
+
+            <!-- <img :src="item.image" alt=""> -->
             <p>{{item.title}}</p>
             <div>
               <span v-for="(i,itemPl,index) in item.item_json" :key="index">{{i}}:{{itemPl}}</span>
             </div>
           </div>
-          <NoData v-if="flowerLists.length == 0"/>
+          <NoData v-if="flowerLists[huaType].length == 0"/>
         </div>
       </div>
       <div class="ondetail-task-content" v-if="pageType == 2">
@@ -182,7 +198,9 @@ export default {
       loading: false,
       popupStatus: false,
       reShow:false,
-      tipText: '你的课程已购买？是否再次购买'
+      tipText: '你的课程已购买？是否再次购买',
+      huaType:1,
+      huaTypeIndex:1
     }
   },
   mounted () {
@@ -201,6 +219,16 @@ export default {
     this.courseTuanList()
   },
   methods: {
+    goGoodMall (id) {
+      if(id>0){
+        this.$router.push({name:'goodsDetails',query:{goodsId:id}})
+      }
+    },
+    changeType (type) {
+      this.huaType = type
+      this.huaTypeIndex = type
+      this.$forceUpdate()
+    },
     wxs (title,description,image) {
       var data = {
         url:location.href
@@ -316,12 +344,10 @@ export default {
     //  }
     },
     playVideo () {
-      if(this.isBuy == 1){
-        this.tipText = '此课程已购买？是否再次购买'
-      }else{
-        this.tipText = '此课程未购买，请选择下方的立即购买或拼团'
+      if(this.isBuy == 0){
+        this.$toast('此课程未购买,购买之后才可以播放')
       }
-      this.reShow = true
+      // this.reShow = true
     },
     shareOpen () {
       this.wxShare = true
@@ -356,6 +382,31 @@ export default {
         // this.$toast.clear()
         if (res.code == 1) {
           this.onlineMsg = res.data
+          this.onlineMsg.playerOptions = {
+              playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
+                autoplay: false, //如果true,浏览器准备好时开始回放。
+                muted: false, // 默认情况下将会消除任何音频。
+                loop: false, // 导致视频一结束就重新开始。
+                preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+                language: 'zh-CN',
+                aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+                fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+                sources: [{
+                  type: "video/mp4",
+                  src: res.data.video //视频url地址
+                }],
+                poster: res.data.image ? res.data.image[0] : '', //你的封面地址
+                // width: document.documentElement.clientWidth,
+                notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
+                controlBar: {
+                  timeDivider: true,
+                  durationDisplay: true,
+                  remainingTimeDisplay: false,
+                  fullscreenToggle: true  //全屏按钮
+
+              }
+
+          }
           this.user_number = res.data.user_number
           this.msgItem = res.data.admin
           this.id = res.data.admin.id
@@ -429,7 +480,20 @@ export default {
         // console.log(res)
         if (res.code == 1) {
           // console.log(res.data.data)
-          this.flowerLists = res.data.data
+          var obj = res.data.data
+          var list = {}
+          obj.map((item)=>{
+            if(!list[item.type]){
+              list[item.type] = []
+            }
+            list[item.type].push(item)
+          })
+          for(var i=1,l=list.length;i<5;i++){
+            if(!list[i]){
+              list[i] = []
+            }
+          }
+          this.flowerLists = list
         }
       })
     },
@@ -515,8 +579,40 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    margin-top:35px;
+    .active{
+      color:#6D8160;
+    }
+    .active::after {
+      position: absolute;
+      bottom:-10px;
+      left:50%;
+      height:2Px;
+      width:40px;
+      content: '';
+      background:#6D8160;
+      transform: translateX(-50%)
+    }
     span{
-      font-size: 36px;
+      font-size: 32px;
+      width:fit-content;
+      padding-right:15px;
+      padding-left:15px;
+      color:#999999;
+      position: relative;
+    }
+    span::before{
+      position: absolute;
+      top:50%;
+      right:0;
+      height:30px;
+      width:1Px;
+      content: '';
+      background:#999999;
+      transform: translateY(-50%)
+    }
+    span:last-child::before{
+      background: transparent
     }
   }
 }
@@ -610,6 +706,10 @@ export default {
         top:50%;
         transform: translate(-50%,-50%)
       }
+  }
+  .videofix{
+    height: auto;
+    margin-bottom: 26px;
   }
   &-top{
     width:100%;
@@ -787,7 +887,7 @@ export default {
   }
   &-flowers{
     width: 100%;
-    padding: 45px 24px 80px;
+    padding: 35px 24px 80px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -795,7 +895,7 @@ export default {
     flex-wrap: wrap;
     /deep/  .nodata{
       position: absolute;
-      margin-top:25%;
+      margin-top:35%;
     }
     &-item{
       display: flex;
@@ -803,10 +903,18 @@ export default {
       width: 216px;
       margin-right: 26px;
       margin-bottom: 37px;
-      img{
+      .itemimg{
         width: 216px;
         height: 287px;
+        overflow: hidden;
+        .van-image{
+
+        width: 100%;
+        height: 100%;
+
+        }
       }
+
       p{
         width:100%;
         overflow: hidden;
@@ -819,7 +927,7 @@ export default {
       }
       div{
         height: 87px;
-        margin-top: 18px;
+        // margin-top: 18px;
         display: flex;
         flex-direction: column;
         // justify-content: space-around;
@@ -979,15 +1087,15 @@ export default {
       display: flex;
     }
     .ondetail-group-btn{
-      line-height: 1.2;
+      line-height: 1.3;
       width: 243px;
-      padding:10px;
       height: 90px;
       text-align: center;
       color: #fff;
       background: #DCC98B;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
       border-radius:50px 0px 0px 50px;
       // font-size: 34px;
@@ -1000,9 +1108,8 @@ export default {
       }
     }
     .ondetail-buy-btn{
-      line-height: 1.2;
+      line-height: 1.3;
       width: 243px;
-      padding:10px;
       height: 90px;
       // line-height: 80px;
       text-align: center;
@@ -1010,6 +1117,7 @@ export default {
       background: #6D8160;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
       border-radius:0px 50px 50px 0px;
       span{

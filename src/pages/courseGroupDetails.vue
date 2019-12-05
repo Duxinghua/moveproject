@@ -77,7 +77,7 @@
             </div>
         </van-popup>
 
-        <van-overlay :show="overlayStatus" @click="hideOverlay">
+        <div class="mb" v-if="overlayStatus" @click="hideOverlay" >
             <div class="wrapper" @click.stop>
                 <div class="tuan-wrapper">
                     <div class="tuan-status"><img src="../assets/images/select.png" alt=""><span>{{tuanStatus == 0 ? '已支付' : '拼团成功'}}</span></div>
@@ -93,11 +93,16 @@
                     <div class="goods-time" v-if="tuanStatus == 0">
                         <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />后结束
                     </div>
-                    <div class="tuan-share" @click="onLink">{{tuanStatus == 0 ? '邀请好友拼团' : '继续逛逛'}}</div>
+                    <div class="goods-time" v-if="tuanStatus == 1">
+                      <span>拼团成功</span>
+                    </div>
+                    <div class="tuan-share" @click="showPopup"  v-if="groupDetails.is_my == 0 && tuanStatus == 0">参与拼团</div>
+                    <div class="tuan-share" @click="onShare" v-if="groupDetails.is_my == 1 && tuanStatus == 0">邀请拼团</div>
+                    <div class="tuan-share" @click="onLook" v-if="tuanStatus == 1">继续逛逛</div>
                     <div class="tuan-link" @click="onLinkOrder"><span>查看订单</span><van-icon name="arrow" /></div>
                 </div>
             </div>
-        </van-overlay>
+        </div>
         <WxShare :show="wxShare" @toShare="toShare" />
     </div>
 </template>
@@ -140,11 +145,18 @@ export default {
     this.groupId = id
     this.tuanStatus = tuanStatus;
     this.goodsTuan()
+    if(tuanStatus == 0 || tuanStatus == 1) {
+      this.overlayStatus = true
+    }
+
   },
   components: {
     WxShare
   },
   methods:{
+      s(){
+        this.overlayStatus = true
+      },
       viewHandler () {
         var type = this.groupDetails.course.type
         if(type == 2){
@@ -376,11 +388,23 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.mb{
+  position: fixed;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.6);
+  z-index: 2000;
+}
 .wrapper {
+  position: fixed;
+  z-index: 2001;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+  height: auto;
   .tuan-wrapper{
     width: 600px;
     height: 585px;
@@ -674,7 +698,8 @@ export default {
     }
 
     .sku-content{
-        padding: 45px 35px 25px 35px;
+        padding: 80px 35px 25px 35px;
+        height: 450px;
         .sku-header{
             display: flex;
             align-items: center;

@@ -58,7 +58,7 @@ export default {
       return tim.getFullYear() + '-' + (tim.getMonth() + 1) + '-' + (tim.getDate().length == 1 ? 0 + tim.getDate() : tim.getDate()) + ' ' + tim.getHours() + ':' + tim.getMinutes()
     },
     userInfoHandler () {
-      this.$router.push({name: 'HuabanUserInfo',query:{id:this.item.user_id}})
+      this.$router.push({name: 'HuabanTzDetail',query:{id:this.item.gp_id}})
     }
   }
 }

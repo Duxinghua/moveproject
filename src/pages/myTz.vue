@@ -236,6 +236,7 @@ export default {
         width:73px;
         height:73px;
         margin-right:22px;
+        border-radius: 50%;
       }
       .userinfo{
         display: flex;

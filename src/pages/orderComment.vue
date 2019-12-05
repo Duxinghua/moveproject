@@ -339,7 +339,7 @@ export default {
     font-size: 36px;
     line-height: 88px;
     text-align: center;
-    border-radius: 36px;
+    border-radius: 44px;
     background:#6D8160;
     color:#F3D995;
     margin:50px auto;

@@ -469,7 +469,8 @@ export default {
             }
             this.$api.goodsTuanLists(param).then((res) => {
                 if (res.code == 1) {
-                    this.groupList = res.data.data;
+                    var list = res.data.data.slice(0,3);
+                    this.groupList = list
                     this.groupTime = res.time;
                 }
             })

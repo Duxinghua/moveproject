@@ -56,7 +56,7 @@
         >
         <div class="myXf-Fx-content-item" v-for="(item, index) in fxlist" :key="index">
           <span class="time">{{item.create_time.split(" ")[0]}}</span>
-          <span class="des">{{item.type == 0 ? '转至支付宝' : '转至银行卡'}}</span>
+          <span class="des">{{item.type == 0 ? '支付宝' : '银行卡'}}</span>
           <span class="money">¥{{item.money}}</span>
           <span class="status">{{item.status_text}}</span>
         </div>
@@ -309,7 +309,7 @@ export default {
           padding-top: 30px;
           padding-bottom: 30px;
           width:100%;
-          border-bottom: 1px solid #F3F3F3;
+          border-bottom: 1Px solid #F3F3F3;
           .userIco{
             width:77px;
             height:77px;

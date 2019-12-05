@@ -74,7 +74,7 @@ export default {
       overflow: hidden;
       overflow-x: auto;
       li {
-        font-size: 28px;
+        font-size: 32px;
         margin-right: 40px;
         flex-shrink: 0;
         transition: all 0.3s;

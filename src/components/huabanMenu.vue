@@ -54,19 +54,22 @@ export default {
       display: flex;
       // flex-direction: row;
       align-items: center;
-      margin-left:45px;
+      margin-right:25px;
+      margin-left:25px;
+      padding-left:25px;
       color:white;
       overflow: hidden;
       overflow-x: auto;
       .active{
         font-weight: 500;
-        font-size: 36px;
+        transform: scale(1.3);
         color:#E3D29C;
       }
     }
     &-list li{
       margin-right:40px;
       flex-shrink:0;
+      transition: all 0.3s;
     }
   }
 </style>

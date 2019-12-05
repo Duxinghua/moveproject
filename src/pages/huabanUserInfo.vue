@@ -178,6 +178,7 @@ export default {
     getUserInfo () {
       this.$api.userIndex({user_id:this.user_id}).then((res)=>{
         if(res.code === 1) {
+          console.log(this.user_id)
           this.detail = res.data
           this.getUserInfoList()
         }
@@ -251,7 +252,9 @@ export default {
       .userxf{
         display: flex;
         flex-direction: row;
+        align-items: center;
         height:36px;
+        line-height: 1;
         span:nth-child(2n+1){
           font-size: 26px;
           color:#999999;
@@ -321,6 +324,7 @@ export default {
     padding:24px 24px 0px 24px;
     box-sizing: border-box;
     flex-direction: column;
+    position: relative;
     .van-list{
       // display: flex;
       // flex-direction: row;
@@ -333,8 +337,13 @@ export default {
       -webkit-column-gap:24px;
       column-gap: 24px;
       column-width:339px;
+      padding-bottom: 20%;
       /deep/ .van-list__finished-text{
         width:100%;
+        position: absolute;
+        top:100%;
+        left:50%;
+        transform: translate(-50%,-100%)
       }
 
     }
