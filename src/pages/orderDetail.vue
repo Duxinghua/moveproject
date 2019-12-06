@@ -150,6 +150,21 @@ export default {
           image: require('../assets/images/orderclose.png'),
           t1: '拼团订单',
           t2: '参加人数越多，越容易成功'
+        },
+        {
+          image: require('../assets/images/orderclose.png'),
+          t1: '订单已关闭',
+          t2: '请重新购买'
+        },
+        {
+          image: require('../assets/images/orderclose.png'),
+          t1: '申请退货中',
+          t2: '请耐心等待'
+        },
+        {
+          image: require('../assets/images/orderclose.png'),
+          t1: '已退货',
+          t2: '欢迎下次购买'
         }
 
       ],
@@ -240,12 +255,23 @@ export default {
             this.order_detail.addressInfo = ''
           }
           var status = res.data.status
+          console.log(status,'status')
+          if(status == 99 ){
+            status = 5
+          }else if(status == 8){
+            status = 6
+          }else if(status == 9){
+            status = 7
+          }
           this.order_detail.tipsimage = this.tips[status].image
           this.order_detail.tipst1 = this.tips[status].t1
           this.order_detail.tipst2 = this.tips[status].t2
           var list = []
-          var arr = res.data.goodsTuan.users
-          var l = res.data.goodsTuan.user_number > 4 ? 4 : res.data.goodsTuan.user_number
+          if(!res.data.goodsTuan){
+            this.order_detail.goodsTuan = {}
+          }
+          var arr = res.data.goodsTuan ? res.data.goodsTuan.users : []
+          var l = res.data.goodsTuan ? (res.data.goodsTuan.user_number > 4 ? 4 : res.data.goodsTuan.user_number ): 2
           for(var i=0,l=l;i<l;i++){
             var obj = {}
             if(i != 3){

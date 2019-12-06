@@ -337,7 +337,12 @@ export default {
                     //定时刷新对应的数据
                     this.timer = null
                     this.timer = setInterval(() => {
-                        that.tuanInfo(that.orderId)
+                        if(that.tuanStatus == 0){
+                          that.tuanInfo(that.orderId)
+                        }else{
+                          clearInterval(that.timer)
+                          that.timer = null
+                        }
                     }, 2000);
                 }
             })

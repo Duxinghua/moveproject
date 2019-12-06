@@ -20,7 +20,8 @@
               <div v-if="!types">
                 <span class="gz" v-if="item.amity == 1">已关注</span>
                 <div class="nogz" v-else >
-                  <img src="../assets/images/gzico.png" alt="" >
+                  <!-- <img src="../assets/images/gzico.png" alt="" > -->
+                  <van-icon size="20" name="like-o" />
                   <span>关注</span>
                 </div>
               </div>
@@ -142,7 +143,7 @@ export default {
         justify-content: center;
         align-items: center;
         .gz{
-          color:#F3D995;
+          color:#CDA871;
           font-size: 30px;
           display: flex;
           justify-content: center;
@@ -164,7 +165,9 @@ export default {
         }
       }
       .gzbackground{
-        background:#708363;
+        // background:#708363;
+        color:#CDA871;
+        border:2px solid #CDA871;
       }
       .nogzbackground{
         background:transparent;

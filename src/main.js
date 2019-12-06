@@ -8,7 +8,9 @@ import Vant from 'vant'
 import VideoPlayer from 'vue-video-player'
 import ElementUI from 'element-ui'
 import VueWechatTitle from 'vue-wechat-title'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
 import 'vant/lib/index.css'
+import 'swiper/dist/css/swiper.css'
 import 'vue-video-player/src/custom-theme.css'
 import 'video.js/dist/video-js.css'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -28,6 +30,7 @@ Vue.use(ElementUI)
 Vue.use(VueWechatTitle)
 
 Vue.use(Vant)
+Vue.use(VueAwesomeSwiper)
 
 Vue.use(VideoPlayer)
 

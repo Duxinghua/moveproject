@@ -35,27 +35,33 @@
       </div>
       <div class="home-teacher">
         <TitleItem title="名师推荐" />
-        <el-carousel :autoplay="true" :interval="4000" indicator-position="none" id="home-teacher-carousel" arrow="always">
-          <el-carousel-item  v-for="item in schoolList" :key="item.id">
-            <div class="home-teacher-item" >
-              <img  :src="item.avatar" alt="">
-              <div class="teacherinfo">
-                <span class="teacher-name">{{item.nickname}}</span>
-                <span class="teacher-des">{{item.keywords}}</span>
-                <div class="teacher-btn">
-                  <span @click="teacherInfoHandle(item.id)">详情</span>
-                  <img src="../assets/images/teachersq.png" alt="">
+          <swiper class="swiper-content" :options="swiperOption" >
+              <swiper-slide v-for="(item,index) in schoolList" :key="index">
+                <div class="home-teacher-item" >
+                <img  :src="item.avatar" alt="">
+                <div class="teacherinfo">
+                  <span class="teacher-name">{{item.nickname}}</span>
+                  <span class="teacher-des">{{item.keywords}}</span>
+                  <div class="teacher-btn">
+                    <span @click="teacherInfoHandle(item.id)">详情</span>
+                    <img src="../assets/images/teachersq.png" alt="">
+                  </div>
                 </div>
-              </div>
-            </div>
-          </el-carousel-item>
-        </el-carousel>
+                </div>
+              </swiper-slide>
+              <div class="swiper-button-prev" slot="button-prev"></div>
+              <div class="swiper-button-next" slot="button-next"></div>
+          </swiper>
+
+
+
         <MoreText moreText="更多名师" moreName="TeacherList"/>
       </div>
       <div class="home-course home-onlinecourse">
         <TitleItem title="线上课程" />
         <div class="home-course-content">
           <CourceItem v-for="(cource,index) in oncourseList" :item="cource" :key="index"/>
+          <NoData v-if="oncourseList.length == 0"/>
         </div>
         <MoreText moreText="更多课程" moreName="OnlineCourseList"/>
 
@@ -116,6 +122,7 @@
       </van-list>
     </div>
 
+
     <Footer :mrt="true" />
   </div>
 </template>
@@ -133,23 +140,12 @@ export default {
   data () {
     return {
       slideList: [
-        {
-          url: 'https://www.baidu.com',
-          image: require('../assets/images/banners.png')
-        },
-        {
-          url: 'https://www.baidu.com',
-          image: require('../assets/images/banners.png')
-        },
-        {
-          url: 'https://www.baidu.com',
-          image: require('../assets/images/banners.png')
-        }
       ],
       offcourseList: [],
       oncourseList: [],
       videoList:[],
-      schoolList: [], // 推荐页名师
+      schoolList: [
+      ], // 推荐页名师
       TeacherLists: [], // 名师列表页名师
       OnlinesLists: [],
       Onlinestotal: 0,
@@ -166,20 +162,41 @@ export default {
         require('../assets/images/1.png'),
         require('../assets/images/2.png'),
         require('../assets/images/3.png')
-      ]
+      ],
+      theacherCurrent: 0,
+          swiperOption: {
+          spaceBetween: 30,
+          centeredSlides: true,
+          autoplay: {
+              delay: 3000,
+              disableOnInteraction: false,
+          },
+          speed:3000,
+          prevButton: '.swiper-button-prev',//上一张
+          nextButton: '.swiper-button-next',//下一张
+          paginationClickable: true,
+          observer: true,
+          observerParents: true
+          // onProgress:function(i,x){
+          //   console.log(i,x)
+          // }
+
+        }
     }
   },
   mounted () {
     this.getCourseList()
     this.getTeacherRec()
+    this.indexBanner()
   },
   methods: {
     indexBanner () {
-      // this.$api.indexBanner({}).then((res)=>{
-      //   if(res.code == 1) {
-      //     this.slideList = res.msg
-      //   }
-      // })
+      this.$api.indexBanner({}).then((res)=>{
+        console.log(res)
+        if(res.code == 1) {
+          this.slideList = res.msg
+        }
+      })
     },
     menuHandler (index) {
       this.current = index
@@ -352,11 +369,29 @@ export default {
     CourceItem,
     Footer,
     NoData
+  },
+  computed: {
+      // swiper() {
+      //   return this.$refs.mySwiper.swiper
+      // }
   }
 }
 </script>
 
 <style lang='scss' scoped>
+.swiper-content{
+  width:100%;
+  height:230px;
+  margin-bottom: 26px;
+  .swiper-button-next {
+    background:url('../assets/images/right.png') no-repeat;
+    background-size: 80% 80%;
+  }
+  .swiper-button-prev{
+    background:url('../assets/images/left.png') no-repeat;
+    background-size: 80% 80%;
+  }
+}
 #home-banner-carousel{
   height:380px !important;
 }
@@ -366,6 +401,9 @@ export default {
 }
 #home-video-carousel{
   height:calc(425px * 1.2) !important
+}
+.theacherContent{
+  position: relative;
 }
 .home{
   display: flex;
@@ -477,8 +515,14 @@ export default {
       box-sizing: border-box;
       padding-left:26px;
       padding-right:26px;
+      min-height: 225px;
       &-item:nth-child(2n){
         margin-right:0px !important;
+      }
+
+      /deep/ .nodata{
+        position: relative;
+        top: 120px;
       }
     }
 
@@ -504,14 +548,33 @@ export default {
       background: transparent;
       // background:url('../assets/images/right.png') no-repeat;
     }
+    .custom-indicator {
+      // transform: translateY(-50%);
+      img:first-child{
+        position: absolute;
+        top:50%;
+        transform: translateY(-50%);
+        width:21px;
+        height:39px;
+        left:26px;
+      }
+      img:last-child{
+        position: absolute;
+        top:50%;
+        transform: translateY(-50%);
+        width:21px;
+        height:39px;
+        right:26px;
+      }
+    }
     &-item{
       display: flex;
       flex-direction: row;
       width:90%;
-      height:100%;
+      height:212px;
       justify-content: center;
       align-items: center;
-      margin:0 auto;
+      margin:10px auto 26px auto;
       background:#FBF8F4;
       img{
         width:162px;

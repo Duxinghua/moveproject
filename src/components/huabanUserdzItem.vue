@@ -128,7 +128,7 @@ export default {
         justify-content: center;
         align-items: center;
         .gz{
-          color:#F3D995;
+          color:#CDA871;
           font-size: 30px;
           display: flex;
           justify-content: center;

@@ -53,15 +53,15 @@
       </div>
       <div class="orderother">
         <span>姓名</span>
-        <span>{{detail.true_name}}</span>
+        <span>{{detail.userInfo ? detail.userInfo.true_name: ''}}</span>
       </div>
       <div class="orderother">
         <span>手机号码</span>
-        <span>{{detail.mobile_ap}}</span>
+        <span>{{detail.userInfo ? detail.userInfo.mobile: ''}}</span>
       </div>
       <div class="orderother" v-if="detail.type == 3">
         <span>身份证号</span>
-        <span>{{detail.idcard}}</span>
+        <span>{{detail.userInfo ? detail.userInfo.idcard: ''}}</span>
       </div>
       <div class="orderother">
         <span>订单编号</span>

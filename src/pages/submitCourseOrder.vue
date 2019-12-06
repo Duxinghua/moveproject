@@ -35,6 +35,10 @@
         <div class="lf">手机号码</div>
         <div class="rg">{{detail.mobile}}</div>
       </div>
+      <div class="msg-info msg-check">
+         <div class="left">您有<span>{{0}}</span>花币，可用<span>{{0}}</span>花币抵扣<span>{{ 0}}</span>元</div>
+         <van-checkbox  v-model="checked" ref="checkboxes" checked-color="#718063"></van-checkbox>
+      </div>
     </div>
     <div class="order-commit" v-if="detail.type == 3">
       <div class="order-commit-notice">本活动为实名制活动，如填写有误，您将无法参与所报名的活动。为保障您的自身利益，请仔细核对身份信息。</div>
@@ -121,7 +125,9 @@ export default {
       tid: 0,
       true_name: '',
       mobile_ap: '',
-      idcard:''
+      idcard:'',
+      checked:false,
+      payScore:false
 
     }
   },
@@ -171,6 +177,53 @@ export default {
     })
   },
   methods: {
+    toggle(){
+
+            this.$refs.checkboxes.toggle();
+            //使用花币
+            if(!this.checked){
+              this.payScore = true
+              // var lenr1 = this.deduction.toString().indexOf('.') > -1 ? this.deduction.toString().split(".")[1].length : 0
+              // var lenr2 = this.goodsTotal.toString().indexOf(".") > -1 ? this.goodsTotal.toString().split(".")[1].length : 0
+              // var l = lenr1 > lenr2 ? lenr1 : lenr2
+              // if(this.deduction*Math.pow(10,l) > this.goodsTotal*Math.pow(10,l)){
+              //   this.goodsTotal = 0
+              // }else{
+              //   this.goodsTotal = this.accSub(this.goodsTotal,this.deduction)
+              // }
+            }else{
+              this.payScore = false
+              // this.goodsTotal = this.oldGoodsTotal
+            }
+
+    },
+    accSub(arg1, arg2) {
+            if (isNaN(arg1)) {
+                arg1 = 0;
+            }
+            if (isNaN(arg2)) {
+                arg2 = 0;
+            }
+            arg1 = Number(arg1);
+            arg2 = Number(arg2);
+
+            var r1, r2, m, n;
+            try {
+                r1 = arg1.toString().split(".")[1].length;
+            }
+            catch (e) {
+                r1 = 0;
+            }
+            try {
+                r2 = arg2.toString().split(".")[1].length;
+            }
+            catch (e) {
+                r2 = 0;
+            }
+            m = Math.pow(10, Math.max(r1, r2)); //last modify by deeka //动态控制精度长度
+            n = (r1 >= r2) ? r1 : r2;
+            return ((arg1 * m - arg2 * m) / m).toFixed(n);
+    },
     onLink () {
       if(this.tuanStatus == 1 ){
         if(this.detail.type == 2){
@@ -509,6 +562,9 @@ export default {
       color: #6D8160;
       margin-bottom: 30px;
     }
+    .msg-check{
+      justify-content: space-between;
+    }
     .msg-info{
       display: flex;
       align-items: center;
@@ -516,6 +572,9 @@ export default {
       font-size: 26px;
       padding: 25px 0;
       border-bottom: 1px solid #F3F3F3;
+      div{
+        span{color:#995258}
+      }
       &:last-child{
         border-bottom: none;
       }

@@ -152,7 +152,8 @@ export default {
       tecImg: {}, // 讲师作品
       groupList: [],
       courseId: 0,  // 课程id
-      imageShow: false
+      imageShow: false,
+      isBuy:0
     }
   },
   mounted () {
@@ -218,6 +219,7 @@ export default {
           var title = res.data.title
           var description = res.data.description
           var image = res.data.image ? res.data.image[0] : ''
+          this.isBuy = res.data.is_buy
           this.wxs(title,description,image)
         }
       })
@@ -241,12 +243,38 @@ export default {
       this.$router.push({path:'/courseallgroup',query:{courseId:this.courseId}})
     },
     onTuan (courseId) {
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})
+      if(this.isBuy == 1){
+        this.$dialog.confirm({
+            title: '提示',
+            message: '您的课程已购买，确认再次购买吗？',
+            confirmButtonColor:'#6D8160',
+            cancelButtonColor:'#999999'
+          }).then(() => {
+              this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})
+
+          }).catch(() => {
+            // on cancel
+          })
+      }else{
+        this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})
+      }
     },
     onBuy (courseId) {
-      // const courseId = this.courseId
-      // this.$router.push({path: '/orderCommit', query: {courseId}})
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
+      if(this.isBuy == 1){
+        this.$dialog.confirm({
+            title: '提示',
+            message: '您的课程已购买，确认再次购买吗？',
+            confirmButtonColor:'#6D8160',
+            cancelButtonColor:'#999999'
+          }).then(() => {
+            this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
+          }).catch(() => {
+            // on cancel
+          })
+      }else{
+
+        this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
+      }
     },
     wxs (title,description,image) {
       var data = {

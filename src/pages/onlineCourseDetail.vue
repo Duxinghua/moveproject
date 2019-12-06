@@ -540,11 +540,40 @@ export default {
       this.$router.push({name:'CourseAllGroup',query:{courseId:this.courseId}})
     },
     onBuy (courseId) {
-      // this.popupStatus = true
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
+      if(this.isBuy == 1){
+        this.$dialog.confirm({
+            title: '提示',
+            message: '您的课程已购买，确认再次购买吗？',
+            confirmButtonColor:'#6D8160',
+            cancelButtonColor:'#999999'
+          }).then(() => {
+
+            this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
+
+          }).catch(() => {
+            // on cancel
+          })
+      }else{
+        this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
+      }
+
     },
     onTrun (courseId) {
+      if(this.isBuy == 1){
+        this.$dialog.confirm({
+            title: '提示',
+            message: '您的课程已购买，确认再次购买吗？',
+            confirmButtonColor:'#6D8160',
+            cancelButtonColor:'#999999'
+          }).then(() => {
+            this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})
+
+          }).catch(() => {
+            // on cancel
+          })
+      }else{
       this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})
+      }
     }
   },
   computed: {
