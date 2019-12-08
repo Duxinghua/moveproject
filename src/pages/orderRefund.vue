@@ -158,28 +158,33 @@ export default {
           success: function (res) {
             // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
             _this.localIds = res.localIds
-            _this.localIds.map((item)=>{
-              _this.uploadImage(new String(item).toString())
-            })
+            // _this.localIds.map((item)=>{
+              _this.asyncUploadImage()
+            // })
           }
         })
       }else{
         this.$toast('只能上传三张')
       }
     },
-    uploadImage (localId) {
+    asyncUploadImage () {
       // this.$toast('uploadImage')
-      var _this = this
-      wx.uploadImage({
-          localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
-          isShowProgressTips: 1, // 默认为1，显示进度提示
-          success: function (res) {
-            var serverId = res.serverId; // 返回图片的服务器端ID
-            // _this.$toast('serverId')
-            // // alert(res.serverId)
-            _this.getImgData(localId,serverId)
-          }
-      })
+     if(!this.localIds.length){
+        this.$toast('上传成功！')
+     }else{
+        var localId = this.localIds.pop()
+        var _this = this
+        wx.uploadImage({
+            localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+            isShowProgressTips: 1, // 默认为1，显示进度提示
+            success: function (res) {
+              var serverId = res.serverId; // 返回图片的服务器端ID
+              // _this.$toast('serverId')
+              // // alert(res.serverId)
+              _this.getImgData(localId,serverId)
+            }
+        })
+     }
     },
     getImgData (localId,serverId) {
       const agent = navigator.userAgent
@@ -203,6 +208,7 @@ export default {
                         _this.imgList.push({l:localId,s:serverId,url:result.data.url})
                       }
                       _this.num --
+                      _this.asyncUploadImage()
               }
             })
           }else{

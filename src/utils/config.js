@@ -1,6 +1,6 @@
 var url = 'https://youmengwx.qixiuu.com'
 var pro = 'dev'
-if (pro == 'pro') {
+if (pro == 'dev') {
   url = 'https://youmengtest.qixiuu.com'
 }
 const config = {
