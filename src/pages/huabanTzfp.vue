@@ -137,24 +137,32 @@ export default {
       var _this = this
       if(this.imgList.length < 4){
         wx.chooseImage({
+<<<<<<< HEAD
           count: 1, // 默认9
+=======
+          count: _this.num, // 默认9
+>>>>>>> 244786a94110aef52a7e4e1b7dc5a642e636ac46
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
             // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
             _this.localIds = res.localIds
 
-            _this.localIds.map((item)=>{
-              _this.uploadImage(new String(item).toString())
-            })
+            // _this.localIds.map((item)=>{
+            //   _this.uploadImage(new String(item).toString())
+            // })
+            _this.asyncUploadImage()
           }
         })
       }else{
         this.$toast('只能上传三张')
       }
     },
-    uploadImage (localId) {
-      // this.$toast('uploadImage')
+    asyncUploadImage () {
+     if(!this.localIds.length){
+        this.$toast('上传成功！')
+     }else{
+      var localId = this.localIds.pop()
       var _this = this
       wx.uploadImage({
           localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
@@ -166,6 +174,7 @@ export default {
             _this.getImgData(localId,serverId)
           }
       })
+     }
     },
     getImgData (localId,serverId) {
       const agent = navigator.userAgent
@@ -190,6 +199,7 @@ export default {
                         _this.imgList.push({l:localId,s:serverId,url:result.data.url})
                       }
                       _this.num --
+                      _this.asyncUploadImage()
             //   }
             // })
                 // if (localIds.length > 0) {

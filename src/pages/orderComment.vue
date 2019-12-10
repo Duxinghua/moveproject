@@ -240,9 +240,9 @@ export default {
           success: function (res) {
             // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
             goods.localIds = res.localIds
-            goods.localIds.map((item)=>{
-              _this.uploadImage(goodsindex,new String(item).toString())
-            })
+            // goods.localIds.map((item)=>{
+            _this.asyncUploadImage(goodsindex)
+            // })
           }
         })
       }else{
@@ -250,18 +250,24 @@ export default {
       }
 
     },
-    uploadImage (goodsindex,localId) {
-      var _this = this
-      wx.uploadImage({
-          localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
-          isShowProgressTips: 1, // 默认为1，显示进度提示
-          success: function (res) {
-            var serverId = res.serverId; // 返回图片的服务器端ID
-            // _this.$toast('serverId')
-            // // alert(res.serverId)
-            _this.getImgData(goodsindex,localId,serverId)
-          }
-      })
+    asyncUploadImage (goodsindex) {
+      var goods = this.order_detail.goods[goodsindex]
+      if(!goods.localIds.length){
+           this.$toast('上传成功！')
+      }else{
+        var localId = goods.localIds.pop()
+        var _this = this
+        wx.uploadImage({
+            localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+            isShowProgressTips: 1, // 默认为1，显示进度提示
+            success: function (res) {
+              var serverId = res.serverId; // 返回图片的服务器端ID
+              // _this.$toast('serverId')
+              // // alert(res.serverId)
+              _this.getImgData(goodsindex,localId,serverId)
+            }
+        })
+      }
     },
     getImgData (goodsindex,localId,serverId) {
       var goods = this.order_detail.goods[goodsindex]
@@ -287,7 +293,9 @@ export default {
                         goods.imgList.push({l:localId,s:serverId,url:result.data.url})
                         _this.$forceUpdate();
                       }
+
                       goods.num --
+                      _this.asyncUploadImage(goodsindex)
             //   }
             // })
           }else{
