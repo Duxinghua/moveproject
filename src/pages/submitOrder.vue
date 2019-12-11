@@ -44,7 +44,7 @@
                 <div class="right">原价￥{{ priceCost }}</div>
             </div>
             <div class="order-item" @click="toggle" v-if="orderType != 1">
-                <div class="left">可用<span>{{ orderData.scoreDeduction ? orderData.scoreDeduction.score : 0}}花币</span>抵用<span>{{orderData.scoreDeduction ? orderData.scoreDeduction.deduction : 0}}</span>元</div>
+                <div class="left">您有<span>{{ orderData.scoreDeduction.data ? orderData.scoreDeduction.data.score : 0}}</span>花币，可用<span>{{orderData.scoreDeduction.data ? orderData.scoreDeduction.data.use_score : 0}}</span>花币抵扣<span>{{orderData.scoreDeduction.data ? orderData.scoreDeduction.data.money: 0}}</span>元</div>
                 <van-checkbox  v-model="checked" ref="checkboxes" checked-color="#718063"></van-checkbox>
             </div>
         </div>
@@ -66,7 +66,11 @@ export default {
             num:1,
             radio:"2",
             checked:false,
-            orderData:{},
+            orderData:{
+              scoreDeduction:{
+                data:{}
+              }
+            },
             goodsTotal:0,
             orderMoney:0,
             orderType:0,
@@ -152,7 +156,7 @@ export default {
                 this.$toast.clear();
                 if(res.code == 1){
                     this.orderData = res.data;
-                    this.deduction = res.data.scoreDeduction.deduction
+                    this.deduction = res.data.scoreDeduction.data.money
                     this.score = res.data.scoreDeduction.score
                 }else{
                     this.$toast(res.msg);
@@ -202,7 +206,9 @@ export default {
                     address_id:this.addressData.id,
                 }
                 if(this.payScore){
-                  param.deduction = this.score
+                  param.payscore = 1
+                }else{
+                  param.payscore = 0
                 }
 
             }else if(this.orderType == 1){
@@ -224,7 +230,9 @@ export default {
                     type:this.orderType
                 }
                 if(this.payScore){
-                  param.deduction = this.score
+                  param.payscore = 1
+                }else{
+                  param.payscore = 0
                 }
             }
             this.$api.goodsOrderStore(param).then((res) => {

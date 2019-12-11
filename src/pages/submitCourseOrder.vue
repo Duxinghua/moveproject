@@ -16,13 +16,17 @@
         <div class="left">课程合计</div>
         <div class="right">¥{{detail.price}}</div>
       </div>
-      <div class="order-item">
+      <div class="order-item" v-if="detail.type == 3">
         <div class="left">优惠活动</div>
         <div class="right">¥{{detail.discount}}</div>
       </div>
       <div class="order-item">
         <div class="left">合计</div>
-        <div class="right">¥{{detail.total}}</div>
+        <div class="right">¥{{detail.type == 2 ? goodsTotal : detail.total }}</div>
+      </div>
+      <div class="order-item msg-check" @click="toggle" v-if="detail.type == 2">
+         <div class="left">您有<span>{{scoreDeduction.score}}</span>花币，可用<span>{{scoreDeduction.use_score}}</span>花币抵扣<span>{{scoreDeduction.money}}</span>元</div>
+         <van-checkbox  v-model="checked" ref="checkboxes" checked-color="#718063"></van-checkbox>
       </div>
     </div>
     <div class="submit-order-msg" v-if="detail.type == 2">
@@ -34,10 +38,6 @@
       <div class="msg-info">
         <div class="lf">手机号码</div>
         <div class="rg">{{detail.mobile}}</div>
-      </div>
-      <div class="msg-info msg-check">
-         <div class="left">您有<span>{{0}}</span>花币，可用<span>{{0}}</span>花币抵扣<span>{{ 0}}</span>元</div>
-         <van-checkbox  v-model="checked" ref="checkboxes" checked-color="#718063"></van-checkbox>
       </div>
     </div>
     <div class="order-commit" v-if="detail.type == 3">
@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="buy-box">
-      <div class="money">需支付<span>￥{{detail.total}}</span></div>
+      <div class="money">需支付<span>￥{{goodsTotal}}</span></div>
       <div class="submit" @click="onBuy">立即购买</div>
     </div>
     <div class="submit-order-reconfirm" v-if="reShow">
@@ -126,8 +126,13 @@ export default {
       true_name: '',
       mobile_ap: '',
       idcard:'',
-      checked:false,
-      payScore:false
+      checked:true,
+      payScore:true,
+      scoreDeduction:{},
+      goodsTotal:'',
+      oldGoodsTotal:'',
+      deduction:''
+
 
     }
   },
@@ -164,6 +169,10 @@ export default {
     this.$api.courseOrderPreview({course_id:this.course_id,type:this.type}).then((res)=>{
         if(res.code == 1){
           this.detail = res.data
+          this.scoreDeduction = res.data.scoreDeduction
+          this.goodsTotal = res.data.total
+          this.oldGoodsTotal = res.data.total
+          this.deduction = res.data.scoreDeduction ? res.data.scoreDeduction.money : 0
           if(res.data.true_name){
             this.true_name = res.data.true_name
           }
@@ -178,23 +187,24 @@ export default {
   },
   methods: {
     toggle(){
-
+            console.log(this.checked)
             this.$refs.checkboxes.toggle();
-            //使用花币
-            if(!this.checked){
-              this.payScore = true
-              // var lenr1 = this.deduction.toString().indexOf('.') > -1 ? this.deduction.toString().split(".")[1].length : 0
-              // var lenr2 = this.goodsTotal.toString().indexOf(".") > -1 ? this.goodsTotal.toString().split(".")[1].length : 0
-              // var l = lenr1 > lenr2 ? lenr1 : lenr2
-              // if(this.deduction*Math.pow(10,l) > this.goodsTotal*Math.pow(10,l)){
-              //   this.goodsTotal = 0
-              // }else{
-              //   this.goodsTotal = this.accSub(this.goodsTotal,this.deduction)
-              // }
-            }else{
+            //不使用花币
+            if(this.checked){
               this.payScore = false
-              // this.goodsTotal = this.oldGoodsTotal
+              var lenr1 = this.deduction.toString().indexOf('.') > -1 ? this.deduction.toString().split(".")[1].length : 0
+              var lenr2 = this.goodsTotal.toString().indexOf(".") > -1 ? this.goodsTotal.toString().split(".")[1].length : 0
+              var l = lenr1 > lenr2 ? lenr1 : lenr2
+              if(this.deduction*Math.pow(10,l) > this.goodsTotal*Math.pow(10,l)){
+                this.goodsTotal = 0
+              }else{
+                this.goodsTotal = this.accSub(this.goodsTotal,this.deduction)
+              }
+            }else{
+              this.payScore = true
+              this.goodsTotal = this.oldGoodsTotal
             }
+            console.log(this.checked,this.payScore)
 
     },
     accSub(arg1, arg2) {
@@ -222,7 +232,7 @@ export default {
             }
             m = Math.pow(10, Math.max(r1, r2)); //last modify by deeka //动态控制精度长度
             n = (r1 >= r2) ? r1 : r2;
-            return ((arg1 * m - arg2 * m) / m).toFixed(n);
+            return ((arg1 * m + arg2 * m) / m).toFixed(n);
     },
     onLink () {
       if(this.tuanStatus == 1 ){
@@ -331,6 +341,13 @@ export default {
           params.true_name = this.true_name
           params.mobile = this.mobile_ap
           params.idcard = this.idcard
+      }
+      if(this.detail.type == 2 && !this.tid){
+        if(this.payScore){
+          params.payscore = 1
+        }else{
+          params.payscore = 0
+        }
       }
 
       this.$api.courseOrderStore(params).then((res)=>{
@@ -552,6 +569,27 @@ export default {
         }
       }
     }
+    .msg-check{
+      justify-content: space-between;
+      .left{
+        font-size: 26px;
+        span{
+          color:#995258;
+        }
+      }
+                  /deep/ .van-checkbox{
+                .van-checkbox__icon{
+                    height: auto;
+                    line-height: normal;
+                    i{
+                        width: 30px;
+                        height: 30px;
+                        font-size: 28px;
+                    }
+                }
+
+            }
+    }
   }
   &-msg{
     background-color: #fff;
@@ -561,9 +599,6 @@ export default {
       font-size: 36px;
       color: #6D8160;
       margin-bottom: 30px;
-    }
-    .msg-check{
-      justify-content: space-between;
     }
     .msg-info{
       display: flex;

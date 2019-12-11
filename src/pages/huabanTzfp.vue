@@ -137,11 +137,7 @@ export default {
       var _this = this
       if(this.imgList.length < 4){
         wx.chooseImage({
-<<<<<<< HEAD
-          count: 1, // 默认9
-=======
           count: _this.num, // 默认9
->>>>>>> 244786a94110aef52a7e4e1b7dc5a642e636ac46
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {

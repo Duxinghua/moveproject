@@ -444,8 +444,12 @@ const server = {
     return post('user/qrcodeByOpenid', data)
   },
   // banner index/banner
-  indexBanner(data){
-    return post('index/banner',data)
+  indexBanner (data) {
+    return post('index/banner', data)
+  },
+  // 课程立即支付接口
+  courseOrderpayOrder (data){
+    return post('course_order/payOrder', data)
   }
 }
 
