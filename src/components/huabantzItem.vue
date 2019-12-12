@@ -11,7 +11,7 @@
               <img class="tzavatar" :src="item.avatar" alt="">
               <div class="tzcinfo">
               <span>{{item.nickname}}</span>
-              <span>{{autoTimer(item.create_time)}}小时前更新</span>
+              <span>{{autoTimer(item.create_time)}}</span>
               </div>
 
             </div>
@@ -40,8 +40,12 @@ export default {
     huabantzHandler (index) {
       this.$router.push({name: 'HuabanTzDetail', query: {id: index}})
     },
+    autoTime (time) {
+      var tim = new Date(time * 1000)
+      return tim.getFullYear() + '-' + (tim.getMonth() + 1) + '-' + (tim.getDate().length == 1 ? 0 + tim.getDate() : tim.getDate()) + ' ' + (tim.getHours().length == 1 ? 0+tim.getHours() : tim.getHours() )+ ':' + (tim.getMinutes().length == 1 ? 0+ time.getMinutes() : tim.getMinutes())
+    },
     autoTimer (timer) {
-      return parseInt((new Date().getTime() - timer*1000)/1000/3600)
+      return parseInt((new Date().getTime() - timer*1000)/1000/3600) > 24 ? this.autoTime(timer) :parseInt((new Date().getTime() - timer*1000)/1000/3600)+'小时前更新'
     }
   }
 }
@@ -107,6 +111,7 @@ export default {
             display: flex;
             width:calc(100% - 72px);
             justify-content: flex-start;
+            align-items: center;
             span{
               width:fit-content;
               overflow: hidden;

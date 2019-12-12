@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="goods-time" v-if="tuanStatus == 0">
-                <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />后结束
+                <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down format="DD天HH时mm分ss秒"  v-if="groupDetails.t_id" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />后结束
             </div>
             <div class="goods-time" v-if="tuanStatus == 1">
               <span>拼团成功</span>
@@ -90,8 +90,11 @@
                             <img src="../assets/images/doubt.png" alt="">
                         </div>
                     </div>
-                    <div class="goods-time" v-if="tuanStatus == 0">
-                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />后结束
+                    <div class="goods-time goods-time-fixs" v-if="tuanStatus == 0">
+                      <div class="goods-fixs">
+                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>
+                      </div>
+                      <van-count-down  format="DD天HH时mm分ss秒后结束"  v-if="groupDetails.t_id" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />
                     </div>
                     <div class="goods-time" v-if="tuanStatus == 1">
                       <span>拼团成功</span>
@@ -159,10 +162,10 @@ export default {
       },
       viewHandler () {
         var type = this.groupDetails.course.type
-        if(type == 2){
-          this.$router.push({name:'OffCourseDetail',query:{id:courseId}})
-        }else if(type == 3){
-          this.$router.push({name:'OnlineCourseDetail',query:{id:courseId}})
+        if(type == 3){
+          this.$router.push({name:'OffCourseDetail',query:{id:this.courseId}})
+        }else if(type == 2){
+          this.$router.push({name:'OnlineCourseDetail',query:{id:this.courseId}})
         }
       },
       onLook () {
@@ -513,6 +516,7 @@ export default {
     font-size: 26px;
     margin-top: 30px;
     margin-bottom: 40px;
+    line-height: 40px;
     img{
         width: 28px;
         height: 28px;
@@ -521,6 +525,17 @@ export default {
     span{
         color: #995258;
     }
+    /deep/ .van-count-down{
+      line-height: 0;
+      font-size: 26px;
+    }
+}
+.goods-time-fixs{
+  display: flex;
+  flex-direction: column;
+  .goods-fixs{
+    margin-bottom: 20px;
+  }
 }
 .goods-submit{
     width: 625px;

@@ -36,7 +36,7 @@ export default {
       this.$api.userEdit({bio: this.textArea}).then((result) => {
         if (result.code === 1) {
           this.$toast({
-            message: result.msg,
+            message: '简介保存成功',
             onClose: () => {
               this.$router.push({name: 'MyEdit'})
             }

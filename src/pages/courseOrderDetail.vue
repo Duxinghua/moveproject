@@ -26,7 +26,7 @@
     </div>
     <div class="orderdetail-tuan" v-if="detail.t_id != 0 " @click="sharelHandler(detail.t_id)">
       <span>拼团状态 {{goodsTuanText[detail.courseTuanStatus]}}</span>
-      <div class="avatars">
+      <div :class="['avatars',{'avatars2': detail.courseTuanUsers.length == 2},{'avatars3': detail.courseTuanUsers.length == 3},{'avatars4': detail.courseTuanUsers.length == 4}]" >
         <div :key="index" v-for="(itemav,index) in detail.courseTuanUsers">
           <img :class="{active:itemav.active}" :src="itemav.avatar" alt="" />
         </div>
@@ -491,6 +491,15 @@ export default {
           border-radius: 50%;
         }
       }
+    }
+    .avatars2{
+      margin-left:190px;
+    }
+    .avatars3{
+      margin-left:80px;
+    }
+    .avatars4{
+     left:-20px;
     }
   }
   &-btns{

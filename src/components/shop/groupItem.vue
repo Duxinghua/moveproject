@@ -13,9 +13,9 @@
         </div>
         <div class="group-info">
             <div class="lack">还差<em>{{groupData.user_number - groupData.current_number}}人</em>拼成</div>
-            <div class="time">剩余<van-count-down :time="groupData.expire_time ? (groupData.expire_time - groupData.create_time) * 1000 : 0" /></div>
+            <div class="time">剩余<van-count-down  format="DD天HH时mm分ss秒" :time="groupData.expire_time ? (groupData.expire_time - groupData.create_time) * 1000 : 0" /></div>
         </div>
-        <div class="group-btn group-active" v-if="groupData.my == 1" @click="onLook">查看</div>
+        <div class="group-btn group-active group-btn1" v-if="groupData.my == 1" @click="onLook">查看</div>
         <div class="group-btn" v-if="groupData.my != 1" @click="onLook">去拼团</div>
     </div>
 </template>
@@ -129,7 +129,7 @@ export default {
     .group-info{
         .lack{
             color: #666666;
-            font-size: 24px;
+            font-size: 18px;
             em{
                 font-style: normal;
                 color: #995258;
@@ -137,10 +137,15 @@ export default {
         }
         .time{
             color: #333333;
-            font-size: 24px;
+            font-size: 18px;
             margin-top: 10px;
             display: flex;
             align-items: center;
+            line-height: 40px;
+           /deep/ .van-count-down{
+              font-size: 18px;
+              line-height:0;
+            }
         }
     }
     .group-btn{
@@ -152,6 +157,9 @@ export default {
         color: #FFFFFF;
         font-size: 28px;
         border-radius: 1rem;
+    }
+    .group-btn1{
+      width:90px!important;
     }
     .group-active{
                 background: url('../../assets/images/goshare.png') no-repeat;

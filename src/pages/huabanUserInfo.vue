@@ -111,7 +111,7 @@ export default {
     getUserInfoList () {
       const param = {
         page: this.current,
-        pageSize: 10,
+        pageSize: 5,
         user_id: this.user_id
       }
       this.$toast.loading({

@@ -56,7 +56,7 @@
     </div>
     <div class="orderdetail-tuan" v-if="order_detail.t_id != 0 " @click="onLook">
       <span>拼团状态 {{goodsTuanText[order_detail.goodsTuan.status]}}</span>
-      <div class="avatars">
+      <div :class="['avatars',{'avatars2': order_detail.goodsTuan.users.length == 2},{'avatars3': order_detail.goodsTuan.users.length == 3},{'avatars4': order_detail.goodsTuan.users.length == 4}]">
         <div :key="index" v-for="(itemav,index) in order_detail.goodsTuan.users">
           <img :class="{active:itemav.active}" :src="itemav.avatar" alt="" />
         </div>
@@ -285,13 +285,13 @@ export default {
 
                 }
               }
+
+            }else{
+
+                obj.active = false
+                obj.avatar = require('../assets/images/img4.png')
+
             }
-            // }else{
-
-            //     obj.active = false
-            //     obj.avatar = require('../assets/images/img4.png')
-
-            // }
             list.push(obj)
           }
           console.log(list)
@@ -406,6 +406,15 @@ export default {
           border-radius: 50%;
         }
       }
+    }
+    .avatars2{
+      margin-left:190px;
+    }
+    .avatars3{
+      margin-left:80px;
+    }
+    .avatars4{
+     left:-20px;
     }
   }
   &-top{

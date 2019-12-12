@@ -52,6 +52,7 @@
 import CourceItem from '@/components/courceItem.vue'
 import TeacherMsg from '@/components/teacherMsg.vue'
 import NoData from '@/components/nodata'
+import getSitem from '@/utils/storage'
 
 export default {
   name: 'HomeSearch',
@@ -70,9 +71,17 @@ export default {
       finished: false
     }
   },
-  // mounted () {
-  //   this.courseList()
-  // },
+  mounted () {
+    if(getSitem.getStr('homesearch')){
+      this.searchText = getSitem.getStr('homesearch')
+      this.getGroupLists()
+    }
+    if(getSitem.getStr('homesearchcur')){
+      this.cur = getSitem.getStr('homesearchcur')
+      this.pageType = getSitem.getStr('homesearchcur')
+      this.getGroupLists()
+    }
+  },
   methods: {
     tabHandler (index) {
       if(!this.searchText){
@@ -88,6 +97,7 @@ export default {
       this.loading = false
       this.current = 1
       this.total = 0
+      getSitem.setStr('homesearchcur',index)
       this.getGroupLists()
       // console.log(arg,'arg')
     },
@@ -111,6 +121,9 @@ export default {
       if(!this.searchText){
         this.$toast('请输入搜索内容')
         return
+      }
+      if(this.searchText){
+        getSitem.setStr('homesearch',this.searchText)
       }
       this.getGroupLists()
     },

@@ -35,8 +35,8 @@
           <span>被喜欢</span>
         </div>
       </div>
-      <div class="my-header-ad">
-        <img src="../assets/images/myad.png" alt="">
+      <div class="my-header-ad" @click="likeGo">
+        <img :src="slideList.image+''" alt="">
       </div>
       <div class="my-header-oc">
         <div class="oitem" @click="likeClickHandler('st')">
@@ -154,7 +154,8 @@ export default {
       qdText: '立即签到',
       currentDate: '',
       qdcontrol: false, // 今天是否签到
-      signValue: 5
+      signValue: 5,
+      slideList:{}
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -166,11 +167,8 @@ export default {
       this.$router.push({name:'Login'})
     }
     this.currentDate = this.formatTime(1)
-    this.$api.userIndex().then((result) => {
-      if (result.code === 1) {
-        this.userInfo = result.data
-      }
-    })
+    this.getUserinfo()
+    this.getBanner()
     this.$api.commonConfig({name:'sign'}).then((res)=>{
       if(res.code === 1) {
         this.signValue = res.data.value
@@ -179,6 +177,25 @@ export default {
     this.getUserSignLists()
   },
   methods: {
+    likeGo () {
+      location.href = this.slideList.url
+    },
+    getBanner () {
+      this.$api.indexBanner({type:2}).then((res)=>{
+        if(res.code == 1) {
+          this.slideList = res.data[0]
+          this.$forceUpdate()
+        }
+      })
+
+    },
+    getUserinfo () {
+      this.$api.userIndex().then((result) => {
+      if (result.code === 1) {
+        this.userInfo = result.data
+      }
+    })
+    },
     formatTime (time) {
       var date  = ""
       if (time != 0 && time != 1) {
@@ -222,7 +239,7 @@ export default {
             message: result.msg,
             onClose: () => {
               _this.getUserSignLists()
-
+              _this.getUserinfo()
             }
           })
         } else {

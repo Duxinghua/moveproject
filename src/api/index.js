@@ -325,7 +325,7 @@ const server = {
   },
   // 取消预约 /api/course/delAppoint
   courseDelAppoint (data) {
-    return post('course/delAppoint', data)
+    return post('course_order/del', data)
   },
   // 我的预约记录 /api/user/appoint
   userAppoint (data) {
@@ -448,7 +448,7 @@ const server = {
     return post('index/banner', data)
   },
   // 课程立即支付接口
-  courseOrderpayOrder (data){
+  courseOrderpayOrder (data) {
     return post('course_order/payOrder', data)
   }
 }

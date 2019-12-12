@@ -19,7 +19,7 @@
       <div class="orderdetail-top-price">退款金额：<span>¥{{order_detail.price_pay}}</span></div>
       <span class="orderdetail-top-span">上传凭证（{{imgList.length}}/3）</span>
       <div class="orderdetail-top-uploads">
-        <div class="uploadimgs-wrap" v-for="(item,index) in imgList" :key="index" @click="delImg(index)">
+        <div class="orderdetail-wrap" v-for="(item,index) in imgList" :key="index" @click="delImg(index)">
           <img :src="item.l" class="uploadimgs" alt="">
           <img src="../assets/images/uploadcloses.png" class="uploadclose" alt="">
         </div>
@@ -123,7 +123,7 @@ export default {
       this.$api.goodsStoreRefund(params).then((res)=>{
         if(res.code === 1){
           _this.$toast({
-            message:res.msg,
+            message:'请等待平台审核',
             onClose: ()=>{
               _this.$router.push({name:'OrderList'})
             }

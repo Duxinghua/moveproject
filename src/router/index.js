@@ -702,6 +702,11 @@ router.beforeEach((to, from, next) => {
         next()
       } else {
         console.log(getSitem.getStr('token'), 'token')
+        Api.wxTokenCheck().then((result) => {
+          if (result.code === 1) {
+            getSitem.setStr('token', result.data.token)
+          }
+        })
         next()
       }
     } else {
@@ -713,7 +718,7 @@ router.beforeEach((to, from, next) => {
       getToken(data)
       if (!getSitem.getStr('mobile')) {
         // alert(getSitem.getStr('token'))
-        if (to.name === 'My' || to.name === 'goodsDetails' || to.name === 'CourseGroupDetails' || to.name === 'OffCourseDetail' || to.name === 'OnlineCourseDetail') {
+        if (to.name === 'My' || to.name === 'groupDetails' || to.name === 'goodsDetails' || to.name === 'CourseGroupDetails' || to.name === 'OffCourseDetail' || to.name === 'OnlineCourseDetail') {
           next({path: '/login', query: {name: to.name, arg: to.fullPath}})
           // alert(getSitem.getStr('token'))
         } else {

@@ -30,11 +30,11 @@ export default {
     z-index: 3000;
     background:rgba(0,0,0, 0.5);
     img{
-      width:80%;
+      width:500px;
       position: fixed;
-      left:50%;
-      top:100px;
-      transform: translateX(-50%);
+      right:0;
+      top:0;
+      // transform: translateX(-50%);
       z-index: 3001
     }
   }

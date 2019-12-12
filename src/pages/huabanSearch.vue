@@ -1,5 +1,5 @@
 <template>
-  <div class="huabanSearch">
+  <div :class="['huabanSearch',{'huaban2':currentIndex == 1}]">
     <div class="huabanSearch-header">
       <div class="inputWrap">
         <img src="../assets/images/huabansearchico.png" alt="">
@@ -35,6 +35,7 @@ import NoData from '@/components/nodata'
 import HuabanGroupItem from '@/components/huabanGroupItem.vue'
 import HuabantzItem from '@/components/huabantzItem.vue'
 import HuabanUsergzItem from '@/components/huabanUsergzItem.vue'
+import getSitem from '@/utils/storage'
 export default {
   name: 'HuabanSearch',
   data () {
@@ -68,6 +69,17 @@ export default {
     HuabantzItem,
     HuabanUsergzItem,
     NoData
+  },
+  mounted () {
+      // if(getSitem.getStr('hanbansearchindex')){
+      //   this.currentIndex = getSitem.getStr('hanbansearchindex')
+      // }
+      // if(getSitem.getStr('hanbansearchkey')){
+      //   this.searchText = getSitem.getStr('hanbansearchkey')
+      // }
+      // if(getSitem.getStr('hanbansearchindex') && getSitem.getStr('hanbansearchkey')){
+      //   this.resultClickHandler(this.currentIndex)
+      // }
   },
   methods: {
     linkDetail (id) {
@@ -126,12 +138,18 @@ export default {
       })
     },
     submit () {
+      if(this.searchText){
+        getSitem.setStr('hanbansearchindex',this.currentIndex)
+        getSitem.setStr('hanbansearchkey',this.searchText)
+      }else{
+        this.$toast('请输入搜索内容')
+        return
+      }
       this.huabanList = []
       this.finished = false
       this.loading = false
       this.current = 1
       this.total = 0
-      console.log(this.currentIndex,'ci')
       this.getGroupLists()
     },
     getGroupLists () {
@@ -221,6 +239,7 @@ export default {
 
         })
       }
+
     },
     onLoad () {
       if (this.huabanList.length < this.total) {
@@ -234,6 +253,8 @@ export default {
         this.$toast('请输入搜索内容')
         return
       }
+      getSitem.setStr('hanbansearchindex',arg)
+      getSitem.setStr('hanbansearchkey',this.searchText)
       this.currentIndex = arg
       this.huabanList = []
       this.finished = false
@@ -241,7 +262,6 @@ export default {
       this.current = 1
       this.total = 0
       this.getGroupLists()
-      console.log(arg,'arg')
     },
     searchHandler () {
       this.$router.push({name: 'HuabanGroupList'})
@@ -252,8 +272,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.huaban2{
+  background:white !important;
+}
 .huabanSearch{
   background:#FBF8F4;
+  min-height: 100vh;
   &-header{
     padding-top:26px;
     height:203px;

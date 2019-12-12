@@ -19,6 +19,7 @@
             <span>订单编号：{{item.order_code}}</span>
             <span  v-if="item.t_id == 0">{{item.status_text}}</span>
             <span  v-if="item.t_id != 0 && status === 4" class="sharecorol">{{item.need == 0 ? '拼团成功' :`待分享，差`+item.need+`人`}}</span>
+            <span  v-if="item.t_id !== 0 && status !== 4">拼团{{goodsTuanText[item.t_status]}}</span>
             <span v-if="item.need ==0 && item.t_id != 0 && (type == 3 || type == 2)">拼团成功</span>
           </div>
           <div class="ordercontent" @click="orderDetailHandler(item.order_id)">
@@ -41,7 +42,8 @@
           <div class="orderfooter">
             <span>合计: ¥{{item.price_pay}}</span>
             <div class="btns" >
-              <span  style="display:none" class="cancel" v-if="item.t_id == 0" @click="cancelHandler(item.order_id)">取消预约</span>
+              <span  class="cancel" v-if="item.t_id == 0 && item.status == 0" @click="cancelHandler(item.order_id)">取消订单</span>
+              <span  class="share" v-if="item.t_id == 0 && item.status == 0" @click="repayHandler(item.order_id)">立即支付</span>
               <span class="share" v-if="status === 4 && item.t_id != 0" @click="sharelHandler(item.t_id)">{{item.need == 0 ? `查看详情` : `邀请拼团`}}</span>
             </div>
           </div>
@@ -69,6 +71,11 @@ export default {
         {name: '线下课程', status: 3},
         {name: '线上课程', status: 2}
       ],
+      goodsTuanText:[
+        '进行中',
+        '成功',
+        '解散'
+      ],
       orderList: [],
       type: '',
       finished: false,
@@ -83,8 +90,54 @@ export default {
     this.getOrderList()
   },
   methods: {
+    onBridgeReady () {
+      var _this = this
+      WeixinJSBridge.invoke(
+        // 'getBrandWCPayRequest', {
+        //   'appId': data.appId, // 公众号名称，由商户传入
+        //   'timeStamp': data.timeStamp, // 时间戳，自1970年以来的秒数
+        //   'nonceStr': data.nonceStr, // 随机串
+        //   'package': data.package,
+        //   'signType': data.signType, // 微信签名方式：
+        //   'paySign': data.paySign // 微信签名
+        // },
+        'getBrandWCPayRequest', _this.wxpay,
+        function (res) {
+          console.log(res)
+          if (new String(res.err_msg).trim() === 'get_brand_wcpay_request:ok') {
+            // 使用以上方式判断前端返回,微信团队郑重提示：
+            // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+            // window.location.href = config.baseurl + '/tickOrderList'
+           // alert(1)
+          } else {
+            // window.location.href = config.baseurl + '/tickOrderList'
+           // alert(2)
+          }
+        })
+    },
     sharelHandler (tid){
       this.$router.push({path:'/coursegroupdetails',query:{id:tid}})
+    },
+    repayHandler (order_id) {
+      var _this = this
+      this.$api.courseOrderpayOrder({order_id:order_id}).then((res)=>{
+        if(res.code === 1) {
+           if (typeof WeixinJSBridge === 'undefined') {
+              if (document.addEventListener) {
+                document.addEventListener('WeixinJSBridgeReady', _this.onBridgeReady, false)
+              } else if (document.attachEvent) {
+                document.attachEvent('WeixinJSBridgeReady', _this.onBridgeReady)
+                document.attachEvent('onWeixinJSBridgeReady', _this.onBridgeReady)
+              }
+            } else {
+              _this.wxpay = res.data.pay_data
+              _this.onBridgeReady()
+            }
+
+        }else{
+          _this.$toast(res.msg)
+        }
+      })
     },
     cancelHandler (order_id) {
       var _this = this
@@ -297,20 +350,24 @@ export default {
             text-align: center;
             border:2px solid rgba(205, 168, 113, 1);
             border-radius:31px;
-            // margin-right:16px;
-            // margin-left:16px;
+            margin-right:16px;
+            margin-left:16px;
           }
           .cancel{
             color:#666666;
             border:2px solid #E3E3E3;
             display: block;
             margin: 0 auto;
+            margin-right:16px;
+            margin-left:16px;
           }
           .share{
             color:#cda871;
             border:2px solid #cda871;
             display: block;
             margin: 0 auto;
+            margin-right:16px;
+            margin-left:16px;
           }
         }
       }

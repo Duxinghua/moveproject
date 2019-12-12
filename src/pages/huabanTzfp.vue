@@ -115,7 +115,7 @@ export default {
       this.$api.postsSave(params).then((res)=>{
         if(res.code === 1){
           _this.$toast({
-            message:res.msg,
+            message: '评论成功，审核通过之后才可显示',
             onClose: ()=>{
               _this.$router.go(-1)
             }

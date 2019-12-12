@@ -137,6 +137,8 @@ export default {
 .myXf{
   display: flex;
   flex-direction: column;
+  background:white;
+  min-height: 100vh;
   &-top{
     background:#FBF8F4;
     height:448px;

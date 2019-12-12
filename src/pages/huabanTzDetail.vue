@@ -4,7 +4,7 @@
       <img class="avatar" :src="user.avatar ? user.avatar : require('../assets/images/people.png')" alt="">
       <div class="userdes">
         <span>{{user.nickname ? user.nickname : ''}}</span>
-        <span>{{user.logintime}}小时前</span>
+        <span>{{user.logintime}}</span>
       </div>
       <div class="gzbtn" v-if="user.amity == 0" @click="gzClickHandler(user.id)">
          <van-icon size="20" name="like-o" />
@@ -178,8 +178,12 @@ export default {
     changeTab (e) {
       this.index = e
     },
+    autoTime (time) {
+      var tim = new Date(time * 1000)
+      return tim.getFullYear() + '-' + (tim.getMonth() + 1) + '-' + (tim.getDate().length == 1 ? 0 + tim.getDate() : tim.getDate()) + ' ' + (tim.getHours().length == 1 ? 0+tim.getHours() : tim.getHours() )+ ':' + (tim.getMinutes().length == 1 ? 0+ time.getMinutes() : tim.getMinutes())
+    },
     timers (timer) {
-      return parseInt((new Date().getTime() - (timer * 1000)) / 3600 / 1000)
+      return parseInt((new Date().getTime() - timer*1000)/1000/3600) > 24 ? this.autoTime(timer) :parseInt((new Date().getTime() - timer*1000)/1000/3600)+'小时前更新'
     },
     gzClickHandler (id) {
       console.log(id)
@@ -220,7 +224,7 @@ export default {
       this.$api.postsCommentsSave(params).then((res) => {
         if (res.code === 1) {
           this.$toast({
-            message: res.msg,
+            message: '评论成功',
             onClose: () => {
               this.content = ''
               this.finished = false

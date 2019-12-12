@@ -1,6 +1,6 @@
 <template>
     <div class="group-details">
-        <div class="goods-header">
+        <div class="goods-header" @click="handlerView">
             <div class="goods-img">
                 <img :src="goodsData.images && goodsData.images[0]" alt="">
             </div>
@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="goods-time" v-if="groupDetails.user_number != groupDetails.current_number">
-                <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />后结束
+                <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down  v-if="groupDetails.t_id" format="DD天HH时mm分ss秒" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />后结束
             </div>
             <div class="goods-time" v-if="groupDetails.user_number == groupDetails.current_number">拼团成功</div>
             <div class="goods-submit" @click="onLinkHome" v-if="groupDetails.user_number == groupDetails.current_number">随便逛逛</div>
@@ -111,8 +111,11 @@
                             <img src="../assets/images/doubt.png" alt="">
                         </div>
                     </div>
-                    <div class="goods-time" v-if="tuanStatus == 0">
-                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>，<van-count-down v-if="groupDetails.t_id" :time="groupDetails.expire_time * 1000" />后结束
+                    <div class="goods-time goods-time-fixs" v-if="tuanStatus == 0">
+                        <div class="goods-fixs">
+                        <img src="../assets/images/remind.png" alt="">拼团中，还差<span>{{(groupDetails.user_number - groupDetails.current_number) || 0}}人</span>
+                        </div>
+                        <van-count-down   v-if="groupDetails.t_id" format="DD天HH时mm分ss秒后结束" :time="(groupDetails.expire_time - groupDetails.create_time) * 1000" />
                     </div>
                     <div class="tuan-share" @click="onLink">{{tuanStatus == 0 ? '邀请好友拼团' : '继续逛逛'}}</div>
                     <div class="tuan-link" @click="onLinkOrder"><span>查看订单</span><van-icon name="arrow" /></div>
@@ -140,6 +143,7 @@ export default {
             skuList:[],
             goodsData:{},
             groupId:0,
+            goodsId:0,
             groupDetails:{
               users:[]
             },
@@ -187,6 +191,14 @@ export default {
 
   },
   methods:{
+      handlerView() {
+            this.$router.push({
+                path:'/goodsDetails',
+                query:{
+                    goodsId:this.goodsId
+                }
+            })
+      },
       onLinkHome(){
           this.$router.push({
             path:'/shopHome'
@@ -197,7 +209,7 @@ export default {
             const title = this.goodsData.goods_name;
             const description = this.goodsData.description;
             const link = location.href;
-            const imgUrl = this.goodsData.images[0];
+            const imgUrl = this.goodsData.images ? this.goodsData.images[0] : '';
             let shareurl = config.baseurl + '/groupDetails?id=' + this.groupId
             this.wx.updateAppMessageShareData({
                 title: title, // 分享标题
@@ -257,6 +269,7 @@ export default {
                 this.$toast.clear();
                 if(res.code == 1){
                     this.groupDetails = res.data;
+                    this.goodsId = res.data.goods_id
                     this.goodsData = res.data.goods || {};
                     this.skuList = res.data.goods ? res.data.goods.specs : [];
                     this.groupList = res.data.hot || [];
@@ -350,9 +363,7 @@ export default {
         border-radius: 50px;
         color: #F3D995;
         font-size: 36px;
-        margin: 0 auto;
-        margin-top: 70px;
-        margin-bottom: 35px;
+        margin: 30px auto;
         background: #6B8162;
     }
     .tuan-link{
@@ -424,6 +435,7 @@ export default {
     font-size: 26px;
     margin-top: 30px;
     margin-bottom: 40px;
+    line-height: 40px;
     img{
         width: 28px;
         height: 28px;
@@ -432,6 +444,16 @@ export default {
     span{
         color: #995258;
     }
+    /deep/ .van-count-down{
+      font-size: 26px;
+    }
+}
+.goods-time-fixs{
+  display: flex;
+  flex-direction: column;
+  .goods-fixs{
+    margin-bottom: 10px;
+  }
 }
 .goods-submit{
     width: 625px;

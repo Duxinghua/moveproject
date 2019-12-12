@@ -212,7 +212,7 @@ export default {
       this.$api.goodsStoreComments({order_id:this.order_id,json_comment:json_comment}).then((res)=>{
         if(res.code == 1) {
           _this.$toast({
-            message:res.msg,
+            message: '评论成功',
             onClose: ()=>{
               _this.$router.go(-1)
             }

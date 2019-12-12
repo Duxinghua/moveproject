@@ -108,7 +108,7 @@ export default {
       this.$api.courseStoreComments(params).then((res)=>{
         if(res.code === 1){
           _this.$toast({
-            message:res.msg,
+            message: '作业已发布',
             onClose: ()=>{
               _this.$router.go(-1)
             }
@@ -130,7 +130,7 @@ export default {
       var _this = this
       if(this.imgList.length < 4){
         wx.chooseImage({
-          count: 1, // 默认9
+          count: _this.num, // 默认9
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
           sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
           success: function (res) {
@@ -145,7 +145,7 @@ export default {
         this.$toast('只能上传三张')
       }
     },
-    asynCuploadImage (localId) {
+    asynCuploadImage () {
       // this.$toast('uploadImage')
       if(!this.localIds.length){
         this.$toast('上传成功！')

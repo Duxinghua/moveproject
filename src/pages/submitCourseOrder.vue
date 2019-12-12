@@ -24,7 +24,7 @@
         <div class="left">合计</div>
         <div class="right">¥{{detail.type == 2 ? goodsTotal : detail.total }}</div>
       </div>
-      <div class="order-item msg-check" @click="toggle" v-if="detail.type == 2">
+      <div class="order-item msg-check" @click="toggle" v-if="detail.type == 2 && type == 1">
          <div class="left">您有<span>{{scoreDeduction.score}}</span>花币，可用<span>{{scoreDeduction.use_score}}</span>花币抵扣<span>{{scoreDeduction.money}}</span>元</div>
          <van-checkbox  v-model="checked" ref="checkboxes" checked-color="#718063"></van-checkbox>
       </div>

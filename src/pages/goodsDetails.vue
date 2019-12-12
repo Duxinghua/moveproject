@@ -218,7 +218,7 @@
 
             <!-- </div> -->
         </div>
-
+        <!-- -->
         <van-popup
             v-if="goodsData.specs && goodsData.specs.length > 0"
             v-model="popupStatus"
@@ -247,11 +247,11 @@
                         ><span>￥{{ goodsData.price_tuan }}</span><em>￥{{ goodsData.price_cost }}</em></div>
                         <div
                             class="attri"
-                            v-if="skuIndex == -1"
+                            v-if="skuIndex == -1 && skuList != null"
                         >请选择规格属性</div>
                         <div
                             class="attri"
-                            v-if="skuIndex != -1"
+                            v-if="skuIndex != -1 && skuList != null"
                         >{{skuList[skuIndex] ? skuList[skuIndex].specs : '请选择规格属性'}}</div>
                     </div>
                 </div>

@@ -191,10 +191,9 @@ export default {
   },
   methods: {
     indexBanner () {
-      this.$api.indexBanner({}).then((res)=>{
-        console.log(res)
+      this.$api.indexBanner({type:1}).then((res)=>{
         if(res.code == 1) {
-          this.slideList = res.msg
+          this.slideList = res.data
         }
       })
     },

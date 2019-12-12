@@ -17,8 +17,10 @@
       <div class="orderList-content-item" v-for="(item,index) in orderList" :key="index">
         <div class="ordertop">
           <span>订单编号：{{item.order_code}}</span>
-          <span v-if="item.status != 4">{{item.status_text}}</span>
+          <span v-if="item.status != 4 && item.t_id == 0">{{item.status_text}}</span>
           <span v-if="item.status == 4" class="sharetext">待分享，差{{item.need}}人</span>
+          <span  v-if="item.t_id !== 0 && item.status !== 4">拼团{{goodsTuanText[item.t_status]}}</span>
+
         </div>
         <div class="orderclist" @click="orderDetailHandler(item.order_id)">
           <div class="ordercontent" v-for="(goodsitem,index) in item.goods" :key="goodsitem.goods_id">
@@ -74,6 +76,11 @@ export default {
         {name: '待发货', status: 1},
         {name: '待收货', status: 2},
         {name: '评价', status: 3}
+      ],
+      goodsTuanText:[
+        '进行中',
+        '成功',
+        '解散'
       ],
       orderList: [],
       finished: false,

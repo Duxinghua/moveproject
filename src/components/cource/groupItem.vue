@@ -5,9 +5,6 @@
                 <div class="img" v-for="(item, index) in groupData.users" :key="index">
                     <img :src="item.avatar ? item.avatar : require('../../assets/images/useravatar.png')" alt="">
                 </div>
-                <!-- <div class="img active" v-for="(item, index) in (3 - groupData.users.length)" :key="'active' + index">
-                    <img src="../../assets/images/doubt.png" alt="">
-                </div> -->
                 <div  class="img active" v-for="(item, index) in (groupData.user_number == 2 ? (2-groupData.users.length) :(3 - groupData.users.length))" :key="'active' + index">
                     <img src="../../assets/images/doubt.png" alt="">
                 </div>
@@ -16,13 +13,13 @@
         </div>
         <div class="group-info" v-if="groupData.status == 0">
             <div class="lack">还差<em>{{groupData.user_number - groupData.current_number}}人</em>拼成</div>
-            <div class="time">剩余<van-count-down :time="groupData.expire_time ? (groupData.expire_time - groupData.create_time) * 1000 : 0" /></div>
+            <div class="time"><span>剩余</span><van-count-down   format="DD天HH时mm分ss秒" :time="groupData.expire_time ? (groupData.expire_time - groupData.create_time) * 1000: 0" /></div>
         </div>
         <div class="group-info" v-if="groupData.status == 1">
             <div class="lack">拼团{{groupData.status == 1 ?'完成' : '解散'}}</div>
             <div class="time">00:00:00</div>
         </div>
-        <div class="group-btn group-active" v-if="groupData.is_my == 1" @click="onLook">查看</div>
+        <div class="group-btn group-active group-btn1" v-if="groupData.is_my == 1" @click="onLook">查看</div>
         <div class="group-btn" v-if="groupData.is_my == 0" @click="onLook">去拼团</div>
     </div>
 </template>
@@ -122,7 +119,7 @@ export default {
     .group-info{
         .lack{
             color: #666666;
-            font-size: 24px;
+            font-size: 18px;
             em{
                 font-style: normal;
                 color: #995258;
@@ -130,10 +127,15 @@ export default {
         }
         .time{
             color: #333333;
-            font-size: 24px;
-            margin-top: 10px;
+            font-size: 18px;
             display: flex;
+            flex-direction: row;
             align-items: center;
+            line-height: 40px;
+            /deep/ .van-count-down{
+              font-size: 18px;
+              line-height:0;
+            }
         }
     }
     .group-btn{
@@ -145,6 +147,9 @@ export default {
         color: #FFFFFF;
         font-size: 28px;
         border-radius: 1rem;
+    }
+    .group-btn1{
+      width:90px!important;
     }
     .group-active{
         background: url('../../assets/images/goshare.png') no-repeat;

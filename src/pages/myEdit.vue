@@ -43,6 +43,8 @@
     <van-datetime-picker  @change="dateChangeHandler" @confirm="dateConfirmHandler" @cancel="dateCancelHandler"
       v-model="currentDate"
       type="date"
+      :min-date="minDate"
+      :max-date="maxDate"
       :formatter="formatter"
       show-toolbar
     />
@@ -79,7 +81,9 @@ export default {
       dateShow: false,
       genderShow: false,
       currentDate: new Date(),
-      userInfo: {}
+      userInfo: {},
+      minDate: new Date(1950, 10, 1),
+      maxDate: new Date(2090, 10, 1)
     }
   },
   mounted () {
@@ -129,7 +133,7 @@ export default {
       this.$api.userEdit({birthday:this.timeFormat(this.currentDate)}).then((result) => {
         if (result.code === 1) {
           this.$toast({
-            message: result.msg,
+            message: '生日修改成功',
             onClose: () => {
                this.getIndex()
                this.dateShow = false
