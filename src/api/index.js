@@ -450,7 +450,12 @@ const server = {
   // 课程立即支付接口
   courseOrderpayOrder (data) {
     return post('course_order/payOrder', data)
+  },
+  //商城分类
+  goodsCates (data) {
+    return get('goods/cates',data)
   }
+
 }
 
 export default server

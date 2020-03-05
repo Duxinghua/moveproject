@@ -4,6 +4,7 @@
             :tabList="tabList"
             @on-change="onTabChange"
             @on-search="onSearch"
+            @on-cate="onCate"
         />
         <van-list
             v-model="loading"
@@ -121,6 +122,12 @@ export default {
         query: {
           id
         }
+      })
+    },
+    onCate () {
+      this.$router.push({
+        path: '/goodsCate',
+        query: {}
       })
     }
   }

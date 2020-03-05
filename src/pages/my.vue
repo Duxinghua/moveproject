@@ -78,7 +78,7 @@
         <img src="../assets/images/myp.png" alt="" />
         <span>我的评论</span>
       </div>
-      <div class="mlitem" @click="likeClickHandler('ad')">
+      <div class="mlitem mlitemfix" @click="likeClickHandler('ad')">
         <img src="../assets/images/address.png" alt="" />
         <span>地址管理</span>
       </div>
@@ -473,6 +473,13 @@ export default {
       span{
         color:#333333;
         font-size: 30px;
+      }
+    }
+    .mlitemfix{
+      img{
+        width:43.2px;
+        height:45.6px;
+        margin-right:18.8px
       }
     }
   }

@@ -2,12 +2,12 @@
 	<div class="tab-box">
 		<div class="tab-fixed"></div>
 		<div class="tab-content">
-			<ul>
-				<li><img
+      <img
 					 @click="onSearch"
 					 src="../../assets/images/search.png"
 					 alt=""
-					></li>
+			>
+			<ul>
 				<li
 				 v-for="(item, index) in tabList"
 				 :key="index"
@@ -15,6 +15,11 @@
 				 @click="tabClick(item.id)"
 				>{{item.name}}</li>
 			</ul>
+      <img
+					 @click="onCate"
+					 src="../../assets/images/more.png"
+					 alt=""
+			>
 		</div>
 	</div>
 </template>
@@ -46,7 +51,10 @@ export default {
 		},
 		onSearch() {
 			this.$emit('on-search')
-		}
+    },
+    onCate () {
+      this.$emit('on-cate')
+    }
 	}
 }
 </script>
@@ -65,7 +73,16 @@ export default {
     top: 0;
     left: 0;
     z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+          width: 40px;
+          height: 40px;
+          margin-top: 10px;
+    }
     ul {
+      width:80%;
       height: 100%;
       display: flex;
       align-items: center;

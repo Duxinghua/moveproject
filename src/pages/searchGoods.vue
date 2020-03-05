@@ -41,7 +41,12 @@ export default {
       finished: false,
       current: 1,
       keywordValue: '',
-      keyword: ''
+      keyword: '',
+      param:{
+        page: this.current,
+        pageSize: 10,
+        keyword: this.keyword
+      }
     }
   },
   components: {
@@ -50,20 +55,23 @@ export default {
   },
   mounted () {
     // this.getGoodsList();
+    if(this.$route.query.id){
+      var gc_id = this.$route.query.id
+      var keyword = this.$route.query.name
+      this.keywordValue = this.$route.query.name
+      this.param.gc_id = gc_id
+      this.param.keyword = keyword
+      this.getGoodsList()
+    }
   },
   methods: {
     getGoodsList () {
-      const param = {
-        page: this.current,
-        pageSize: 10,
-        keyword: this.keyword
-      }
       this.$toast.loading({
         duration: 0,
         message: '加载中...',
         forbidClick: true
       })
-      this.$api.goodsList(param).then((res) => {
+      this.$api.goodsList(this.param).then((res) => {
         this.$toast.clear()
         if (res.code == 1) {
           this.loading = false

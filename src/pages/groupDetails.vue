@@ -136,7 +136,7 @@ export default {
         return {
             overlayStatus1:false,
             tuanStatus:1,//1是拼团成功 0 是支付成功
-            overlayStatus:false,
+            overlayStatus:true,
             popupStatus:false,
             goodsNum:1,
             skuIndex:-1,

@@ -658,6 +658,14 @@ const router = new Router({
       }
     },
     {
+      path: '/goodsCate',
+      name: 'GoodsCate',
+      component: () => import('@/pages/goodsCate'),
+      meta: {
+        title: '商品分类'
+      }
+    },
+    {
       path: '/test',
       name: 'Test',
       component: Test,
@@ -669,12 +677,21 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  // next()
-  // return;
   // console.log(to)
   // getSitem.remove('token')
   // getSitem.remove('mobile')
   // getSitem.remove('open')
+  if (!getSitem.getStr('mobile')) {
+    // alert(getSitem.getStr('token'))
+    if (to.name === 'My' || to.name === 'groupDetails' || to.name === 'goodsDetails' || to.name === 'CourseGroupDetails' || to.name === 'OffCourseDetail' || to.name === 'OnlineCourseDetail') {
+      next({path: '/login', query: {name: to.name, arg: to.fullPath}})
+      // alert(getSitem.getStr('token'))
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
   if (to.name === 'Invite') {
     next()
   } else {
@@ -716,17 +733,7 @@ router.beforeEach((to, from, next) => {
         code: code
       }
       getToken(data)
-      if (!getSitem.getStr('mobile')) {
-        // alert(getSitem.getStr('token'))
-        if (to.name === 'My' || to.name === 'groupDetails' || to.name === 'goodsDetails' || to.name === 'CourseGroupDetails' || to.name === 'OffCourseDetail' || to.name === 'OnlineCourseDetail') {
-          next({path: '/login', query: {name: to.name, arg: to.fullPath}})
-          // alert(getSitem.getStr('token'))
-        } else {
-          next()
-        }
-      } else {
-        next()
-      }
+
     }
   }
 })
