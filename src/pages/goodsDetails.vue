@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="goods-group" v-if="goodsData.is_tuan == 1">
+        <div class="goods-group" v-if="type == 'tuan'">
             <div class="group-header">
                 <h3><span>商品拼团</span><img src="../assets/images/tuan-bg.png" alt=""></h3>
                 <div
@@ -110,9 +110,7 @@
                     v-model="loading"
                     :finished="finished"
                     finished-text="没有更多了"
-                    :immediate-check="false"
                     @load="onLoad"
-                    v-if="comments.length > 0"
                 >
                     <div class="comments-list">
                         <div
@@ -129,18 +127,21 @@
                                 <span class="time">{{item.create_time}}</span>
                             </div>
                             <div class="comments-center">
-								<div class="rate">
-									<span>描述相符</span>
-									<van-rate
-										:value="item.score"
-										readonly
-										color="#9E5259"
-										void-color="#9E5259"
-									/>
-								</div>
-								<ul v-if="item.content">
-									<li v-for="(self, index) in item.content" :key="index">{{self}}</li>
-								</ul>
+                              <div class="rate">
+                                <span>描述相符</span>
+                                <van-rate
+                                  :value="item.score"
+                                  readonly
+                                  color="#9E5259"
+                                  void-color="#9E5259"
+                                />
+                              </div>
+                              <ul v-if="item.content">
+                                <li v-for="(self, index) in item.content" :key="index">{{self}}</li>
+                              </ul>
+                              <div class="diy_content" v-if="item.diy_content">
+                               {{item.diy_content}}
+                              </div>
                             </div>
                             <div class="comments-img">
                                 <div
@@ -191,8 +192,9 @@
                 v-if="disabled"
             >合计<span>￥{{ skuIndex != -1 ? goodsData.price_tuan : '0.00'}}</span></div> -->
             <!-- <div> -->
-				<div class="home" @click="onLinkHome"><img src="../assets/images/home.png" alt=""><span>首页</span></div>
-				<div class="tuan-box" v-if="goodsData.is_tuan == 1">
+				<div class="home" @click="onLinkHome"><img class="carico" src="../assets/images/carhome.png" alt=""><span>首页</span></div>
+        <div class="gocar" @click="onLinkCar"><img src="../assets/images/gocar.png" alt=""><span>购物车</span></div>
+				<div class="tuan-box" v-if="type == 'tuan'">
 					<div
 						class="goods-group-btn"
 						@click="onBuy('group')"
@@ -203,7 +205,7 @@
 					><span>¥{{(skuList && skuList[skuIndex]) ? (skuList[skuIndex].price * goodsNum) : goodsData.price}}</span><em>立即购买</em></div>
 				</div>
 
-				<div class="car-box" v-if="goodsData.is_tuan != 1">
+				<div class="car-box" v-if="type == 'single'">
 					<div
 						class="goods-group-btn"
 						@click="onBuy('car')"
@@ -214,7 +216,6 @@
 						@click="onBuy('buy')"
 					><em>立即购买</em></div>
 				</div>
-
 
             <!-- </div> -->
         </div>
@@ -306,263 +307,264 @@ import GroupItem from '@/components/shop/groupItem'
 import config from '@/utils/config'
 
 export default {
-    data() {
-        return {
-			overlayStatus:false,
-            goodsNum: 1,
-            swiperCurrent: 0,
-            tabIndex: 0,
-            popupStatus: false,
-            skuList: [],//规格
-            skuIndex: -1,//规格
-            goodsId: 0,//商品ID
-            goodsData: {},
-            comments: [],//评论列表
-            total: 0,
-            current: 1,
-            loading: false,
-            finished: false,
-            groupList: [],
-            imageShow: false,
-            disabled: false,
-            groupTime: 0,
-            buyType: 'buy',
-            imagePreview: [],
-            startPosition: 0,
-            wx: null
-        }
-    },
-    components: {
-        GroupItem,
-    },
-    created() {
-        const data = {
-            url: location.href.split('#')[0]
-		}
-		const agent = navigator.userAgent
-		const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-		if(isiOS){
-			data.url = config.shareurls
-		}
-        // 请求api返回sdk配置参数
-        this.$api.userGetSignPackage(data).then(res => {
-            if (res.code === 1) {
-                var wxConfig = res.data;
-                this.wxConfig = wxConfig;
-                wx.config({
-                    appId: wxConfig.appId, // 必填，公众号的唯一标识
-                    timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
-                    nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
-                    signature: wxConfig.signature,// 必填，签名
-                    jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData'] // 必填，需要使用的JS接口列表
-                });
-            }
-
-            wx.ready(() => {
-				this.wx = wx;
-				this.onShare();
-            });
-        });
-    },
-    mounted() {
-        this.goodsId = this.$route.query.goodsId;
-        this.goodsIndex();
-        this.goodsComments();
-        this.goodsTuanLists();
-    },
-    methods: {
-		onLinkHome(){
-			this.$router.push({
-                path: '/shopHome',
-            })
-		},
-		onLinkCar(){
-			this.$router.push({
-                path: '/shop',
-            })
-		},
-		toggleShare(){
-			this.overlayStatus = !this.overlayStatus;
-		},
-        onShare() {
-            const _this = this;
-            const title = this.goodsData.goods_name;
-            const description = this.goodsData.description;
-            const link = location.href;
-			const imgUrl = this.goodsData.images[0];
-			let shareurl = config.baseurl + '/goodsDetails?goodsId=' + this.goodsId
-            this.wx.updateAppMessageShareData({
-                title: title, // 分享标题
-                desc: description, // 分享描述
-                link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                imgUrl: imgUrl, // 分享图标
-                success: function () {
-                    // _this.$toast('分享成功')
-                }
-            })
-
-            this.wx.updateTimelineShareData({
-                title: title, // 分享标题
-                link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                imgUrl: imgUrl, // 分享图标
-                success: function () {
-                    // _this.$toast('分享成功')
-                }
-			})
-
-
-        },
-        onImageView(data, index) {
-            this.imagePreview = data;
-            this.startPosition = index;
-            this.imageShow = true;
-        },
-        onLoad() {
-            this.current++;
-            this.goodsComments()
-        },
-        goodsIndex() {
-            const param = {
-                goods_id: this.goodsId
-            }
-            this.$toast.loading({
-                duration: 0,
-                message: '加载中...',
-                forbidClick: true
-            });
-            this.$api.goodsIndex(param).then((res) => {
-                this.$toast.clear();
-                if (res.code == 1) {
-                    this.goodsData = res.data;
-                    this.skuList = res.data.specs;
-                }
-            })
-        },
-        goodsComments() {
-            const param = {
-                page: this.current,
-                pageSize: 10,
-                goods_id: this.goodsId
-            }
-            this.$api.goodsComments(param).then((res) => {
-                if (res.code == 1) {
-                    if (this.comments.length == 0) {
-                        //第一次加载
-                        this.comments = res.data.data || [];
-                        this.total = res.data.total;
-                    } else if (this.comments.length < this.total) {
-                        //加载更多
-                        this.comments = this.comments.concat(res.data.data);
-                    }
-                    if (this.comments.length >= this.total) {
-                        // 全部加载完成
-                        this.finished = true;
-                    }
-                }
-            })
-        },
-        goodsTuanLists() {
-            const param = {
-                page: 1,
-                pageSize: 3,
-                goods_id: this.goodsId
-            }
-            this.$api.goodsTuanLists(param).then((res) => {
-                if (res.code == 1) {
-                    var list = res.data.data.slice(0,3);
-                    this.groupList = list
-                    this.groupTime = res.time;
-                }
-            })
-        },
-        onSkuClick(index) {
-            if (this.skuIndex == index) {
-                this.skuIndex = -1;
-            } else {
-                this.skuIndex = index;
-            }
-        },
-        onSwipeChange(index) {
-            this.swiperCurrent = index;
-        },
-        onTabChange(index) {
-            this.tabIndex = index;
-        },
-        onBuy(type) {
-            this.buyType = type;
-            if (type == 'group') {
-                this.goodsNum = 1;
-                this.disabled = true;
-            } else if(type == 'buy') {
-                this.disabled = false;
-            }else if(type == 'car'){
-                this.disabled = false;
-            }
-            this.popupStatus = true;
-        },
-        onSubmit() {
-            if (this.skuIndex == -1) {
-                this.$toast('请选择规格')
-                return false
-            }
-            if (this.buyType == 'group') {
-                // this.goodsStoreCarts();//加入购物车
-                this.goodsOrderCreate(1)
-            } else if(this.buyType == 'buy') {
-                this.goodsOrderCreate(2)
-
-            }else if(this.buyType == 'car') {
-                this.goodsStoreCarts();//加入购物车
-            }
-        },
-        onLinkAll() {
-            this.$router.push({
-              path:'/allGroup',
-              query:{
-                goodsId:this.goodsId
-              }
-            })
-        },
-        goodsStoreCarts() {
-            const param = {
-                goods_id: this.goodsId,
-                goods_num: this.goodsNum,
-                specs: JSON.stringify(this.skuList[this.skuIndex])
-            }
-            this.$toast.loading({
-                duration: 0,
-                forbidClick: true
-            });
-            this.$api.goodsStoreCarts(param).then((res) => {
-                this.$toast.clear();
-                if (res.code == 1) {
-					this.popupStatus = true;
-                    this.$toast({
-                        type: 'success',
-                        message: '添加成功',
-                        forbidClick: true
-                    });
-                } else {
-                    this.$toast({
-                        message: res.msg
-                    });
-                }
-            })
-        },
-        goodsOrderCreate(type) {
-            const param = {
-                type,
-                goods_id: this.goodsId,
-                specs: JSON.stringify(this.skuList[this.skuIndex]),
-                goods_num: this.goodsNum
-            }
-            this.$router.push({
-                path: '/submitOrder',
-                query: param
-            })
-        }
-
+  data () {
+    return {
+      overlayStatus: false,
+      goodsNum: 1,
+      swiperCurrent: 0,
+      tabIndex: 0,
+      popupStatus: false,
+      skuList: [], // 规格
+      skuIndex: -1, // 规格
+      goodsId: 0, // 商品ID
+      goodsData: {},
+      comments: [], // 评论列表
+      total: 0,
+      current: 1,
+      loading: false,
+      finished: false,
+      groupList: [],
+      imageShow: false,
+      disabled: false,
+      groupTime: 0,
+      buyType: 'buy',
+      imagePreview: [],
+      startPosition: 0,
+      wx: null,
+      type: 'tuan'
     }
+  },
+  components: {
+    GroupItem
+  },
+  created () {
+    const data = {
+      url: location.href.split('#')[0]
+    }
+    const agent = navigator.userAgent
+    const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+    if (isiOS) {
+      data.url = config.shareurls
+    }
+    // 请求api返回sdk配置参数
+    this.$api.userGetSignPackage(data).then(res => {
+      if (res.code === 1) {
+        var wxConfig = res.data
+        this.wxConfig = wxConfig
+        wx.config({
+          appId: wxConfig.appId, // 必填，公众号的唯一标识
+          timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
+          nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
+          signature: wxConfig.signature, // 必填，签名
+          jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData'] // 必填，需要使用的JS接口列表
+        })
+      }
+
+      wx.ready(() => {
+        this.wx = wx
+        this.onShare()
+      })
+    })
+  },
+  mounted () {
+    this.goodsId = this.$route.query.goodsId
+    this.type = this.$route.query.type
+    this.goodsIndex()
+    this.goodsComments()
+    this.goodsTuanLists()
+  },
+  methods: {
+    onLinkHome () {
+      this.$router.push({
+        path: '/shopHome'
+      })
+    },
+    onLinkCar () {
+      this.$router.push({
+        path: '/shop'
+      })
+    },
+    toggleShare () {
+      this.overlayStatus = !this.overlayStatus
+    },
+    onShare () {
+      const _this = this
+      const title = this.goodsData.goods_name
+      const description = this.goodsData.description
+      const link = location.href
+      const imgUrl = this.goodsData.images[0]
+      let shareurl = config.baseurl + '/goodsDetails?type=' + this.type + 'goodsId=' + this.goodsId
+      this.wx.updateAppMessageShareData({
+        title: title, // 分享标题
+        desc: description, // 分享描述
+        link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: imgUrl, // 分享图标
+        success: function () {
+          // _this.$toast('分享成功')
+        }
+      })
+
+      this.wx.updateTimelineShareData({
+        title: title, // 分享标题
+        link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: imgUrl, // 分享图标
+        success: function () {
+          // _this.$toast('分享成功')
+        }
+      })
+    },
+    onImageView (data, index) {
+      this.imagePreview = data
+      this.startPosition = index
+      this.imageShow = true
+    },
+    onLoad () {
+      this.current++
+      this.goodsComments()
+    },
+    goodsIndex () {
+      const param = {
+        goods_id: this.goodsId
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.goodsIndex(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.goodsData = res.data
+          this.skuList = res.data.specs
+        }
+      })
+    },
+    goodsComments () {
+      const param = {
+        page: this.current,
+        pageSize: 10,
+        goods_id: this.goodsId
+      }
+      this.$api.goodsComments(param).then((res) => {
+
+        if (res.code == 1) {
+          if (this.comments.length == 0) {
+            // 第一次加载
+            this.comments = res.data.data || []
+            this.total = res.data.last_page
+          } else if (this.current < this.total) {
+            // 加载更多
+            this.comments = this.comments.concat(res.data.data)
+          }
+          if (this.current == this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+          console.log(this.total, 'total', this.current, this.finished)
+        }
+      })
+    },
+    goodsTuanLists () {
+      const param = {
+        page: 1,
+        pageSize: 3,
+        goods_id: this.goodsId
+      }
+      this.$api.goodsTuanLists(param).then((res) => {
+        if (res.code == 1) {
+          var list = res.data.data.slice(0, 3)
+          this.groupList = list
+          this.groupTime = res.time
+        }
+      })
+    },
+    onSkuClick (index) {
+      if (this.skuIndex == index) {
+        this.skuIndex = -1
+      } else {
+        this.skuIndex = index
+      }
+    },
+    onSwipeChange (index) {
+      this.swiperCurrent = index
+    },
+    onTabChange (index) {
+      this.tabIndex = index
+    },
+    onBuy (type) {
+      this.buyType = type
+      if (type == 'group') {
+        this.goodsNum = 1
+        this.disabled = true
+      } else if (type == 'buy') {
+        this.disabled = false
+      } else if (type == 'car') {
+        this.disabled = false
+      }
+      this.popupStatus = true
+    },
+    onSubmit () {
+      if (this.skuIndex == -1) {
+        this.$toast('请选择规格')
+        return false
+      }
+      if (this.buyType == 'group') {
+        // this.goodsStoreCarts();//加入购物车
+        this.goodsOrderCreate(1)
+      } else if (this.buyType == 'buy') {
+        this.goodsOrderCreate(2)
+      } else if (this.buyType == 'car') {
+        this.goodsStoreCarts()// 加入购物车
+      }
+    },
+    onLinkAll () {
+      this.$router.push({
+        path: '/allGroup',
+        query: {
+          goodsId: this.goodsId
+        }
+      })
+    },
+    goodsStoreCarts () {
+      const param = {
+        goods_id: this.goodsId,
+        goods_num: this.goodsNum,
+        specs: JSON.stringify(this.skuList[this.skuIndex])
+      }
+      this.$toast.loading({
+        duration: 0,
+        forbidClick: true
+      })
+      this.$api.goodsStoreCarts(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.popupStatus = true
+          this.$toast({
+            type: 'success',
+            message: '添加成功',
+            forbidClick: true
+          })
+        } else {
+          this.$toast({
+            message: res.msg
+          })
+        }
+      })
+    },
+    goodsOrderCreate (type) {
+      const param = {
+        type,
+        goods_id: this.goodsId,
+        specs: JSON.stringify(this.skuList[this.skuIndex]),
+        goods_num: this.goodsNum
+      }
+      this.$router.push({
+        path: '/submitOrder',
+        query: param
+      })
+    }
+
+  }
 }
 </script>
 
@@ -770,6 +772,9 @@ export default {
         font-size: 30px;
       }
       .comments-list {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 125px;
         .comments-item {
           padding-top: 25px;
           padding-bottom: 30px;
@@ -821,29 +826,32 @@ export default {
             margin-top: 10px;
             font-size: 26px;
             padding-left: 85px;
-			.rate{
-				display: flex;
-				align-items: center;
-				span{
-					color: #999999;
-					font-size: 28px;
-					margin-right: 30px;
-				}
-			}
-			ul{
-				display: flex;
-				flex-wrap: wrap;
-				margin-top: 20px;
-				li{
-					border-radius: 33px;
-					border: 1Px solid #E7E7E7;
-					padding: 8px 30px;
-					font-size: 26px;
-					color: #333333;
-					margin-right: 10px;
-					margin-top: 10px;
-				}
-			}
+          .rate{
+            display: flex;
+            align-items: center;
+            span{
+              color: #999999;
+              font-size: 28px;
+              margin-right: 30px;
+            }
+          }
+          .diy_content{
+            margin-top: 20px;
+          }
+          ul{
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            li{
+              border-radius: 33px;
+              border: 1Px solid #E7E7E7;
+              padding: 8px 30px;
+              font-size: 26px;
+              color: #333333;
+              margin-right: 10px;
+              margin-top: 10px;
+            }
+          }
           }
 
           .comments-img {
@@ -938,25 +946,43 @@ export default {
     align-items: center;
     padding: 0px 20px 0px 25px;
     background: #fff;
-	.home{
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		img{
-			width: 46px;
-			height: 46px;
-		}
-		span{
-			color: #995258;
-			font-size: 22px;
-		}
-	}
-	.tuan-box,.car-box{
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
+    .home{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      img{
+        width: 46px;
+        height: 46px;
+      }
+      span{
+        color: #995258;
+        font-size: 22px;
+      }
+    }
+    .gocar{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .carico{
+        width:40px;
+        height:40px;
+      }
+      img{
+        width: 46px;
+        height: 46px;
+      }
+      span{
+        color: #afa187;
+        font-size: 22px;
+      }
+    }
+    .tuan-box,.car-box{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
     .goods-money {
       color: #333333;
@@ -970,42 +996,42 @@ export default {
       }
     }
     .goods-group-btn {
-		line-height: 1.2;
-		width: 240px;
-      height: 90px;
-      color: #fff;
-      background: #dcc98b;
-      font-size: 30px;
-	  display: flex;
-	  justify-content: center;
-	  flex-direction: column;
-	  align-items: center;
-    border-radius: 50px 0 0 50px;
-	  span{
-		  margin-right: 10px;
-	  }
-	  em{
-		  font-style: normal;
-	  }
+      line-height: 1.2;
+      width: 240px;
+        height: 90px;
+        color: #fff;
+        background: #dcc98b;
+        font-size: 30px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 50px 0 0 50px;
+      span{
+        margin-right: 10px;
+      }
+      em{
+        font-style: normal;
+      }
     }
     .goods-buy-btn {
-		line-height: 1.2;
-	width: 240px;
-      height: 90px;
-      color: #f3d995;
-      background: #6d8160;
-      font-size: 30px;
-	  display: flex;
-	  justify-content: center;
-	  flex-direction: column;
-	  align-items: center;
-    border-radius: 0 50px 50px 0;
-	  span{
-		  margin-right: 10px;
-	  }
-	  em{
-		  font-style: normal;
-	  }
+      line-height: 1.2;
+       width: 240px;
+        height: 90px;
+        color: #f3d995;
+        background: #6d8160;
+        font-size: 30px;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      border-radius: 0 50px 50px 0;
+      span{
+        margin-right: 10px;
+      }
+      em{
+        font-style: normal;
+      }
     }
   }
 

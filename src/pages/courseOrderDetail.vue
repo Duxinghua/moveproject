@@ -91,7 +91,7 @@ export default {
     return {
       order_id: '',
       detail: {},
-      goodsTuanText:[
+      goodsTuanText: [
         '进行中',
         '成功',
         '解散'
@@ -102,18 +102,18 @@ export default {
     this.order_id = this.$route.query.id
     this.getCourseOrderIndex()
   },
-  methods:{
-    sharelHandler (tid){
-      this.$router.push({path:'/coursegroupdetails',query:{id:tid}})
+  methods: {
+    sharelHandler (tid) {
+      this.$router.push({path: '/coursegroupdetails', query: {id: tid}})
     },
     onLook () {
 
     },
     formatTime (time) {
-      var date  = ""
+      var date = ''
       if (time) {
-        date = new Date(time*1000)
-      }else{
+        date = new Date(time * 1000)
+      } else {
         date = new Date()
       }
       var getyear = date.getFullYear()
@@ -121,36 +121,33 @@ export default {
       var getday = date.getDate()
       var gethours = date.getHours()
       var getminute = date.getMinutes()
-      return getyear + '-' + getmonth + '-' + getday + ' ' + gethours + ':'+ getminute
+      return getyear + '-' + getmonth + '-' + getday + ' ' + gethours + ':' + getminute
     },
     getCourseOrderIndex () {
-      this.$api.courseOrderIndex({order_id:this.order_id}).then((res)=>{
-        if(res.code == 1){
+      this.$api.courseOrderIndex({order_id: this.order_id}).then((res) => {
+        if (res.code == 1) {
           this.detail = res.data
           this.detail.courseTuanStatus = res.data.courseTuan.status
           var list = []
           var arr = res.data.courseTuan.users
           var l = res.data.courseTuan.user_number
-          console.log(l,'l')
+          console.log(l, 'l')
 
-          for(var i=0;i<l;i++){
+          for (var i = 0; i < l; i++) {
             var obj = {}
-            if(i != 3){
-              if(arr[i]){
+            if (i != 3) {
+              if (arr[i]) {
                 obj = arr[i]
                 obj.active = false
-              }else{
-                if(i == 0 || i == 1 || i == 2){
+              } else {
+                if (i == 0 || i == 1 || i == 2) {
                   obj.active = true
                   obj.avatar = require('../assets/images/doubt.png')
-
                 }
               }
-            }else{
-
-                obj.active = false
-                obj.avatar = require('../assets/images/img4.png')
-
+            } else {
+              obj.active = false
+              obj.avatar = require('../assets/images/img4.png')
             }
             list.push(obj)
           }

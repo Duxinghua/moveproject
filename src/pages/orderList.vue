@@ -47,6 +47,7 @@
             <span class="cancel" v-if="item.status === 0" @click="cancelClickHandler(item.order_id)">取消订单</span>
             <span class="share" v-if="item.status === 0" @click="replayClickHandler(item.order_id)">去付款</span>
             <span class="share" v-if="item.status === 1" @click="sendClickHandler(item.order_id)">提醒发货</span>
+            <span class="share" v-if="item.is_aftersale == 1 || item.is_aftersale == 2" @click="afterClickHandler(item)">售后</span>
             <span class="share" v-if="item.status === 2" @click="confirmClickHandler(item.order_id)">确认收货</span>
             <span  class="share" v-if="item.status === 3 && item.is_comment === 0 " @click="commentClickHandler(item.order_id)">评论</span>
             <span class="share" v-if="item.status === 4" @click="shareClickHandler(item.t_id)">邀请拼团</span>
@@ -77,7 +78,7 @@ export default {
         {name: '待收货', status: 2},
         {name: '评价', status: 3}
       ],
-      goodsTuanText:[
+      goodsTuanText: [
         '进行中',
         '成功',
         '解散'
@@ -110,58 +111,61 @@ export default {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
             // window.location.href = config.baseurl + '/tickOrderList'
-           // alert(1)
+            // alert(1)
           } else {
             // window.location.href = config.baseurl + '/tickOrderList'
-           // alert(2)
+            // alert(2)
           }
         })
     },
     confirmClickHandler (order_id) {
       var _this = this
-      this.$api.goodsOrderReceiveGoods({order_id:order_id}).then((res)=>{
-        if(res.code == 1){
+      this.$api.goodsOrderReceiveGoods({order_id: order_id}).then((res) => {
+        if (res.code == 1) {
           _this.$toast({
-            message:res.msg,
-            onClose:()=>{
+            message: res.msg,
+            onClose: () => {
               _this.orderList = []
-               _this.finished = false
-               _this.loading = false
-               _this.current = 1
-               _this.getOrderList()
+              _this.finished = false
+              _this.loading = false
+              _this.current = 1
+              _this.getOrderList()
             }
           })
-        }else{
+        } else {
           _this.$toast(res.msg)
         }
       })
     },
     sendClickHandler (order_id) {
       var _this = this
-      this.$api.goodsOrderHastenOrder({order_id:order_id}).then((res)=>{
-        if(res.code === 1){
+      this.$api.goodsOrderHastenOrder({order_id: order_id}).then((res) => {
+        if (res.code === 1) {
           _this.$toast({
-            message:res.msg,
-            onClose:()=>{
+            message: res.msg,
+            onClose: () => {
               _this.orderList = []
-               _this.finished = false
-               _this.loading = false
-               _this.current = 1
-               _this.getOrderList()
+              _this.finished = false
+              _this.loading = false
+              _this.current = 1
+              _this.getOrderList()
             }
           })
-        }else{
+        } else {
           _this.$toast(res.msg)
         }
       })
     },
     commentClickHandler (order_id) {
-      this.$router.push({name:'OrderComment',query:{id:order_id}})
+      this.$router.push({name: 'OrderComment', query: {id: order_id}})
+    },
+    afterClickHandler (item) {
+      this.$router.push({name: 'afterOrder', query: {id: item.order_id, is_aftersale: item.is_aftersale}})
     },
     replayClickHandler (order_id) {
-       var _this = this
-       this.$api.goodsOrderPayOrder({order_id:order_id}).then((res)=>{
-         if (res.code === 1) {
+      var _this = this
+      this.$api.goodsOrderPayOrder({order_id: order_id}).then((res) => {
+        if (res.code === 1) {
           //  _this.$toast({
           //    message: res.msg,
           //    onClose: () => {
@@ -172,43 +176,40 @@ export default {
           //      _this.getOrderList()
           //    }
           //  })
-            if (typeof WeixinJSBridge === 'undefined') {
-              if (document.addEventListener) {
-                document.addEventListener('WeixinJSBridgeReady', _this.onBridgeReady, false)
-              } else if (document.attachEvent) {
-                document.attachEvent('WeixinJSBridgeReady', _this.onBridgeReady)
-                document.attachEvent('onWeixinJSBridgeReady', _this.onBridgeReady)
-              }
-            } else {
-              _this.wxpay = res.data.pay_data
-              _this.onBridgeReady()
+          if (typeof WeixinJSBridge === 'undefined') {
+            if (document.addEventListener) {
+              document.addEventListener('WeixinJSBridgeReady', _this.onBridgeReady, false)
+            } else if (document.attachEvent) {
+              document.attachEvent('WeixinJSBridgeReady', _this.onBridgeReady)
+              document.attachEvent('onWeixinJSBridgeReady', _this.onBridgeReady)
             }
-
-         }else{
-           _this.$toast(res.msg)
-         }
-       })
-
+          } else {
+            _this.wxpay = res.data.pay_data
+            _this.onBridgeReady()
+          }
+        } else {
+          _this.$toast(res.msg)
+        }
+      })
     },
     cancelClickHandler (order_id) {
       var _this = this
-       this.$api.goodsOrderDel({order_id:order_id}).then((res)=>{
-         if (res.code === 1) {
-           _this.$toast({
-             message: res.msg,
-             onClose: () => {
-               _this.orderList = []
-               _this.finished = false
-               _this.loading = false
-               _this.current = 1
-               _this.getOrderList()
-             }
-           })
-
-         }else{
-           _this.$toast(res.msg)
-         }
-       })
+      this.$api.goodsOrderDel({order_id: order_id}).then((res) => {
+        if (res.code === 1) {
+          _this.$toast({
+            message: res.msg,
+            onClose: () => {
+              _this.orderList = []
+              _this.finished = false
+              _this.loading = false
+              _this.current = 1
+              _this.getOrderList()
+            }
+          })
+        } else {
+          _this.$toast(res.msg)
+        }
+      })
     },
     tabClickHandler (index, status) {
       this.currentIndex = index
@@ -220,16 +221,16 @@ export default {
       this.getOrderList()
     },
     orderDetailHandler (order_id) {
-      this.$router.push({name: 'OrderDetail',query:{id:order_id}})
+      this.$router.push({name: 'OrderDetail', query: {id: order_id}})
     },
-    shareClickHandler (t_id,tuanStatus) {
-                    this.$router.push({
-                        path:'/groupDetails',
-                        query:{
-                            id:t_id,
-                            tuanStatus:tuanStatus
-                        }
-                    })
+    shareClickHandler (t_id, tuanStatus) {
+      this.$router.push({
+        path: '/groupDetails',
+        query: {
+          id: t_id,
+          tuanStatus: tuanStatus
+        }
+      })
     },
     getOrderList () {
       const param = {
@@ -237,7 +238,7 @@ export default {
         pageSize: 10,
         status: this.status
       }
-      if(this.status === 3) {
+      if (this.status === 3) {
         param.is_comment = 0
       }
       this.$toast.loading({

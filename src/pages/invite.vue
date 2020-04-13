@@ -22,10 +22,10 @@ export default {
   },
   mounted () {
     var openid = this.$route.query.openid
-    console.log(openid,'openid')
-    Api.userQrcodeByOpenid({openid:openid}).then((result) => {
+    console.log(openid, 'openid')
+    Api.userQrcodeByOpenid({openid: openid}).then((result) => {
       if (result.code === 1) {
-        this.qrurl = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='+result.data.ticket
+        this.qrurl = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + result.data.ticket
       }
     })
   }

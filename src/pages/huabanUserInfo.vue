@@ -81,8 +81,8 @@ export default {
       current: 1,
       total: 0,
       huabanList: [],
-      detail:{},
-      user_id:''
+      detail: {},
+      user_id: ''
     }
   },
   mounted () {
@@ -106,7 +106,7 @@ export default {
       })
     },
     tzClickHandler (gp_id) {
-      this.$router.push({name:'HuabanTzDetail',query:{id:gp_id}})
+      this.$router.push({name: 'HuabanTzDetail', query: {id: gp_id}})
     },
     getUserInfoList () {
       const param = {
@@ -119,7 +119,7 @@ export default {
         message: '加载中...',
         forbidClick: true
       })
-      if(this.currentIndex === 0){
+      if (this.currentIndex === 0) {
         this.$api.postsLists(param).then((res) => {
           this.$toast.clear()
           if (res.code == 1) {
@@ -128,7 +128,7 @@ export default {
               // 第一次加载
               console.log(res.data.data)
               var list = []
-              res.data.data.map((item)=>{
+              res.data.data.map((item) => {
                 item.image = item.images ? item.images[0] : ''
                 item.avatar = item.user.avatar
                 item.nickname = item.user.nickname
@@ -139,7 +139,7 @@ export default {
             } else if (this.huabanList.length < this.total) {
               // 加载更多
               var list = []
-              res.data.data.map((item)=>{
+              res.data.data.map((item) => {
                 item.image = item.images ? item.images[0] : ''
                 item.avatar = item.user.avatar
                 item.nickname = item.user.nickname
@@ -153,7 +153,7 @@ export default {
             }
           }
         })
-      }else if(this.currentIndex === 1){
+      } else if (this.currentIndex === 1) {
         this.$api.groupPhotos(param).then((res) => {
           this.$toast.clear()
           if (res.code == 1) {
@@ -176,8 +176,8 @@ export default {
       }
     },
     getUserInfo () {
-      this.$api.userIndex({user_id:this.user_id}).then((res)=>{
-        if(res.code === 1) {
+      this.$api.userIndex({user_id: this.user_id}).then((res) => {
+        if (res.code === 1) {
           console.log(this.user_id)
           this.detail = res.data
           this.getUserInfoList()

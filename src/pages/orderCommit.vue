@@ -2,7 +2,7 @@
   <div class="order-commit">
     <div class="order-commit-notice">
 本活动为实名制活动，如填写有误，您将无法参与所报名
-的活动。为保障您的自身利益，请仔细核对身份信息。                  
+的活动。为保障您的自身利益，请仔细核对身份信息。
     </div>
     <div class="order-commit-content">
       <div>
@@ -39,11 +39,11 @@ export default {
   name: 'OrderCommit',
   data () {
     return {
-      name: "",
-      cardId: "",
-      cardId_s: "",
-      phone: "",
-      courseId: ""
+      name: '',
+      cardId: '',
+      cardId_s: '',
+      phone: '',
+      courseId: ''
     }
   },
   mounted () {
@@ -64,9 +64,9 @@ export default {
         idcard: this.$refs.cardId_s.value
       }
       this.$api.courseAppoint(param).then((res) => {
-        if(res.code == 1) {
+        if (res.code == 1) {
           this.$toast({
-            message: res.msg,           
+            message: res.msg,
             onClose: () => {
               this.commitSuc()
             }
@@ -75,9 +75,8 @@ export default {
           this.$toast({
             message: res.msg
           })
-          return
         }
-      })      
+      })
     },
     commitSuc () {
       this.$router.push('/submitCourseOrder')

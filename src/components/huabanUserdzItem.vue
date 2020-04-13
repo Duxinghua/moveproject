@@ -51,14 +51,14 @@ export default {
   },
   methods: {
     auToImage (item) {
-      return item.post ? (item.post.images ? item.post.images[0]+'' : '') : require('../assets/images/courseimg.png')
+      return item.post ? (item.post.images ? item.post.images[0] + '' : '') : require('../assets/images/courseimg.png')
     },
     autoTime (time) {
       var tim = new Date(time * 1000)
       return tim.getFullYear() + '-' + (tim.getMonth() + 1) + '-' + (tim.getDate().length == 1 ? 0 + tim.getDate() : tim.getDate()) + ' ' + tim.getHours() + ':' + tim.getMinutes()
     },
     userInfoHandler () {
-      this.$router.push({name: 'HuabanTzDetail',query:{id:this.item.gp_id}})
+      this.$router.push({name: 'HuabanTzDetail', query: {id: this.item.gp_id}})
     }
   }
 }

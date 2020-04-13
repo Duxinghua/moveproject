@@ -29,12 +29,16 @@ export default {
     goodsData: {
       type: Object,
       default: {}
+    },
+    types: {
+      type: String,
+      default: 'tuan'
     }
   },
   methods: {
     onLinkDetails (goodsId) {
       this.$router.push({
-        path: '/goodsDetails',
+        path: '/goodsDetails?type=' + this.types,
         query: {
           goodsId
         }

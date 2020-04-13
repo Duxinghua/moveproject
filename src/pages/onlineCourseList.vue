@@ -52,7 +52,7 @@ export default {
         this.$toast.clear()
         if (res.code === 1) {
           this.loading = false
-          console.log(res.data);
+          console.log(res.data)
           if (this.courseList.length == 0) {
             // 第一次加载
             this.courseList = res.data.data || []

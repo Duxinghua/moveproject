@@ -41,7 +41,6 @@
 
         </div>
 
-
       </div>
     </van-list>
     <NoData v-if="(courceLists.length === 0 && pageType === 0) || teacherLists.length === 0 && pageType === 1" />
@@ -72,11 +71,11 @@ export default {
     }
   },
   mounted () {
-    if(getSitem.getStr('homesearch')){
+    if (getSitem.getStr('homesearch')) {
       this.searchText = getSitem.getStr('homesearch')
       this.getGroupLists()
     }
-    if(getSitem.getStr('homesearchcur')){
+    if (getSitem.getStr('homesearchcur')) {
       this.cur = getSitem.getStr('homesearchcur')
       this.pageType = getSitem.getStr('homesearchcur')
       this.getGroupLists()
@@ -84,7 +83,7 @@ export default {
   },
   methods: {
     tabHandler (index) {
-      if(!this.searchText){
+      if (!this.searchText) {
         this.$toast('请输入搜索内容')
         return
       }
@@ -97,7 +96,7 @@ export default {
       this.loading = false
       this.current = 1
       this.total = 0
-      getSitem.setStr('homesearchcur',index)
+      getSitem.setStr('homesearchcur', index)
       this.getGroupLists()
       // console.log(arg,'arg')
     },
@@ -112,18 +111,18 @@ export default {
       this.$router.push({name: 'Home'})
     },
     submit () {
-      this.courceLists= []
-      this.teacherLists= []
+      this.courceLists = []
+      this.teacherLists = []
       this.finished = false
       this.loading = false
       this.current = 1
       this.total = 0
-      if(!this.searchText){
+      if (!this.searchText) {
         this.$toast('请输入搜索内容')
         return
       }
-      if(this.searchText){
-        getSitem.setStr('homesearch',this.searchText)
+      if (this.searchText) {
+        getSitem.setStr('homesearch', this.searchText)
       }
       this.getGroupLists()
     },
@@ -139,7 +138,7 @@ export default {
         message: '加载中...',
         forbidClick: true
       })
-      if(this.pageType == 0){
+      if (this.pageType == 0) {
         this.$api.courseList(param).then((res) => {
           this.$toast.clear()
           if (res.code == 1) {

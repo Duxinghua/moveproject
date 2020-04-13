@@ -76,23 +76,23 @@ export default {
   },
   mounted () {
     // WxSing.init('花伴123','测试发的哈456',location.href,'https://youmeng.qixiuu.com/uploads/20191031/92c752479595ee8fbd07c3caca9dd434.png')
-    this.getGroupLists({recommend:0},{data:1})
+    this.getGroupLists({recommend: 0}, {data: 1})
     // this.getGroupLists({my:1},{data:2})
     // this.getGroupLists({recommend:1},{data:3})
     this.getMyGroup()
     this.getPostsLists()
   },
   methods: {
-    getMyGroup(){
-      this.$api.getMyGroup({}).then((res)=>{
-        console.log(res,'res')
-        if(res.code === 1) {
+    getMyGroup () {
+      this.$api.getMyGroup({}).then((res) => {
+        console.log(res, 'res')
+        if (res.code === 1) {
           var list = res.data.my
-          list.map((item)=>{
+          list.map((item) => {
             item.s = 1
           })
           var list2 = res.data.recommend
-          list2.map((item)=>{
+          list2.map((item) => {
             item.s = 2
           })
           this.huabanJoin = list.concat(list2)
@@ -100,38 +100,38 @@ export default {
       })
     },
     test () {
-        alert(getSitem.getStr('mobile'))
-        alert(getSitem.getStr('token'))
-        getSitem.remove('token')
-        getSitem.remove('mobile')
+      alert(getSitem.getStr('mobile'))
+      alert(getSitem.getStr('token'))
+      getSitem.remove('token')
+      getSitem.remove('mobile')
     },
     linkDetail (id) {
-      this.$router.push({name:'HuabanGroupDetail', query:{id:id}})
+      this.$router.push({name: 'HuabanGroupDetail', query: {id: id}})
     },
-    getGroupLists (data,type) {
-      this.$api.groupLists(data).then((res)=>{
-        if(res.code === 1){
-          if(type.data === 1) {
+    getGroupLists (data, type) {
+      this.$api.groupLists(data).then((res) => {
+        if (res.code === 1) {
+          if (type.data === 1) {
             this.huabanList = res.data.data
           }
         }
       })
     },
     formatTimer (timer) {
-      return parseInt((new Date().getTime() - timer*1000)/1000/3600)
+      return parseInt((new Date().getTime() - timer * 1000) / 1000 / 3600)
     },
     getPostsLists () {
-      this.$api.postsLists({recommend:1}).then((result)=>{
-        console.log(result,'res')
-        if(result.code === 1) {
-        var list =  result.data.data.splice(0,8)
-         list.map((item)=>{
-           console.log(item,'item')
-           item.image = item.images  ? item.images[0]: ''
-           item.nickname = item.user ? item.user.nickname : ''
-           item.avatar = item.user ? item.user.avatar : ''
-         })
-         this.huabantzlist = list
+      this.$api.postsLists({recommend: 1}).then((result) => {
+        console.log(result, 'res')
+        if (result.code === 1) {
+          var list = result.data.data.splice(0, 8)
+          list.map((item) => {
+            console.log(item, 'item')
+            item.image = item.images ? item.images[0] : ''
+            item.nickname = item.user ? item.user.nickname : ''
+            item.avatar = item.user ? item.user.avatar : ''
+          })
+          this.huabantzlist = list
         }
       })
     },

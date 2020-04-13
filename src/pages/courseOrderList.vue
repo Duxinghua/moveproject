@@ -67,11 +67,11 @@ export default {
       currentIndex: 0,
       tabList: [
         {name: '全部', status: ''},
-        {name: '待分享',status : 4},
+        {name: '待分享', status: 4},
         {name: '线下课程', status: 3},
         {name: '线上课程', status: 2}
       ],
-      goodsTuanText:[
+      goodsTuanText: [
         '进行中',
         '成功',
         '解散'
@@ -86,7 +86,7 @@ export default {
       wxpay: {}
     }
   },
-  mounted() {
+  mounted () {
     this.getOrderList()
   },
   methods: {
@@ -108,59 +108,57 @@ export default {
             // 使用以上方式判断前端返回,微信团队郑重提示：
             // res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
             // window.location.href = config.baseurl + '/tickOrderList'
-           // alert(1)
+            // alert(1)
           } else {
             // window.location.href = config.baseurl + '/tickOrderList'
-           // alert(2)
+            // alert(2)
           }
         })
     },
-    sharelHandler (tid){
-      this.$router.push({path:'/coursegroupdetails',query:{id:tid}})
+    sharelHandler (tid) {
+      this.$router.push({path: '/coursegroupdetails', query: {id: tid}})
     },
     repayHandler (order_id) {
       var _this = this
-      this.$api.courseOrderpayOrder({order_id:order_id}).then((res)=>{
-        if(res.code === 1) {
-           if (typeof WeixinJSBridge === 'undefined') {
-              if (document.addEventListener) {
-                document.addEventListener('WeixinJSBridgeReady', _this.onBridgeReady, false)
-              } else if (document.attachEvent) {
-                document.attachEvent('WeixinJSBridgeReady', _this.onBridgeReady)
-                document.attachEvent('onWeixinJSBridgeReady', _this.onBridgeReady)
-              }
-            } else {
-              _this.wxpay = res.data.pay_data
-              _this.onBridgeReady()
+      this.$api.courseOrderpayOrder({order_id: order_id}).then((res) => {
+        if (res.code === 1) {
+          if (typeof WeixinJSBridge === 'undefined') {
+            if (document.addEventListener) {
+              document.addEventListener('WeixinJSBridgeReady', _this.onBridgeReady, false)
+            } else if (document.attachEvent) {
+              document.attachEvent('WeixinJSBridgeReady', _this.onBridgeReady)
+              document.attachEvent('onWeixinJSBridgeReady', _this.onBridgeReady)
             }
-
-        }else{
+          } else {
+            _this.wxpay = res.data.pay_data
+            _this.onBridgeReady()
+          }
+        } else {
           _this.$toast(res.msg)
         }
       })
     },
     cancelHandler (order_id) {
       var _this = this
-      this.$api.courseDelAppoint({order_id:order_id}).then((res)=>{
+      this.$api.courseDelAppoint({order_id: order_id}).then((res) => {
         if (res.code === 1) {
           this.$toast({
-            message:res.msg,
+            message: res.msg,
             onClose: () => {
               _this.orderList = []
               _this.finished = false
               _this.loading = false
               _this.current = 1
               _this.getOrderList()
-
             }
 
           })
-        }else{
+        } else {
           this.$toast(res.msg)
         }
       })
     },
-    tabClickHandler (index,type) {
+    tabClickHandler (index, type) {
       this.currentIndex = index
       this.type = type
       this.status = type
@@ -169,10 +167,9 @@ export default {
       this.loading = false
       this.current = 1
       this.getOrderList()
-
     },
     orderDetailHandler (id) {
-      this.$router.push({name: 'CourseOrderDetail',query:{id}})
+      this.$router.push({name: 'CourseOrderDetail', query: {id}})
     },
     getOrderList () {
       const param = {
@@ -180,7 +177,7 @@ export default {
         pageSize: 10,
         type: this.type
       }
-      if(this.type == 4) {
+      if (this.type == 4) {
         param.status = 4
         param.type = null
       }

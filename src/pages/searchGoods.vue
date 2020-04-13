@@ -42,7 +42,7 @@ export default {
       current: 1,
       keywordValue: '',
       keyword: '',
-      param:{
+      param: {
         page: this.current,
         pageSize: 10,
         keyword: this.keyword
@@ -55,7 +55,7 @@ export default {
   },
   mounted () {
     // this.getGoodsList();
-    if(this.$route.query.id){
+    if (this.$route.query.id) {
       var gc_id = this.$route.query.id
       var keyword = this.$route.query.name
       this.keywordValue = this.$route.query.name

@@ -119,7 +119,7 @@ export default {
       bannerImg: [],
       courseDetails: {},
       courseOffline: {},
-      user_number:null,
+      user_number: null,
       wxShare: false,
       datatime: null,
       planList: [
@@ -151,9 +151,9 @@ export default {
       msgItem: {}, // 讲师详情
       tecImg: {}, // 讲师作品
       groupList: [],
-      courseId: 0,  // 课程id
+      courseId: 0, // 课程id
       imageShow: false,
-      isBuy:0
+      isBuy: 0
     }
   },
   mounted () {
@@ -176,7 +176,7 @@ export default {
       console.log(a)
     },
     homeClick () {
-      this.$router.push({name:'Home'})
+      this.$router.push({name: 'Home'})
     },
     shareOpen () {
       this.wxShare = true
@@ -194,7 +194,7 @@ export default {
         forbidClick: true
       })
       this.$api.courseDetail(param).then((res) => {
-        console.log(res,'resdata')
+        console.log(res, 'resdata')
         this.$toast.clear()
         if (res.code == 1) {
           this.courseDetails = res.data
@@ -202,25 +202,25 @@ export default {
           this.courseOffline = res.data.courseOffline
           var t1 = res.data.courseOffline.open_time_end
           var text = ''
-          var t2 = res.data.courseOffline.open_time_text.split(" ")[0]
-          var t3 =''
-          if(t1 == 0){
+          var t2 = res.data.courseOffline.open_time_text.split(' ')[0]
+          var t3 = ''
+          if (t1 == 0) {
             text = t2
-          }else{
-            t3 = res.data.courseOffline.open_time_end_text.split(" ")[0]
-            text = t2 + ' 至 '+t3
+          } else {
+            t3 = res.data.courseOffline.open_time_end_text.split(' ')[0]
+            text = t2 + ' 至 ' + t3
           }
           this.datatime = text
           this.msgItem = res.data.admin
-          this.tecImg = res.data.adminOpus ? res.data.adminOpus.slice(0,3) : []
+          this.tecImg = res.data.adminOpus ? res.data.adminOpus.slice(0, 3) : []
           // this.skuList = res.data.specs ? JSON.parse(res.data.specs) : []
           // console.log(res.data)
-          console.log(res.data.title,res.data.description,'title','des')
+          console.log(res.data.title, res.data.description, 'title', 'des')
           var title = res.data.title
           var description = res.data.description
           var image = res.data.image ? res.data.image[0] : ''
           this.isBuy = res.data.is_buy
-          this.wxs(title,description,image)
+          this.wxs(title, description, image)
         }
       })
     },
@@ -232,7 +232,7 @@ export default {
       }
       this.$api.courseTuanList(param).then((res) => {
         if (res.code == 1) {
-          var list = res.data.data.slice(0,3)
+          var list = res.data.data.slice(0, 3)
           console.log(list)
           this.groupList = list
           // console.log(res.data)
@@ -240,51 +240,49 @@ export default {
       })
     },
     onLinkAll () {
-      this.$router.push({path:'/courseallgroup',query:{courseId:this.courseId}})
+      this.$router.push({path: '/courseallgroup', query: {courseId: this.courseId}})
     },
     onTuan (courseId) {
-      if(this.isBuy == 1){
+      if (this.isBuy == 1) {
         this.$dialog.confirm({
-            title: '提示',
-            message: '您的课程已购买，确认再次购买吗？',
-            confirmButtonColor:'#6D8160',
-            cancelButtonColor:'#999999'
-          }).then(() => {
-              this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})
-
-          }).catch(() => {
-            // on cancel
-          })
-      }else{
-        this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})
+          title: '提示',
+          message: '您的课程已购买，确认再次购买吗？',
+          confirmButtonColor: '#6D8160',
+          cancelButtonColor: '#999999'
+        }).then(() => {
+          this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 2, user_number: this.user_number}})
+        }).catch(() => {
+          // on cancel
+        })
+      } else {
+        this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 2, user_number: this.user_number}})
       }
     },
     onBuy (courseId) {
-      if(this.isBuy == 1){
+      if (this.isBuy == 1) {
         this.$dialog.confirm({
-            title: '提示',
-            message: '您的课程已购买，确认再次购买吗？',
-            confirmButtonColor:'#6D8160',
-            cancelButtonColor:'#999999'
-          }).then(() => {
-            this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
-          }).catch(() => {
-            // on cancel
-          })
-      }else{
-
-        this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
+          title: '提示',
+          message: '您的课程已购买，确认再次购买吗？',
+          confirmButtonColor: '#6D8160',
+          cancelButtonColor: '#999999'
+        }).then(() => {
+          this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
+        }).catch(() => {
+          // on cancel
+        })
+      } else {
+        this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
       }
     },
-    wxs (title,description,image) {
+    wxs (title, description, image) {
       var data = {
-        url:location.href
+        url: location.href
       }
       var that = this
       let shareurl = config.baseurl + '/offcoursedetail?id=' + that.courseId + '&openid=' + getSitem.getStr('openid')
       const agent = navigator.userAgent
       const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-      if(isiOS){
+      if (isiOS) {
         data.url = config.shareurls
       }
       this.$api.userGetSignPackage(data).then((res) => {
@@ -360,7 +358,6 @@ export default {
               that.wxShare = false
               // 用户确认分享后执行的回调函数
               // alert('分享成功');
-
             },
             cancel: function () {
               that.wxShare = false
@@ -368,10 +365,8 @@ export default {
               // alert('分享取消');
             }
           })
-
         }
       })
-
     }
   },
   components: {
@@ -379,10 +374,10 @@ export default {
     WxShare,
     GroupItem
   },
-    computed:{
+  computed: {
     buyClass () {
       return {
-        'goods-buy-btn':true,
+        'goods-buy-btn': true,
         'noTuan': this.courseDetails.is_tuan == 0
       }
     }

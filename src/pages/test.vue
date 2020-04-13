@@ -7,12 +7,12 @@
 <script>
 import getSitem from '@/utils/storage'
 export default {
-  methods:{
+  methods: {
     test () {
-        alert(getSitem.getStr('mobile'))
-        alert(getSitem.getStr('token'))
-        getSitem.remove('token')
-        getSitem.remove('mobile')
+      alert(getSitem.getStr('mobile'))
+      alert(getSitem.getStr('token'))
+      getSitem.remove('token')
+      getSitem.remove('mobile')
     }
   }
 }

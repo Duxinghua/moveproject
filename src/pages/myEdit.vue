@@ -130,13 +130,13 @@ export default {
 
     },
     dateConfirmHandler () {
-      this.$api.userEdit({birthday:this.timeFormat(this.currentDate)}).then((result) => {
+      this.$api.userEdit({birthday: this.timeFormat(this.currentDate)}).then((result) => {
         if (result.code === 1) {
           this.$toast({
             message: '生日修改成功',
             onClose: () => {
-               this.getIndex()
-               this.dateShow = false
+              this.getIndex()
+              this.dateShow = false
             }
           })
         } else {
@@ -145,7 +145,7 @@ export default {
       })
     },
     dateCancelHandler () {
-       this.dateShow = false
+      this.dateShow = false
     },
     infoEditHandler () {
       this.$router.push({name: 'MyModify', params: {bio: this.userInfo ? this.userInfo.bio : null}})

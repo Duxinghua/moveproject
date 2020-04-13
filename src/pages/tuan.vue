@@ -1,11 +1,5 @@
 <template>
     <div class="home">
-        <Tab
-            :tabList="tabList"
-            @on-change="onTabChange"
-            @on-search="onSearch"
-            @on-cate="onCate"
-        />
         <div class="home-banner">
             <van-swipe :autoplay="3000" id="home-banner-carousel" indicator-color="#F3D995"	>
               <van-swipe-item v-for="(item, index) in slideList" :key="index">
@@ -31,7 +25,7 @@
             @load="onLoad"
         >
             <div class="goods-list">
-                <GoodsItem
+                <TuanItem
                     v-for="(item, index) in goodsList"
                     :key="index"
                     :goodsData="item"
@@ -40,14 +34,14 @@
             </div>
         </van-list>
         <NoData v-if="goodsList.length == 0"/>
-        <Footer :sc="true" />
+        <Footer :pt="true" />
     </div>
 </template>
 
 <script>
-import Tab from '@/components/common/tab'
-import GoodsItem from '@/components/shop/goodsItem'
 import Footer from '@/components/footer.vue'
+import Tabs from '@/components/common/tabs'
+import TuanItem from '@/components/shop/tuanitem'
 import NoData from '@/components/nodata'
 
 export default {
@@ -60,48 +54,42 @@ export default {
       finished: false,
       total: 0,
       current: 1,
-      gcId: 0,
-      type: 'single'
+      type: 'tuan'
     }
   },
   components: {
-    Tab,
-    GoodsItem,
-    Footer,
-    NoData
+    Tabs,
+    TuanItem,
+    NoData,
+    Footer
   },
   mounted () {
-    this.categorys()
-    this.goodsbanner()
+    this.goodsTuanBanner()
+    this.goodTuanLists()
   },
   methods: {
-    categorys () {
-      this.$api.goodsCates().then((res) => {
-        if (res.code == 1) {
-          if (res.data.length > 0) {
-            this.tabList = res.data.map((item) => {
-              return {
-                id: item.gc_id,
-                name: item.gc_name
-              }
-            })
-
-            this.gcId = this.tabList[0].id
-            this.getGoodsList()
-          }
-        }
-      })
-    },
-    async goodsbanner () {
+    async goodsTuanBanner () {
       this.$toast.loading({
         duration: 0,
         message: '加载中...',
         forbidClick: true
       })
-      var result = await this.$api.goodsbanner({})
+      var result = await this.$api.goodsTuanBanner({})
       this.$toast.clear()
       if (result.code == 1) {
         this.slideList = result.data
+      }
+    },
+    async goodTuanLists () {
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      var result = await this.$api.goodTuanLists({})
+      this.$toast.clear()
+      if (result.code == 1) {
+        this.goodsList = result.data.data
       }
     },
     getGoodsList () {
@@ -142,17 +130,11 @@ export default {
       }
     },
     onTabChange (id) {
-      // this.goodsList = []
-      // this.current = 1
-      // this.gcId = id
-      // this.finished = false
-      // this.getGoodsList()
-      this.$router.push({
-        path: '/shopCate',
-        query: {
-          id
-        }
-      })
+      this.goodsList = []
+      this.current = 1
+      this.gcId = id
+      this.finished = false
+      this.getGoodsList()
     },
     onSearch (id) {
       this.$router.push({
@@ -177,14 +159,8 @@ export default {
   background: #fbf8f5;
   padding-bottom: 100px;
   min-height: 100vh;
-  /deep/ .nodata{
-    margin-top:300px;
-  }
   #home-banner-carousel{
    height:380px !important;
-  }
-  .home-banner{
-    margin-top:250px;
   }
   .goods-list {
     padding:25px;

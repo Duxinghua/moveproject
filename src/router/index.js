@@ -175,8 +175,8 @@ const router = new Router({
   scrollBehavior,
   routes: [
     {
-      path: '/',
-      name: 'Home',
+      path: '/Fall',
+      name: 'Fall',
       component: Home,
       meta: {
         title: '有梦不晚'
@@ -585,11 +585,20 @@ const router = new Router({
       }
     },
     {
-      path: '/shopHome',
+      path: '/',
       name: 'shopHome',
       component: () => import('@/pages/shopHome'),
       meta: {
-        title: '商城',
+        title: '有梦不晚',
+        keepAlive: true
+      }
+    },
+    {
+      path: '/tuan',
+      name: 'Tuan',
+      component: () => import('@/pages/tuan'),
+      meta: {
+        title: '拼团',
         keepAlive: true
       }
     },
@@ -597,6 +606,14 @@ const router = new Router({
       path: '/goodsDetails',
       name: 'goodsDetails',
       component: () => import('@/pages/goodsDetails'),
+      meta: {
+        title: '有梦不晚'
+      }
+    },
+    {
+      path: '/afterorder',
+      name: 'afterOrder',
+      component: () => import('@/pages/afterOrder'),
       meta: {
         title: '有梦不晚'
       }
@@ -662,6 +679,14 @@ const router = new Router({
       name: 'GoodsCate',
       component: () => import('@/pages/goodsCate'),
       meta: {
+        title: '目录分类'
+      }
+    },
+    {
+      path: '/shopCate',
+      name: 'ShopCate',
+      component: () => import('@/pages/shopCate'),
+      meta: {
         title: '商品分类'
       }
     },
@@ -677,6 +702,8 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  next()
+  return
   // console.log(to)
   // getSitem.remove('token')
   // getSitem.remove('mobile')
@@ -733,7 +760,6 @@ router.beforeEach((to, from, next) => {
         code: code
       }
       getToken(data)
-
     }
   }
 })

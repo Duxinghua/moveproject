@@ -1,12 +1,10 @@
 <template>
 	<div class="tab-box">
-		<div class="tab-fixed"></div>
+		<div class="tab-fixed" @click="onSearch">
+        <img src="../../assets/images/huabansearchico.png" alt="">
+        <input type="text" v-model="searchText" class="input" placeholder="请输入关键字" disabled>
+    </div>
 		<div class="tab-content">
-      <img
-					 @click="onSearch"
-					 src="../../assets/images/search.png"
-					 alt=""
-			>
 			<ul>
 				<li
 				 v-for="(item, index) in tabList"
@@ -15,64 +13,85 @@
 				 @click="tabClick(item.id)"
 				>{{item.name}}</li>
 			</ul>
-      <img
-					 @click="onCate"
-					 src="../../assets/images/more.png"
-					 alt=""
-			>
 		</div>
 	</div>
 </template>
 
 <script>
 export default {
-	data() {
-		return {
-			tabIndex: 0
-		}
-	},
-	props: {
-		tabList: {
-			type: Array,
-			default: []
-		}
-	},
-	watch: {
-		tabList(data) {
-			if (data) {
-				this.tabIndex = data[0].id
-			}
-		}
-	},
-	methods: {
-		tabClick(id) {
-			this.tabIndex = id
-			this.$emit('on-change', id)
-		},
-		onSearch() {
-			this.$emit('on-search')
+  data () {
+    return {
+      tabIndex: 0,
+      searchText: ''
+    }
+  },
+  props: {
+    tabList: {
+      type: Array,
+      default: []
+    }
+  },
+  watch: {
+    tabList (data) {
+      if (data) {
+        this.tabIndex = data[0].id
+      }
+    }
+  },
+  methods: {
+    tabClick (id) {
+      this.tabIndex = id
+      this.$emit('on-change', id)
+    },
+    onSearch () {
+      this.$emit('on-search')
     },
     onCate () {
       this.$emit('on-cate')
     }
-	}
+  }
 }
 </script>
 
 <style lang='scss' scoped>
 .tab-box {
   width: 100%;
+  width: 100%;
+  background: url("../../assets/images/tab-bg.png") 100% 100% no-repeat;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
   .tab-fixed {
     height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top:30px;
+    box-sizing: border-box;
+      img{
+        position: absolute;
+        width:33px;
+        height:35px;
+        left:72px;
+        top:50%;
+        transform: translateY(-50%)
+      }
+      input{
+        width:90%;
+        height:70px;
+        border-radius: 5px;
+        padding-left:85px;
+        background:#FAFAFA;
+        border:none;
+        font-size: 30px;
+        color:#333;
+      }
   }
   .tab-content {
-    width: 100%;
-    height: 100px;
-    background: url("../../assets/images/tab-bg.png") 100% 100% no-repeat;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -82,8 +101,8 @@ export default {
           margin-top: 10px;
     }
     ul {
-      width:80%;
-      height: 100%;
+      width:85%;
+      height: 100px;
       display: flex;
       align-items: center;
       padding-left: 30px;

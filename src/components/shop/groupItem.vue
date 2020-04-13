@@ -28,14 +28,14 @@ export default {
     }
   },
   props: {
-        groupData:{
-            type:Object,
-            default:{}
-        },
-        groupTime:{
-            type:[Number , String],
-            default:0
-        }
+    groupData: {
+      type: Object,
+      default: {}
+    },
+    groupTime: {
+      type: [Number, String],
+      default: 0
+    }
   },
   methods: {
     onLook () {
@@ -102,8 +102,6 @@ export default {
                     height: 42px;
                 }
             }
-
-
 
         }
         .img2{

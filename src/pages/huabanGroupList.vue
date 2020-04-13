@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     linkDetail (id) {
-      this.$router.push({name:'HuabanGroupDetail', query:{id:id}})
+      this.$router.push({name: 'HuabanGroupDetail', query: {id: id}})
     },
     menuClick (v) {
       this.gc_id = v
@@ -51,19 +51,19 @@ export default {
       this.getGroupLists()
     },
     getGroupCateGory () {
-      this.$api.groupCateGory().then((res)=>{
-        if(res.code === 1) {
+      this.$api.groupCateGory().then((res) => {
+        if (res.code === 1) {
           this.menuList = res.data
           this.gc_id = res.data ? res.data[0].gc_id : 1
           this.getGroupLists()
         }
       })
     },
-    joinGroupHandler (is_join,group_id) {
+    joinGroupHandler (is_join, group_id) {
       console.log(is_join == 0)
-      if(is_join === 0) {
-        this.$api.groupGroupUser({group_id:group_id}).then((res)=>{
-          if(res.code === 1){
+      if (is_join === 0) {
+        this.$api.groupGroupUser({group_id: group_id}).then((res) => {
+          if (res.code === 1) {
             this.$toast({
               message: res.msg,
               onClose: () => {
@@ -73,13 +73,13 @@ export default {
                 this.getGroupLists()
               }
             })
-          }else{
+          } else {
             this.$toast(res.msg)
           }
         })
-      }else if(is_join === 1) {
-       this.$api.groupGroupUserDel({group_id:group_id}).then((res)=>{
-          if(res.code === 1){
+      } else if (is_join === 1) {
+        this.$api.groupGroupUserDel({group_id: group_id}).then((res) => {
+          if (res.code === 1) {
             this.$toast({
               message: res.msg,
               onClose: () => {
@@ -89,7 +89,7 @@ export default {
                 this.getGroupLists()
               }
             })
-          }else{
+          } else {
             this.$toast(res.msg)
           }
         })

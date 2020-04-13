@@ -53,7 +53,7 @@
         </div>
         <div class="oitem" @click="likeClickHandler('fx')">
           <img src="../assets/images/mf.png" alt="">
-          <span>我的分销</span>
+          <span>合伙人</span>
         </div>
       </div>
     </div>
@@ -68,7 +68,7 @@
       </div>
       <div class="mlitem" @click="likeClickHandler('yq')">
         <img src="../assets/images/myf.png" alt="" />
-        <span>邀请注册</span>
+        <span>邀请合伙人</span>
       </div>
       <div class="mlitem" @click="likeClickHandler('ab')">
         <img src="../assets/images/myg.png" alt="" />
@@ -155,7 +155,7 @@ export default {
       currentDate: '',
       qdcontrol: false, // 今天是否签到
       signValue: 5,
-      slideList:{}
+      slideList: {}
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -163,14 +163,14 @@ export default {
     next()
   },
   mounted () {
-    if(!getSitem.getStr('mobile')){
-      this.$router.push({name:'Login'})
+    if (!getSitem.getStr('mobile')) {
+      this.$router.push({name: 'Login'})
     }
     this.currentDate = this.formatTime(1)
     this.getUserinfo()
     this.getBanner()
-    this.$api.commonConfig({name:'sign'}).then((res)=>{
-      if(res.code === 1) {
+    this.$api.commonConfig({name: 'sign'}).then((res) => {
+      if (res.code === 1) {
         this.signValue = res.data.value
       }
     })
@@ -181,28 +181,27 @@ export default {
       location.href = this.slideList.url
     },
     getBanner () {
-      this.$api.indexBanner({type:2}).then((res)=>{
-        if(res.code == 1) {
+      this.$api.indexBanner({type: 2}).then((res) => {
+        if (res.code == 1) {
           this.slideList = res.data[0]
           this.$forceUpdate()
         }
       })
-
     },
     getUserinfo () {
       this.$api.userIndex().then((result) => {
-      if (result.code === 1) {
-        this.userInfo = result.data
-      }
-    })
+        if (result.code === 1) {
+          this.userInfo = result.data
+        }
+      })
     },
     formatTime (time) {
-      var date  = ""
+      var date = ''
       if (time != 0 && time != 1) {
-        date = new Date(time*1000)
-      }else if(time == 0){
+        date = new Date(time * 1000)
+      } else if (time == 0) {
         date = new Date(0)
-      }else if(time == 1){
+      } else if (time == 1) {
         date = new Date()
       }
       var getyear = date.getFullYear()
@@ -215,19 +214,19 @@ export default {
       this.$api.userSignLists().then((result) => {
         console.log(result)
         if (result.code === 1) {
-            if (_this.currentDate == _this.formatTime(result.data.sign_time)) {
-              _this.qdcontrol = true
-              _this.qdText = '已经连续签到' + result.data.days + '天'
-            }else{
-              _this.qdcontrol = false
-              _this.qdText = '立即签到'
+          if (_this.currentDate == _this.formatTime(result.data.sign_time)) {
+            _this.qdcontrol = true
+            _this.qdText = '已经连续签到' + result.data.days + '天'
+          } else {
+            _this.qdcontrol = false
+            _this.qdText = '立即签到'
+          }
+          _this.qdList.map((item) => {
+            if (item.num <= result.data.days) {
+              item.check = true
             }
-            _this.qdList.map((item)=>{
-              if(item.num <= result.data.days){
-                item.check = true
-              }
-            })
-            _this.$forceUpdate()
+          })
+          _this.$forceUpdate()
         }
       })
     },
@@ -302,10 +301,10 @@ export default {
         case 'ad':
           Links = 'addressList'
       }
-      if(arg === 'xf'){
-      this.$router.push({name: Links,query:{score:this.userInfo.score}})
-      }else{
-      this.$router.push({name: Links})
+      if (arg === 'xf') {
+        this.$router.push({name: Links, query: {score: this.userInfo.score}})
+      } else {
+        this.$router.push({name: Links})
       }
     }
   },

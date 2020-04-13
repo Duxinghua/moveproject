@@ -57,308 +57,303 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex'
 import config from '@/utils/config'
 
 export default {
-    data() {
-        return {
-            num:1,
-            radio:"2",
-            checked:false,
-            orderData:{
-              scoreDeduction:{
-                data:{}
-              }
-            },
-            goodsTotal:0,
-            orderMoney:0,
-            orderType:0,
-            wx:null,
-            wxConfig:{},
-            priceCost:0,
-            specs: {},
-            goods_id: null,
-            deduction: '',
-            oldGoodsTotal:0,
-            score:0,
-            payScore:false,
+  data () {
+    return {
+      num: 1,
+      radio: '2',
+      checked: false,
+      orderData: {
+        scoreDeduction: {
+          data: {}
         }
-    },
-    watch:{
-        orderData:{
-            deep:true,
-            handler(data){
-                let goodsTotal = 0;
-                let priceCost = 0;
-                if(data.goods && data.goods.length > 0){
-                    if(this.orderType == 1){
-                        this.goodsTotal = this.orderData.goodsTuan ? this.orderData.goodsTuan.goods_price : '0.00';
-                        return
-                    }
-                    data.goods.forEach((item) => {
-                        goodsTotal += item.goods_num * item.price;
-                    })
-                    data.goods.forEach((item) => {
-                        priceCost += item.goods_num * item.price_cost;
-                    })
-                }
-                this.goodsTotal = goodsTotal.toFixed(2);
-                this.oldGoodsTotal = goodsTotal.toFixed(2);
-                this.priceCost = priceCost.toFixed(2);
-            }
-        }
-    },
-    computed:{
-        ...mapState('shop',['addressData'])
-    },
-    created() {
-        const config = {
-            url:location.href.split('#')[0]
-        }
-        // 请求api返回sdk配置参数
-        this.$api.userGetSignPackage(config).then(res => {
-            if (res.code === 1) {
-                var wxConfig = res.data;
-                this.wxConfig = wxConfig;
-                wx.config({
-                    appId: wxConfig.appId, // 必填，公众号的唯一标识
-                    timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
-                    nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
-                    signature: wxConfig.signature,// 必填，签名
-                    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
-                });
-            }
-
-            wx.ready(() => {
-                this.wx = wx;
-            });
-        });
-    },
-    mounted(){
-        const {goods_id,specs,type} = this.$route.query;
-        this.orderType = type;
-        this.goods_id = goods_id;
-        this.specs = specs;
-        console.log(this.specs,this.goods_id)
-        this.getAddressList();
-        this.goodsOrderCreate();
-    },
-    methods:{
-        ...mapMutations('shop',['saveAddressData']),
-        goodsOrderCreate(){
-            const param = this.$route.query;
-            this.$toast.loading({
-                duration:0,
-                forbidClick: true
-            });
-            this.$api.goodsOrderCreate(param).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    this.orderData = res.data;
-                    this.deduction = res.data.scoreDeduction.data.money
-                    this.score = res.data.scoreDeduction.score
-                }else{
-                    this.$toast(res.msg);
-                }
-            })
-        },
-        accSub(arg1, arg2) {
-            if (isNaN(arg1)) {
-                arg1 = 0;
-            }
-            if (isNaN(arg2)) {
-                arg2 = 0;
-            }
-            arg1 = Number(arg1);
-            arg2 = Number(arg2);
-
-            var r1, r2, m, n;
-            try {
-                r1 = arg1.toString().split(".")[1].length;
-            }
-            catch (e) {
-                r1 = 0;
-            }
-            try {
-                r2 = arg2.toString().split(".")[1].length;
-            }
-            catch (e) {
-                r2 = 0;
-            }
-            m = Math.pow(10, Math.max(r1, r2)); //last modify by deeka //动态控制精度长度
-            n = (r1 >= r2) ? r1 : r2;
-            return ((arg1 * m - arg2 * m) / m).toFixed(n);
-        },
-        goodsOrderStore(){
-            var that = this
-            // 微信支付
-            let param = {}
-            if(this.orderType == 0){
-                //购物车购买
-                let cart_id = [];
-                this.orderData.goods.forEach((item) => {
-                    cart_id.push(item.cart_id)
-                })
-                param = {
-                    cart_id:cart_id.join(','),
-                    type:this.orderType,
-                    address_id:this.addressData.id,
-                }
-                if(this.payScore){
-                  param.payscore = 1
-                }else{
-                  param.payscore = 0
-                }
-
-            }else if(this.orderType == 1){
-                //拼团购买
-                param = {
-                    t_id:this.orderData.t_id,
-                    type:this.orderType,
-                    address_id:this.addressData.id,
-                    goods_id:this.goods_id,
-                    specs:this.specs
-                }
-            }else{
-                //单个商品购买
-                param = {
-                    goods_id:this.orderData.goods[0].goods_id,
-                    specs:JSON.stringify(this.orderData.specs),
-                    goods_num:this.orderData.goods[0].goods_num,
-                    address_id:this.addressData.id,
-                    type:this.orderType
-                }
-                if(this.payScore){
-                  param.payscore = 1
-                }else{
-                  param.payscore = 0
-                }
-            }
-            this.$api.goodsOrderStore(param).then((res) => {
-                if(res.code == 1){
-                  if(res.data.pay_type != 3){
-                    const pay_data = res.data.pay_data;
-                    this.wxPay(pay_data,res.data.order_id)
-                  }else{
-                    this.$toast({
-                      message:res.msg,
-                      onClose:()=>{
-                        that.$router.push({
-                            path:'/orderlist'
-                        })
-                      }
-                    })
-                  }
-                }else{
-                    this.$toast(res.msg);
-                }
-            })
-        },
-        onLinkAddress(){
-            this.$router.push({
-                path:'/addressList',
-                query:{
-                    type:'select'
-                }
-            })
-        },
-        onBuy(){
-            if(!this.addressData.mobile){
-                this.$toast('请填写收货地址')
-                return false
-            }
-            this.goodsOrderStore()
-        },
-        toggle(){
-
-            this.$refs.checkboxes.toggle();
-            //使用花币
-            if(!this.checked){
-              this.payScore = true
-              var lenr1 = this.deduction.toString().indexOf('.') > -1 ? this.deduction.toString().split(".")[1].length : 0
-              var lenr2 = this.goodsTotal.toString().indexOf(".") > -1 ? this.goodsTotal.toString().split(".")[1].length : 0
-              var l = lenr1 > lenr2 ? lenr1 : lenr2
-              if(this.deduction*Math.pow(10,l) > this.goodsTotal*Math.pow(10,l)){
-                this.goodsTotal = 0
-              }else{
-                this.goodsTotal = this.accSub(this.goodsTotal,this.deduction)
-              }
-            }else{
-              this.payScore = false
-              this.goodsTotal = this.oldGoodsTotal
-            }
-
-        },
-        getAddressList(){
-            const param = {
-                page:1,
-                pageSize:100
-            }
-            this.$toast.loading({
-                duration:0,
-                message: '加载中...',
-                forbidClick: true
-            });
-            this.$api.addressList(param).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    if(res.data.data.length > 0){
-                        if(!this.addressData.id){
-                            this.saveAddressData(res.data.data[0])
-                        }
-                    }
-                }
-            })
-        },
-        wxPay(wxmsg,order_id){
-            const _this = this;
-            // _this.tuanInfo(order_id)
-            this.wx.chooseWXPay({
-                appId: wxmsg.appId,
-                timestamp: wxmsg.timeStamp,
-                nonceStr: wxmsg.nonceStr, // 支付签名随机串，不长于 32 位
-                package: wxmsg.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
-                signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-                paySign: wxmsg.paySign, // 支付签名
-                success: function (res) {
-                    // 支付成功的回调函数
-                    if(_this.orderType == 1){
-                        _this.tuanInfo(order_id)
-                    }else{
-                        _this.$router.push({
-                            path:'/orderlist'
-                        })
-                    }
-                },
-                cancel: function (res) {
-                    // 支付取消的回调函数
-                    _this.$router.push({
-                        path:'/orderlist'
-                    })
-                },
-                error: function (res) {
-                    // 支付失败的回调函数
-                    _this.$router.push({
-                        path:'/orderlist'
-                    })
-                }
-            })
-        },
-        tuanInfo(order_id){
-            this.$api.tuanInfo({order_id}).then((res) => {
-                if(res.code == 1){
-                    this.$router.push({
-                        path:'/groupDetails',
-                        query:{
-                            id:res.data.t_id,
-                            tuanStatus:res.data.success
-                        }
-                    })
-                }
-            })
-        }
+      },
+      goodsTotal: 0,
+      orderMoney: 0,
+      orderType: 0,
+      wx: null,
+      wxConfig: {},
+      priceCost: 0,
+      specs: {},
+      goods_id: null,
+      deduction: '',
+      oldGoodsTotal: 0,
+      score: 0,
+      payScore: false
     }
+  },
+  watch: {
+    orderData: {
+      deep: true,
+      handler (data) {
+        let goodsTotal = 0
+        let priceCost = 0
+        if (data.goods && data.goods.length > 0) {
+          if (this.orderType == 1) {
+            this.goodsTotal = this.orderData.goodsTuan ? this.orderData.goodsTuan.goods_price : '0.00'
+            return
+          }
+          data.goods.forEach((item) => {
+            goodsTotal += item.goods_num * item.price
+          })
+          data.goods.forEach((item) => {
+            priceCost += item.goods_num * item.price_cost
+          })
+        }
+        this.goodsTotal = goodsTotal.toFixed(2)
+        this.oldGoodsTotal = goodsTotal.toFixed(2)
+        this.priceCost = priceCost.toFixed(2)
+      }
+    }
+  },
+  computed: {
+    ...mapState('shop', ['addressData'])
+  },
+  created () {
+    const config = {
+      url: location.href.split('#')[0]
+    }
+    // 请求api返回sdk配置参数
+    this.$api.userGetSignPackage(config).then(res => {
+      if (res.code === 1) {
+        var wxConfig = res.data
+        this.wxConfig = wxConfig
+        wx.config({
+          appId: wxConfig.appId, // 必填，公众号的唯一标识
+          timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
+          nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
+          signature: wxConfig.signature, // 必填，签名
+          jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
+        })
+      }
+
+      wx.ready(() => {
+        this.wx = wx
+      })
+    })
+  },
+  mounted () {
+    const {goods_id, specs, type} = this.$route.query
+    this.orderType = type
+    this.goods_id = goods_id
+    this.specs = specs
+    console.log(this.specs, this.goods_id)
+    this.getAddressList()
+    this.goodsOrderCreate()
+  },
+  methods: {
+    ...mapMutations('shop', ['saveAddressData']),
+    goodsOrderCreate () {
+      const param = this.$route.query
+      this.$toast.loading({
+        duration: 0,
+        forbidClick: true
+      })
+      this.$api.goodsOrderCreate(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.orderData = res.data
+          this.deduction = res.data.scoreDeduction.data.money
+          this.score = res.data.scoreDeduction.score
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    accSub (arg1, arg2) {
+      if (isNaN(arg1)) {
+        arg1 = 0
+      }
+      if (isNaN(arg2)) {
+        arg2 = 0
+      }
+      arg1 = Number(arg1)
+      arg2 = Number(arg2)
+
+      var r1, r2, m, n
+      try {
+        r1 = arg1.toString().split('.')[1].length
+      } catch (e) {
+        r1 = 0
+      }
+      try {
+        r2 = arg2.toString().split('.')[1].length
+      } catch (e) {
+        r2 = 0
+      }
+      m = Math.pow(10, Math.max(r1, r2)) // last modify by deeka //动态控制精度长度
+      n = (r1 >= r2) ? r1 : r2
+      return ((arg1 * m - arg2 * m) / m).toFixed(n)
+    },
+    goodsOrderStore () {
+      var that = this
+      // 微信支付
+      let param = {}
+      if (this.orderType == 0) {
+        // 购物车购买
+        let cart_id = []
+        this.orderData.goods.forEach((item) => {
+          cart_id.push(item.cart_id)
+        })
+        param = {
+          cart_id: cart_id.join(','),
+          type: this.orderType,
+          address_id: this.addressData.id
+        }
+        if (this.payScore) {
+          param.payscore = 1
+        } else {
+          param.payscore = 0
+        }
+      } else if (this.orderType == 1) {
+        // 拼团购买
+        param = {
+          t_id: this.orderData.t_id,
+          type: this.orderType,
+          address_id: this.addressData.id,
+          goods_id: this.goods_id,
+          specs: this.specs
+        }
+      } else {
+        // 单个商品购买
+        param = {
+          goods_id: this.orderData.goods[0].goods_id,
+          specs: JSON.stringify(this.orderData.specs),
+          goods_num: this.orderData.goods[0].goods_num,
+          address_id: this.addressData.id,
+          type: this.orderType
+        }
+        if (this.payScore) {
+          param.payscore = 1
+        } else {
+          param.payscore = 0
+        }
+      }
+      this.$api.goodsOrderStore(param).then((res) => {
+        if (res.code == 1) {
+          if (res.data.pay_type != 3) {
+            const pay_data = res.data.pay_data
+            this.wxPay(pay_data, res.data.order_id)
+          } else {
+            this.$toast({
+              message: res.msg,
+              onClose: () => {
+                that.$router.push({
+                  path: '/orderlist'
+                })
+              }
+            })
+          }
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    onLinkAddress () {
+      this.$router.push({
+        path: '/addressList',
+        query: {
+          type: 'select'
+        }
+      })
+    },
+    onBuy () {
+      if (!this.addressData.mobile) {
+        this.$toast('请填写收货地址')
+        return false
+      }
+      this.goodsOrderStore()
+    },
+    toggle () {
+      this.$refs.checkboxes.toggle()
+      // 使用花币
+      if (!this.checked) {
+        this.payScore = true
+        var lenr1 = this.deduction.toString().indexOf('.') > -1 ? this.deduction.toString().split('.')[1].length : 0
+        var lenr2 = this.goodsTotal.toString().indexOf('.') > -1 ? this.goodsTotal.toString().split('.')[1].length : 0
+        var l = lenr1 > lenr2 ? lenr1 : lenr2
+        if (this.deduction * Math.pow(10, l) > this.goodsTotal * Math.pow(10, l)) {
+          this.goodsTotal = 0
+        } else {
+          this.goodsTotal = this.accSub(this.goodsTotal, this.deduction)
+        }
+      } else {
+        this.payScore = false
+        this.goodsTotal = this.oldGoodsTotal
+      }
+    },
+    getAddressList () {
+      const param = {
+        page: 1,
+        pageSize: 100
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.addressList(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          if (res.data.data.length > 0) {
+            if (!this.addressData.id) {
+              this.saveAddressData(res.data.data[0])
+            }
+          }
+        }
+      })
+    },
+    wxPay (wxmsg, order_id) {
+      const _this = this
+      // _this.tuanInfo(order_id)
+      this.wx.chooseWXPay({
+        appId: wxmsg.appId,
+        timestamp: wxmsg.timeStamp,
+        nonceStr: wxmsg.nonceStr, // 支付签名随机串，不长于 32 位
+        package: wxmsg.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+        signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+        paySign: wxmsg.paySign, // 支付签名
+        success: function (res) {
+          // 支付成功的回调函数
+          if (_this.orderType == 1) {
+            _this.tuanInfo(order_id)
+          } else {
+            _this.$router.push({
+              path: '/orderlist'
+            })
+          }
+        },
+        cancel: function (res) {
+          // 支付取消的回调函数
+          _this.$router.push({
+            path: '/orderlist'
+          })
+        },
+        error: function (res) {
+          // 支付失败的回调函数
+          _this.$router.push({
+            path: '/orderlist'
+          })
+        }
+      })
+    },
+    tuanInfo (order_id) {
+      this.$api.tuanInfo({order_id}).then((res) => {
+        if (res.code == 1) {
+          this.$router.push({
+            path: '/groupDetails',
+            query: {
+              id: res.data.t_id,
+              tuanStatus: res.data.success
+            }
+          })
+        }
+      })
+    }
+  }
 
 }
 </script>

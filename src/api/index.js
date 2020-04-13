@@ -25,6 +25,14 @@ const server = {
   logout (data) {
     return post('/auth/logout', data)
   },
+
+  /**
+   *
+   * goods/banner
+  */
+  goodsbanner (data) {
+    return post('/goods/banner', data)
+  },
   /**
 	 * 商城列表
 	 */
@@ -55,49 +63,49 @@ const server = {
   goodsCarts (data) {
     return post('/goods/carts', data)
   },
-	/**
+  /**
 	 * 订单详情
 	 */
-	goodsOrder(data) {
-		return post('/goods_order', data);
-	},
-	/**
+  goodsOrder (data) {
+    return post('/goods_order', data)
+  },
+  /**
 	 * 添加订单
 	 */
-	goodsOrderCreate(data) {
-		return post('/goods_order/create', data);
-	},
-	/**
+  goodsOrderCreate (data) {
+    return post('/goods_order/create', data)
+  },
+  /**
 	 * 添加订单
 	 */
-	goodsOrderStore(data) {
-		return post('/goods_order/store', data);
-	},
-	/**
+  goodsOrderStore (data) {
+    return post('/goods_order/store', data)
+  },
+  /**
 	 * 支付订单
 	 */
-	goodsOrderPayOrder(data) {
-		return post('/goods_order/payOrder', data);
-	},
-	/**
+  goodsOrderPayOrder (data) {
+    return post('/goods_order/payOrder', data)
+  },
+  /**
 	 * 添加修改购物车
 	 */
-	goodsStoreCarts(data) {
-		return post('/goods/storeCarts', data);
-	},
-	/**
+  goodsStoreCarts (data) {
+    return post('/goods/storeCarts', data)
+  },
+  /**
 	 * 删除购物车
 	 */
-	goodsDelCarts(data) {
-		return post('/goods/delCarts', data);
+  goodsDelCarts (data) {
+    return post('/goods/delCarts', data)
   },
   /**
 	 * 拼团状态
 	 */
-  tuanInfo(data) {
+  tuanInfo (data) {
     return post('/goods_order/tuanInfo', data)
   },
-	/**
+  /**
 	 * 商品拼团详情
 	 */
   goodsTuan (data) {
@@ -451,11 +459,30 @@ const server = {
   courseOrderpayOrder (data) {
     return post('course_order/payOrder', data)
   },
-  //商城分类
+  // 商城分类
   goodsCates (data) {
-    return get('goods/cates',data)
+    return get('goods/cates', data)
+  },
+  // 拼团首页goods/tuanLists
+  goodTuanLists (data) {
+    return post('goods/tuanLists', data)
+  },
+  // 拼团Banner /api/goods/tuanBanner
+  goodsTuanBanner (data) {
+    return post('goods/tuanBanner', data)
+  },
+  // 售后提交 /api/goods_order/afterSaleGoods
+  afterSaleGoods (data) {
+    return post('goods_order/afterSaleGoods', data)
+  },
+  // 查看售后 /api/goods_order/afterSaleDetail
+  afterSaleDetail (data) {
+    return post('goods_order/afterSaleDetail', data)
+  },
+  // 分销订单 /api/user/distributionList
+  userDistributionList (data) {
+    return post('user/distributionList', data)
   }
-
 }
 
 export default server

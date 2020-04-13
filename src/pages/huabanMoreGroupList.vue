@@ -36,7 +36,7 @@ export default {
     console.log(22)
     this.getGroupLists(this.type)
   },
-  created() {
+  created () {
     console.log(111)
   },
   activated () {
@@ -76,7 +76,7 @@ export default {
           }
         }
       })
-    },
+    }
     // onLoad () {
     //   if (this.huabanList.length < this.total) {
     //     this.current++

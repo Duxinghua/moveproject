@@ -6,7 +6,6 @@
           {{item.gc_name}}
         </div>
 
-
     </div>
     <div class="right">
         <div class="cateitem" v-for="(item,index) in subList" :key="index" v-if="activeIndex == -1">
@@ -28,71 +27,74 @@
           </div>
         </div>
     </div>
+    <Footer :fl="true" />
   </div>
 </template>
 
 <script>
+import Footer from '@/components/footer.vue'
 export default {
-    name: 'GoodsCate',
-    data() {
-        return {
-          menuList:[
-            {
-              gc_id:-1,
-              gc_name:'全部分类'
-            }
-          ],
-          changeList:[],
-          subList:[],
-          activeIndex:-1,
-          paddingTop:300,
-          type:'store'
-      }
-    },
-    mounted () {
-      this.goodsCates()
-    },
-    methods:{
-      cateTap(e){
-        this.activeIndex = e
-        this.menuList.map((item)=>{
-          if(this.activeIndex == item.gc_id){
-            if(this.activeIndex != -1){
-              if(item.list){
-                this.subList = item.list
-              }else{
-                this.subList = []
-              }
-            }else{
-              var result = Object.assign([],this.changeList)
-              this.subList = result
-            }
-          }
-
-        })
-      },
-      subCateClist(item){
-            this.$router.push({
-                path: '/searchGoods',
-                query: {id:item.gc_id,name:item.gc_name}
-            })
-
-      },
-      goodsCates() {
-            const param = {
-            }
-            this.$toast.loading({
-                duration: 0,
-                forbidClick: true
-            });
-            this.$api.goodsCates(param).then((res) => {
-                this.$toast.clear();
-                this.menuList = this.menuList.concat(res.data)
-                this.changeList = res.data
-                this.subList = res.data
-            })
-        },
+  name: 'GoodsCate',
+  data () {
+    return {
+      menuList: [
+        {
+          gc_id: -1,
+          gc_name: '全部分类'
+        }
+      ],
+      changeList: [],
+      subList: [],
+      activeIndex: -1,
+      paddingTop: 300,
+      type: 'store'
     }
+  },
+  mounted () {
+    this.goodsCates()
+  },
+  methods: {
+    cateTap (e) {
+      this.activeIndex = e
+      this.menuList.map((item) => {
+        if (this.activeIndex == item.gc_id) {
+          if (this.activeIndex != -1) {
+            if (item.list) {
+              this.subList = item.list
+            } else {
+              this.subList = []
+            }
+          } else {
+            var result = Object.assign([], this.changeList)
+            this.subList = result
+          }
+        }
+      })
+    },
+    subCateClist (item) {
+      this.$router.push({
+        path: '/searchGoods',
+        query: {id: item.gc_id, name: item.gc_name}
+      })
+    },
+    goodsCates () {
+      const param = {
+      }
+      this.$toast.loading({
+        duration: 0,
+        forbidClick: true
+      })
+      this.$api.goodsCates(param).then((res) => {
+        this.$toast.clear()
+        this.menuList = this.menuList.concat(res.data)
+        this.changeList = res.data
+        this.subList = res.data
+      })
+    }
+  },
+  components: {
+    Footer
+  }
 }
 </script>
 

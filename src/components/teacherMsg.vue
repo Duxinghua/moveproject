@@ -34,16 +34,15 @@ export default {
   methods: {
     detailHandler () {
       console.log(this.$route.name)
-      if(this.$route.name == 'TeacherDetail'){
-        return
-      }else{
+      if (this.$route.name == 'TeacherDetail') {
 
-      this.$router.push({path: '/teacherDetail',query:{index:this.msgItem.id}})
+      } else {
+        this.$router.push({path: '/teacherDetail', query: {index: this.msgItem.id}})
       }
     },
-    userFocusHandler (amity,index) {
+    userFocusHandler (amity, index) {
       this.$api.teacherLike({teacher_id: index}).then(res => {
-        if (res.code === 1 ) {
+        if (res.code === 1) {
           this.$toast({
             message: res.msg
           })
@@ -53,13 +52,13 @@ export default {
       if (this.status == amity) {
         if (amity == 1) {
           this.status = 0
-        }else if (amity == 0) {
+        } else if (amity == 0) {
           this.status = 1
         }
       } else {
         this.status = amity
       }
-    },
+    }
   }
 }
 </script>

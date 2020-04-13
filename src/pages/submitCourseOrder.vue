@@ -110,14 +110,14 @@ export default {
       reShow: false,
       type: null,
       course_id: null,
-      user_number:null,
-      detail:{},
-      wxpay:{},
-      courseType:null,
-      wx:null,
-      overlayStatus:false,
-      popupStatus:false,
-      tuanStatus: 0,//1是拼团成功 0 是支付成功
+      user_number: null,
+      detail: {},
+      wxpay: {},
+      courseType: null,
+      wx: null,
+      overlayStatus: false,
+      popupStatus: false,
+      tuanStatus: 0, // 1是拼团成功 0 是支付成功
       groupDetails: {
         users: [
         ]
@@ -125,186 +125,181 @@ export default {
       tid: 0,
       true_name: '',
       mobile_ap: '',
-      idcard:'',
-      checked:true,
-      payScore:true,
-      scoreDeduction:{},
-      goodsTotal:'',
-      oldGoodsTotal:'',
-      deduction:''
-
+      idcard: '',
+      checked: true,
+      payScore: true,
+      scoreDeduction: {},
+      goodsTotal: '',
+      oldGoodsTotal: '',
+      deduction: ''
 
     }
   },
-  created() {
-        const config = {
-            url:location.href.split('#')[0]
-        }
-        // 请求api返回sdk配置参数
-        this.$api.userGetSignPackage(config).then(res => {
-            if (res.code === 1) {
-                var wxConfig = res.data;
-                this.wxConfig = wxConfig;
-                wx.config({
-                    appId: wxConfig.appId, // 必填，公众号的唯一标识
-                    timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
-                    nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
-                    signature: wxConfig.signature,// 必填，签名
-                    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
-                });
-            }
+  created () {
+    const config = {
+      url: location.href.split('#')[0]
+    }
+    // 请求api返回sdk配置参数
+    this.$api.userGetSignPackage(config).then(res => {
+      if (res.code === 1) {
+        var wxConfig = res.data
+        this.wxConfig = wxConfig
+        wx.config({
+          appId: wxConfig.appId, // 必填，公众号的唯一标识
+          timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
+          nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
+          signature: wxConfig.signature, // 必填，签名
+          jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
+        })
+      }
 
-            wx.ready(() => {
-                this.wx = wx;
-            });
-        });
+      wx.ready(() => {
+        this.wx = wx
+      })
+    })
   },
   mounted () {
-    const {type,courseId,courseType,user_number,tid} = this.$route.query
+    const {type, courseId, courseType, user_number, tid} = this.$route.query
     this.type = type
     this.course_id = courseId
     this.courseType = courseType
     this.user_number = user_number ? (user_number > 5 ? 5 : user_number) : 0
     this.tid = tid
-    this.$api.courseOrderPreview({course_id:this.course_id,type:this.type}).then((res)=>{
-        if(res.code == 1){
-          this.detail = res.data
-          this.scoreDeduction = res.data.scoreDeduction
-          this.goodsTotal = res.data.total
-          this.oldGoodsTotal = res.data.total
-          this.deduction = res.data.scoreDeduction ? res.data.scoreDeduction.money : 0
-          if(res.data.true_name){
-            this.true_name = res.data.true_name
-          }
-          if(res.data.mobile_ap) {
-            this.mobile_ap = res.data.mobile_ap
-          }
-          if(res.data.idcard){
-            this.idcard = res.data.idcard
-          }
+    this.$api.courseOrderPreview({course_id: this.course_id, type: this.type}).then((res) => {
+      if (res.code == 1) {
+        this.detail = res.data
+        this.scoreDeduction = res.data.scoreDeduction
+        this.goodsTotal = res.data.total
+        this.oldGoodsTotal = res.data.total
+        this.deduction = res.data.scoreDeduction ? res.data.scoreDeduction.money : 0
+        if (res.data.true_name) {
+          this.true_name = res.data.true_name
         }
+        if (res.data.mobile_ap) {
+          this.mobile_ap = res.data.mobile_ap
+        }
+        if (res.data.idcard) {
+          this.idcard = res.data.idcard
+        }
+      }
     })
   },
   methods: {
-    toggle(){
-            console.log(this.checked)
-            this.$refs.checkboxes.toggle();
-            //不使用花币
-            if(this.checked){
-              this.payScore = false
-              var lenr1 = this.deduction.toString().indexOf('.') > -1 ? this.deduction.toString().split(".")[1].length : 0
-              var lenr2 = this.goodsTotal.toString().indexOf(".") > -1 ? this.goodsTotal.toString().split(".")[1].length : 0
-              var l = lenr1 > lenr2 ? lenr1 : lenr2
-              if(this.deduction*Math.pow(10,l) > this.goodsTotal*Math.pow(10,l)){
-                this.goodsTotal = 0
-              }else{
-                this.goodsTotal = this.accSub(this.goodsTotal,this.deduction)
-              }
-            }else{
-              this.payScore = true
-              this.goodsTotal = this.oldGoodsTotal
-            }
-            console.log(this.checked,this.payScore)
-
+    toggle () {
+      console.log(this.checked)
+      this.$refs.checkboxes.toggle()
+      // 不使用花币
+      if (this.checked) {
+        this.payScore = false
+        var lenr1 = this.deduction.toString().indexOf('.') > -1 ? this.deduction.toString().split('.')[1].length : 0
+        var lenr2 = this.goodsTotal.toString().indexOf('.') > -1 ? this.goodsTotal.toString().split('.')[1].length : 0
+        var l = lenr1 > lenr2 ? lenr1 : lenr2
+        if (this.deduction * Math.pow(10, l) > this.goodsTotal * Math.pow(10, l)) {
+          this.goodsTotal = 0
+        } else {
+          this.goodsTotal = this.accSub(this.goodsTotal, this.deduction)
+        }
+      } else {
+        this.payScore = true
+        this.goodsTotal = this.oldGoodsTotal
+      }
+      console.log(this.checked, this.payScore)
     },
-    accSub(arg1, arg2) {
-            if (isNaN(arg1)) {
-                arg1 = 0;
-            }
-            if (isNaN(arg2)) {
-                arg2 = 0;
-            }
-            arg1 = Number(arg1);
-            arg2 = Number(arg2);
+    accSub (arg1, arg2) {
+      if (isNaN(arg1)) {
+        arg1 = 0
+      }
+      if (isNaN(arg2)) {
+        arg2 = 0
+      }
+      arg1 = Number(arg1)
+      arg2 = Number(arg2)
 
-            var r1, r2, m, n;
-            try {
-                r1 = arg1.toString().split(".")[1].length;
-            }
-            catch (e) {
-                r1 = 0;
-            }
-            try {
-                r2 = arg2.toString().split(".")[1].length;
-            }
-            catch (e) {
-                r2 = 0;
-            }
-            m = Math.pow(10, Math.max(r1, r2)); //last modify by deeka //动态控制精度长度
-            n = (r1 >= r2) ? r1 : r2;
-            return ((arg1 * m + arg2 * m) / m).toFixed(n);
+      var r1, r2, m, n
+      try {
+        r1 = arg1.toString().split('.')[1].length
+      } catch (e) {
+        r1 = 0
+      }
+      try {
+        r2 = arg2.toString().split('.')[1].length
+      } catch (e) {
+        r2 = 0
+      }
+      m = Math.pow(10, Math.max(r1, r2)) // last modify by deeka //动态控制精度长度
+      n = (r1 >= r2) ? r1 : r2
+      return ((arg1 * m + arg2 * m) / m).toFixed(n)
     },
     onLink () {
-      if(this.tuanStatus == 1 ){
-        if(this.detail.type == 2){
-          this.$router.push({path:'/onlinecourselist'})
-        }else if(this.detail.type == 3){
-          this.$router.push({path:'/offcourselist'})
+      if (this.tuanStatus == 1) {
+        if (this.detail.type == 2) {
+          this.$router.push({path: '/onlinecourselist'})
+        } else if (this.detail.type == 3) {
+          this.$router.push({path: '/offcourselist'})
         }
-      }else{
-        this.$router.push({name:'CourseGroupDetails',query:{id:this.groupDetails.t_id}})
+      } else {
+        this.$router.push({name: 'CourseGroupDetails', query: {id: this.groupDetails.t_id}})
       }
     },
     onLinkOrder () {
-      this.$router.push({name:'CourseOrderList'})
+      this.$router.push({name: 'CourseOrderList'})
     },
     hideOverlay () {
-      this.$router.push({name:'CourseGroupDetails'})
+      this.$router.push({name: 'CourseGroupDetails'})
     },
     onBuy () {
-      this.reShow = true;
+      this.reShow = true
     },
-    wxPay(wxmsg,order_id){
-            this.reShow = false
-            const _this = this;
-            // _this.tuanInfo(order_id)
-            this.wx.chooseWXPay({
-                appId: wxmsg.appId,
-                timestamp: wxmsg.timeStamp,
-                nonceStr: wxmsg.nonceStr, // 支付签名随机串，不长于 32 位
-                package: wxmsg.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
-                signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
-                paySign: wxmsg.paySign, // 支付签名
-                success: function (res) {
-                    // 支付成功的回调函数
+    wxPay (wxmsg, order_id) {
+      this.reShow = false
+      const _this = this
+      // _this.tuanInfo(order_id)
+      this.wx.chooseWXPay({
+        appId: wxmsg.appId,
+        timestamp: wxmsg.timeStamp,
+        nonceStr: wxmsg.nonceStr, // 支付签名随机串，不长于 32 位
+        package: wxmsg.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
+        signType: 'MD5', // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+        paySign: wxmsg.paySign, // 支付签名
+        success: function (res) {
+          // 支付成功的回调函数
 
-                    if(_this.type == 2){
-                        _this.tuanInfo(order_id)
-                    }else{
-                        _this.$router.push({
-                            path:'/courseorderlist'
-                        })
-                    }
-                },
-                cancel: function (res) {
-                    // 支付取消的回调函数
-                    _this.$router.push({
-                        path:'/courseorderlist'
-                    })
-                },
-                error: function (res) {
-                    // 支付失败的回调函数
-                    _this.$router.push({
-                        path:'/courseorderlist'
-                    })
-                }
+          if (_this.type == 2) {
+            _this.tuanInfo(order_id)
+          } else {
+            _this.$router.push({
+              path: '/courseorderlist'
             })
+          }
+        },
+        cancel: function (res) {
+          // 支付取消的回调函数
+          _this.$router.push({
+            path: '/courseorderlist'
+          })
+        },
+        error: function (res) {
+          // 支付失败的回调函数
+          _this.$router.push({
+            path: '/courseorderlist'
+          })
+        }
+      })
     },
     cancelHandler () {
-      this.reShow = false;
+      this.reShow = false
     },
     tuanInfo (order_id) {
-      this.$api.courseOrderTuaninfo({order_id:order_id}).then((res)=>{
-
-        if(res.code == 1){
+      this.$api.courseOrderTuaninfo({order_id: order_id}).then((res) => {
+        if (res.code == 1) {
           this.groupDetails = res.data
           this.groupDetails.current_number = res.data.users.length
           this.groupDetails.user_number = this.user_number
-          this.groupDetails.expire_time = (res.data.expire_time - res.data.create_time)*1000
+          this.groupDetails.expire_time = (res.data.expire_time - res.data.create_time) * 1000
           this.groupDetails.tuanStatus = res.data.success
           this.tuanStatus = res.data.success
           this.groupDetails.t_id = res.data.t_id
-          this.$router.push({name:'CourseGroupDetails',query:{id:res.data.t_id,tuanStatus:res.data.tuanStatus}})
+          this.$router.push({name: 'CourseGroupDetails', query: {id: res.data.t_id, tuanStatus: res.data.tuanStatus}})
           // this.overlayStatus = true
         }
         this.$forceUpdate()
@@ -312,52 +307,51 @@ export default {
     },
     onHandler () {
       var _this = this
-      if(this.detail.type  == 3){
-        if(!this.true_name){
-              this.$toast('请输入真实姓名')
-              return
-            }
-            if(!this.mobile_ap){
-              this.$toast('请输入手机号')
-              return
-            }
-            if(!this.idcard){
-              this.$toast('请输入身份证号')
-              return
+      if (this.detail.type == 3) {
+        if (!this.true_name) {
+          this.$toast('请输入真实姓名')
+          return
+        }
+        if (!this.mobile_ap) {
+          this.$toast('请输入手机号')
+          return
+        }
+        if (!this.idcard) {
+          this.$toast('请输入身份证号')
+          return
         }
       }
       var params = {
         course_id: this.course_id
       }
-      if(this.type == 2){
+      if (this.type == 2) {
         params.type = 1
-        if(this.tid){
+        if (this.tid) {
           params.t_id = this.tid
         }
-      }else if(this.type == 1){
+      } else if (this.type == 1) {
         params.type = 0
       }
-      if(this.detail.type  == 3){
-          params.true_name = this.true_name
-          params.mobile = this.mobile_ap
-          params.idcard = this.idcard
+      if (this.detail.type == 3) {
+        params.true_name = this.true_name
+        params.mobile = this.mobile_ap
+        params.idcard = this.idcard
       }
-      if(this.detail.type == 2 && !this.tid){
-        if(this.payScore){
+      if (this.detail.type == 2 && !this.tid) {
+        if (this.payScore) {
           params.payscore = 1
-        }else{
+        } else {
           params.payscore = 0
         }
       }
 
-      this.$api.courseOrderStore(params).then((res)=>{
-        if(res.code == 1){
-          _this.wxPay(res.data.pay_data,res.data.order_id)
-        }else{
+      this.$api.courseOrderStore(params).then((res) => {
+        if (res.code == 1) {
+          _this.wxPay(res.data.pay_data, res.data.order_id)
+        } else {
           _this.$toast(res.msg)
         }
       })
-
     }
   },
   components: {

@@ -17,25 +17,25 @@
 export default {
   name: 'RateWrap',
   props: {
-    values:{
-      type:Number
+    values: {
+      type: Number
     },
-    goodsId:{
-      type:Number
+    goodsId: {
+      type: Number
     },
-    disabled:{
-      type:Boolean,
-      default:false
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
-      value:this.values
+      value: this.values
     }
   },
   methods: {
     rateChange (value) {
-      this.$emit('rateChange',value,this.goodsId)
+      this.$emit('rateChange', value, this.goodsId)
     }
   }
 

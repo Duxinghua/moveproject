@@ -38,17 +38,17 @@ export default {
       timerText: '获取验证码',
       yx: true,
       tipmessage: false,
-      phone:null,
-      captcha:null,
-      name:'',
+      phone: null,
+      captcha: null,
+      name: '',
       arg: ''
     }
   },
   mounted () {
-    if(this.$route.query.name){
+    if (this.$route.query.name) {
       this.name = this.$route.query.name
     }
-    if(this.$route.query.arg){
+    if (this.$route.query.arg) {
       this.arg = this.$route.query.arg
     }
     // alert(arg)
@@ -59,17 +59,17 @@ export default {
       this.yx = !this.yx
     },
     sendClickHandler () {
-      if(!this.phone){
+      if (!this.phone) {
         this.$toast('请输入手机号')
         return
       }
-      if(!/^\d{11}$/.test(this.phone)){
+      if (!/^\d{11}$/.test(this.phone)) {
         this.$toast('请输入正确的手机号')
         return
       }
       var _this = this
       if (this.timeFlag) {
-        this.$api.smsSend({mobile:this.phone,event:'send'}).then((res)=>{
+        this.$api.smsSend({mobile: this.phone, event: 'send'}).then((res) => {
           this.timeFlag = false
           this.timer = setInterval(() => {
             if (this.time === 0) {
@@ -83,19 +83,17 @@ export default {
               this.timerText = this.time + 's'
             }
           }, 1000)
-
         })
-      }else{
+      } else {
         this.$toast('60s之内只能发一次')
-        return
       }
     },
     login () {
-      if(!this.captcha){
+      if (!this.captcha) {
         this.$toast('请输入验证码')
         return
       }
-      if(!this.phone){
+      if (!this.phone) {
         this.$toast('请输入手机号')
         return
       }
@@ -105,22 +103,20 @@ export default {
         event: 'send'
       }
       var _this = this
-      this.$api.authSaveMobile(params).then((res)=>{
-        if(res.code === 1){
+      this.$api.authSaveMobile(params).then((res) => {
+        if (res.code === 1) {
           this.$toast({
             message: res.msg,
             onClose: () => {
               getSitem.setStr('mobile', res.data.mobile)
-              if(_this.name){
-
-                location.href = config.baseurl+_this.arg
-              }else{
-
+              if (_this.name) {
+                location.href = config.baseurl + _this.arg
+              } else {
                 _this.$router.go(-1)
               }
             }
           })
-        }else{
+        } else {
           this.$toast(res.msg)
         }
       })

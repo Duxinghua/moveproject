@@ -6,13 +6,13 @@
 
 <script>
 export default {
-  props:{
-    show:{
+  props: {
+    show: {
       type: Boolean,
       default: false
     }
   },
-  methods:{
+  methods: {
     toShare () {
       this.$emit('toShare')
     }

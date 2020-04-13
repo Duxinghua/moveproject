@@ -38,150 +38,147 @@
 
 <script>
 export default {
-    data() {
-        return {
-            moneyTotal:'0.00',
-            shopList:[],
-            allChecked:false,
-            checkedTotal:0,
-            cartIdChecked:[],
-        }
-    },
-    watch:{
-        shopList:{
-            deep:true,
-            handler(data){
-                let checkedTotal = 0;
-                let moneyTotal = 0;
-                let cartIdChecked = [];
-                data.forEach((item) => {
-                    if(item.checked){
-                        checkedTotal += 1;
-                        cartIdChecked.push(item.cart_id)
-                        if(item.specs){
-                            moneyTotal += item.goods_num * item.specs.price;
-                        }
-                    }
-
-                })
-                if(checkedTotal != 0 && checkedTotal == data.length){
-                    this.allChecked = true;
-                }
-
-                this.moneyTotal = moneyTotal.toFixed(2);
-                this.checkedTotal = checkedTotal;
-                this.cartIdChecked = cartIdChecked;
-            }
-        },
-        allChecked(data){
-            const shopList = this.shopList.map((item) => {
-                return {
-                    ...item,
-                    checked:data
-                }
-            })
-            this.shopList = shopList;
-        }
-    },
-    mounted(){
-        this.goodsCarts();
-    },
-    methods:{
-        onBuy(){
-            if(this.checkedTotal == 0){
-                this.$toast('请选择支付商品');
-                return false;
-            }
-            this.goodsOrderCreate()
-
-        },
-        onChangeNum(value,item){
-            this.goodsStoreCarts(item,value)
-        },
-        goodsCarts(){
-            const params = {
-                page:1,
-                pageSize:100
-            }
-            this.$toast.loading({
-                duration:0,
-                message: '加载中...',
-                forbidClick: true
-            });
-            this.$api.goodsCarts(params).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    this.shopList = res.data.data.map((item,index) => {
-                        return {
-                            ...item,
-                            index,
-                            checked:false
-                        }
-                    });
-                }
-            })
-        },
-        onLinkShop(){
-            this.$router.push('/shopHome')
-        },
-        onRemove(id){
-            const _this = this;
-            this.$dialog.confirm({
-                title: '提示',
-                message: '确认是否删除',
-                beforeClose(action, done) {
-                    if (action === 'confirm') {
-                        _this.goodsDelCarts(id,done)
-                    } else {
-                        done();
-                    }
-                }
-            });
-        },
-        goodsDelCarts(id,done){
-            this.$api.goodsDelCarts({cart_id:id}).then((res) => {
-                done()
-                if(res.code == 1){
-                    const index = this.shopList.findIndex((item) => item.cart_id == id);
-                    this.shopList.splice(index,1)
-                    this.$toast('删除成功');
-                }else{
-                    this.$toast(res.msg);
-                }
-            })
-        },
-        goodsStoreCarts(data,goodsNum){
-            const param = {
-                goods_id:data.goods_id,
-                goods_num:goodsNum,
-                specs:JSON.stringify(data.specs)
-
-            }
-            this.$toast.loading({
-                duration:0,
-                message: '加载中...',
-                forbidClick: true
-            });
-            this.$api.goodsStoreCarts(param).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    this.$toast('修改成功');
-                }
-            })
-        },
-        goodsOrderCreate(){
-            const param = {
-                type:0,
-                cart_id:this.cartIdChecked.join(',')
-            }
-            this.$router.push({
-                path:'/submitOrder',
-                query:param
-            })
-
-        }
-
+  data () {
+    return {
+      moneyTotal: '0.00',
+      shopList: [],
+      allChecked: false,
+      checkedTotal: 0,
+      cartIdChecked: []
     }
+  },
+  watch: {
+    shopList: {
+      deep: true,
+      handler (data) {
+        let checkedTotal = 0
+        let moneyTotal = 0
+        let cartIdChecked = []
+        data.forEach((item) => {
+          if (item.checked) {
+            checkedTotal += 1
+            cartIdChecked.push(item.cart_id)
+            if (item.specs) {
+              moneyTotal += item.goods_num * item.specs.price
+            }
+          }
+        })
+        if (checkedTotal != 0 && checkedTotal == data.length) {
+          this.allChecked = true
+        }
+
+        this.moneyTotal = moneyTotal.toFixed(2)
+        this.checkedTotal = checkedTotal
+        this.cartIdChecked = cartIdChecked
+      }
+    },
+    allChecked (data) {
+      const shopList = this.shopList.map((item) => {
+        return {
+          ...item,
+          checked: data
+        }
+      })
+      this.shopList = shopList
+    }
+  },
+  mounted () {
+    this.goodsCarts()
+  },
+  methods: {
+    onBuy () {
+      if (this.checkedTotal == 0) {
+        this.$toast('请选择支付商品')
+        return false
+      }
+      this.goodsOrderCreate()
+    },
+    onChangeNum (value, item) {
+      this.goodsStoreCarts(item, value)
+    },
+    goodsCarts () {
+      const params = {
+        page: 1,
+        pageSize: 100
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.goodsCarts(params).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.shopList = res.data.data.map((item, index) => {
+            return {
+              ...item,
+              index,
+              checked: false
+            }
+          })
+        }
+      })
+    },
+    onLinkShop () {
+      this.$router.push('/shopHome')
+    },
+    onRemove (id) {
+      const _this = this
+      this.$dialog.confirm({
+        title: '提示',
+        message: '确认是否删除',
+        beforeClose (action, done) {
+          if (action === 'confirm') {
+            _this.goodsDelCarts(id, done)
+          } else {
+            done()
+          }
+        }
+      })
+    },
+    goodsDelCarts (id, done) {
+      this.$api.goodsDelCarts({cart_id: id}).then((res) => {
+        done()
+        if (res.code == 1) {
+          const index = this.shopList.findIndex((item) => item.cart_id == id)
+          this.shopList.splice(index, 1)
+          this.$toast('删除成功')
+        } else {
+          this.$toast(res.msg)
+        }
+      })
+    },
+    goodsStoreCarts (data, goodsNum) {
+      const param = {
+        goods_id: data.goods_id,
+        goods_num: goodsNum,
+        specs: JSON.stringify(data.specs)
+
+      }
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      this.$api.goodsStoreCarts(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.$toast('修改成功')
+        }
+      })
+    },
+    goodsOrderCreate () {
+      const param = {
+        type: 0,
+        cart_id: this.cartIdChecked.join(',')
+      }
+      this.$router.push({
+        path: '/submitOrder',
+        query: param
+      })
+    }
+
+  }
 
 }
 </script>

@@ -53,8 +53,6 @@
               <div class="swiper-button-next" slot="button-next"></div>
           </swiper>
 
-
-
         <MoreText moreText="更多名师" moreName="TeacherList"/>
       </div>
       <div class="home-course home-onlinecourse">
@@ -122,7 +120,6 @@
       </van-list>
     </div>
 
-
     <Footer :mrt="true" />
   </div>
 </template>
@@ -136,14 +133,14 @@ import NoData from '@/components/nodata'
 // import ApiModel from '@/api'
 
 export default {
-  name: 'Home',
+  name: 'Fall',
   data () {
     return {
       slideList: [
       ],
       offcourseList: [],
       oncourseList: [],
-      videoList:[],
+      videoList: [],
       schoolList: [
       ], // 推荐页名师
       TeacherLists: [], // 名师列表页名师
@@ -164,24 +161,24 @@ export default {
         require('../assets/images/3.png')
       ],
       theacherCurrent: 0,
-          swiperOption: {
-          spaceBetween: 30,
-          centeredSlides: true,
-          autoplay: {
-              delay: 3000,
-              disableOnInteraction: false,
-          },
-          speed:3000,
-          prevButton: '.swiper-button-prev',//上一张
-          nextButton: '.swiper-button-next',//下一张
-          paginationClickable: true,
-          observer: true,
-          observerParents: true
-          // onProgress:function(i,x){
-          //   console.log(i,x)
-          // }
+      swiperOption: {
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false
+        },
+        speed: 3000,
+        prevButton: '.swiper-button-prev', // 上一张
+        nextButton: '.swiper-button-next', // 下一张
+        paginationClickable: true,
+        observer: true,
+        observerParents: true
+        // onProgress:function(i,x){
+        //   console.log(i,x)
+        // }
 
-        }
+      }
     }
   },
   mounted () {
@@ -191,8 +188,8 @@ export default {
   },
   methods: {
     indexBanner () {
-      this.$api.indexBanner({type:1}).then((res)=>{
-        if(res.code == 1) {
+      this.$api.indexBanner({type: 1}).then((res) => {
+        if (res.code == 1) {
           this.slideList = res.data
         }
       })
@@ -200,7 +197,7 @@ export default {
     menuHandler (index) {
       this.current = index
       this.pageType = index
-      if(index == 2 || index == 3){
+      if (index == 2 || index == 3) {
         this.Onlinestotal = 0
         this.OnlinesLists = []
         this.OnlinesCurrent = 1
@@ -320,9 +317,9 @@ export default {
         pageSize: 10,
         type: 2 // 线上
       }
-      if(this.pageType == 2) {
+      if (this.pageType == 2) {
         param = paramOn
-      }else if(this.pageType == 3){
+      } else if (this.pageType == 3) {
         param = paramOff
       }
       this.$toast.loading({
@@ -370,9 +367,9 @@ export default {
     NoData
   },
   computed: {
-      // swiper() {
-      //   return this.$refs.mySwiper.swiper
-      // }
+    // swiper() {
+    //   return this.$refs.mySwiper.swiper
+    // }
   }
 }
 </script>

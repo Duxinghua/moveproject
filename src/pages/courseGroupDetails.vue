@@ -115,279 +115,274 @@ import WxShare from '@/components/wxshare.vue'
 import config from '@/utils/config'
 import getSitem from '@/utils/storage'
 export default {
-  data() {
-        return {
-            tuanStatus:0,//1是拼团成功 0 是支付成功
-            overlayStatus:false,
-            popupStatus:false,
-            goodsNum:1,
-            skuIndex:-1,
-            skuList:[],
-            goodsData:{},
-            groupId:0,
-            groupDetails:{
-              users:[]
-            },
-            groupList:[],
-            tuanInfos:{
-              users: []
-            },
-            wxShare: false,
-            courseId: 0,
-            orderId:0,
-            timer:null
-        }
+  data () {
+    return {
+      tuanStatus: 0, // 1是拼团成功 0 是支付成功
+      overlayStatus: false,
+      popupStatus: false,
+      goodsNum: 1,
+      skuIndex: -1,
+      skuList: [],
+      goodsData: {},
+      groupId: 0,
+      groupDetails: {
+        users: []
+      },
+      groupList: [],
+      tuanInfos: {
+        users: []
+      },
+      wxShare: false,
+      courseId: 0,
+      orderId: 0,
+      timer: null
+    }
   },
   mounted () {
     // alert(getSitem.getStr('mobile'))
-    if(!getSitem.getStr('mobile')){
-          this.$router.push({name:'Login'})
+    if (!getSitem.getStr('mobile')) {
+      this.$router.push({name: 'Login'})
     }
 
-    const {tuanStatus,id} = this.$route.query
+    const {tuanStatus, id} = this.$route.query
     this.groupId = id
-    this.tuanStatus = tuanStatus;
+    this.tuanStatus = tuanStatus
     this.goodsTuan()
-    if(tuanStatus == 0 || tuanStatus == 1) {
+    if (tuanStatus == 0 || tuanStatus == 1) {
       this.overlayStatus = true
     }
-
   },
   components: {
     WxShare
   },
-  methods:{
-      s(){
-        this.overlayStatus = true
-      },
-      viewHandler () {
-        var type = this.groupDetails.course.type
-        if(type == 3){
-          this.$router.push({name:'OffCourseDetail',query:{id:this.courseId}})
-        }else if(type == 2){
-          this.$router.push({name:'OnlineCourseDetail',query:{id:this.courseId}})
-        }
-      },
-      onLook () {
-        var type = this.groupDetails.course.type
-        if(type == 2){
-          this.$router.push({path:'/onlinecourselist'})
-        }else if(type == 3){
-          this.$router.push({path:'/offcourselist'})
-        }
-      },
-      test () {
-        alert(getSitem.getStr('mobile'))
-        alert(getSitem.getStr('token'))
-        getSitem.remove('token')
-        getSitem.remove('mobile')
-      },
-      wxs (title,description,image) {
-          var data = {
-            url:location.href
-          }
-          var that = this
-          let shareurl = config.baseurl + '/coursegroupdetails?id=' + that.groupId
-          const agent = navigator.userAgent
-          const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-          if(isiOS){
-            data.url = config.shareurls
-          }
-          this.$api.userGetSignPackage(data).then((res) => {
-            if (res.code === 1) {
-              var wxpay = res.data
-              wx.config({
-                debug: false,
-                appId: wxpay.appId,
-                timestamp: wxpay.timestamp,
-                nonceStr: wxpay.nonceStr,
-                signature: wxpay.signature,
-                jsApiList: [
-                  'checkJsApi',
-                  'onMenuShareTimeline',
-                  'onMenuShareAppMessage',
-                  'chooseImage',
-                  'uploadImage',
-                  'getLocalImgData'
-                ]
-              })
-              wx.error(function (res) {
-                console.log('出错了：' + res.errMsg)
-              })
-              // 在这里调用 API
-              wx.ready(function () {
-                wx.checkJsApi({
-                  jsApiList: [
-                    'checkJsApi',
-                    'onMenuShareTimeline',
-                    'onMenuShareAppMessage',
-                    'chooseImage',
-                    'uploadImage',
-                    'getLocalImgData'
-                  ],
-                  success: function (res) {
+  methods: {
+    s () {
+      this.overlayStatus = true
+    },
+    viewHandler () {
+      var type = this.groupDetails.course.type
+      if (type == 3) {
+        this.$router.push({name: 'OffCourseDetail', query: {id: this.courseId}})
+      } else if (type == 2) {
+        this.$router.push({name: 'OnlineCourseDetail', query: {id: this.courseId}})
+      }
+    },
+    onLook () {
+      var type = this.groupDetails.course.type
+      if (type == 2) {
+        this.$router.push({path: '/onlinecourselist'})
+      } else if (type == 3) {
+        this.$router.push({path: '/offcourselist'})
+      }
+    },
+    test () {
+      alert(getSitem.getStr('mobile'))
+      alert(getSitem.getStr('token'))
+      getSitem.remove('token')
+      getSitem.remove('mobile')
+    },
+    wxs (title, description, image) {
+      var data = {
+        url: location.href
+      }
+      var that = this
+      let shareurl = config.baseurl + '/coursegroupdetails?id=' + that.groupId
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      if (isiOS) {
+        data.url = config.shareurls
+      }
+      this.$api.userGetSignPackage(data).then((res) => {
+        if (res.code === 1) {
+          var wxpay = res.data
+          wx.config({
+            debug: false,
+            appId: wxpay.appId,
+            timestamp: wxpay.timestamp,
+            nonceStr: wxpay.nonceStr,
+            signature: wxpay.signature,
+            jsApiList: [
+              'checkJsApi',
+              'onMenuShareTimeline',
+              'onMenuShareAppMessage',
+              'chooseImage',
+              'uploadImage',
+              'getLocalImgData'
+            ]
+          })
+          wx.error(function (res) {
+            console.log('出错了：' + res.errMsg)
+          })
+          // 在这里调用 API
+          wx.ready(function () {
+            wx.checkJsApi({
+              jsApiList: [
+                'checkJsApi',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'chooseImage',
+                'uploadImage',
+                'getLocalImgData'
+              ],
+              success: function (res) {
 
-                  }
-                })
-              })
-
-              // 点击分享到朋友圈
-              wx.onMenuShareTimeline({
-                title: title, // 分享标题
-                desc: description, // 分享描述
-                link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                imgUrl: image, // 分享图标
-                trigger: function (res) {
-                  that.wxShare = false
-                  // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
-                  alert('用户点击分享到朋友圈')
-                },
-                success: function () {
-                  that.wxShare = false
-                  // 用户确认分享后执行的回调函数
-                  alert('分享成功')
-                },
-                cancel: function () {
-                  that.wxShare = false
-                  // 用户取消分享后执行的回调函数
-                  alert('分享取消')
-                },
-                fail: function (res) {
-                  alert(JSON.stringify(res))
-                }
-              })
-              wx.onMenuShareAppMessage({
-                title: title, // 分享标题
-                desc: description, // 分享描述
-                link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                imgUrl: image, // 分享图标
-                type: 'link', // 分享类型,music、video或link，不填默认为link
-                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-                success: function () {
-                  that.wxShare = false
-                  // 用户确认分享后执行的回调函数
-                  // alert('分享成功');
-
-                },
-                cancel: function () {
-                  that.wxShare = false
-                  // 用户取消分享后执行的回调函数
-                  // alert('分享取消');
-                }
-              })
-
-            }
+              }
+            })
           })
 
-      },
-      toShare () {
-        this.wxShare = false
-      },
-      onShare () {
-        this.wxShare = true
-      },
-      onLink(){
-          if(this.tuanStatus == 1){
-              this.$router.push({
-                path:'/shopHome'
-            })
-          }
-      },
-      onLinkOrder(){
-          this.$router.push({
-                path:'/courseorderlist'
-            })
-      },
-        hideOverlay(){
-            this.overlayStatus = false;
-        },
-        onLinkDetails(id,type){
-            var path = ''
-            if(type == 2){
-              path = '/onlineCourseDetail'
-            }else if(type == 3) {
-              path = '/offcoursedetail'
-            }
-            this.$router.push({
-                path: path,
-                query:{
-                    id
-                }
-            })
-        },
-        goodsTuan(){
-
-            this.$toast.loading({
-                duration:0,
-                message: '加载中...',
-                forbidClick: true
-            });
-            var that = this
-            this.$api.courseTuanIndex({t_id:this.groupId}).then((res) => {
-                this.$toast.clear();
-                if(res.code == 1){
-                    this.groupDetails = res.data;
-                    this.goodsData = res.data.course || {};
-                    this.courseId = res.data.course_id
-                    this.groupList = res.data.hot || [];
-                    var obj = res.data.course
-                    var title = obj.title
-                    var description = obj.description
-                    var image = obj.image ? obj.image[0] : ''
-                    this.orderId = res.data.order_id
-                    this.wxs(title,description,image)
-                    this.tuanInfo(res.data.order_id)
-                    //定时刷新对应的数据
-                    this.timer = null
-                    this.timer = setInterval(() => {
-                        if(that.tuanStatus == 0){
-                          that.tuanInfo(that.orderId)
-                        }else{
-                          clearInterval(that.timer)
-                          that.timer = null
-                        }
-                    }, 2000);
-                }
-            })
-        },
-        tuanInfo (order_id) {
-          this.$api.courseOrderTuaninfo({order_id:order_id}).then((res)=>{
-            console.log(res)
-            if(res.code == 1){
-              this.tuanInfos = res.data
-              this.tuanStatus = res.data.success
+          // 点击分享到朋友圈
+          wx.onMenuShareTimeline({
+            title: title, // 分享标题
+            desc: description, // 分享描述
+            link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: image, // 分享图标
+            trigger: function (res) {
+              that.wxShare = false
+              // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+              alert('用户点击分享到朋友圈')
+            },
+            success: function () {
+              that.wxShare = false
+              // 用户确认分享后执行的回调函数
+              alert('分享成功')
+            },
+            cancel: function () {
+              that.wxShare = false
+              // 用户取消分享后执行的回调函数
+              alert('分享取消')
+            },
+            fail: function (res) {
+              alert(JSON.stringify(res))
             }
           })
-        },
-        onSkuClick(index){
-            if(this.skuIndex == index){
-                this.skuIndex = -1;
-            }else{
-                this.skuIndex = index;
+          wx.onMenuShareAppMessage({
+            title: title, // 分享标题
+            desc: description, // 分享描述
+            link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: image, // 分享图标
+            type: 'link', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+              that.wxShare = false
+              // 用户确认分享后执行的回调函数
+              // alert('分享成功');
+            },
+            cancel: function () {
+              that.wxShare = false
+              // 用户取消分享后执行的回调函数
+              // alert('分享取消');
             }
-        },
-        onSubmit(){
-            this.goodsOrderCreate(2)
-        },
-        showPopup(){
-            this.popupStatus = true;
-        },
-        goodsOrderCreate(type){
-            //参加拼团到支付页面
-            const param = {
-                type,
-                tid:this.groupId,
-                courseId:this.groupDetails.course_id,
-                user_number:this.groupDetails.user_number
-            }
-            this.$router.push({
-                path:'/submitcourseorder',
-                query:param
-            })
+          })
         }
+      })
+    },
+    toShare () {
+      this.wxShare = false
+    },
+    onShare () {
+      this.wxShare = true
+    },
+    onLink () {
+      if (this.tuanStatus == 1) {
+        this.$router.push({
+          path: '/shopHome'
+        })
+      }
+    },
+    onLinkOrder () {
+      this.$router.push({
+        path: '/courseorderlist'
+      })
+    },
+    hideOverlay () {
+      this.overlayStatus = false
+    },
+    onLinkDetails (id, type) {
+      var path = ''
+      if (type == 2) {
+        path = '/onlineCourseDetail'
+      } else if (type == 3) {
+        path = '/offcoursedetail'
+      }
+      this.$router.push({
+        path: path,
+        query: {
+          id
+        }
+      })
+    },
+    goodsTuan () {
+      this.$toast.loading({
+        duration: 0,
+        message: '加载中...',
+        forbidClick: true
+      })
+      var that = this
+      this.$api.courseTuanIndex({t_id: this.groupId}).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.groupDetails = res.data
+          this.goodsData = res.data.course || {}
+          this.courseId = res.data.course_id
+          this.groupList = res.data.hot || []
+          var obj = res.data.course
+          var title = obj.title
+          var description = obj.description
+          var image = obj.image ? obj.image[0] : ''
+          this.orderId = res.data.order_id
+          this.wxs(title, description, image)
+          this.tuanInfo(res.data.order_id)
+          // 定时刷新对应的数据
+          this.timer = null
+          this.timer = setInterval(() => {
+            if (that.tuanStatus == 0) {
+              that.tuanInfo(that.orderId)
+            } else {
+              clearInterval(that.timer)
+              that.timer = null
+            }
+          }, 2000)
+        }
+      })
+    },
+    tuanInfo (order_id) {
+      this.$api.courseOrderTuaninfo({order_id: order_id}).then((res) => {
+        console.log(res)
+        if (res.code == 1) {
+          this.tuanInfos = res.data
+          this.tuanStatus = res.data.success
+        }
+      })
+    },
+    onSkuClick (index) {
+      if (this.skuIndex == index) {
+        this.skuIndex = -1
+      } else {
+        this.skuIndex = index
+      }
+    },
+    onSubmit () {
+      this.goodsOrderCreate(2)
+    },
+    showPopup () {
+      this.popupStatus = true
+    },
+    goodsOrderCreate (type) {
+      // 参加拼团到支付页面
+      const param = {
+        type,
+        tid: this.groupId,
+        courseId: this.groupDetails.course_id,
+        user_number: this.groupDetails.user_number
+      }
+      this.$router.push({
+        path: '/submitcourseorder',
+        query: param
+      })
+    }
 
   },
-  destroyed(){
+  destroyed () {
     clearInterval(this.timer)
     this.timer = null
   }

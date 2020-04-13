@@ -183,7 +183,7 @@ export default {
       pageType: 0,
       courseId: 0,
       isBuy: 0,
-      id: "",
+      id: '',
       // like: 0,
       onlineMsg: {},
       user_number: null,
@@ -197,14 +197,13 @@ export default {
       finished: false,
       loading: false,
       popupStatus: false,
-      reShow:false,
+      reShow: false,
       tipText: '你的课程已购买？是否再次购买',
-      huaType:1,
-      huaTypeIndex:1
+      huaType: 1,
+      huaTypeIndex: 1
     }
   },
   mounted () {
-
     // if(!getSitem.getStr('mobile')){
     //       this.$router.push({name:'Login'})
     // }
@@ -220,8 +219,8 @@ export default {
   },
   methods: {
     goGoodMall (id) {
-      if(id>0){
-        this.$router.push({name:'goodsDetails',query:{goodsId:id}})
+      if (id > 0) {
+        this.$router.push({name: 'goodsDetails', query: {goodsId: id}})
       }
     },
     changeType (type) {
@@ -229,15 +228,15 @@ export default {
       this.huaTypeIndex = type
       this.$forceUpdate()
     },
-    wxs (title,description,image) {
+    wxs (title, description, image) {
       var data = {
-        url:location.href
+        url: location.href
       }
       var that = this
       let shareurl = config.baseurl + '/onlinecoursedetail?id=' + that.courseId + '&openid=' + getSitem.getStr('openid')
       const agent = navigator.userAgent
       const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-      if(isiOS){
+      if (isiOS) {
         data.url = config.shareurls
       }
       this.$api.userGetSignPackage(data).then((res) => {
@@ -313,7 +312,6 @@ export default {
               that.wxShare = false
               // 用户确认分享后执行的回调函数
               // alert('分享成功');
-
             },
             cancel: function () {
               that.wxShare = false
@@ -321,18 +319,16 @@ export default {
               // alert('分享取消');
             }
           })
-
         }
       })
-
     },
     homeClick () {
-      this.$router.push({name:'Home'})
+      this.$router.push({name: 'Home'})
     },
     cancelHandler () {
-      if(this.isBuy == 1){
-        this.$router.push({name:'MyYy'})
-      }else{
+      if (this.isBuy == 1) {
+        this.$router.push({name: 'MyYy'})
+      } else {
         this.reShow = false
       }
     },
@@ -340,11 +336,11 @@ export default {
     //  if(this.isBuy == 1){
     //      this.reShow = false
     //  }else{
-         this.reShow = false
+      this.reShow = false
     //  }
     },
     playVideo () {
-      if(this.isBuy == 0){
+      if (this.isBuy == 0) {
         this.$toast('此课程未购买,购买之后才可以播放')
       }
       // this.reShow = true
@@ -367,44 +363,43 @@ export default {
       this.$router.push('/submitCourseOrder')
     },
     doTask () {
-      if(this.isBuy == 1){
-        this.$router.push({path:'doTask',query:{courseId:this.courseId}})
-      }else{
+      if (this.isBuy == 1) {
+        this.$router.push({path: 'doTask', query: {courseId: this.courseId}})
+      } else {
         this.$toast('购买课程后,才可以添加作业')
       }
     },
     onlineDetail () {
-      const param ={
+      const param = {
         course_id: this.courseId
       }
       this.$api.courseDetail(param).then((res) => {
-
         // this.$toast.clear()
         if (res.code == 1) {
           this.onlineMsg = res.data
           this.onlineMsg.playerOptions = {
-              playbackRates: [0.7, 1.0, 1.5, 2.0], //播放速度
-                autoplay: false, //如果true,浏览器准备好时开始回放。
-                muted: false, // 默认情况下将会消除任何音频。
-                loop: false, // 导致视频一结束就重新开始。
-                preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
-                language: 'zh-CN',
-                aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
-                fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
-                sources: [{
-                  type: "video/mp4",
-                  src: res.data.video //视频url地址
-                }],
-                poster: res.data.image ? res.data.image[0] : '', //你的封面地址
-                // width: document.documentElement.clientWidth,
-                notSupportedMessage: '此视频暂无法播放，请稍后再试', //允许覆盖Video.js无法播放媒体源时显示的默认信息。
-                controlBar: {
-                  timeDivider: true,
-                  durationDisplay: true,
-                  remainingTimeDisplay: false,
-                  fullscreenToggle: true  //全屏按钮
+            playbackRates: [0.7, 1.0, 1.5, 2.0], // 播放速度
+            autoplay: false, // 如果true,浏览器准备好时开始回放。
+            muted: false, // 默认情况下将会消除任何音频。
+            loop: false, // 导致视频一结束就重新开始。
+            preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+            language: 'zh-CN',
+            aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+            fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+            sources: [{
+              type: 'video/mp4',
+              src: res.data.video // 视频url地址
+            }],
+            poster: res.data.image ? res.data.image[0] : '', // 你的封面地址
+            // width: document.documentElement.clientWidth,
+            notSupportedMessage: '此视频暂无法播放，请稍后再试', // 允许覆盖Video.js无法播放媒体源时显示的默认信息。
+            controlBar: {
+              timeDivider: true,
+              durationDisplay: true,
+              remainingTimeDisplay: false,
+              fullscreenToggle: true // 全屏按钮
 
-              }
+            }
 
           }
           this.user_number = res.data.user_number
@@ -414,8 +409,8 @@ export default {
           this.getWorksList()
           var title = res.data.title
           var description = res.data.description
-          var image = res.data.image ? res.data.image[0]: ''
-          this.wxs(title,description,image)
+          var image = res.data.image ? res.data.image[0] : ''
+          this.wxs(title, description, image)
         }
       })
     },
@@ -436,9 +431,9 @@ export default {
           this.loading = false
           // console.log(res.data)
           // if (this.teacherWorks.length == 0) {
-            // 第一次加载
-            this.teacherWorks = res.data.data.slice(0,3) || []
-            this.total = res.data.total
+          // 第一次加载
+          this.teacherWorks = res.data.data.slice(0, 3) || []
+          this.total = res.data.total
           // } else if (this.teacherWorks.length < this.total) {
           //   // 加载更多
           //   this.teacherWorks = this.teacherWorks.concat(res.data.data)
@@ -464,8 +459,8 @@ export default {
       }
       this.$api.courseTuanList(param).then((res) => {
         if (res.code == 1) {
-          var list = res.data.data.slice(0,3)
-          this.groupList =  list
+          var list = res.data.data.slice(0, 3)
+          this.groupList = list
           // console.log(res.data)
         }
       })
@@ -482,14 +477,14 @@ export default {
           // console.log(res.data.data)
           var obj = res.data.data
           var list = {}
-          obj.map((item)=>{
-            if(!list[item.type]){
+          obj.map((item) => {
+            if (!list[item.type]) {
               list[item.type] = []
             }
             list[item.type].push(item)
           })
-          for(var i=1,l=list.length;i<5;i++){
-            if(!list[i]){
+          for (var i = 1, l = list.length; i < 5; i++) {
+            if (!list[i]) {
               list[i] = []
             }
           }
@@ -507,7 +502,7 @@ export default {
         if (res.code == 1) {
           // console.log(res.data.data)
           var list = []
-          res.data.data.map((item)=>{
+          res.data.data.map((item) => {
             item.id = item.id
             item.amity = item.amity
             item.likes = item.likes
@@ -520,8 +515,8 @@ export default {
         }
       })
     },
-    likeHandler (amity,id) {
-      this.$api.courseSaveLike({comment_id:id}).then((res) => {
+    likeHandler (amity, id) {
+      this.$api.courseSaveLike({comment_id: id}).then((res) => {
         if (res.code === 1) {
           // console.log(res)
           this.$toast({
@@ -537,49 +532,45 @@ export default {
       })
     },
     onLinkAll () {
-      this.$router.push({name:'CourseAllGroup',query:{courseId:this.courseId}})
+      this.$router.push({name: 'CourseAllGroup', query: {courseId: this.courseId}})
     },
     onBuy (courseId) {
-      if(this.isBuy == 1){
+      if (this.isBuy == 1) {
         this.$dialog.confirm({
-            title: '提示',
-            message: '您的课程已购买，确认再次购买吗？',
-            confirmButtonColor:'#6D8160',
-            cancelButtonColor:'#999999'
-          }).then(() => {
-
-            this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
-
-          }).catch(() => {
-            // on cancel
-          })
-      }else{
-        this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:1,user_number:this.user_number}})
+          title: '提示',
+          message: '您的课程已购买，确认再次购买吗？',
+          confirmButtonColor: '#6D8160',
+          cancelButtonColor: '#999999'
+        }).then(() => {
+          this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
+        }).catch(() => {
+          // on cancel
+        })
+      } else {
+        this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
       }
-
     },
     onTrun (courseId) {
-      if(this.isBuy == 1){
+      if (this.isBuy == 1) {
         this.$dialog.confirm({
-            title: '提示',
-            message: '您的课程已购买，确认再次购买吗？',
-            confirmButtonColor:'#6D8160',
-            cancelButtonColor:'#999999'
-          }).then(() => {
-            this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})
-
-          }).catch(() => {
-            // on cancel
-          })
-      }else{
-      this.$router.push({path: '/submitCourseOrder', query: {courseId:courseId, type:2,user_number:this.user_number}})
+          title: '提示',
+          message: '您的课程已购买，确认再次购买吗？',
+          confirmButtonColor: '#6D8160',
+          cancelButtonColor: '#999999'
+        }).then(() => {
+          this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 2, user_number: this.user_number}})
+        }).catch(() => {
+          // on cancel
+        })
+      } else {
+        this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 2, user_number: this.user_number}})
       }
     }
   },
   computed: {
-    player() {
-        return this.$refs.videoPlnoTuanayer.player
-      }
+    player () {
+      return this.$refs.videoPlnoTuanayer.player
+    }
   },
   components: {
     TeacherMsg,
@@ -588,10 +579,10 @@ export default {
     GroupItem,
     WxShare
   },
-  computed:{
+  computed: {
     buyClass () {
       return {
-        'ondetail-buy-btn':true,
+        'ondetail-buy-btn': true,
         'noTuan': this.onlineMsg.is_tuan == 0
       }
     }

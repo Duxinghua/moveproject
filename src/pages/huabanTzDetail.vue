@@ -90,7 +90,7 @@ export default {
   data () {
     return {
       id: '',
-      wxShare:false,
+      wxShare: false,
       index: 1,
       user: {},
       tzDetail: {},
@@ -114,12 +114,12 @@ export default {
   },
   methods: {
     userInfoClick (id) {
-      this.$router.push({name:'HuabanUserInfo',query:{id:id}})
+      this.$router.push({name: 'HuabanUserInfo', query: {id: id}})
     },
-    onImageView(data, index) {
-            this.imagePreview = data;
-            this.startPosition = index;
-            this.imageShow = true;
+    onImageView (data, index) {
+      this.imagePreview = data
+      this.startPosition = index
+      this.imageShow = true
     },
     shareOpen () {
       this.wxShare = true
@@ -180,10 +180,10 @@ export default {
     },
     autoTime (time) {
       var tim = new Date(time * 1000)
-      return tim.getFullYear() + '-' + (tim.getMonth() + 1) + '-' + (tim.getDate().length == 1 ? 0 + tim.getDate() : tim.getDate()) + ' ' + (tim.getHours().length == 1 ? 0+tim.getHours() : tim.getHours() )+ ':' + (tim.getMinutes().length == 1 ? 0+ time.getMinutes() : tim.getMinutes())
+      return tim.getFullYear() + '-' + (tim.getMonth() + 1) + '-' + (tim.getDate().length == 1 ? 0 + tim.getDate() : tim.getDate()) + ' ' + (tim.getHours().length == 1 ? 0 + tim.getHours() : tim.getHours()) + ':' + (tim.getMinutes().length == 1 ? 0 + time.getMinutes() : tim.getMinutes())
     },
     timers (timer) {
-      return parseInt((new Date().getTime() - timer*1000)/1000/3600) > 24 ? this.autoTime(timer) :parseInt((new Date().getTime() - timer*1000)/1000/3600)+'小时前更新'
+      return parseInt((new Date().getTime() - timer * 1000) / 1000 / 3600) > 24 ? this.autoTime(timer) : parseInt((new Date().getTime() - timer * 1000) / 1000 / 3600) + '小时前更新'
     },
     gzClickHandler (id) {
       console.log(id)

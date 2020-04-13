@@ -105,6 +105,9 @@
       </span>
       <span style="display:none" class="repay" v-if="order_detail.status == 99">重新购买</span>
     </div>
+    <div class="phonecall">
+
+    </div>
   </div>
 </template>
 
@@ -120,7 +123,7 @@ export default {
           users: []
         }
       },
-      goodsTuanText:[
+      goodsTuanText: [
         '进行中',
         '成功',
         '解散'
@@ -168,7 +171,7 @@ export default {
         }
 
       ],
-      num: 3,//上传数量
+      num: 3, // 上传数量
       localIds: [],
       imgList: []
     }
@@ -187,117 +190,109 @@ export default {
       })
     },
     commentClickHandler (order_id) {
-      this.$router.push({name:'OrderComment',query:{id:order_id}})
+      this.$router.push({name: 'OrderComment', query: {id: order_id}})
     },
     refundHandler (order_id) {
-      this.$router.push({name:'OrderRefund',query:{id:order_id}})
+      this.$router.push({name: 'OrderRefund', query: {id: order_id}})
     },
     payClickHandler (order_id) {
       var _this = this
-      this.$api.goodsOrderPayOrder({order_id: order_id}).then((res)=>{
-        if(res.code === 1){
+      this.$api.goodsOrderPayOrder({order_id: order_id}).then((res) => {
+        if (res.code === 1) {
           this.$toast({
             message: res.msg,
             onClose: () => {
               _this.getDetail()
             }
           })
-        }else{
+        } else {
           this.$toast(res.msg)
         }
       })
     },
     cancelClickHandler (order_id) {
       var _this = this
-       this.$api.goodsOrderDel({order_id:order_id}).then((res)=>{
-         if (res.code === 1) {
-           _this.$toast({
-             message: res.msg,
-             onClose: () => {
-
-               _this.$router.go(-1)
-             }
-           })
-
-         }else{
-           _this.$toast(res.msg)
-         }
-       })
+      this.$api.goodsOrderDel({order_id: order_id}).then((res) => {
+        if (res.code === 1) {
+          _this.$toast({
+            message: res.msg,
+            onClose: () => {
+              _this.$router.go(-1)
+            }
+          })
+        } else {
+          _this.$toast(res.msg)
+        }
+      })
     },
     formatTime (time) {
-      var date  = ""
+      var date = ''
       if (time) {
-        date = new Date(time*1000)
-      }else{
+        date = new Date(time * 1000)
+      } else {
         date = new Date()
       }
       var getyear = date.getFullYear()
       var getmonth = date.getMonth() + 1
       var getday = date.getDate()
-      var gethours = new String(date.getHours()).length == 1 ? (0+new String(date.getHours())) : date.getHours()
-      var getminute = new String(date.getMinutes()).length  == 1 ? (0+ new String(date.getMinutes())) : date.getMinutes()
-      return getyear + '-' + getmonth + '-' + getday + ' ' + gethours + ':'+ getminute
+      var gethours = new String(date.getHours()).length == 1 ? (0 + new String(date.getHours())) : date.getHours()
+      var getminute = new String(date.getMinutes()).length == 1 ? (0 + new String(date.getMinutes())) : date.getMinutes()
+      return getyear + '-' + getmonth + '-' + getday + ' ' + gethours + ':' + getminute
     },
     getDetail () {
-      this.$api.goodsOrderIndex({order_id:this.order_id}).then((res)=>{
-        if(res.code === 1) {
+      this.$api.goodsOrderIndex({order_id: this.order_id}).then((res) => {
+        if (res.code === 1) {
           var address = res.data.address_text
           var arr = address.split('，')
           var list = []
           this.order_detail = res.data
-          if(arr.length){
+          if (arr.length) {
             list.push(area.province_list[arr[0]])
             list.push(area.city_list[arr[1]])
             list.push(area.county_list[arr[2]])
             list.push(arr[3])
             this.order_detail.addressInfo = list.join()
-          }else{
+          } else {
             this.order_detail.addressInfo = ''
           }
           var status = res.data.status
-          console.log(status,'status')
-          if(status == 99 ){
+          console.log(status, 'status')
+          if (status == 99) {
             status = 5
-          }else if(status == 8){
+          } else if (status == 8) {
             status = 6
-          }else if(status == 9){
+          } else if (status == 9) {
             status = 7
           }
           this.order_detail.tipsimage = this.tips[status].image
           this.order_detail.tipst1 = this.tips[status].t1
           this.order_detail.tipst2 = this.tips[status].t2
           var list = []
-          if(!res.data.goodsTuan){
+          if (!res.data.goodsTuan) {
             this.order_detail.goodsTuan = {}
           }
           var arr = res.data.goodsTuan ? res.data.goodsTuan.users : []
-          var l = res.data.goodsTuan ? (res.data.goodsTuan.user_number > 4 ? 4 : res.data.goodsTuan.user_number ): 2
-          for(var i=0,l=l;i<l;i++){
+          var l = res.data.goodsTuan ? (res.data.goodsTuan.user_number > 4 ? 4 : res.data.goodsTuan.user_number) : 2
+          for (var i = 0, l = l; i < l; i++) {
             var obj = {}
-            if(i != 3){
-              if(arr[i]){
+            if (i != 3) {
+              if (arr[i]) {
                 obj = arr[i]
                 obj.active = false
-              }else{
-                if(i == 0 || i == 1 || i == 2 || i == 3){
+              } else {
+                if (i == 0 || i == 1 || i == 2 || i == 3) {
                   obj.active = true
                   obj.avatar = require('../assets/images/doubt.png')
-
                 }
               }
-
-            }else{
-
-                obj.active = false
-                obj.avatar = require('../assets/images/img4.png')
-
+            } else {
+              obj.active = false
+              obj.avatar = require('../assets/images/img4.png')
             }
             list.push(obj)
           }
           console.log(list)
           this.order_detail.goodsTuan.users = list
-
-
         }
       })
     }
@@ -312,6 +307,8 @@ export default {
   flex-direction: column;
   min-height: 100vh;
   background: #FBF8F4;
+  padding-bottom: 110px;
+  box-sizing: border-box;
   &-tuan{
     display: flex;
     flex-direction: row;

@@ -2,7 +2,7 @@ import Api from '@/api/index'
 import config from './config'
 const wxSing = {
 
-  init (title,description,shareUrl,image) {
+  init (title, description, shareUrl, image) {
     console.log('22')
     shareUrl = shareUrl || location.href
     var data = {

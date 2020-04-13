@@ -71,58 +71,58 @@ export default {
     NoData
   },
   mounted () {
-      // if(getSitem.getStr('hanbansearchindex')){
-      //   this.currentIndex = getSitem.getStr('hanbansearchindex')
-      // }
-      // if(getSitem.getStr('hanbansearchkey')){
-      //   this.searchText = getSitem.getStr('hanbansearchkey')
-      // }
-      // if(getSitem.getStr('hanbansearchindex') && getSitem.getStr('hanbansearchkey')){
-      //   this.resultClickHandler(this.currentIndex)
-      // }
+    // if(getSitem.getStr('hanbansearchindex')){
+    //   this.currentIndex = getSitem.getStr('hanbansearchindex')
+    // }
+    // if(getSitem.getStr('hanbansearchkey')){
+    //   this.searchText = getSitem.getStr('hanbansearchkey')
+    // }
+    // if(getSitem.getStr('hanbansearchindex') && getSitem.getStr('hanbansearchkey')){
+    //   this.resultClickHandler(this.currentIndex)
+    // }
   },
   methods: {
     linkDetail (id) {
-      this.$router.push({name:'HuabanGroupDetail', query:{id:id}})
+      this.$router.push({name: 'HuabanGroupDetail', query: {id: id}})
     },
-    joinGroupHandler (is_join,group_id) {
-      if(is_join === 0){
-      this.$api.groupGroupUser({group_id:group_id}).then((res)=>{
-        if(res.code === 1){
-          this.$toast({
-            message: res.msg,
-            onClose: () => {
-              this.huabanList = []
-              this.finished = false
-              this.loading = false
-              this.getGroupLists()
-            }
-          })
-        }else{
-          this.$toast(res.msg)
-        }
-      })
-      }else if(is_join === 1) {
-       this.$api.groupGroupUserDel({group_id:group_id}).then((res)=>{
-        if(res.code === 1){
-          this.$toast({
-            message: res.msg,
-            onClose: () => {
-              this.huabanList = []
-              this.finished = false
-              this.loading = false
-              this.getGroupLists()
-            }
-          })
-        }else{
-          this.$toast(res.msg)
-        }
-      })
+    joinGroupHandler (is_join, group_id) {
+      if (is_join === 0) {
+        this.$api.groupGroupUser({group_id: group_id}).then((res) => {
+          if (res.code === 1) {
+            this.$toast({
+              message: res.msg,
+              onClose: () => {
+                this.huabanList = []
+                this.finished = false
+                this.loading = false
+                this.getGroupLists()
+              }
+            })
+          } else {
+            this.$toast(res.msg)
+          }
+        })
+      } else if (is_join === 1) {
+        this.$api.groupGroupUserDel({group_id: group_id}).then((res) => {
+          if (res.code === 1) {
+            this.$toast({
+              message: res.msg,
+              onClose: () => {
+                this.huabanList = []
+                this.finished = false
+                this.loading = false
+                this.getGroupLists()
+              }
+            })
+          } else {
+            this.$toast(res.msg)
+          }
+        })
       }
     },
-    cancelGz(id) {
-      this.$api.userSaveFollow({user_id:id}).then((res)=>{
-        if(res.code === 1){
+    cancelGz (id) {
+      this.$api.userSaveFollow({user_id: id}).then((res) => {
+        if (res.code === 1) {
           this.$toast({
             message: res.msg,
             onClose: () => {
@@ -132,16 +132,16 @@ export default {
               this.getGroupLists()
             }
           })
-        }else{
+        } else {
           this.$toast(res.msg)
         }
       })
     },
     submit () {
-      if(this.searchText){
-        getSitem.setStr('hanbansearchindex',this.currentIndex)
-        getSitem.setStr('hanbansearchkey',this.searchText)
-      }else{
+      if (this.searchText) {
+        getSitem.setStr('hanbansearchindex', this.currentIndex)
+        getSitem.setStr('hanbansearchkey', this.searchText)
+      } else {
         this.$toast('请输入搜索内容')
         return
       }
@@ -163,7 +163,7 @@ export default {
         message: '加载中...',
         forbidClick: true
       })
-      if(this.currentIndex == 0){
+      if (this.currentIndex == 0) {
         this.$api.groupLists(param).then((res) => {
           this.$toast.clear()
           if (res.code == 1) {
@@ -183,8 +183,8 @@ export default {
             }
           }
         })
-      }else if(this.currentIndex == 1){
-        this.$api.postsLists(param).then((res)=>{
+      } else if (this.currentIndex == 1) {
+        this.$api.postsLists(param).then((res) => {
           this.$toast.clear()
           if (res.code == 1) {
             this.loading = false
@@ -192,7 +192,7 @@ export default {
             if (this.huabanList.length == 0) {
               // 第一次加载
               var list = []
-              res.data.data.map((item)=>{
+              res.data.data.map((item) => {
                 item.nickname = item.user.nickname
                 item.avatar = item.user.avatar
                 item.image = item.images ? item.images[0] : ''
@@ -203,7 +203,7 @@ export default {
             } else if (this.huabanList.length < this.total) {
               // 加载更多
               var list = []
-              res.data.data.map((item)=>{
+              res.data.data.map((item) => {
                 item.nickname = item.user.nickname
                 item.avatar = item.user.avatar
                 item.image = item.images ? item.images[0] : ''
@@ -217,8 +217,8 @@ export default {
             }
           }
         })
-      }else if(this.currentIndex == 2){
-        this.$api.userLists(param).then((res)=>{
+      } else if (this.currentIndex == 2) {
+        this.$api.userLists(param).then((res) => {
           this.$toast.clear()
           if (res.code == 1) {
             this.loading = false
@@ -236,10 +236,8 @@ export default {
               this.finished = true
             }
           }
-
         })
       }
-
     },
     onLoad () {
       if (this.huabanList.length < this.total) {
@@ -249,12 +247,12 @@ export default {
     },
 
     resultClickHandler (arg) {
-      if(!this.searchText){
+      if (!this.searchText) {
         this.$toast('请输入搜索内容')
         return
       }
-      getSitem.setStr('hanbansearchindex',arg)
-      getSitem.setStr('hanbansearchkey',this.searchText)
+      getSitem.setStr('hanbansearchindex', arg)
+      getSitem.setStr('hanbansearchkey', this.searchText)
       this.currentIndex = arg
       this.huabanList = []
       this.finished = false

@@ -19,9 +19,9 @@ export default {
     }
   },
   methods: {
-    menuHandler (e,id) {
+    menuHandler (e, id) {
       this.current = e
-      this.$emit('menuClick',id)
+      this.$emit('menuClick', id)
     },
     searchHandler () {
       this.$router.push({name: 'HuabanSearch'})

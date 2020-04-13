@@ -23,6 +23,9 @@
                 </div>
 
               </div>
+
+              <textarea class="orderdetail-top-textarea" v-model="goodsitem.diy_content" placeholder="请输入评论内容"></textarea>
+
               <span class="orderdetail-top-span">上传照片（{{goodsitem.imgList.length}}/3）</span>
               <div class="orderdetail-top-uploads">
                 <div class="orderdetail-wrap" v-for="(iitem,index) in goodsitem.imgList" :key="index" @click="delImg(goodsindex,index)">
@@ -38,7 +41,6 @@
 
     </div>
 
-
     <div class="orderdetail-btn" @click="postSave">确认提交</div>
   </div>
 </template>
@@ -52,21 +54,21 @@ export default {
     return {
       order_id: null,
       order_detail: {},
-      num: 3,//上传数量
+      num: 3, // 上传数量
       localIds: [],
       imgList: [],
       value: 3,
-      commentList:[],
+      commentList: [],
       json_comment: []
     }
   },
   created () {
     var data = {
-      url:location.href
+      url: location.href
     }
     const agent = navigator.userAgent
     const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-    if(isiOS){
+    if (isiOS) {
       data.url = config.shareurls
     }
     this.$api.userGetSignPackage(data).then((res) => {
@@ -106,10 +108,8 @@ export default {
             }
           })
         })
-
       }
     })
-
   },
   mounted () {
     this.order_id = this.$route.query.id
@@ -119,55 +119,55 @@ export default {
     RateWrap
   },
   methods: {
-    plItemClick (goodsIndex,id) {
+    plItemClick (goodsIndex, id) {
       var len = 0
       var _this = this
       var flag = false
-      var tip = false //提示
-      for(var i=0,l=this.order_detail.goods[goodsIndex].commentList.length;i<l;i++){
-        if(len<3){
-          if(this.order_detail.goods[goodsIndex].commentList[i].check){
+      var tip = false // 提示
+      for (var i = 0, l = this.order_detail.goods[goodsIndex].commentList.length; i < l; i++) {
+        if (len < 3) {
+          if (this.order_detail.goods[goodsIndex].commentList[i].check) {
             len++
           }
-        }else{
+        } else {
           flag = true
         }
       }
-      if(!flag){
-        this.order_detail.goods[goodsIndex].commentList.map((item)=>{
-              if(item.id == id){
-                item.check = !item.check
-              }
+      if (!flag) {
+        this.order_detail.goods[goodsIndex].commentList.map((item) => {
+          if (item.id == id) {
+            item.check = !item.check
+          }
         })
-        this.$forceUpdate();
-      }else{
-        //说明已经超过三条
-        this.order_detail.goods[goodsIndex].commentList.map((item)=>{
-          console.log(item,'item')
-          if(item.id == id && item.check){
+        this.$forceUpdate()
+      } else {
+        // 说明已经超过三条
+        this.order_detail.goods[goodsIndex].commentList.map((item) => {
+          console.log(item, 'item')
+          if (item.id == id && item.check) {
             item.check = !item.check
             tip = false
-          }else{
+          } else {
             tip = true
           }
         })
-        if(tip){
+        if (tip) {
           this.$toast('只能选择三个')
         }
-        this.$forceUpdate();
+        this.$forceUpdate()
       }
     },
     autoClass (check) {
       return {
-        'pl-item':true,
+        'pl-item': true,
         'plActive': check
       }
     },
     getGoodsCommentWords () {
-      this.$api.getGoodsCommentWords({}).then((res)=>{
-        if(res.code == 1) {
+      this.$api.getGoodsCommentWords({}).then((res) => {
+        if (res.code == 1) {
           var list = []
-          res.data.map((item)=>{
+          res.data.map((item) => {
             item.check = false
             list.push(item)
           })
@@ -181,58 +181,59 @@ export default {
       this.json_comment = []
       var goods = this.order_detail.goods
       var contentL = []
-      goods.map((item)=>{
+      goods.map((item) => {
         var obj = {}
         var content = []
         var images = []
         obj.score = item.score
         obj.goods_id = item.goods_id
-        item.commentList.map((citem)=>{
-          if(citem.check){
+        obj.diy_content = item.diy_content
+        item.commentList.map((citem) => {
+          if (citem.check) {
             content.push(citem.words)
           }
         })
         obj.content = content
-        item.imgList.map((gitem)=>{
+        item.imgList.map((gitem) => {
           images.push(gitem.url)
         })
         obj.images = images.join(',')
         this.json_comment.push(obj)
       })
-      for(var i in this.json_comment){
-        if(this.json_comment[i].content.length == 0){
-          contentL.push('第'+(parseInt(i)+1)+'个产品评论内容')
+      for (var i in this.json_comment) {
+        if (this.json_comment[i].content.length == 0) {
+          contentL.push('第' + (parseInt(i) + 1) + '个产品评论内容')
         }
       }
-      if(contentL.length != 0){
-        this.$toast('请选择'+contentL.join(','))
+      if (contentL.length != 0) {
+        this.$toast('请选择' + contentL.join(','))
         return
       }
       var json_comment = JSON.stringify(this.json_comment)
-      this.$api.goodsStoreComments({order_id:this.order_id,json_comment:json_comment}).then((res)=>{
-        if(res.code == 1) {
+      this.$api.goodsStoreComments({order_id: this.order_id, json_comment: json_comment}).then((res) => {
+        if (res.code == 1) {
           _this.$toast({
             message: '评论成功',
-            onClose: ()=>{
+            onClose: () => {
               _this.$router.go(-1)
             }
           })
-        }else{
+        } else {
           _this.$toast(res.msg)
         }
       })
     },
-    delImg (goodsindex,index) {
+    delImg (goodsindex, index) {
       var goods = this.order_detail.goods[goodsindex]
-      goods.imgList.splice(index,1)
-      goods.localIds.splice(index,1)
+      goods.imgList.splice(index, 1)
+      goods.localIds.splice(index, 1)
       goods.num = goods.imgList
-      this.$forceUpdate();
+      this.$forceUpdate()
     },
     chooseImage (goodsindex) {
       var _this = this
       var goods = this.order_detail.goods[goodsindex]
-      if(goods.imgList.length < 4){
+      if (goods.imgList.length < 4) {
         wx.chooseImage({
           count: goods.num, // 默认9
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -245,72 +246,71 @@ export default {
             // })
           }
         })
-      }else{
+      } else {
         this.$toast('只能上传三张')
       }
-
     },
     asyncUploadImage (goodsindex) {
       var goods = this.order_detail.goods[goodsindex]
-      if(!goods.localIds.length){
-           this.$toast('上传成功！')
-      }else{
+      if (!goods.localIds.length) {
+        this.$toast('上传成功！')
+      } else {
         var localId = goods.localIds.pop()
         var _this = this
         wx.uploadImage({
-            localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
-            isShowProgressTips: 1, // 默认为1，显示进度提示
-            success: function (res) {
-              var serverId = res.serverId; // 返回图片的服务器端ID
-              // _this.$toast('serverId')
-              // // alert(res.serverId)
-              _this.getImgData(goodsindex,localId,serverId)
-            }
+          localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+          isShowProgressTips: 1, // 默认为1，显示进度提示
+          success: function (res) {
+            var serverId = res.serverId // 返回图片的服务器端ID
+            // _this.$toast('serverId')
+            // // alert(res.serverId)
+            _this.getImgData(goodsindex, localId, serverId)
+          }
         })
       }
     },
-    getImgData (goodsindex,localId,serverId) {
+    getImgData (goodsindex, localId, serverId) {
       var goods = this.order_detail.goods[goodsindex]
       const agent = navigator.userAgent
       const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
       var _this = this
-      this.$api.commonwxUpload({id:serverId}).then((result)=>{
-          if(result.code === 1){
-            // _this.$toast({
-            //   message:result.msg,
-            //   onClose: ()=>{
-                      if(isiOS){
-                        wx.getLocalImgData({
-                              localId: localId, // 图片的localID
-                              success: function (res) {
-                                  var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
-                                  localData = localData.replace('jgp', 'jpeg');
-                                  goods.imgList.push({l:localData,s:serverId,url:result.data.url})
-                                  _this.$forceUpdate();
-                              }
-                        });
-                      }else{
-                        goods.imgList.push({l:localId,s:serverId,url:result.data.url})
-                        _this.$forceUpdate();
-                      }
-
-                      goods.num --
-                      _this.asyncUploadImage(goodsindex)
-            //   }
-            // })
-          }else{
-            _this.$toast(result.msg)
+      this.$api.commonwxUpload({id: serverId}).then((result) => {
+        if (result.code === 1) {
+          // _this.$toast({
+          //   message:result.msg,
+          //   onClose: ()=>{
+          if (isiOS) {
+            wx.getLocalImgData({
+              localId: localId, // 图片的localID
+              success: function (res) {
+                var localData = res.localData // localData是图片的base64数据，可以用img标签显示
+                localData = localData.replace('jgp', 'jpeg')
+                goods.imgList.push({l: localData, s: serverId, url: result.data.url})
+                _this.$forceUpdate()
+              }
+            })
+          } else {
+            goods.imgList.push({l: localId, s: serverId, url: result.data.url})
+            _this.$forceUpdate()
           }
+
+          goods.num--
+          _this.asyncUploadImage(goodsindex)
+          //   }
+          // })
+        } else {
+          _this.$toast(result.msg)
+        }
       })
     },
-    rateChange (i,goodsindex) {
+    rateChange (i, goodsindex) {
       var goods = this.order_detail.goods[goodsindex]
       goods.score = i
     },
     getDetail () {
       var _this = this
-      this.$api.goodsOrderIndex({order_id:this.order_id}).then((res)=>{
-        if(res.code === 1) {
+      this.$api.goodsOrderIndex({order_id: this.order_id}).then((res) => {
+        if (res.code === 1) {
           var data = res.data
           //       num: 3,//上传数量
           // localIds: [],
@@ -318,16 +318,16 @@ export default {
           // value: 3,
           // commentList:[],
           // json_comment: []
-          res.data.goods.map((item)=>{
+          res.data.goods.map((item) => {
             // var lists = Object.assign([],_this.commentList)
             item.commentList = JSON.parse(JSON.stringify(_this.commentList))
             item.score = 5
             item.num = 3
             item.localIds = []
             item.imgList = []
+            item.diy_content = ''
           })
           _this.order_detail = res.data
-
         }
       })
     }
@@ -360,14 +360,14 @@ export default {
    padding-top:26px;
      &-textarea{
       margin-top:42px;
-      width:100%;
+      width:90%;
       padding:10px;
-      height:311px;
+      height:211px;
       resize:none;
       outline:none;
       font-size:28px;
       border-radius:12px;
-      margin-bottom: 28px;
+      margin: 28px auto;
       border:2px solid rgba(241, 241, 241, 1);
     }
     &-price{

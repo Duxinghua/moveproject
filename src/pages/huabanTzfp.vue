@@ -24,7 +24,7 @@ export default {
   name: 'HuabanTzfp',
   data () {
     return {
-      num: 3,//上传数量
+      num: 3, // 上传数量
       localIds: [],
       imgList: [],
       titleName: '',
@@ -35,11 +35,11 @@ export default {
   },
   mounted () {
     var data = {
-      url:location.href
+      url: location.href
     }
     const agent = navigator.userAgent
     const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-    if(isiOS){
+    if (isiOS) {
       data.url = config.shareurls
     }
     this.$api.userGetSignPackage(data).then((res) => {
@@ -79,7 +79,6 @@ export default {
             }
           })
         })
-
       }
     })
     this.group_id = this.$route.query.id
@@ -88,54 +87,51 @@ export default {
     postSave () {
       var images = []
       var _this = this
-      if(!this.titleName){
+      if (!this.titleName) {
         this.$toast('请输入标题')
         return
       }
-      if(!this.desContent){
-          this.$toast('请输入内容')
-          return
+      if (!this.desContent) {
+        this.$toast('请输入内容')
+        return
       }
-      if(!this.imgList.length){
+      if (!this.imgList.length) {
         this.$toast('请上传图片')
         return
-      }else{
-        this.imgList.map((item)=>{
+      } else {
+        this.imgList.map((item) => {
           images.push(item.url)
         })
-
       }
       var params = {
-        title:this.titleName,
-        content:this.desContent,
-        group_id:this.group_id,
-        images:images.join()
+        title: this.titleName,
+        content: this.desContent,
+        group_id: this.group_id,
+        images: images.join()
       }
       // alert(JSON.stringify(params))
-      this.$api.postsSave(params).then((res)=>{
-        if(res.code === 1){
+      this.$api.postsSave(params).then((res) => {
+        if (res.code === 1) {
           _this.$toast({
             message: '评论成功，审核通过之后才可显示',
-            onClose: ()=>{
+            onClose: () => {
               _this.$router.go(-1)
             }
           })
-        }else{
+        } else {
           _this.$toast(res.msg)
         }
       })
-
-
     },
     delImg (index) {
-      this.imgList.splice(index,1)
-      this.localIds.splice(index,1)
+      this.imgList.splice(index, 1)
+      this.localIds.splice(index, 1)
       this.num = this.imgList
-      console.log(this.imgList,'imgList')
+      console.log(this.imgList, 'imgList')
     },
     chooseImage () {
       var _this = this
-      if(this.imgList.length < 4){
+      if (this.imgList.length < 4) {
         wx.chooseImage({
           count: _this.num, // 默认9
           sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
@@ -150,60 +146,60 @@ export default {
             _this.asyncUploadImage()
           }
         })
-      }else{
+      } else {
         this.$toast('只能上传三张')
       }
     },
     asyncUploadImage () {
-     if(!this.localIds.length){
+      if (!this.localIds.length) {
         this.$toast('上传成功！')
-     }else{
-      var localId = this.localIds.pop()
-      var _this = this
-      wx.uploadImage({
+      } else {
+        var localId = this.localIds.pop()
+        var _this = this
+        wx.uploadImage({
           localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
           isShowProgressTips: 1, // 默认为1，显示进度提示
           success: function (res) {
-            var serverId = res.serverId; // 返回图片的服务器端ID
+            var serverId = res.serverId // 返回图片的服务器端ID
             // _this.$toast('serverId')
             // alert(res.serverId)
-            _this.getImgData(localId,serverId)
+            _this.getImgData(localId, serverId)
           }
-      })
-     }
+        })
+      }
     },
-    getImgData (localId,serverId) {
+    getImgData (localId, serverId) {
       const agent = navigator.userAgent
       const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
       var _this = this
-      this.$api.commonwxUpload({id:serverId}).then((result)=>{
-          // alert(JSON.stringify(result))
-          if(result.code === 1){
-            // _this.$toast({
-            //   message:result.msg,
-            //   onClose: ()=>{
-                      if(isiOS){
-                        wx.getLocalImgData({
-                              localId: localId, // 图片的localID
-                              success: function (res) {
-                                  var localData = res.localData; // localData是图片的base64数据，可以用img标签显示
-                                  localData = localData.replace('jgp', 'jpeg');
-                                  _this.imgList.push({l:localData,s:serverId,url:result.data.url})
-                              }
-                        });
-                      }else{
-                        _this.imgList.push({l:localId,s:serverId,url:result.data.url})
-                      }
-                      _this.num --
-                      _this.asyncUploadImage()
-            //   }
-            // })
-                // if (localIds.length > 0) {
-                //     _this.uploadImage();
-                // }
-          }else{
-            _this.$toast(result.msg)
+      this.$api.commonwxUpload({id: serverId}).then((result) => {
+        // alert(JSON.stringify(result))
+        if (result.code === 1) {
+          // _this.$toast({
+          //   message:result.msg,
+          //   onClose: ()=>{
+          if (isiOS) {
+            wx.getLocalImgData({
+              localId: localId, // 图片的localID
+              success: function (res) {
+                var localData = res.localData // localData是图片的base64数据，可以用img标签显示
+                localData = localData.replace('jgp', 'jpeg')
+                _this.imgList.push({l: localData, s: serverId, url: result.data.url})
+              }
+            })
+          } else {
+            _this.imgList.push({l: localId, s: serverId, url: result.data.url})
           }
+          _this.num--
+          _this.asyncUploadImage()
+          //   }
+          // })
+          // if (localIds.length > 0) {
+          //     _this.uploadImage();
+          // }
+        } else {
+          _this.$toast(result.msg)
+        }
       })
     }
 

@@ -58,9 +58,9 @@ export default {
 
           if (this.huabanList.length == 0) {
             // 第一次加载
-              var list =  res.data.data
-              list.map((item)=>{
-              item.image = item.images ? item.images[0]: ''
+            var list = res.data.data
+            list.map((item) => {
+              item.image = item.images ? item.images[0] : ''
               item.nickname = item.user ? item.user.nickname : ''
               item.avatar = item.user ? item.user.avatar : ''
             })
@@ -68,9 +68,9 @@ export default {
             this.total = res.data.total
           } else if (this.huabanList.length < this.total) {
             // 加载更多
-            var list =  res.data.data
-              list.map((item)=>{
-              item.image = item.images ? item.images[0]: ''
+            var list = res.data.data
+            list.map((item) => {
+              item.image = item.images ? item.images[0] : ''
               item.nickname = item.user ? item.user.nickname : ''
               item.avatar = item.user ? item.user.avatar : ''
             })

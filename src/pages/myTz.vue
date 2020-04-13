@@ -114,20 +114,20 @@ export default {
   methods: {
     delClick () {
       var _this = this
-      this.$api.postsDel({gp_id:this.gp_id}).then((res)=>{
-        if(res.code === 1){
+      this.$api.postsDel({gp_id: this.gp_id}).then((res) => {
+        if (res.code === 1) {
           this.$toast({
-            message:res.msg,
-            onClose: ()=> {
-            _this.tzShow = false
-            _this.tzList = []
-            _this.finished = false
-            _this.loading = false
-            _this.current = 1
-            _this.getTzList()
+            message: res.msg,
+            onClose: () => {
+              _this.tzShow = false
+              _this.tzList = []
+              _this.finished = false
+              _this.loading = false
+              _this.current = 1
+              _this.getTzList()
             }
           })
-        }else{
+        } else {
           _this.tzShow = false
           _this.$toast(res.msg)
         }
@@ -140,18 +140,17 @@ export default {
     delClickHandler (id) {
       this.gp_id = id
       this.tzShow = true
-
     },
     inputClick (id) {
-      this.$router.push({name:'HuabanTzDetail',query:{id}})
+      this.$router.push({name: 'HuabanTzDetail', query: {id}})
     },
-    gzClickHandler (gp_id,gp_user_id) {
+    gzClickHandler (gp_id, gp_user_id) {
       this.$api.postsSaveLike({gp_id: gp_id, gp_user_id: gp_user_id}).then((res) => {
         if (res.code === 1) {
           this.$toast({
             message: res.msg,
             onClose: () => {
-              this.tzList =  []
+              this.tzList = []
               this.finished = false
               this.loading = false
               this.current = 1
@@ -164,7 +163,7 @@ export default {
       })
     },
     autoTimer (timer) {
-      return parseInt((new Date().getTime() - timer*1000)/1000/3600)
+      return parseInt((new Date().getTime() - timer * 1000) / 1000 / 3600)
     },
     changeTab (e) {
       this.index = e

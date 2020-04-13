@@ -56,22 +56,22 @@ export default {
     }
   },
   mounted () {
-    this.id = this.$route.query.index;
+    this.id = this.$route.query.index
     this.getDetail()
   },
   methods: {
-    teacherInfo(data,index) {
-            this.imagePreview = data;
-            this.startPosition = index;
-            this.imageShow = true;
+    teacherInfo (data, index) {
+      this.imagePreview = data
+      this.startPosition = index
+      this.imageShow = true
     },
     getDetail () {
-      const param ={
+      const param = {
         id: this.id
       }
       this.$api.teacherDetail(param).then((res) => {
         if (res.code === 1) {
-          console.log(res.data);
+          console.log(res.data)
           this.msgItem = res.data
           this.getWorksList()
         }
@@ -97,8 +97,8 @@ export default {
             // 第一次加载
             this.teacherWorks = res.data.data || []
             var list = []
-            res.data.data.map((item)=>{
-              if(item.image){
+            res.data.data.map((item) => {
+              if (item.image) {
                 list.push(item.image[0])
               }
             })
@@ -108,8 +108,8 @@ export default {
             // 加载更多
             this.teacherWorks = this.teacherWorks.concat(res.data.data)
             var list = []
-            res.data.data.map((item)=>{
-              if(item.image){
+            res.data.data.map((item) => {
+              if (item.image) {
                 list.push(item.image[0])
               }
             })

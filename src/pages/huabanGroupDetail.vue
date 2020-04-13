@@ -70,113 +70,115 @@ export default {
   },
   methods: {
     userContClick () {
-      this.$router.push({name:'HuabanGroupMember',query:{id:this.id}})
+      this.$router.push({name: 'HuabanGroupMember', query: {id: this.id}})
     },
-    init (title,description,image) {
-        console.log('22')
-        var shareUrl = config.baseurl + '/huabangroupdetail?id=' + this.id
-        var data = {
-          url: location.href
-        }
-        const agent = navigator.userAgent
-        const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-        if (isiOS) {
-          data.url = config.shareurls
-        }
-        this.$api.userGetSignPackage(data).then((res) => {
-          if (res.code === 1) {
-            var wxpay = res.data
-            wx.config({
-              debug: false,
-              appId: wxpay.appId,
-              timestamp: wxpay.timestamp,
-              nonceStr: wxpay.nonceStr,
-              signature: wxpay.signature,
+    init (title, description, image) {
+      console.log('22')
+      var shareUrl = config.baseurl + '/huabangroupdetail?id=' + this.id
+      var data = {
+        url: location.href
+      }
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      if (isiOS) {
+        data.url = config.shareurls
+      }
+      this.$api.userGetSignPackage(data).then((res) => {
+        if (res.code === 1) {
+          var wxpay = res.data
+          wx.config({
+            debug: false,
+            appId: wxpay.appId,
+            timestamp: wxpay.timestamp,
+            nonceStr: wxpay.nonceStr,
+            signature: wxpay.signature,
+            jsApiList: [
+              'checkJsApi',
+              'onMenuShareTimeline',
+              'onMenuShareAppMessage',
+              'chooseImage',
+              'uploadImage',
+              'getLocalImgData',
+              'scanQRCode'
+            ]
+          })
+          wx.error(function (res) {
+            console.log('出错了：' + res.errMsg)
+          })
+          // 在这里调用 API
+          wx.ready(function () {
+            wx.checkJsApi({
               jsApiList: [
                 'checkJsApi',
                 'onMenuShareTimeline',
                 'onMenuShareAppMessage',
                 'chooseImage',
                 'uploadImage',
-                'getLocalImgData'
-              ]
-            })
-            wx.error(function (res) {
-              console.log('出错了：' + res.errMsg)
-            })
-            // 在这里调用 API
-            wx.ready(function () {
-              wx.checkJsApi({
-                jsApiList: [
-                  'checkJsApi',
-                  'onMenuShareTimeline',
-                  'onMenuShareAppMessage',
-                  'chooseImage',
-                  'uploadImage',
-                  'getLocalImgData'
-                ],
-                success: function (res) {
+                'getLocalImgData',
+                'scanQRCode'
+              ],
+              success: function (res) {
 
-                }
-              })
-
-              // 点击分享到朋友圈
-              // that.baseurl + '/detail?id=' + encodeURIComponent(that.goods_id)
-              wx.onMenuShareTimeline({
-                title: title, // 分享标题
-                desc: description, // 分享描述
-                link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                imgUrl: image, // 分享图标
-                trigger: function (res) {
-                  // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
-                  alert('用户点击分享到朋友圈')
-                },
-                success: function () {
-                  // 用户确认分享后执行的回调函数
-                  alert('分享成功')
-                },
-                cancel: function () {
-                  // 用户取消分享后执行的回调函数
-                  alert('分享取消')
-                },
-                fail: function (res) {
-                  alert(JSON.stringify(res))
-                }
-              })
-              wx.onMenuShareAppMessage({
-                title: title, // 分享标题
-                desc: description, // 分享描述
-                link: config.gourl + encodeURIComponent(shareUrl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-                imgUrl: image, // 分享图标
-                type: 'link', // 分享类型,music、video或link，不填默认为link
-                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
-                success: function () {
-                  // 用户确认分享后执行的回调函数
-                  // alert('分享成功');
-
-                },
-                cancel: function () {
-                  // 用户取消分享后执行的回调函数
-                  // alert('分享取消');
-                }
-              })
+              }
             })
-          }
-        })
+
+            // 点击分享到朋友圈
+            // that.baseurl + '/detail?id=' + encodeURIComponent(that.goods_id)
+            wx.onMenuShareTimeline({
+              title: title, // 分享标题
+              desc: description, // 分享描述
+              link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+              imgUrl: image, // 分享图标
+              trigger: function (res) {
+                // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+                alert('用户点击分享到朋友圈')
+              },
+              success: function () {
+                // 用户确认分享后执行的回调函数
+                alert('分享成功')
+              },
+              cancel: function () {
+                // 用户取消分享后执行的回调函数
+                alert('分享取消')
+              },
+              fail: function (res) {
+                alert(JSON.stringify(res))
+              }
+            })
+            wx.onMenuShareAppMessage({
+              title: title, // 分享标题
+              desc: description, // 分享描述
+              link: config.gourl + encodeURIComponent(shareUrl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+              imgUrl: image, // 分享图标
+              type: 'link', // 分享类型,music、video或link，不填默认为link
+              dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+              success: function () {
+                // 用户确认分享后执行的回调函数
+                // alert('分享成功');
+
+              },
+              cancel: function () {
+                // 用户取消分享后执行的回调函数
+                // alert('分享取消');
+              }
+            })
+          })
+        }
+      })
     },
     fptzClickHandler () {
-      if(this.tzDetail.is_join === 1){
+      if (this.tzDetail.is_join === 1) {
         this.$router.push({name: 'HuabanTzfp', query: {id: this.id}})
-      }else{
+      } else {
         this.$toast('请先加入小组才可以发贴')
       }
     },
     joinGroupHandler () {
       var is_join = this.tzDetail.is_join
       var group_id = this.tzDetail.group_id
-      if(is_join === 0) {
-        this.$api.groupGroupUser({group_id:group_id}).then((res)=>{
-          if(res.code === 1){
+      if (is_join === 0) {
+        this.$api.groupGroupUser({group_id: group_id}).then((res) => {
+          if (res.code === 1) {
             this.$toast({
               message: res.msg,
               onClose: () => {
@@ -186,13 +188,13 @@ export default {
                 this.getGroupIndex()
               }
             })
-          }else{
+          } else {
             this.$toast(res.msg)
           }
         })
-      }else if(is_join === 1) {
-       this.$api.groupGroupUserDel({group_id:group_id}).then((res)=>{
-          if(res.code === 1){
+      } else if (is_join === 1) {
+        this.$api.groupGroupUserDel({group_id: group_id}).then((res) => {
+          if (res.code === 1) {
             this.$toast({
               message: res.msg,
               onClose: () => {
@@ -202,7 +204,7 @@ export default {
                 this.getGroupIndex()
               }
             })
-          }else{
+          } else {
             this.$toast(res.msg)
           }
         })
@@ -233,12 +235,12 @@ export default {
         this.$toast.clear()
         if (res.code == 1) {
           this.loading = false
-          console.log(res,'list')
+          console.log(res, 'list')
           if (this.huabantzlist.length == 0) {
             // 第一次加载
-            var list =  res.data.data
-            list.map((item)=>{
-              item.image = item.images ? item.images[0]: ''
+            var list = res.data.data
+            list.map((item) => {
+              item.image = item.images ? item.images[0] : ''
               item.nickname = item.user ? item.user.nickname : ''
               item.avatar = item.user ? item.user.avatar : ''
             })
@@ -247,11 +249,11 @@ export default {
             this.total = res.data.total
           } else if (this.huabantzlist.length < this.total) {
             // 加载更多
-            var list =  res.data.data
-            list.map((item)=>{
-              item.image = item.images ? item.images[0]: ''
+            var list = res.data.data
+            list.map((item) => {
+              item.image = item.images ? item.images[0] : ''
               item.nickname = item.user ? item.user.nickname : ''
-              item.avatar = item.user ? item.user.avatar: ''
+              item.avatar = item.user ? item.user.avatar : ''
             })
             this.huabantzlist = this.huabantzlist.concat(list)
           }

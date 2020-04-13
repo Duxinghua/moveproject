@@ -53,7 +53,7 @@ export default {
       current: 1,
       total: 0,
       score: 0,
-      points_rule:null
+      points_rule: null
     }
   },
   mounted () {
@@ -63,15 +63,15 @@ export default {
   methods: {
     tabClickHandler (e) {
       this.currentIndex = e
-      if(this.currentIndex === 0){
+      if (this.currentIndex === 0) {
         this.getxflist()
-      }else{
+      } else {
         this.getcommonConfig()
       }
     },
-    getcommonConfig(){
-      this.$api.commonConfig({name:'points_rule'}).then((res)=>{
-        if(res.code === 1) {
+    getcommonConfig () {
+      this.$api.commonConfig({name: 'points_rule'}).then((res) => {
+        if (res.code === 1) {
           this.points_rule = res.data.value
         }
       })
@@ -87,26 +87,25 @@ export default {
         message: '加载中...',
         forbidClick: true
       })
-        this.$api.userScoreLog(param).then((res) => {
-          this.$toast.clear()
-          if (res.code == 1) {
-            this.loading = false
+      this.$api.userScoreLog(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
 
-            if (this.xflist.length == 0) {
-              // 第一次加载
-              this.xflist = res.data.data || []
-              this.total = res.data.total
-            } else if (this.xflist.length < this.total) {
-              // 加载更多
-              this.xflist = this.xflist.concat(res.data.data)
-            }
-            if (this.xflist.length >= this.total) {
-              // 全部加载完成
-              this.finished = true
-            }
+          if (this.xflist.length == 0) {
+            // 第一次加载
+            this.xflist = res.data.data || []
+            this.total = res.data.total
+          } else if (this.xflist.length < this.total) {
+            // 加载更多
+            this.xflist = this.xflist.concat(res.data.data)
           }
-        })
-
+          if (this.xflist.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
     },
     onLoad () {
       if (this.xflist.length < this.total) {

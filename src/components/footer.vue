@@ -1,21 +1,25 @@
 <template>
   <div class="footer">
-      <router-link class="menuitem" to="/">
-        <img :src="mrt === true ? require('../assets/images/mrico-a.png') : require('../assets/images/mrico.png') " alt="" />
-        <span :class="{active:mrt}">名人堂</span>
-      </router-link>
 
-        <router-link class="menuitem" to="/huaban" >
-          <img :src="hb === true ? require('../assets/images/hbico-a.png') : require('../assets/images/hbico.png')" alt="" />
-          <span :class="{active:hb}">花伴</span>
-        </router-link>
       <!-- <router-link class="menuitem" to="/company">
         <img :src="zb === true ? require('../assets/images/zbico-a.png') : require('../assets/images/zbico.png')" alt="" />
         <span :class="{active:zb}">直播</span>
       </router-link> -->
-      <router-link class="menuitem" to="/shopHome">
+      <router-link class="menuitem" to="/">
         <img :src="sc === true ? require('../assets/images/scico-a.png') : require('../assets/images/scico.png')" alt="" />
-        <span :class="{active:sc}">商城</span>
+        <span :class="{active:sc}">首页</span>
+      </router-link>
+      <router-link class="menuitem" to="/goodsCate" >
+          <img :src="fl === true ? require('../assets/images/hbico-a.png') : require('../assets/images/hbico.png')" alt="" />
+          <span :class="{active:fl}">分类</span>
+      </router-link>
+      <router-link class="menuitem" to="/tuan" >
+          <img :src="pt === true ? require('../assets/images/hbico-a.png') : require('../assets/images/hbico.png')" alt="" />
+          <span :class="{active:pt}">拼团</span>
+      </router-link>
+      <router-link class="menuitem" to="/Fall">
+        <img :src="mrt === true ? require('../assets/images/mrico-a.png') : require('../assets/images/mrico.png') " alt="" />
+        <span :class="{active:mrt}">名人堂</span>
       </router-link>
       <router-link class="menuitem" to="/my">
         <img :src="wd === true ? require('../assets/images/wdico-a.png') : require('../assets/images/wdico.png')" alt="" />
@@ -33,6 +37,14 @@ export default {
       default: false
     },
     hb: {
+      type: Boolean,
+      default: false
+    },
+    fl: {
+      type: Boolean,
+      default: false
+    },
+    pt: {
       type: Boolean,
       default: false
     },
@@ -76,7 +88,7 @@ export default {
 .footer .menuitem{
   display: flex;
   flex-direction: column;
-  width:25%;
+  width:20%;
   height:100%;
   justify-content: center;
   align-items: center;

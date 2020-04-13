@@ -13,7 +13,7 @@ export default {
   name: 'About',
   data () {
     return {
-      detail:null
+      detail: null
     }
   },
   components: {
@@ -21,8 +21,8 @@ export default {
   },
   mounted () {
     console.log(1)
-    this.$api.commonConfig({name:'about_us'}).then((res)=>{
-      if(res.code === 1){
+    this.$api.commonConfig({name: 'about_us'}).then((res) => {
+      if (res.code === 1) {
         this.detail = res.data.value
       }
     })

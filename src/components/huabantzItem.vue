@@ -42,10 +42,10 @@ export default {
     },
     autoTime (time) {
       var tim = new Date(time * 1000)
-      return tim.getFullYear() + '-' + (tim.getMonth() + 1) + '-' + (tim.getDate().length == 1 ? 0 + tim.getDate() : tim.getDate()) + ' ' + (tim.getHours().length == 1 ? 0+tim.getHours() : tim.getHours() )+ ':' + (tim.getMinutes().length == 1 ? 0+ time.getMinutes() : tim.getMinutes())
+      return tim.getFullYear() + '-' + (tim.getMonth() + 1) + '-' + (tim.getDate().length == 1 ? 0 + tim.getDate() : tim.getDate()) + ' ' + (tim.getHours().length == 1 ? 0 + tim.getHours() : tim.getHours()) + ':' + (tim.getMinutes().length == 1 ? 0 + time.getMinutes() : tim.getMinutes())
     },
     autoTimer (timer) {
-      return parseInt((new Date().getTime() - timer*1000)/1000/3600) > 24 ? this.autoTime(timer) :parseInt((new Date().getTime() - timer*1000)/1000/3600)+'小时前更新'
+      return parseInt((new Date().getTime() - timer * 1000) / 1000 / 3600) > 24 ? this.autoTime(timer) : parseInt((new Date().getTime() - timer * 1000) / 1000 / 3600) + '小时前更新'
     }
   }
 }

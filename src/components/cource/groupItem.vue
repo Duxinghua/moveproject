@@ -32,14 +32,14 @@ export default {
     }
   },
   props: {
-        groupData:{
-            type:Object,
-            default:{}
-        },
-        groupTime:{
-            type:[Number , String],
-            default:0
-        }
+    groupData: {
+      type: Object,
+      default: {}
+    },
+    groupTime: {
+      type: [Number, String],
+      default: 0
+    }
   },
   methods: {
     onLook () {

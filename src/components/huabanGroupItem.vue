@@ -30,7 +30,7 @@ export default {
       this.$emit('linkDetail', this.item.group_id)
     },
     joinGroupHandler () {
-      this.$emit('joinGroupHandler',this.item.is_join,this.item.group_id)
+      this.$emit('joinGroupHandler', this.item.is_join, this.item.group_id)
     }
   }
 }

@@ -1,27 +1,12 @@
 <template>
     <div class="home">
-        <Tab
+        <Tabs
             :tabList="tabList"
             @on-change="onTabChange"
             @on-search="onSearch"
             @on-cate="onCate"
+            v-if="tabList.length"
         />
-        <div class="home-banner">
-            <van-swipe :autoplay="3000" id="home-banner-carousel" indicator-color="#F3D995"	>
-              <van-swipe-item v-for="(item, index) in slideList" :key="index">
-                <div class="home-banner-item">
-                    <van-image :src="item.image">
-                        <template v-slot:loading>
-                            <van-loading
-                                type="spinner"
-                                size="20"
-                            />
-                        </template>
-                    </van-image>
-                </div>
-              </van-swipe-item>
-            </van-swipe>
-        </div>
         <van-list
             v-model="loading"
             v-show="goodsList.length > 0"
@@ -40,14 +25,12 @@
             </div>
         </van-list>
         <NoData v-if="goodsList.length == 0"/>
-        <Footer :sc="true" />
     </div>
 </template>
 
 <script>
-import Tab from '@/components/common/tab'
+import Tabs from '@/components/common/tabs'
 import GoodsItem from '@/components/shop/goodsItem'
-import Footer from '@/components/footer.vue'
 import NoData from '@/components/nodata'
 
 export default {
@@ -65,27 +48,34 @@ export default {
     }
   },
   components: {
-    Tab,
+    Tabs,
     GoodsItem,
-    Footer,
     NoData
   },
   mounted () {
+    this.gcId = this.$route.query.id
     this.categorys()
-    this.goodsbanner()
   },
   methods: {
     categorys () {
+      var that = this
       this.$api.goodsCates().then((res) => {
         if (res.code == 1) {
           if (res.data.length > 0) {
-            this.tabList = res.data.map((item) => {
-              return {
-                id: item.gc_id,
-                name: item.gc_name
+            var lists = []
+            res.data.map((item) => {
+              if (item.gc_id == that.gcId) {
+                if (item.list.length) {
+                  item.list.map((sitem) => {
+                    lists.push({
+                      id: sitem.gc_id,
+                      name: sitem.gc_name
+                    })
+                  })
+                }
               }
             })
-
+            this.tabList = lists
             this.gcId = this.tabList[0].id
             this.getGoodsList()
           }
@@ -142,17 +132,11 @@ export default {
       }
     },
     onTabChange (id) {
-      // this.goodsList = []
-      // this.current = 1
-      // this.gcId = id
-      // this.finished = false
-      // this.getGoodsList()
-      this.$router.push({
-        path: '/shopCate',
-        query: {
-          id
-        }
-      })
+      this.goodsList = []
+      this.current = 1
+      this.gcId = id
+      this.finished = false
+      this.getGoodsList()
     },
     onSearch (id) {
       this.$router.push({
@@ -177,9 +161,6 @@ export default {
   background: #fbf8f5;
   padding-bottom: 100px;
   min-height: 100vh;
-  /deep/ .nodata{
-    margin-top:300px;
-  }
   #home-banner-carousel{
    height:380px !important;
   }
@@ -187,7 +168,7 @@ export default {
     margin-top:250px;
   }
   .goods-list {
-    padding:25px;
+    padding:125px 25px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;

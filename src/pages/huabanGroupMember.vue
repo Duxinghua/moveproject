@@ -30,12 +30,12 @@ export default {
   name: 'HuabanGroupMember',
   data () {
     return {
-      memberList:[],
+      memberList: [],
       finished: false,
       loading: false,
       current: 1,
       total: 0,
-      group_id:0
+      group_id: 0
     }
   },
   mounted () {
@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     userinfoHandler (id) {
-      this.$router.push({name:'HuabanUserInfo',query:{id:id}})
+      this.$router.push({name: 'HuabanUserInfo', query: {id: id}})
     },
     getgroupUser () {
       const param = {
@@ -57,26 +57,25 @@ export default {
         message: '加载中...',
         forbidClick: true
       })
-        this.$api.groupUser(param).then((res) => {
-          this.$toast.clear()
-          if (res.code == 1) {
-            this.loading = false
+      this.$api.groupUser(param).then((res) => {
+        this.$toast.clear()
+        if (res.code == 1) {
+          this.loading = false
 
-            if (this.memberList.length == 0) {
-              // 第一次加载
-              this.memberList = res.data || []
-              this.total = res.data.total
-            } else if (this.memberList.length < this.total) {
-              // 加载更多
-              this.memberList = this.memberList.concat(res.data)
-            }
-            if (this.memberList.length >= this.total) {
-              // 全部加载完成
-              this.finished = true
-            }
+          if (this.memberList.length == 0) {
+            // 第一次加载
+            this.memberList = res.data || []
+            this.total = res.data.total
+          } else if (this.memberList.length < this.total) {
+            // 加载更多
+            this.memberList = this.memberList.concat(res.data)
           }
-        })
-
+          if (this.memberList.length >= this.total) {
+            // 全部加载完成
+            this.finished = true
+          }
+        }
+      })
     },
     onLoad () {
       if (this.memberList.length < this.total) {
@@ -85,7 +84,7 @@ export default {
       }
     }
   },
-  components:{
+  components: {
     NoData
   }
 }

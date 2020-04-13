@@ -32,7 +32,7 @@ export default {
     this.getuserLikes()
   },
   methods: {
-    userTz(){
+    userTz () {
 
     },
     getuserLikes () {
