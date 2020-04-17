@@ -9,9 +9,11 @@
 				<li
 				 v-for="(item, index) in tabList"
 				 :key="index"
-				 :class="tabIndex == item.id ? 'active' : ''"
+				 class="active"
 				 @click="tabClick(item.id)"
-				>{{item.name}}</li>
+				>
+        {{item.name}}
+        </li>
 			</ul>
 		</div>
 	</div>
@@ -56,8 +58,9 @@ export default {
 <style lang='scss' scoped>
 .tab-box {
   width: 100%;
-  width: 100%;
-  background: url("../../assets/images/tab-bg.png") 100% 100% no-repeat;
+  height: 200px;
+  background: url("../../assets/images/tab-bg.png") no-repeat;
+  background-size: 100% 100%;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -101,32 +104,45 @@ export default {
           margin-top: 10px;
     }
     ul {
-      width:85%;
+      width:90%;
       height: 100px;
       display: flex;
       align-items: center;
-      padding-left: 30px;
-      padding-right: 30px;
+      // padding-left: 30px;
+      // padding-right: 30px;
       overflow: hidden;
       overflow-x: auto;
       li {
         font-size: 32px;
-        margin-right: 40px;
+        // margin-right: 40px;
         flex-shrink: 0;
         transition: all 0.3s;
         color: #fff;
+        padding-left:25px;
+        padding-right:24px;
+        height: fit-content;
+        position: relative;
         &:first-child {
-          margin-right: 40px;
-        }
-        img {
-          width: 40px;
-          height: 40px;
-          margin-top: 10px;
+          // margin-right: 40px;
+          padding-left:0px;
         }
       }
+      li::after{
+        position: absolute;
+        content:'';
+        width:2px;
+        height:70%;
+        border-right:2px dashed #E3D29C;
+        right:0;
+        top:70%;
+        transform: translateY(-70%)
+      }
+      li:last-child::after{
+        display: none
+      }
       .active {
-        font-weight: 500;
-        transform: scale(1.3);
+        // font-weight: 500;
+        // transform: scale(1.3);
         color: #e3d29c;
       }
     }

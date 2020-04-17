@@ -11,7 +11,7 @@
     </div>
     <div class="home-tj-content" v-if="pageType == 0">
       <div class="home-banner">
-            <van-swipe :autoplay="3000" id="home-banner-carousel" indicator-color="#F3D995"	>
+            <van-swipe :autoplay="3000" id="home-banner-carousel" indicator-color="#F3D995">
               <van-swipe-item v-for="(item, index) in slideList" :key="index">
                 <div class="home-banner-item">
                     <van-image :src="item.image">
@@ -64,18 +64,18 @@
         <MoreText moreText="更多课程" moreName="OnlineCourseList"/>
 
       </div>
-      <div class="home-video" >
+      <div class="home-video" @click="videoClickHandle">
         <TitleItem title="直播约课" />
-        <el-carousel indicator-position="none" :interval="4000" type="card" id="home-video-carousel" @change="cardChange">
-          <el-carousel-item v-for="(item,index) in videoLists" :key="index">
-            <img  class="home-video-img" :src="item" />
+        <el-carousel indicator-position="none" :interval="4000" type="card" id="home-video-carousel" @change="cardChange" >
+          <el-carousel-item v-for="(item,index) in videoList" :key="index" >
+            <img  class="home-video-img" :src="item.image ? item.image[0] : ''" />
           </el-carousel-item>
         </el-carousel>
         <div class="home-video-course">
-          <span class="videoTitle">花艺课中式传统插花</span>
+          <span class="videoTitle">{{videoDetail.title}}</span>
           <div class="videoDes">
-            <img class="videoAvatar" src="../assets/images/video-avatar.png" />
-            <span class="videoPerson">Kate sapdiek</span>
+            <img class="videoAvatar" :src="videoDetail.admin.avatar" />
+            <span class="videoPerson">{{videoDetail.admin.nickname}}</span>
           </div>
         </div>
         <MoreText moreText="更多直播" />
@@ -155,11 +155,6 @@ export default {
       page: 1,
       loading: false,
       finished: false,
-      videoLists: [
-        require('../assets/images/1.png'),
-        require('../assets/images/2.png'),
-        require('../assets/images/3.png')
-      ],
       theacherCurrent: 0,
       swiperOption: {
         spaceBetween: 30,
@@ -178,7 +173,11 @@ export default {
         //   console.log(i,x)
         // }
 
-      }
+      },
+      videoDetail: {
+        admin: {}
+      },
+      videoIndex: 0
     }
   },
   mounted () {
@@ -208,6 +207,8 @@ export default {
     },
     cardChange (index) {
       // console.log(index, 'cardindex')
+      this.videoIndex = index
+      this.videoDetail = this.videoList[index]
     },
     onChange (index) {
       this.current = index
@@ -220,6 +221,10 @@ export default {
     },
     teacherInfoHandle (index) {
       this.$router.push({path: '/teacherDetail', query: {index}})
+    },
+    videoClickHandle () {
+      var id = this.videoList[this.videoIndex].course_id
+      this.$router.push({path: '/videodetail', query: {courseId: id}})
     },
     searchHandle () {
       this.$router.push({name: 'HomeSearch'})
@@ -282,8 +287,7 @@ export default {
       const paramV = {
         page: 1,
         pageSize: 5,
-        type: 1, // 直播
-        recommend: 1
+        type: 1 // 直播
       }
 
       this.$api.courseList(paramOff).then((res) => {
@@ -301,6 +305,7 @@ export default {
       this.$api.courseList(paramV).then((res) => {
         if (res.code === 1) {
           this.videoList = res.data.data
+          this.videoDetail = this.videoList[0]
           // console.log(res.data.data)
         }
       })
@@ -657,6 +662,7 @@ export default {
         .videoAvatar{
           width:38px;
           height:38px;
+          border-radius: 50%;
           margin-right:12px;
         }
         .videoPerson{

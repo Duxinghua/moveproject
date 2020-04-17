@@ -22,24 +22,30 @@
               </van-swipe-item>
             </van-swipe>
         </div>
-        <van-list
-            v-model="loading"
-            v-show="goodsList.length > 0"
-            :finished="finished"
-            finished-text="没有更多了"
-            :immediate-check="false"
-            @load="onLoad"
-        >
+        <div class="sales">
+            <div class="title">今日特卖</div>
             <div class="goods-list">
                 <GoodsItem
-                    v-for="(item, index) in goodsList"
+                    v-for="(item, index) in todaySale"
                     :key="index"
                     :goodsData="item"
                     :types="type"
                 />
             </div>
-        </van-list>
-        <NoData v-if="goodsList.length == 0"/>
+
+        </div>
+        <div class="sales">
+            <div class="title">新品上市</div>
+            <div class="goods-list">
+                <GoodsItem
+                    v-for="(item, index) in newSale"
+                    :key="index"
+                    :goodsData="item"
+                    :types="type"
+                />
+            </div>
+
+        </div>
         <Footer :sc="true" />
     </div>
 </template>
@@ -61,7 +67,9 @@ export default {
       total: 0,
       current: 1,
       gcId: 0,
-      type: 'single'
+      type: 'single',
+      newSale: [],
+      todaySale: []
     }
   },
   components: {
@@ -105,41 +113,19 @@ export default {
       }
     },
     getGoodsList () {
-      const param = {
-        page: this.current,
-        pageSize: 10,
-        gc_id: this.gcId
-      }
+
       this.$toast.loading({
         duration: 0,
         message: '加载中...',
         forbidClick: true
       })
-      this.$api.goodsList(param).then((res) => {
+      this.$api.goodsHome({}).then((res) => {
         this.$toast.clear()
         if (res.code == 1) {
-          this.loading = false
-
-          if (this.goodsList.length == 0) {
-            // 第一次加载
-            this.goodsList = res.data.data || []
-            this.total = res.data.total
-          } else if (this.goodsList.length < this.total) {
-            // 加载更多
-            this.goodsList = this.goodsList.concat(res.data.data)
-          }
-          if (this.goodsList.length >= this.total) {
-            // 全部加载完成
-            this.finished = true
-          }
+          this.newSale = res.data.new_sale
+          this.todaySale = res.data.today_sale
         }
       })
-    },
-    onLoad () {
-      if (this.goodsList.length < this.total) {
-        this.current++
-        this.getGoodsList()
-      }
     },
     onTabChange (id) {
       // this.goodsList = []
@@ -180,14 +166,35 @@ export default {
   /deep/ .nodata{
     margin-top:300px;
   }
+  /deep/ .van-image__img{
+    border-radius: 10px;
+  }
   #home-banner-carousel{
-   height:380px !important;
+   height:355px !important;
+   width:700px!important;
+   margin:auto;
   }
   .home-banner{
-    margin-top:250px;
+    margin-top:200px;
+    padding-top:25px;
+    height:380px;
+    box-sizing: border-box;
+    background:#fbf8f5;
+  }
+  .sales{
+    display: flex;
+    flex-direction: column;
+    padding:25px 25px 0 25px;
+    box-sizing: border-box;
+    width:100%;
+    .title{
+      font-size:36px;
+      font-weight:800;
+      color:rgba(102,121,90,1);
+      margin-bottom: 25px;
+    }
   }
   .goods-list {
-    padding:25px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;

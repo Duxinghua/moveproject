@@ -8,7 +8,7 @@
             :immediate-check="false"
             @load="onLoad"
     >
-    <div class="myPl-item" v-for="(item,index) in Lklist" :key="index" @click="clickHandler(item.goods_id)">
+	  <div class="myPl-item" v-for="(item,index) in Lklist" :key="index" @click="clickHandler(item.goods_id)">
       <img class="myPl-item-left" :src="item.user.avatar" alt="" />
       <div class="myPl-item-right">
         <div class="top">
@@ -23,8 +23,11 @@
             {{pitem}}
           </span>
         </div>
+        <div class="dpl" v-if="item.diy_content">
+          {{item.diy_content}}
+        </div>
         <div class="goods">
-          <img class="img" :src="item.goods.images[0]" alt="">
+          <img v-if="item.gimages" class="img" :src="item.gimages" alt="">
           <div class="goodsinfo">
             <span>{{item.goods.goods_name}}</span>
             <span>{{item.goods.description}}</span>
@@ -85,13 +88,32 @@ export default {
 
           if (this.Lklist.length == 0) {
             // 第一次加载
-
-            this.Lklist = res.data.data
+            var s = res.data.data
+            var arr = []
+            s.map((item) => {
+              console.log(item.goods)
+              if (item.goods && item.goods.images) {
+                item.gimages = item.goods.images[0]
+              } else {
+                item.gimages = ''
+              }
+              arr.push(item)
+            })
+            this.Lklist = arr
             this.total = res.data.total
           } else if (this.Lklist.length < this.total) {
             // 加载更多
-
-            this.Lklist = this.Lklist.concat(res.data.data)
+            var ss = res.data.data
+            var arrs = []
+            ss.map((item) => {
+              if (item.goods.images.length) {
+                item.gimages = item.goods.images[0]
+              } else {
+                item.gimages = ''
+              }
+              arrs.push(item)
+            })
+            this.Lklist = this.Lklist.concat(arrs)
           }
           if (this.Lklist.length >= this.total) {
             // 全部加载完成
@@ -163,6 +185,11 @@ export default {
           color:#333;
           border-radius: 44px;
         }
+      }
+      .dpl{
+        font-size: 30px;
+        color:#333;
+        margin-top:20px;
       }
       .goods{
         width:100%;

@@ -50,6 +50,7 @@ import MyYq from '@/pages/myYq'
 import MyYy from '@/pages/myYy'
 import MyPl from '@/pages/myPl'
 import About from '@/pages/about'
+import VideoDetail from '@/pages/videodetail'
 import My from '@/pages/my'
 import Login from '@/pages/login'
 import Test from '@/pages/test'
@@ -86,6 +87,7 @@ const getToken = (data) => {
         getSitem.setStr('mobile', result.data.info.mobile)
         getSitem.setStr('token', result.data.info.token)
         getSitem.setStr('openid', result.data.info.openid)
+        getSitem.setStr('userid', result.data.info.user_id)
         if (getSitem.getStr('open')) {
           location.reload()
         } else {
@@ -513,6 +515,14 @@ const router = new Router({
       }
     },
     {
+      path: '/videodetail',
+      name: 'VideoDetail',
+      component: VideoDetail,
+      meta: {
+        title: '预课详情'
+      }
+    },
+    {
       path: '/orderlist',
       name: 'OrderList',
       component: OrderList,
@@ -688,6 +698,30 @@ const router = new Router({
       component: () => import('@/pages/shopCate'),
       meta: {
         title: '商品分类'
+      }
+    },
+    {
+      path: '/myHhR',
+      name: 'MyHhr',
+      component: () => import('@/pages/myHhr'),
+      meta: {
+        title: '合伙人'
+      }
+    },
+    {
+      path: '/myHho',
+      name: 'MyHho',
+      component: () => import('@/pages/myHho'),
+      meta: {
+        title: '合伙人订单'
+      }
+    },
+    {
+      path: '/myHhl',
+      name: 'MyHhl',
+      component: () => import('@/pages/myHhl'),
+      meta: {
+        title: '合伙人列表'
       }
     },
     {

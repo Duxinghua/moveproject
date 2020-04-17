@@ -1,71 +1,6 @@
 <template>
   <div class="myXf">
-    <div class="myXf-top">
-      <img class="card" src="../assets/images/myxf.png" alt="">
-      <div class="cardInfo">
-        <div class="cardInfo-c">
-          <span>账户余额</span>
-          <span>{{userInfo.money}}</span>
-          <span @click="linkClickHandler">提现</span>
-        </div>
-      </div>
-      <div class="myXf-top-menu">
-        <!-- <span :class="{active: currentIndex === 0 ? true : false}" @click="tabClickHandler(0)">我的分销</span> -->
-        <span :class="{active: currentIndex === 2 ? true : false}" @click="tabClickHandler(2)">商城订单</span>
-        <span :class="{active: currentIndex === 3 ? true : false}" @click="tabClickHandler(3)">课程订单</span>
-        <span :class="{active: currentIndex === 1 ? true : false}" @click="tabClickHandler(1)">提现记录</span>
-      </div>
-    </div>
-    <div class="myXf-content" style="display:none" v-if="currentIndex === 0">
-      <van-list
-            v-model="loading"
-            v-show="fxlist.length > 0"
-            :finished="finished"
-            finished-text="没有更多了"
-            :immediate-check="false"
-            @load="onLoad"
-      >
-      <div class="myXf-content-item" v-for="(item, index) in fxlist" :key="index" >
-        <div class="myXf-content-item-top">
-            <img class="userIco" :src="item.avatar" alt="">
-            <div class="userInfo">
-              <span>{{item.username}}</span>
-              <span>注册时间:{{item.create_time_txt}}</span>
-            </div>
-        </div>
-        <div class="myXf-content-item-bottom">
-          <div>累计消费金额:<span class="sl">¥{{item.price}}</span></div>
-          <div>返还金额:<span class="sr">¥{{item.price_to_top}}</span></div>
-        </div>
-      </div>
-      </van-list>
-    </div>
-    <div class="myXf-Fx" v-if="currentIndex === 1">
-      <div class="myXf-Fx-top">
-        <span class="time">时间</span>
-        <span class="des">详情</span>
-        <span class="money">金额</span>
-        <span class="status">状态</span>
-      </div>
-      <div class="myXf-Fx-content">
-        <van-list
-            v-model="loading"
-            v-show="fxlist.length > 0"
-            :finished="finished"
-            finished-text="没有更多了"
-            :immediate-check="false"
-            @load="onLoad"
-        >
-        <div class="myXf-Fx-content-item" v-for="(item, index) in fxlist" :key="index">
-          <span class="time">{{item.create_time.split(" ")[0]}}</span>
-          <span class="des">{{item.type == 0 ? '支付宝' : '银行卡'}}</span>
-          <span class="money">¥{{item.money}}</span>
-          <span class="status">{{item.status_text}}</span>
-        </div>
-        </van-list>
-      </div>
-    </div>
-    <div class="myXf-order" v-if="currentIndex === 2 || currentIndex === 3">
+    <div class="myXf-order" >
             <van-list
             v-model="loading"
             v-show="fxlist.length > 0"
@@ -74,7 +9,7 @@
             :immediate-check="false"
             @load="onLoad"
       >
-      <div class="myXf-order-item" v-for="(item, index) in fxlist" :key="index" @click="orderDetail(item)" >
+      <div class="myXf-order-item" v-for="(item, index) in fxlist" :key="index" >
         <div class="myXf-order-top">
           <div class="ot1">订单编号：<span>864319955677</span></div>
           <div class="ot2">订单时间：<span>4月15日 19:14</span> </div>
@@ -101,7 +36,7 @@
 <script>
 import NoData from '@/components/nodata'
 export default {
-  name: 'MyFx',
+  name: 'MyHho',
   data () {
     return {
       currentIndex: 2,
@@ -122,34 +57,6 @@ export default {
     this.getuserTakeout()
   },
   methods: {
-    orderDetail (item) {
-      if (this.currentIndex == 2) {
-        this.$router.push({
-          path: '/goodsDetails',
-          query: {
-            goodsId: item.goods_id,
-            type: 'single'
-          }
-        })
-      } else if (this.currentIndex == 3) {
-        // 2线上，3线下
-        if (item.type == 3) {
-          this.$router.push({
-            path: '/offCourseDetail',
-            query: {
-              id: item.course_id
-            }
-          })
-        } else if (item.type == 2) {
-          this.$router.push({
-            path: '/onlineCourseDetail',
-            query: {
-              id: item.course_id
-            }
-          })
-        }
-      }
-    },
     getuserTakeout () {
       const param = {
         page: this.current,
@@ -304,7 +211,7 @@ export default {
   display: flex;
   flex-direction: column;
   min-height:100vh;
-  background:white;
+  background:#FBF8F4;
   .myfooter{
       position: fixed;
       bottom: 0;
@@ -394,10 +301,10 @@ export default {
     display: flex;
     flex-direction: column;
     width:100%;
-    background:white;
     &-item{
       display: flex;
       flex-direction: column;
+      background: white;
       border-bottom: 15px solid #FBF8F4;
       &-top{
           padding-left:26px;
@@ -507,6 +414,7 @@ export default {
     box-sizing: border-box;
     width:100%;
     height: fit-content;
+    background: white;
     border-bottom: 20px solid #FBF8F4;
     .myXf-order-top{
       display: flex;

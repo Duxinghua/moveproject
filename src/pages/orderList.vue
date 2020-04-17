@@ -22,7 +22,7 @@
           <span  v-if="item.t_id !== 0 && item.status !== 4">拼团{{goodsTuanText[item.t_status]}}</span>
 
         </div>
-        <div class="orderclist" @click="orderDetailHandler(item.order_id)">
+        <div class="orderclist" @click="orderDetailHandler(item)">
           <div class="ordercontent" v-for="(goodsitem,index) in item.goods" :key="goodsitem.goods_id">
             <div class="ordercontentimg">
               <van-image :src="goodsitem.images">
@@ -220,8 +220,18 @@ export default {
       this.loading = false
       this.getOrderList()
     },
-    orderDetailHandler (order_id) {
-      this.$router.push({name: 'OrderDetail', query: {id: order_id}})
+    orderDetailHandler (obj) {
+      if (obj.express.length < 4) {
+        this.$router.push({name: 'OrderDetail', query: {id: obj.order_id}})
+      } else {
+        this.$router.push({
+          name: 'OrderDetail',
+          query: {
+            id: obj.order_id,
+            express: obj.express
+          }
+        })
+      }
     },
     shareClickHandler (t_id, tuanStatus) {
       this.$router.push({

@@ -165,6 +165,9 @@ export default {
     if (this.$route.query.openid) {
       getSitem.setStr('pudd', this.$route.query.openid)
     }
+    if (this.$route.query.sourceuid) {
+      getSitem.setStr('puid', this.$route.query.sourceuid)
+    }
     this.courseDetail()
     this.courseTuanList()
   },

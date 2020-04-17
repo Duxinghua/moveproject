@@ -95,6 +95,15 @@
         <span>下单时间</span>
         <span>{{formatTime(order_detail.create_time)}}</span>
       </div>
+      <a :href="'tel:'+order_detail.linkway" class="orderother orderotherfix">
+        <img  class="phonecall" src="../assets/images/phonecall.png" />
+        <span>联系电话</span>
+      </a>
+      <div class="orderother" v-if="express">
+        <div class="btn" @click="expressgo">
+          查看物流
+        </div>
+      </div>
     </div>
     <div class="orderdetail-btns" v-if="order_detail.status == 0">
       <span class="cancel" v-if="order_detail.status == 0 && order_detail.t_id == 0" @click="cancelClickHandler(order_detail.order_id)">
@@ -104,9 +113,6 @@
         立即付款
       </span>
       <span style="display:none" class="repay" v-if="order_detail.status == 99">重新购买</span>
-    </div>
-    <div class="phonecall">
-
     </div>
   </div>
 </template>
@@ -173,11 +179,14 @@ export default {
       ],
       num: 3, // 上传数量
       localIds: [],
-      imgList: []
+      imgList: [],
+      express: ''
     }
   },
   mounted () {
+    console.log(this.$route.query)
     this.order_id = this.$route.query.id
+    this.express = this.$route.query.express
     this.getDetail()
   },
   methods: {
@@ -188,6 +197,9 @@ export default {
           id: this.order_detail.t_id
         }
       })
+    },
+    expressgo () {
+      window.location.href = this.express
     },
     commentClickHandler (order_id) {
       this.$router.push({name: 'OrderComment', query: {id: order_id}})
@@ -553,7 +565,7 @@ export default {
     display: flex;
     flex-direction: column;
     background:white;
-    padding:0px 26px 26px  26px;
+    padding:0px 26px;
     margin-top:15px;
 
     .header{
@@ -609,6 +621,21 @@ export default {
       padding:20px 0px;
       align-items: center;
       border-bottom: 1px solid #f3f3f3;
+      .btn{
+        width:677px;
+        height:88px;
+        font-size: 36px;
+        line-height: 88px;
+        text-align: center;
+        border-radius: 44px;
+        background:#6D8160;
+        color:#F3D995;
+        margin:50px auto;
+      }
+      .phonecall{
+        width:44px;
+        height:44px;
+      }
       span:nth-child(1){
         width:150px;
         color:#999999;
@@ -617,8 +644,17 @@ export default {
         color:#333333;
       }
     }
+    .orderother:nth-last-child(2){
+      padding-bottom: 40px;
+    }
     .orderother:last-child{
       border-bottom: 1px solid transparent;
+    }
+    .orderotherfix{
+      border-bottom: 1px solid #f3f3f3 !important;
+      display: flex;
+      justify-content: center;
+      padding:30px 0;
     }
   }
   &-btns{

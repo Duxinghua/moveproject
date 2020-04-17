@@ -10,89 +10,25 @@
         </div>
       </div>
       <div class="myXf-top-menu">
-        <!-- <span :class="{active: currentIndex === 0 ? true : false}" @click="tabClickHandler(0)">我的分销</span> -->
-        <span :class="{active: currentIndex === 2 ? true : false}" @click="tabClickHandler(2)">商城订单</span>
-        <span :class="{active: currentIndex === 3 ? true : false}" @click="tabClickHandler(3)">课程订单</span>
-        <span :class="{active: currentIndex === 1 ? true : false}" @click="tabClickHandler(1)">提现记录</span>
       </div>
-    </div>
-    <div class="myXf-content" style="display:none" v-if="currentIndex === 0">
-      <van-list
-            v-model="loading"
-            v-show="fxlist.length > 0"
-            :finished="finished"
-            finished-text="没有更多了"
-            :immediate-check="false"
-            @load="onLoad"
-      >
-      <div class="myXf-content-item" v-for="(item, index) in fxlist" :key="index" >
-        <div class="myXf-content-item-top">
-            <img class="userIco" :src="item.avatar" alt="">
-            <div class="userInfo">
-              <span>{{item.username}}</span>
-              <span>注册时间:{{item.create_time_txt}}</span>
-            </div>
+      <div class="myxf-menu-wrap">
+        <div class="myitem" @click="likeClickType('kc')">
+          <img src="../assets/images/o1.png" alt="">
+          <span>课程订单</span>
         </div>
-        <div class="myXf-content-item-bottom">
-          <div>累计消费金额:<span class="sl">¥{{item.price}}</span></div>
-          <div>返还金额:<span class="sr">¥{{item.price_to_top}}</span></div>
+        <div class="myitem" @click="likeClickType('sp')">
+          <img src="../assets/images/o2.png" alt="">
+          <span>商品订单</span>
+        </div>
+        <div class="myitem" @click="likeClickType('yh')">
+          <img src="../assets/images/o3.png" alt="">
+          <span>邀请好友</span>
+        </div>
+        <div class="myitem" @click="likeClickType('hh')">
+          <img src="../assets/images/o4.png" alt="">
+          <span>我的合伙人</span>
         </div>
       </div>
-      </van-list>
-    </div>
-    <div class="myXf-Fx" v-if="currentIndex === 1">
-      <div class="myXf-Fx-top">
-        <span class="time">时间</span>
-        <span class="des">详情</span>
-        <span class="money">金额</span>
-        <span class="status">状态</span>
-      </div>
-      <div class="myXf-Fx-content">
-        <van-list
-            v-model="loading"
-            v-show="fxlist.length > 0"
-            :finished="finished"
-            finished-text="没有更多了"
-            :immediate-check="false"
-            @load="onLoad"
-        >
-        <div class="myXf-Fx-content-item" v-for="(item, index) in fxlist" :key="index">
-          <span class="time">{{item.create_time.split(" ")[0]}}</span>
-          <span class="des">{{item.type == 0 ? '支付宝' : '银行卡'}}</span>
-          <span class="money">¥{{item.money}}</span>
-          <span class="status">{{item.status_text}}</span>
-        </div>
-        </van-list>
-      </div>
-    </div>
-    <div class="myXf-order" v-if="currentIndex === 2 || currentIndex === 3">
-            <van-list
-            v-model="loading"
-            v-show="fxlist.length > 0"
-            :finished="finished"
-            finished-text="没有更多了"
-            :immediate-check="false"
-            @load="onLoad"
-      >
-      <div class="myXf-order-item" v-for="(item, index) in fxlist" :key="index" @click="orderDetail(item)" >
-        <div class="myXf-order-top">
-          <div class="ot1">订单编号：<span>864319955677</span></div>
-          <div class="ot2">订单时间：<span>4月15日 19:14</span> </div>
-          <div class="ot2">订单金额：<span>¥680.00</span> </div>
-          <!-- 订单时间：4月15日 19:14 订单金额：¥680.00  -->
-        </div>
-        <div class="myXf-order-bottom">
-          <div class="ob1">
-            <img class="avatar" :src="item.user.avatar" />
-            <span class="b1">{{item.user.nickname}}</span>
-          </div>
-          <div class="ob2">
-            <span class="p1">预估收入：</span>
-            <span class="p2">¥120.00</span>
-          </div>
-        </div>
-      </div>
-      </van-list>
     </div>
     <img class="myfooter" src="../assets/images/myfooter.png" alt="">
   </div>
@@ -101,7 +37,7 @@
 <script>
 import NoData from '@/components/nodata'
 export default {
-  name: 'MyFx',
+  name: 'MyHhr',
   data () {
     return {
       currentIndex: 2,
@@ -119,137 +55,8 @@ export default {
     if (this.$route.query.current) {
       this.currentIndex = this.$route.query.current
     }
-    this.getuserTakeout()
   },
   methods: {
-    orderDetail (item) {
-      if (this.currentIndex == 2) {
-        this.$router.push({
-          path: '/goodsDetails',
-          query: {
-            goodsId: item.goods_id,
-            type: 'single'
-          }
-        })
-      } else if (this.currentIndex == 3) {
-        // 2线上，3线下
-        if (item.type == 3) {
-          this.$router.push({
-            path: '/offCourseDetail',
-            query: {
-              id: item.course_id
-            }
-          })
-        } else if (item.type == 2) {
-          this.$router.push({
-            path: '/onlineCourseDetail',
-            query: {
-              id: item.course_id
-            }
-          })
-        }
-      }
-    },
-    getuserTakeout () {
-      const param = {
-        page: this.current,
-        pageSize: 10
-      }
-      this.$toast.loading({
-        duration: 0,
-        message: '加载中...',
-        forbidClick: true
-      })
-      if (this.currentIndex === 1) {
-        this.$api.userTakeout(param).then((res) => {
-          this.$toast.clear()
-          if (res.code == 1) {
-            this.loading = false
-
-            if (this.fxlist.length == 0) {
-              // 第一次加载
-              this.fxlist = res.data.data || []
-              this.total = res.data.total
-            } else if (this.fxlist.length < this.total) {
-              // 加载更多
-              this.fxlist = this.fxlist.concat(res.data.data)
-            }
-            if (this.fxlist.length >= this.total) {
-              // 全部加载完成
-              this.finished = true
-            }
-          }
-        })
-      } else if (this.currentIndex === 0) {
-        this.$api.userDistribution(param).then((res) => {
-          this.$toast.clear()
-          if (res.code == 1) {
-            this.loading = false
-
-            if (this.fxlist.length == 0) {
-              // 第一次加载
-              this.fxlist = res.data.data || []
-              this.total = res.data.total
-            } else if (this.fxlist.length < this.total) {
-              // 加载更多
-              this.fxlist = this.fxlist.concat(res.data.data)
-            }
-            if (this.fxlist.length >= this.total) {
-              // 全部加载完成
-              this.finished = true
-            }
-          }
-        })
-      } else if (this.currentIndex === 2) {
-        param.order_type = 2
-        this.$api.userDistributionList(param).then((res) => {
-          this.$toast.clear()
-          if (res.code == 1) {
-            this.loading = false
-
-            if (this.fxlist.length == 0) {
-              // 第一次加载
-              this.fxlist = res.data.data || []
-              this.total = res.data.total
-            } else if (this.fxlist.length < this.total) {
-              // 加载更多
-              this.fxlist = this.fxlist.concat(res.data.data)
-            }
-            if (this.fxlist.length >= this.total) {
-              // 全部加载完成
-              this.finished = true
-            }
-          }
-        })
-      } else if (this.currentIndex == 3) {
-        param.order_type = 1
-        this.$api.userDistributionList(param).then((res) => {
-          this.$toast.clear()
-          if (res.code == 1) {
-            this.loading = false
-
-            if (this.fxlist.length == 0) {
-              // 第一次加载
-              this.fxlist = res.data.data || []
-              this.total = res.data.total
-            } else if (this.fxlist.length < this.total) {
-              // 加载更多
-              this.fxlist = this.fxlist.concat(res.data.data)
-            }
-            if (this.fxlist.length >= this.total) {
-              // 全部加载完成
-              this.finished = true
-            }
-          }
-        })
-      }
-    },
-    onLoad () {
-      if (this.fxlist.length < this.total) {
-        this.current++
-        this.getuserTakeout()
-      }
-    },
     getuserIndex () {
       this.$api.userIndex().then((result) => {
         if (result.code === 1) {
@@ -257,34 +64,32 @@ export default {
         }
       })
     },
-    tabClickHandler (e) {
-      this.currentIndex = e
-      this.finished = false
-      this.loading = false
-      this.current = 1
-      this.fxlist = []
-      this.getuserTakeout()
-    },
     linkClickHandler () {
       this.$router.push({name: 'MyTx', params: {money: this.userInfo.money}})
-    }
-  },
-  computed: {
-    autoIco (type) {
-      var links
-      switch (type) {
-        case 1:
-          links = require('../assets/images/myxfzl.png')
+    },
+    likeClickType (arg) {
+      var Links
+      switch (arg) {
+        case 'kc':
+          Links = 'MyHho'
           break
-        case 2:
-        case 3:
-          links = require('../assets/images/myxfxx.png')
+        case 'sp':
+          Links = 'MyHho'
           break
-        case 4:
-          links = require('../assets/images/myxfft.png')
+        case 'yh':
+          Links = 'MyYq'
+          break
+        case 'hh':
+          Links = 'MyHhl'
           break
       }
-      return links
+      if (arg === 'kc') {
+        this.$router.push({name: Links, query: {type: 1}})
+      } else if (arg === 'sp') {
+        this.$router.push({name: Links, query: {type: 2}})
+      } else {
+        this.$router.push({name: Links})
+      }
     }
   },
   components: {
@@ -356,15 +161,14 @@ export default {
     &-menu{
       display: flex;
       flex-direction: row;
-      height:105px;
+      height:100px;
       justify-content: center;
       align-items: center;
       position: absolute;
       left:0;
-      bottom: 0;
+      bottom: 0px;
       background:white;
       width:100%;
-      border-bottom: 2px solid #F3F3F3;
       span{
         font-size: 32px;
         color:#999999;
@@ -604,6 +408,58 @@ export default {
         font-size: 20px;
         color:#999;
       }
+    }
+  }
+}
+.myxf-menu-wrap{
+  display: flex;
+  padding:0 28px 28px 28px;
+  box-sizing: border-box;
+  flex-direction: row;
+  flex-wrap: wrap;
+  position: inherit;
+  z-index: 100;
+  margin-top:-10px;
+  .myitem{
+    width:50%;
+    height:220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    span{
+      font-size: 26px;
+      color:#333;
+      margin-top:29px;
+    }
+  }
+  .myitem:nth-child(1){
+    border-bottom: 1px solid #F2F2F2;
+    border-right:1px solid #F2F2F2;
+    img{
+      width:38px;
+      height:48px;
+    }
+
+  }
+  .myitem:nth-child(2){
+    border-bottom: 1px solid #F2F2F2;
+    img{
+      width:44px;
+      height:46px;
+    }
+  }
+  .myitem:nth-child(3){
+    border-right: 1px solid #F2F2F2;
+    img{
+      width:46px;
+      height:46px;
+    }
+  }
+  .myitem:nth-child(4){
+    img{
+      width:52px;
+      height:49px;
     }
   }
 }

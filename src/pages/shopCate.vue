@@ -76,8 +76,10 @@ export default {
               }
             })
             this.tabList = lists
-            this.gcId = this.tabList[0].id
-            this.getGoodsList()
+            if (this.tabList.length) {
+              this.gcId = this.tabList[0].id
+              this.getGoodsList()
+            }
           }
         }
       })

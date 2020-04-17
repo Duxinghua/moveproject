@@ -17,7 +17,7 @@
           <span class="myInfos-edit" @click="editHandler">编辑资料</span>
         </div>
       </div>
-      <div class="my-header-tab">
+      <div class="my-header-tab" style="display:none">
         <div class="tabitem" @click="likeClickHandler('gz')">
           <span>{{userInfo.follow}}</span>
           <span>我的关注</span>
@@ -35,9 +35,6 @@
           <span>被喜欢</span>
         </div>
       </div>
-      <div class="my-header-ad" @click="likeGo">
-        <img :src="slideList.image+''" alt="">
-      </div>
       <div class="my-header-oc">
         <div class="oitem" @click="likeClickHandler('st')">
           <img src="../assets/images/sp.png" alt="">
@@ -47,15 +44,18 @@
           <img src="../assets/images/kz.png" alt="">
           <span>课程订单</span>
         </div>
-        <div class="oitem" @click="likeClickHandler('tz')">
-          <img src="../assets/images/mt.png" alt="">
-          <span>我的帖子</span>
-        </div>
         <div class="oitem" @click="likeClickHandler('fx')">
+          <img src="../assets/images/myshare.png" alt="">
+          <span>分享推广</span>
+        </div>
+        <div class="oitem" @click="likeClickHandler('hh')">
           <img src="../assets/images/mf.png" alt="">
           <span>合伙人</span>
         </div>
       </div>
+    </div>
+    <div class="my-header-ad" @click="likeGo" >
+        <img :src="slideList.image+''" alt="">
     </div>
     <div class="my-list">
       <div class="mlitem" @click="likeClickHandler('yy')">
@@ -66,7 +66,11 @@
         <img src="../assets/images/mym.png" alt="" />
         <span>消息中心</span>
       </div>
-      <div class="mlitem" @click="likeClickHandler('yq')">
+      <div class="mlitem" style="display:none" @click="likeClickHandler('yq')">
+        <img src="../assets/images/myf.png" alt="" />
+        <span>邀请好友</span>
+      </div>
+      <div class="mlitem" style="display:none"  @click="likeClickHandler('hhr')">
         <img src="../assets/images/myf.png" alt="" />
         <span>邀请合伙人</span>
       </div>
@@ -300,6 +304,10 @@ export default {
           break
         case 'ad':
           Links = 'addressList'
+          break
+        case 'hh':
+          Links = 'MyHhr'
+          break
       }
       if (arg === 'xf') {
         this.$router.push({name: Links, query: {score: this.userInfo.score}})
@@ -324,12 +332,13 @@ export default {
   &-header{
     display: flex;
     flex-direction: column;
-    border-bottom: 15px solid #FBF8F4;
+    // border-bottom: 15px solid #FBF8F4;
     &-info{
       display: flex;
       flex-direction: row;
       padding-left:26px;
       padding-right:26px;
+      margin-bottom: 26px;
       justify-content: space-between;
       width:100%;
       .avatar{
@@ -422,7 +431,7 @@ export default {
     &-ad{
       width:700px;
       height:160px;
-      margin:30px auto;
+      margin:15px auto;
       img{
         width:100%;
         height:100%;
@@ -433,7 +442,7 @@ export default {
       width:100%;
       display: flex;
       flex-direction: row;
-      margin-bottom: 34px;
+      margin-bottom: 26px;
       .oitem{
         width:25%;
         display: flex;

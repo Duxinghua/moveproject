@@ -14,7 +14,7 @@
           <span :class="{active:fl}">分类</span>
       </router-link>
       <router-link class="menuitem" to="/tuan" >
-          <img :src="pt === true ? require('../assets/images/hbico-a.png') : require('../assets/images/hbico.png')" alt="" />
+          <img :src="pt === true ? require('../assets/images/ptico-a.png') : require('../assets/images/ptico.png')" alt="" />
           <span :class="{active:pt}">拼团</span>
       </router-link>
       <router-link class="menuitem" to="/Fall">

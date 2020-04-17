@@ -171,10 +171,10 @@
                         </div>
                     </div>
                 </van-list>
-                <div
+                <!-- <div
                     class="comments-no"
                     v-if="comments.length == 0"
-                >暂无评论</div>
+                >暂无评论</div> -->
             </div>
         </div>
 
@@ -296,9 +296,9 @@
         >
         </van-image-preview>
 
-		<van-overlay :show="overlayStatus" :z-index="100" @click="toggleShare">
-			<img src="../assets/images/shareimg.png" alt="">
-		</van-overlay>
+      <van-overlay :show="overlayStatus" :z-index="100" @click="toggleShare">
+        <img src="../assets/images/shareimg.png" alt="">
+      </van-overlay>
     </div>
 </template>
 
@@ -452,6 +452,9 @@ export default {
             // 第一次加载
             this.comments = res.data.data || []
             this.total = res.data.last_page
+            if (this.total == 0) {
+              this.finished = true
+            }
           } else if (this.current < this.total) {
             // 加载更多
             this.comments = this.comments.concat(res.data.data)
@@ -460,7 +463,6 @@ export default {
             // 全部加载完成
             this.finished = true
           }
-          console.log(this.total, 'total', this.current, this.finished)
         }
       })
     },
@@ -674,18 +676,18 @@ export default {
       h3 {
         color: #6d8160;
         font-size: 36px;
-		position: relative;
-		span{
-			position: relative;
-			z-index: 1;
-		}
-		img{
-			width: 150px;
-			position:absolute;
-			bottom: 0px;
-			left: 0px;
-			opacity: 0.7;
-		}
+        position: relative;
+        span{
+          position: relative;
+          z-index: 1;
+        }
+        img{
+          width: 150px;
+          position:absolute;
+          bottom: 0px;
+          left: 0px;
+          opacity: 0.7;
+        }
       }
       .right {
         color: #999999;

@@ -132,185 +132,188 @@
 <script>
 import config from '@/utils/config'
 export default {
-  data () {
-    return {
-      overlayStatus1: false,
-      tuanStatus: 1, // 1是拼团成功 0 是支付成功
-      overlayStatus: true,
-      popupStatus: false,
-      goodsNum: 1,
-      skuIndex: -1,
-      skuList: [],
-      goodsData: {},
-      groupId: 0,
-      goodsId: 0,
-      groupDetails: {
-        users: []
-      },
-      groupList: [],
-      wx: null
-    }
+  data() {
+        return {
+            overlayStatus1:false,
+            tuanStatus:1,//1是拼团成功 0 是支付成功
+            overlayStatus:false,
+            popupStatus:false,
+            goodsNum:1,
+            skuIndex:-1,
+            skuList:[],
+            goodsData:{},
+            groupId:0,
+            goodsId:0,
+            groupDetails:{
+              users:[]
+            },
+            groupList:[],
+            wx:null
+        }
   },
-  created () {
-    const data = {
-      url: location.href.split('#')[0]
-    }
-    const agent = navigator.userAgent
-    const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-    if (isiOS) {
-      data.url = config.shareurls
-    }
-    // 请求api返回sdk配置参数
-    this.$api.userGetSignPackage(data).then(res => {
-      if (res.code === 1) {
-        var wxConfig = res.data
-        this.wxConfig = wxConfig
-        wx.config({
-          appId: wxConfig.appId, // 必填，公众号的唯一标识
-          timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
-          nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
-          signature: wxConfig.signature, // 必填，签名
-          jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData'] // 必填，需要使用的JS接口列表
-        })
-      }
+  created() {
+        const data = {
+            url: location.href.split('#')[0]
+		}
+		const agent = navigator.userAgent
+		const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+		if(isiOS){
+			data.url = config.shareurls
+		}
+        // 请求api返回sdk配置参数
+        this.$api.userGetSignPackage(data).then(res => {
+            if (res.code === 1) {
+                var wxConfig = res.data;
+                this.wxConfig = wxConfig;
+                wx.config({
+                    appId: wxConfig.appId, // 必填，公众号的唯一标识
+                    timestamp: wxConfig.timestamp, // 必填，生成签名的时间戳
+                    nonceStr: wxConfig.nonceStr, // 必填，生成签名的随机串
+                    signature: wxConfig.signature,// 必填，签名
+                    jsApiList: ['updateAppMessageShareData', 'updateTimelineShareData'] // 必填，需要使用的JS接口列表
+                });
+            }
 
-      wx.ready(() => {
-        this.wx = wx
-        this.onShare()
-      })
-    })
-  },
+            wx.ready(() => {
+                this.wx = wx;
+                this.onShare();
+            });
+        });
+    },
   mounted () {
-    const {tuanStatus, id} = this.$route.query
+    const {tuanStatus,id} = this.$route.query
     this.groupId = id
-    this.tuanStatus = tuanStatus
+    this.tuanStatus = tuanStatus;
     this.goodsTuan()
-    if (tuanStatus == 0 || tuanStatus == 1) {
-      this.overlayStatus = true
+    if(tuanStatus == 0 || tuanStatus == 1){
+        this.overlayStatus = true;
     }
-  },
-  methods: {
-    handlerView () {
-      this.$router.push({
-        path: '/goodsDetails',
-        query: {
-          goodsId: this.goodsId
-        }
-      })
-    },
-    onLinkHome () {
-      this.$router.push({
-        path: '/shopHome'
-      })
-    },
-    onShare () {
-      const _this = this
-      const title = this.goodsData.goods_name
-      const description = this.goodsData.description
-      const link = location.href
-      const imgUrl = this.goodsData.images ? this.goodsData.images[0] : ''
-      let shareurl = config.baseurl + '/groupDetails?id=' + this.groupId
-      this.wx.updateAppMessageShareData({
-        title: title, // 分享标题
-        desc: description, // 分享描述
-        link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-        imgUrl: imgUrl, // 分享图标
-        success: function () {
-          // _this.$toast('分享成功')
-        }
-      })
 
-      this.wx.updateTimelineShareData({
-        title: title, // 分享标题
-        link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-        imgUrl: imgUrl, // 分享图标
-        success: function () {
-          // _this.$toast('分享成功')
-        }
-      })
-    },
-    toggleShare () {
-      this.overlayStatus1 = !this.overlayStatus1
-    },
-    onLink () {
-      if (this.tuanStatus == 1) {
-        this.$router.push({
-          path: '/shopHome'
+  },
+  methods:{
+      handlerView() {
+            this.$router.push({
+                path:'/goodsDetails',
+                query:{
+                    goodsId:this.goodsId
+                }
+            })
+      },
+      onLinkHome(){
+          this.$router.push({
+            path:'/shopHome'
         })
-      } else {
-        this.toggleShare()
-      }
-    },
-    onLinkOrder () {
-      this.$router.push({
-        path: '/orderlist'
-      })
-    },
-    hideOverlay () {
-      this.overlayStatus = false
-    },
-    onLinkDetails (id) {
-      this.$router.push({
-        path: '/goodsDetails',
-        query: {
-          goodsId: id
+      },
+      onShare() {
+            const _this = this;
+            const title = this.goodsData.goods_name;
+            const description = this.goodsData.description;
+            const link = location.href;
+            const imgUrl = this.goodsData.images ? this.goodsData.images[0] : '';
+            let shareurl = config.baseurl + '/groupDetails?id=' + this.groupId
+            this.wx.updateAppMessageShareData({
+                title: title, // 分享标题
+                desc: description, // 分享描述
+                link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: imgUrl, // 分享图标
+                success: function () {
+                    // _this.$toast('分享成功')
+                }
+            })
+
+            this.wx.updateTimelineShareData({
+                title: title, // 分享标题
+                link: config.gourl + encodeURIComponent(shareurl), // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: imgUrl, // 分享图标
+                success: function () {
+                    // _this.$toast('分享成功')
+                }
+            })
+
+        },
+      toggleShare(){
+            this.overlayStatus1 = !this.overlayStatus1;
+        },
+      onLink(){
+          if(this.tuanStatus == 1){
+              this.$router.push({
+                path:'/shopHome'
+            })
+          }else{
+              this.toggleShare();
+          }
+      },
+      onLinkOrder(){
+          this.$router.push({
+                path:'/orderlist'
+            })
+      },
+        hideOverlay(){
+            this.overlayStatus = false;
+        },
+        onLinkDetails(id){
+            this.$router.push({
+                path:'/goodsDetails',
+                query:{
+                    goodsId:id
+                }
+            })
+        },
+        goodsTuan(){
+            this.$toast.loading({
+                duration:0,
+                message: '加载中...',
+                forbidClick: true
+            });
+            this.$api.goodsTuan({t_id:this.groupId}).then((res) => {
+                this.$toast.clear();
+                if(res.code == 1){
+                    this.groupDetails = res.data;
+                    this.goodsId = res.data.goods_id
+                    this.goodsData = res.data.goods || {};
+                    this.skuList = res.data.goods ? res.data.goods.specs : [];
+                    this.groupList = res.data.hot || [];
+                }else{
+                    this.$toast(res.msg)
+                }
+            })
+        },
+        onSkuClick(index){
+            if(this.skuIndex == index){
+                this.skuIndex = -1;
+            }else{
+                this.skuIndex = index;
+            }
+        },
+        onSubmit(){
+            if(this.skuIndex == -1){
+                this.$toast('请选择规格')
+                return false
+            }
+            this.goodsOrderCreate(1)
+        },
+        showPopup(){
+            if(this.groupDetails.is_buy == 1){
+                this.$toast('该团已支付')
+            }else{
+                this.popupStatus = true;
+            }
+
+        },
+        goodsOrderCreate(type){
+            //参加拼团到支付页面
+            const param = {
+                type,
+                goods_id:this.groupDetails.goods_id,
+                t_id:this.groupId,
+                specs:JSON.stringify(this.skuList[this.skuIndex]),
+                goods_num:this.goodsNum
+            }
+            this.$router.push({
+                path:'/submitOrder',
+                query:param
+            })
         }
-      })
-    },
-    goodsTuan () {
-      this.$toast.loading({
-        duration: 0,
-        message: '加载中...',
-        forbidClick: true
-      })
-      this.$api.goodsTuan({t_id: this.groupId}).then((res) => {
-        this.$toast.clear()
-        if (res.code == 1) {
-          this.groupDetails = res.data
-          this.goodsId = res.data.goods_id
-          this.goodsData = res.data.goods || {}
-          this.skuList = res.data.goods ? res.data.goods.specs : []
-          this.groupList = res.data.hot || []
-        } else {
-          this.$toast(res.msg)
-        }
-      })
-    },
-    onSkuClick (index) {
-      if (this.skuIndex == index) {
-        this.skuIndex = -1
-      } else {
-        this.skuIndex = index
-      }
-    },
-    onSubmit () {
-      if (this.skuIndex == -1) {
-        this.$toast('请选择规格')
-        return false
-      }
-      this.goodsOrderCreate(1)
-    },
-    showPopup () {
-      if (this.groupDetails.is_buy == 1) {
-        this.$toast('该团已支付')
-      } else {
-        this.popupStatus = true
-      }
-    },
-    goodsOrderCreate (type) {
-      // 参加拼团到支付页面
-      const param = {
-        type,
-        goods_id: this.groupDetails.goods_id,
-        t_id: this.groupId,
-        specs: JSON.stringify(this.skuList[this.skuIndex]),
-        goods_num: this.goodsNum
-      }
-      this.$router.push({
-        path: '/submitOrder',
-        query: param
-      })
-    }
 
   }
 }

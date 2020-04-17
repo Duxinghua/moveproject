@@ -40,6 +40,12 @@ const server = {
     return post('/goods/lists', data)
   },
   /**
+	 * 商城首页
+	 */
+  goodsHome (data) {
+    return post('/goods/home', data)
+  },
+  /**
 	 * 商城分类
 	 */
   categorys (data) {

@@ -34,7 +34,7 @@ export default {
 
 <style lang='scss' scoped>
   .nodata{
-    position: fixed;
+    position: absolute;
     top: 50%;
     left:50%;
     transform: translate(-50%,-50%);
