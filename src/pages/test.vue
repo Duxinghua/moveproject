@@ -13,6 +13,7 @@ export default {
       alert(getSitem.getStr('token'))
       getSitem.remove('token')
       getSitem.remove('mobile')
+      localStorage.clear()
     }
   }
 }

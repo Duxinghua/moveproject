@@ -44,21 +44,21 @@ export default {
   },
   methods: {
     shareOpen () {
-      // this.wxShare = true
-      wx.scanQRCode({
-        needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果
-        scanType: [ 'qrCode', 'barCode' ], // 可以指定扫二维码还是一维码，默认二者都有 */
-        /*   desc : 'scanQRCode desc', */
-        success: function (res) {
-          alert(JSON.stringify(res))
-          // var url = res.resultStr;//扫码后获取结果
-          // location.href =  url;
-          console.log(res)
-        },
-        error: function (res) {
-          alert(JSON.stringify(res))
-        }
-      })
+      this.wxShare = true
+      // wx.scanQRCode({
+      //   needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果
+      //   scanType: [ 'qrCode', 'barCode' ], // 可以指定扫二维码还是一维码，默认二者都有 */
+      //   /*   desc : 'scanQRCode desc', */
+      //   success: function (res) {
+      //     alert(JSON.stringify(res))
+      //     // var url = res.resultStr;//扫码后获取结果
+      //     // location.href =  url;
+      //     console.log(res)
+      //   },
+      //   error: function (res) {
+      //     alert(JSON.stringify(res))
+      //   }
+      // })
     },
     toShare () {
       this.wxShare = false
@@ -78,7 +78,7 @@ export default {
         if (res.code === 1) {
           var wxpay = res.data
           wx.config({
-            debug: true,
+            debug: false,
             appId: wxpay.appId,
             timestamp: wxpay.timestamp,
             nonceStr: wxpay.nonceStr,

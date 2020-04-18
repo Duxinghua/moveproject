@@ -82,7 +82,8 @@ export default {
       deduction: '',
       oldGoodsTotal: 0,
       score: 0,
-      payScore: false
+      payScore: false,
+      sourceuid: ''
     }
   },
   watch: {
@@ -137,6 +138,9 @@ export default {
   },
   mounted () {
     const {goods_id, specs, type} = this.$route.query
+    if (this.$route.query.sourceuid) {
+      this.sourceuid = this.$route.query.sourceuid
+    }
     this.orderType = type
     this.goods_id = goods_id
     this.specs = specs
@@ -208,6 +212,9 @@ export default {
         } else {
           param.payscore = 0
         }
+        if (this.sourceuid) {
+          param.source_uid = this.sourceuid
+        }
       } else if (this.orderType == 1) {
         // 拼团购买
         param = {
@@ -230,6 +237,9 @@ export default {
           param.payscore = 1
         } else {
           param.payscore = 0
+        }
+        if (this.sourceuid) {
+          param.source_uid = this.sourceuid
         }
       }
       this.$api.goodsOrderStore(param).then((res) => {

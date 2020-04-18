@@ -1,36 +1,42 @@
 <template>
-  <div class="myXf">
-    <div class="myXf-top">
-      <img class="card" src="../assets/images/myxf.png" alt="">
-      <div class="cardInfo">
-        <div class="cardInfo-c">
-          <span>账户余额</span>
-          <span>{{userInfo.money}}</span>
-          <span @click="linkClickHandler">提现</span>
-        </div>
-      </div>
-      <div class="myXf-top-menu">
-      </div>
-      <div class="myxf-menu-wrap">
-        <div class="myitem" @click="likeClickType('kc')">
-          <img src="../assets/images/o1.png" alt="">
-          <span>课程订单</span>
-        </div>
-        <div class="myitem" @click="likeClickType('sp')">
-          <img src="../assets/images/o2.png" alt="">
-          <span>商品订单</span>
-        </div>
-        <div class="myitem" @click="likeClickType('yh')">
-          <img src="../assets/images/o3.png" alt="">
-          <span>邀请好友</span>
-        </div>
-        <div class="myitem" @click="likeClickType('hh')">
-          <img src="../assets/images/o4.png" alt="">
-          <span>我的合伙人</span>
-        </div>
-      </div>
+  <div class="myhrc">
+    <div class="myhr" v-if="is_partner == 0">
+      <img src="../assets/images/hhjoin.png" class="hhjoin" alt="">
+      <div class="myhhbtn" @click="partnerClick">成为合伙人</div>
     </div>
-    <img class="myfooter" src="../assets/images/myfooter.png" alt="">
+    <div class="myXf" v-if="is_partner == 1">
+      <div class="myXf-top">
+        <img class="card" src="../assets/images/myxf.png" alt="">
+        <div class="cardInfo">
+          <div class="cardInfo-c">
+            <span>账户余额</span>
+            <span>{{userInfo.money}}</span>
+            <span @click="linkClickHandler">提现</span>
+          </div>
+        </div>
+        <div class="myXf-top-menu">
+        </div>
+        <div class="myxf-menu-wrap">
+          <div class="myitem" @click="likeClickType('kc')">
+            <img src="../assets/images/o1.png" alt="">
+            <span>课程订单</span>
+          </div>
+          <div class="myitem" @click="likeClickType('sp')">
+            <img src="../assets/images/o2.png" alt="">
+            <span>商品订单</span>
+          </div>
+          <div class="myitem" @click="likeClickType('yh')">
+            <img src="../assets/images/o3.png" alt="">
+            <span>邀请好友</span>
+          </div>
+          <div class="myitem" @click="likeClickType('hh')">
+            <img src="../assets/images/o4.png" alt="">
+            <span>我的合伙人</span>
+          </div>
+        </div>
+      </div>
+      <img class="myfooter" src="../assets/images/myfooter.png" alt="">
+    </div>
   </div>
 </template>
 
@@ -47,13 +53,14 @@ export default {
       total: 0,
       userInfo: {},
       xflist: [],
-      fxlist: []
+      fxlist: [],
+      is_partner: 0
     }
   },
   mounted () {
     this.getuserIndex()
-    if (this.$route.query.current) {
-      this.currentIndex = this.$route.query.current
+    if (this.$route.query.is_partner) {
+      this.is_partner = this.$route.query.is_partner
     }
   },
   methods: {
@@ -66,6 +73,9 @@ export default {
     },
     linkClickHandler () {
       this.$router.push({name: 'MyTx', params: {money: this.userInfo.money}})
+    },
+    partnerClick () {
+      this.$router.push({name: 'Partner'})
     },
     likeClickType (arg) {
       var Links
@@ -99,6 +109,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.myhrc{
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  .myhr{
+    width:100%;
+    height:100vh;
+    background:url('../assets/images/hhbg.png') no-repeat;
+    background-size: 100% 100%;
+    position: relative;
+    .hhjoin{
+      position: absolute;
+      top:116px;
+      left:50%;
+      transform: translateX(-50%);
+      width:542px;
+      height:801px;
+    }
+    .myhhbtn{
+      position: absolute;
+      bottom: 159px;
+      left:50%;
+      transform: translateX(-50%);
+      width:601px;
+      height:98px;
+      background:url('../assets/images/hhbtn.png') no-repeat;
+      background-size: 100% 100%;
+      font-size: 36px;
+      color: white;
+      font-weight: 400;
+      line-height: 98px;
+      text-align: center;
+    }
+  }
+}
 .time,.status{
   width:30%
 }

@@ -77,17 +77,27 @@ const getToken = (data) => {
     Api.wxTokenCheck().then((result) => {
       if (result.code === 1) {
         getSitem.setStr('token', result.data.token)
+        Api.userIndex().then((result) => {
+          console.log(result, 'aa')
+          if (result.code === 1) {
+            getSitem.setStr('ispartner', result.data.is_partner)
+          }
+        })
       }
     })
   } else {
     Api.wxLogin(data).then((result) => {
       getSitem.setStr('open', true)
       if (result.code === 1) {
-        console.log(result)
         getSitem.setStr('mobile', result.data.info.mobile)
         getSitem.setStr('token', result.data.info.token)
         getSitem.setStr('openid', result.data.info.openid)
         getSitem.setStr('userid', result.data.info.user_id)
+        Api.userIndex().then((result) => {
+          if (result.code === 1) {
+            getSitem.setStr('ispartner', result.data.is_partner)
+          }
+        })
         if (getSitem.getStr('open')) {
           location.reload()
         } else {
@@ -725,6 +735,14 @@ const router = new Router({
       }
     },
     {
+      path: '/partner',
+      name: 'Partner',
+      component: () => import('@/pages/partner'),
+      meta: {
+        title: '合伙人申请'
+      }
+    },
+    {
       path: '/test',
       name: 'Test',
       component: Test,
@@ -736,8 +754,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
-  return
   // console.log(to)
   // getSitem.remove('token')
   // getSitem.remove('mobile')
@@ -783,6 +799,19 @@ router.beforeEach((to, from, next) => {
         Api.wxTokenCheck().then((result) => {
           if (result.code === 1) {
             getSitem.setStr('token', result.data.token)
+            Api.userIndex().then((result) => {
+              if (result.code === 1) {
+                getSitem.setStr('ispartner', result.data.is_partner)
+              }
+            })
+            if (getSitem.getStr('pudd')) {
+              var params = {
+                openid: getSitem.getStr('pudd')
+              }
+              Api.userBindTopUserId(params).then((res) => {
+                getSitem.remove('pudd')
+              })
+            }
           }
         })
         next()

@@ -200,7 +200,8 @@ export default {
       reShow: false,
       tipText: '你的课程已购买？是否再次购买',
       huaType: 1,
-      huaTypeIndex: 1
+      huaTypeIndex: 1,
+      sourceuid: ''
     }
   },
   mounted () {
@@ -211,6 +212,9 @@ export default {
     this.courseId = this.$route.query.id
     if (this.$route.query.openid) {
       getSitem.setStr('pudd', this.$route.query.openid)
+    }
+    if (this.$route.query.sourceuid) {
+      this.sourceuid = this.$route.query.sourceuid
     }
     this.onlineDetail()
     this.flowerList()
@@ -233,7 +237,12 @@ export default {
         url: location.href
       }
       var that = this
-      let shareurl = config.baseurl + '/onlinecoursedetail?id=' + that.courseId + '&openid=' + getSitem.getStr('openid')
+      var shareurl = ''
+      if (getSitem.getStr('ispartner') == 0) {
+        shareurl = config.baseurl + '/onlinecoursedetail?id=' + that.courseId + '&sourceuid=' + getSitem.getStr('userid')
+      } else {
+        shareurl = config.baseurl + '/onlinecoursedetail?id=' + that.courseId + '&openid=' + getSitem.getStr('openid') + '&sourceuid=' + getSitem.getStr('userid')
+      }
       const agent = navigator.userAgent
       const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
       if (isiOS) {
@@ -323,7 +332,7 @@ export default {
       })
     },
     homeClick () {
-      this.$router.push({name: 'Home'})
+      this.$router.push({name: 'shopHome'})
     },
     cancelHandler () {
       if (this.isBuy == 1) {
@@ -542,12 +551,20 @@ export default {
           confirmButtonColor: '#6D8160',
           cancelButtonColor: '#999999'
         }).then(() => {
-          this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
+          if (this.sourceuid) {
+            this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number, sourceuid: this.sourceuid}})
+          } else {
+            this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
+          }
         }).catch(() => {
           // on cancel
         })
       } else {
-        this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
+        if (this.sourceuid) {
+          this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number, sourceuid: this.sourceuid}})
+        } else {
+          this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
+        }
       }
     },
     onTrun (courseId) {
@@ -570,6 +587,12 @@ export default {
   computed: {
     player () {
       return this.$refs.videoPlnoTuanayer.player
+    },
+    buyClass () {
+      return {
+        'ondetail-buy-btn': true,
+        'noTuan': this.onlineMsg.is_tuan == 0
+      }
     }
   },
   components: {
@@ -578,14 +601,6 @@ export default {
     NoData,
     GroupItem,
     WxShare
-  },
-  computed: {
-    buyClass () {
-      return {
-        'ondetail-buy-btn': true,
-        'noTuan': this.onlineMsg.is_tuan == 0
-      }
-    }
   }
 }
 </script>

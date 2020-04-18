@@ -488,6 +488,14 @@ const server = {
   // 分销订单 /api/user/distributionList
   userDistributionList (data) {
     return post('user/distributionList', data)
+  },
+  // 会员分销订单 /api/user/memberDistributionList
+  memberDistributionList (data) {
+    return post('user/memberDistributionList', data)
+  },
+  // 申请成为合伙人 /api/user/partnerApply
+  partnerApply (data) {
+    return post('user/partnerApply', data)
   }
 }
 

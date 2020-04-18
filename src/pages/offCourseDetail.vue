@@ -153,7 +153,8 @@ export default {
       groupList: [],
       courseId: 0, // 课程id
       imageShow: false,
-      isBuy: 0
+      isBuy: 0,
+      sourceuid: ''
     }
   },
   mounted () {
@@ -166,7 +167,7 @@ export default {
       getSitem.setStr('pudd', this.$route.query.openid)
     }
     if (this.$route.query.sourceuid) {
-      getSitem.setStr('puid', this.$route.query.sourceuid)
+      this.sourceuid = this.$route.query.sourceuid
     }
     this.courseDetail()
     this.courseTuanList()
@@ -179,7 +180,7 @@ export default {
       console.log(a)
     },
     homeClick () {
-      this.$router.push({name: 'Home'})
+      this.$router.push({name: 'shopHome'})
     },
     shareOpen () {
       this.wxShare = true
@@ -269,12 +270,20 @@ export default {
           confirmButtonColor: '#6D8160',
           cancelButtonColor: '#999999'
         }).then(() => {
-          this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
+          if (this.sourceuid) {
+            this.$router.push({path: '/submitCourseOrder', query: {sourceuid: this.sourceuid, courseId: courseId, type: 1, user_number: this.user_number}})
+          } else {
+            this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
+          }
         }).catch(() => {
           // on cancel
         })
       } else {
-        this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
+        if (this.sourceuid) {
+          this.$router.push({path: '/submitCourseOrder', query: {sourceuid: this.sourceuid, courseId: courseId, type: 1, user_number: this.user_number}})
+        } else {
+          this.$router.push({path: '/submitCourseOrder', query: {courseId: courseId, type: 1, user_number: this.user_number}})
+        }
       }
     },
     wxs (title, description, image) {
@@ -282,7 +291,12 @@ export default {
         url: location.href
       }
       var that = this
-      let shareurl = config.baseurl + '/offcoursedetail?id=' + that.courseId + '&openid=' + getSitem.getStr('openid')
+      var shareurl = ''
+      if (getSitem.getStr('ispartner') == 0) {
+        shareurl = config.baseurl + '/offcoursedetail?id=' + that.courseId + '&sourceuid=' + getSitem.getStr('userid')
+      } else {
+        shareurl = config.baseurl + '/offcoursedetail?id=' + that.courseId + '&openid=' + getSitem.getStr('openid') + '&sourceuid=' + getSitem.getStr('userid')
+      }
       const agent = navigator.userAgent
       const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
       if (isiOS) {

@@ -67,7 +67,8 @@ export default {
       this.$router.push({
         path: '/goodsDetails',
         query: {
-          goodsId
+          goodsId,
+          type: 'single'
         }
       })
     },

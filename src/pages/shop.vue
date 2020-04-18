@@ -44,7 +44,8 @@ export default {
       shopList: [],
       allChecked: false,
       checkedTotal: 0,
-      cartIdChecked: []
+      cartIdChecked: [],
+      sourceuid: ''
     }
   },
   watch: {
@@ -84,6 +85,9 @@ export default {
   },
   mounted () {
     this.goodsCarts()
+    if (this.$route.query.sourceuid) {
+      this.sourceuid = this.$route.query.sourceuid
+    }
   },
   methods: {
     onBuy () {
@@ -120,7 +124,7 @@ export default {
       })
     },
     onLinkShop () {
-      this.$router.push('/shopHome')
+      this.$router.push({name: 'shopHome'})
     },
     onRemove (id) {
       const _this = this
@@ -171,6 +175,9 @@ export default {
       const param = {
         type: 0,
         cart_id: this.cartIdChecked.join(',')
+      }
+      if (this.sourceuid) {
+        param.sourceuid = this.sourceuid
       }
       this.$router.push({
         path: '/submitOrder',

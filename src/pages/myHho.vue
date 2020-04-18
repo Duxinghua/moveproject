@@ -11,19 +11,20 @@
       >
       <div class="myXf-order-item" v-for="(item, index) in fxlist" :key="index" >
         <div class="myXf-order-top">
-          <div class="ot1">订单编号：<span>864319955677</span></div>
-          <div class="ot2">订单时间：<span>4月15日 19:14</span> </div>
-          <div class="ot2">订单金额：<span>¥680.00</span> </div>
+          <div class="ot1">订单编号：<span>{{item.order_code}}</span></div>
+          <div class="ot2">订单时间：<span>{{item.create_time}}</span> </div>
+          <div class="ot2">订单金额：<span>¥{{item.price}}</span> </div>
           <!-- 订单时间：4月15日 19:14 订单金额：¥680.00  -->
         </div>
         <div class="myXf-order-bottom">
           <div class="ob1">
             <img class="avatar" :src="item.user.avatar" />
             <span class="b1">{{item.user.nickname}}</span>
+            <span class="b2">合伙人订单</span>
           </div>
           <div class="ob2">
             <span class="p1">预估收入：</span>
-            <span class="p2">¥120.00</span>
+            <span class="p2">¥{{item.price_to_top}}</span>
           </div>
         </div>
       </div>
@@ -39,7 +40,7 @@ export default {
   name: 'MyHho',
   data () {
     return {
-      currentIndex: 2,
+      currentIndex: 3,
       finished: false,
       loading: false,
       current: 1,
@@ -51,8 +52,8 @@ export default {
   },
   mounted () {
     this.getuserIndex()
-    if (this.$route.query.current) {
-      this.currentIndex = this.$route.query.current
+    if (this.$route.query.type) {
+      this.currentIndex = this.$route.query.type
     }
     this.getuserTakeout()
   },
@@ -68,47 +69,7 @@ export default {
         forbidClick: true
       })
       if (this.currentIndex === 1) {
-        this.$api.userTakeout(param).then((res) => {
-          this.$toast.clear()
-          if (res.code == 1) {
-            this.loading = false
-
-            if (this.fxlist.length == 0) {
-              // 第一次加载
-              this.fxlist = res.data.data || []
-              this.total = res.data.total
-            } else if (this.fxlist.length < this.total) {
-              // 加载更多
-              this.fxlist = this.fxlist.concat(res.data.data)
-            }
-            if (this.fxlist.length >= this.total) {
-              // 全部加载完成
-              this.finished = true
-            }
-          }
-        })
-      } else if (this.currentIndex === 0) {
-        this.$api.userDistribution(param).then((res) => {
-          this.$toast.clear()
-          if (res.code == 1) {
-            this.loading = false
-
-            if (this.fxlist.length == 0) {
-              // 第一次加载
-              this.fxlist = res.data.data || []
-              this.total = res.data.total
-            } else if (this.fxlist.length < this.total) {
-              // 加载更多
-              this.fxlist = this.fxlist.concat(res.data.data)
-            }
-            if (this.fxlist.length >= this.total) {
-              // 全部加载完成
-              this.finished = true
-            }
-          }
-        })
-      } else if (this.currentIndex === 2) {
-        param.order_type = 2
+        param.order_type = 1
         this.$api.userDistributionList(param).then((res) => {
           this.$toast.clear()
           if (res.code == 1) {
@@ -128,8 +89,8 @@ export default {
             }
           }
         })
-      } else if (this.currentIndex == 3) {
-        param.order_type = 1
+      } else if (this.currentIndex == 2) {
+        param.order_type = 2
         this.$api.userDistributionList(param).then((res) => {
           this.$toast.clear()
           if (res.code == 1) {

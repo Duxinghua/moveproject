@@ -304,6 +304,7 @@
 
 <script>
 import GroupItem from '@/components/shop/groupItem'
+import getSitem from '@/utils/storage'
 import config from '@/utils/config'
 
 export default {
@@ -331,7 +332,8 @@ export default {
       imagePreview: [],
       startPosition: 0,
       wx: null,
-      type: 'tuan'
+      type: 'tuan',
+      sourceuid: ''
     }
   },
   components: {
@@ -367,7 +369,14 @@ export default {
     })
   },
   mounted () {
+    console.log(getSitem.getStr('ispartner'))
     this.goodsId = this.$route.query.goodsId
+    if (this.$route.query.openid) {
+      getSitem.setStr('pudd', this.$route.query.openid)
+    }
+    if (this.$route.query.sourceuid) {
+      this.sourceuid = this.$route.query.sourceuid
+    }
     this.type = this.$route.query.type
     this.goodsIndex()
     this.goodsComments()
@@ -376,13 +385,19 @@ export default {
   methods: {
     onLinkHome () {
       this.$router.push({
-        path: '/shopHome'
+        path: '/'
       })
     },
     onLinkCar () {
-      this.$router.push({
-        path: '/shop'
-      })
+      if (this.sourceuid) {
+        this.$router.push({
+          path: '/shop?sourceuid=' + this.sourceuid
+        })
+      } else {
+        this.$router.push({
+          path: '/shop'
+        })
+      }
     },
     toggleShare () {
       this.overlayStatus = !this.overlayStatus
@@ -393,7 +408,12 @@ export default {
       const description = this.goodsData.description
       const link = location.href
       const imgUrl = this.goodsData.images[0]
-      let shareurl = config.baseurl + '/goodsDetails?type=' + this.type + 'goodsId=' + this.goodsId
+      var shareurl = ''
+      if (getSitem.getStr('ispartner') == 0) {
+        shareurl = config.baseurl + '/goodsDetails?type=' + this.type + '&goodsId=' + this.goodsId + '&sourceuid=' + getSitem.getStr('userid')
+      } else {
+        shareurl = config.baseurl + '/goodsDetails?type=' + this.type + '&goodsId=' + this.goodsId + '&openid=' + getSitem.getStr('openid') + '&sourceuid=' + getSitem.getStr('userid')
+      }
       this.wx.updateAppMessageShareData({
         title: title, // 分享标题
         desc: description, // 分享描述
@@ -559,6 +579,9 @@ export default {
         goods_id: this.goodsId,
         specs: JSON.stringify(this.skuList[this.skuIndex]),
         goods_num: this.goodsNum
+      }
+      if (type == 2) {
+        param.sourceuid = this.sourceuid
       }
       this.$router.push({
         path: '/submitOrder',

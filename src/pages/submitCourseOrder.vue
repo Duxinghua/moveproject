@@ -131,7 +131,8 @@ export default {
       scoreDeduction: {},
       goodsTotal: '',
       oldGoodsTotal: '',
-      deduction: ''
+      deduction: '',
+      sourceuid: ''
 
     }
   },
@@ -159,8 +160,9 @@ export default {
     })
   },
   mounted () {
-    const {type, courseId, courseType, user_number, tid} = this.$route.query
+    const {type, courseId, courseType, user_number, tid, sourceuid} = this.$route.query
     this.type = type
+    this.sourceuid = sourceuid
     this.course_id = courseId
     this.courseType = courseType
     this.user_number = user_number ? (user_number > 5 ? 5 : user_number) : 0
@@ -331,6 +333,9 @@ export default {
         }
       } else if (this.type == 1) {
         params.type = 0
+        if (this.sourceuid) {
+          params.source_uid = this.sourceuid
+        }
       }
       if (this.detail.type == 3) {
         params.true_name = this.true_name

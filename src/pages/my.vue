@@ -311,6 +311,8 @@ export default {
       }
       if (arg === 'xf') {
         this.$router.push({name: Links, query: {score: this.userInfo.score}})
+      } else if (arg === 'hh') {
+        this.$router.push({name: Links, query: {is_partner: this.userInfo.is_partner}})
       } else {
         this.$router.push({name: Links})
       }

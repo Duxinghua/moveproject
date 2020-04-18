@@ -74,21 +74,22 @@
             :immediate-check="false"
             @load="onLoad"
       >
-      <div class="myXf-order-item" v-for="(item, index) in fxlist" :key="index" @click="orderDetail(item)" >
+      <div class="myXf-order-item" v-for="(item, index) in fxlist" :key="index" >
         <div class="myXf-order-top">
-          <div class="ot1">订单编号：<span>864319955677</span></div>
-          <div class="ot2">订单时间：<span>4月15日 19:14</span> </div>
-          <div class="ot2">订单金额：<span>¥680.00</span> </div>
+          <div class="ot1">订单编号：<span>{{item.order_code}}</span></div>
+          <div class="ot2">订单时间：<span>{{item.create_time}}</span> </div>
+          <div class="ot2">订单金额：<span>¥{{item.price}}</span> </div>
           <!-- 订单时间：4月15日 19:14 订单金额：¥680.00  -->
         </div>
         <div class="myXf-order-bottom">
           <div class="ob1">
             <img class="avatar" :src="item.user.avatar" />
             <span class="b1">{{item.user.nickname}}</span>
+            <span class="b2">合伙人订单</span>
           </div>
           <div class="ob2">
             <span class="p1">预估收入：</span>
-            <span class="p2">¥120.00</span>
+            <span class="p2">¥{{item.price_to_top ? item.price_to_top : '0.00'}}</span>
           </div>
         </div>
       </div>
@@ -202,7 +203,7 @@ export default {
         })
       } else if (this.currentIndex === 2) {
         param.order_type = 2
-        this.$api.userDistributionList(param).then((res) => {
+        this.$api.memberDistributionList(param).then((res) => {
           this.$toast.clear()
           if (res.code == 1) {
             this.loading = false
@@ -223,7 +224,7 @@ export default {
         })
       } else if (this.currentIndex == 3) {
         param.order_type = 1
-        this.$api.userDistributionList(param).then((res) => {
+        this.$api.memberDistributionList(param).then((res) => {
           this.$toast.clear()
           if (res.code == 1) {
             this.loading = false

@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import getSitem from '@/utils/storage'
 import Api from '@/api/index'
 export default {
   name: 'Invite',
@@ -22,7 +23,9 @@ export default {
   },
   mounted () {
     var openid = this.$route.query.openid
-    console.log(openid, 'openid')
+    if (openid) {
+      getSitem.setStr('pudd', openid)
+    }
     Api.userQrcodeByOpenid({openid: openid}).then((result) => {
       if (result.code === 1) {
         this.qrurl = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + result.data.ticket
