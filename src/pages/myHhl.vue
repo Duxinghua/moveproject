@@ -13,7 +13,7 @@
         <div class="myXf-content-item-top">
             <img class="userIco" :src="item.avatar" alt="">
             <div class="userInfo">
-              <span>{{item.username}}</span>
+              <span>{{item.nickname}}</span>
               <span>注册时间:{{item.create_time_txt}}</span>
             </div>
         </div>
@@ -23,6 +23,7 @@
         </div>
       </div>
       </van-list>
+      <NoData v-if="fxlist.length == 0" />
     </div>
     <img class="myfooter" src="../assets/images/myfooter.png" alt="">
   </div>

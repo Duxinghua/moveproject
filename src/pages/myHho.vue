@@ -1,7 +1,7 @@
 <template>
   <div class="myXf">
     <div class="myXf-order" >
-            <van-list
+     <van-list
             v-model="loading"
             v-show="fxlist.length > 0"
             :finished="finished"
@@ -29,6 +29,7 @@
         </div>
       </div>
       </van-list>
+      <NoData v-if="fxlist.length == 0" />
     </div>
     <img class="myfooter" src="../assets/images/myfooter.png" alt="">
   </div>

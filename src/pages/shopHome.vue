@@ -24,7 +24,7 @@
         </div>
         <div class="sales">
             <div class="title">今日特卖</div>
-            <div class="goods-list">
+            <div class="goods-list" v-if="todaySale.length != 0">
                 <GoodsItem
                     v-for="(item, index) in todaySale"
                     :key="index"
@@ -32,11 +32,11 @@
                     :types="type"
                 />
             </div>
-
+            <NoData v-if="todaySale.length == 0" />
         </div>
         <div class="sales">
             <div class="title">新品上市</div>
-            <div class="goods-list">
+            <div class="goods-list" v-if="newSale.length != 0">
                 <GoodsItem
                     v-for="(item, index) in newSale"
                     :key="index"
@@ -44,7 +44,7 @@
                     :types="type"
                 />
             </div>
-
+            <NoData v-if="newSale.length == 0" />
         </div>
         <Footer :sc="true" />
     </div>

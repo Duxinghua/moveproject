@@ -63,10 +63,11 @@
           <span class="status">{{item.status_text}}</span>
         </div>
         </van-list>
+        <NoData v-if="fxlist.length == 0 && currentIndex == 1" />
       </div>
     </div>
     <div class="myXf-order" v-if="currentIndex === 2 || currentIndex === 3">
-            <van-list
+      <van-list
             v-model="loading"
             v-show="fxlist.length > 0"
             :finished="finished"
@@ -94,6 +95,7 @@
         </div>
       </div>
       </van-list>
+      <NoData v-if="fxlist.length == 0 && (currentIndex == 2 || currentIndex == 3 )" />
     </div>
     <img class="myfooter" src="../assets/images/myfooter.png" alt="">
   </div>
@@ -306,6 +308,9 @@ export default {
   flex-direction: column;
   min-height:100vh;
   background:white;
+  /deep/ .nodata{
+    margin-top: 150px;
+  }
   .myfooter{
       position: fixed;
       bottom: 0;
