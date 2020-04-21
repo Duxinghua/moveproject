@@ -178,11 +178,17 @@ export default {
         flex-wrap: wrap;
         &-item{
           width:fit-content;
-          padding:19px 40px;
+          height:55px;
+          padding-left:9px;
+          padding-right:9px;
+          box-sizing: border-box;
           border:2px solid #E7E7E7;
           margin-right:11px;
-          margin-top:20px;
-          font-size:30px;
+          margin-top:10px;
+          font-size:15px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           color:#333;
           border-radius: 44px;
         }

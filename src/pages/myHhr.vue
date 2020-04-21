@@ -9,7 +9,7 @@
         <img class="card" src="../assets/images/myxf.png" alt="">
         <div class="cardInfo">
           <div class="cardInfo-c">
-            <span>账户余额</span>
+            <span>预估收入</span>
             <span>{{userInfo.money}}</span>
             <span @click="linkClickHandler">提现</span>
           </div>
@@ -129,7 +129,7 @@ export default {
     }
     .myhhbtn{
       position: absolute;
-      bottom: 159px;
+      bottom: 100px;
       left:50%;
       transform: translateX(-50%);
       width:601px;
@@ -199,7 +199,7 @@ export default {
           line-height: 68px;
           color:white;
           text-align: center;
-          margin-top: 45px;
+          margin-top: 25px;
         }
       }
     }

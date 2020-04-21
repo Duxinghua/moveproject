@@ -64,13 +64,16 @@ export default {
 width:100%;
 display: flex;
 flex-direction: row;
+padding-top:20px;
+box-sizing: border-box;
+border-bottom: 1px solid #ececec;
       .goods-img{
         width: 240px;
         height: 180px;
         overflow: hidden;
         border-radius: 5px;
         margin-right:25px;
-        margin-bottom: 25px;
+        margin-bottom: 20px;
         .van-image{
             width: 100%;
             height: 100%;

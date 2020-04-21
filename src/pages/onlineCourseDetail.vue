@@ -29,7 +29,7 @@
           <div>{{onlineMsg.title}}</div>
           <p>{{onlineMsg.description}}</p>
         </div>
-        <div class="goods-group"  v-if="onlineMsg.is_tuan == 1">
+        <div class="goods-group"  v-if="type == 'tuan'">
           <div class="group-header">
             <h3>课程拼团</h3>
             <div class="right" @click="onLinkAll">查看全部拼团<img class="arrormore" src="../assets/images/fxend.png" alt=""/></div>
@@ -119,7 +119,7 @@
           <span>首页</span>
         </div>
         <div>
-            <div class="ondetail-group-btn" @click="onTrun(courseId)" v-if="onlineMsg.is_tuan === 1">
+            <div class="ondetail-group-btn" @click="onTrun(courseId)" v-if="type == 'tuan'">
               <span>￥{{onlineMsg.price_tuan}}</span>
               <em>发起拼团</em>
             </div>
@@ -201,7 +201,8 @@ export default {
       tipText: '你的课程已购买？是否再次购买',
       huaType: 1,
       huaTypeIndex: 1,
-      sourceuid: ''
+      sourceuid: '',
+      type: 'single'
     }
   },
   mounted () {
@@ -591,7 +592,7 @@ export default {
     buyClass () {
       return {
         'ondetail-buy-btn': true,
-        'noTuan': this.onlineMsg.is_tuan == 0
+        'noTuan': this.type == 'single'
       }
     }
   },

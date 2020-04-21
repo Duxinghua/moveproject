@@ -355,7 +355,7 @@ export default {
           line-height: 68px;
           color:white;
           text-align: center;
-          margin-top: 45px;
+          margin-top: 25px;
         }
       }
     }

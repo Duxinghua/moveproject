@@ -1,6 +1,6 @@
 <template>
     <div class="shop-container">
-        <div class="no-shop" v-if="shopList.length == 0">
+        <div class="no-shop" v-if="shopFlag">
             <img src="../assets/images/shop.png" alt="">
             <div class="text">购物车空空如也</div>
             <div class="btn" @click="onLinkShop">开启购物之旅</div>
@@ -45,7 +45,8 @@ export default {
       allChecked: false,
       checkedTotal: 0,
       cartIdChecked: [],
-      sourceuid: ''
+      sourceuid: '',
+      shopFlag: false
     }
   },
   watch: {
@@ -120,6 +121,11 @@ export default {
               checked: false
             }
           })
+          if (this.shopList.length) {
+            this.shopFlag = false
+          } else {
+            this.shopFlag = true
+          }
         }
       })
     },

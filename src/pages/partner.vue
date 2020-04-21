@@ -49,14 +49,14 @@ export default {
         })
         return true
       }
-      if (!this.remark) {
-        this.$dialog.alert({
-          title: '',
-          message: '请输入备注'
-        }).then(() => {
-        })
-        return true
-      }
+      // if (!this.remark) {
+      //   this.$dialog.alert({
+      //     title: '',
+      //     message: '请输入备注'
+      //   }).then(() => {
+      //   })
+      //   return true
+      // }
       var data = {
         username: this.name,
         phone: this.mobile,

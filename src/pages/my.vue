@@ -182,7 +182,11 @@ export default {
   },
   methods: {
     likeGo () {
-      location.href = this.slideList.url
+      if (this.userInfo.is_apply == 1) {
+        this.$router.push({name: 'MyHhr', query: {is_partner: this.userInfo.is_partner}})
+      } else {
+        this.$toast('您是合伙人下线，不能申请合伙人')
+      }
     },
     getBanner () {
       this.$api.indexBanner({type: 2}).then((res) => {
@@ -312,7 +316,11 @@ export default {
       if (arg === 'xf') {
         this.$router.push({name: Links, query: {score: this.userInfo.score}})
       } else if (arg === 'hh') {
-        this.$router.push({name: Links, query: {is_partner: this.userInfo.is_partner}})
+        if (this.userInfo.is_apply == 1) {
+          this.$router.push({name: Links, query: {is_partner: this.userInfo.is_partner}})
+        } else {
+          this.$toast('您是合伙人下线，不能申请合伙人')
+        }
       } else {
         this.$router.push({name: Links})
       }

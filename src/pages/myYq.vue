@@ -188,9 +188,9 @@ export default {
   }
   &-qrcode{
     position: fixed;
-    top:40%;
+    top:45%;
     left:50%;
-    transform:translate(-50%,-40%);
+    transform:translate(-50%,-45%);
     width:448px;
     height:440px;
     z-index: 1;
@@ -198,15 +198,17 @@ export default {
   // 432px;
   &-wrap{
     position: fixed;
-    top:40%;
+    top:45%;
     left:50%;
-    transform: translate(-50%,-40%);
+    transform: translate(-50%,-45%);
     width:448px;
     height:440px;
     z-index: 2;
     .content{
       display: flex;
       flex-direction: column;
+      width:100%;
+      height:100%;
       span{
         height:58px;
         width:100%;

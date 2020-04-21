@@ -17,10 +17,10 @@
                 </div>
           </div>
         </div>
-        <div class="cateitem" v-for="(item,index) in subList" :key="index" v-if="activeIndex != -1">
-          <span class="catetitle">{{item.gc_name}}</span>
-          <div class="catewrap">
-                <div class="catesub" @click="subCateClist(item)">
+        <div class="cateitem"   v-if="activeIndex != -1">
+          <span class="catetitle">{{gc_name}}</span>
+          <div class="catewrap" v-if="subList.length">
+                <div class="catesub" v-for="(item,index) in subList" :key="index"  @click="subCateClist(item)">
                   <img   :src="item.image_text" />
                   <span>{{item.gc_name}}</span>
                 </div>
@@ -47,7 +47,8 @@ export default {
       subList: [],
       activeIndex: -1,
       paddingTop: 300,
-      type: 'store'
+      type: 'store',
+      gc_name: ''
     }
   },
   mounted () {
@@ -59,16 +60,19 @@ export default {
       this.menuList.map((item) => {
         if (this.activeIndex == item.gc_id) {
           if (this.activeIndex != -1) {
+            this.gc_name = item.gc_name
             if (item.list) {
               this.subList = item.list
             } else {
               this.subList = []
             }
           } else {
+            this.gc_name = '全部分类'
             var result = Object.assign([], this.changeList)
             this.subList = result
           }
         }
+
       })
     },
     subCateClist (item) {
@@ -109,11 +113,13 @@ export default {
   width:750px;
   background:#FBF7F4;
   min-height: 100vh;
-  padding-bottom: 200px;
+  // padding-bottom: 200px;
   .left{
     width:174px;
     font-size:26px;
     color:#333;
+    min-height: 100vh;
+    background:white;
     .categoryItem{
       width:100%;
       height:97px;

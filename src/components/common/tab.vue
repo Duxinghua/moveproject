@@ -86,7 +86,7 @@ export default {
       input{
         width:90%;
         height:70px;
-        border-radius: 5px;
+        border-radius: 20px;
         padding-left:85px;
         background:#FAFAFA;
         border:none;
@@ -131,11 +131,11 @@ export default {
         position: absolute;
         content:'';
         width:2px;
-        height:70%;
+        height:60%;
         border-right:2px dashed #E3D29C;
         right:0;
-        top:70%;
-        transform: translateY(-70%)
+        top:60%;
+        transform: translateY(-60%)
       }
       li:last-child::after{
         display: none

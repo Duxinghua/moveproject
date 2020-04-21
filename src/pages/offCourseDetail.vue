@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div class="goods-group" v-if="courseDetails.is_tuan == 1">
+    <div class="goods-group" v-if="type == 'tuan'">
       <div class="group-header">
         <h3>课程拼团</h3>
         <div class="right" @click="onLinkAll">查看全部拼团<img class="arrormore" src="../assets/images/fxend.png" alt=""/></div>
@@ -91,11 +91,11 @@
           <span>首页</span>
       </div>
       <div>
-        <div class="goods-group-btn" @click="onTuan(courseId)" v-if="courseDetails.is_tuan == 1">
+        <div class="goods-group-btn" @click="onTuan(courseId)" v-if="type == 'tuan'">
           <span>￥{{courseDetails.price_tuan}}</span>
           <em>发起拼团</em>
         </div>
-        <div  :class="buyClass" @click="onBuy(courseId)">
+        <div  :class="[buyClass]" @click="onBuy(courseId)">
           <span>￥{{courseDetails.price}}</span>
           <em>立即购买</em>
         </div>
@@ -154,7 +154,8 @@ export default {
       courseId: 0, // 课程id
       imageShow: false,
       isBuy: 0,
-      sourceuid: ''
+      sourceuid: '',
+      type: 'single'
     }
   },
   mounted () {
@@ -395,7 +396,8 @@ export default {
     buyClass () {
       return {
         'goods-buy-btn': true,
-        'noTuan': this.courseDetails.is_tuan == 0
+        'noTuan': this.type == 'single'
+        // 'noTuan': this.courseDetails.is_tuan == 0
       }
     }
   }

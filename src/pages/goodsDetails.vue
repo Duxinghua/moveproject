@@ -178,9 +178,9 @@
             </div>
         </div>
 
-		<div class="shop-car" @click="onLinkCar" v-if="goodsData.is_tuan != 1">
+		<!-- <div class="shop-car" @click="onLinkCar" v-if="goodsData.is_tuan != 1">
 			<img src="../assets/images/car.png" alt="">
-		</div>
+		</div> -->
 
         <div class="goods-action">
             <!-- <div
@@ -332,7 +332,7 @@ export default {
       imagePreview: [],
       startPosition: 0,
       wx: null,
-      type: 'tuan',
+      type: 'single',
       sourceuid: ''
     }
   },
@@ -560,7 +560,7 @@ export default {
       this.$api.goodsStoreCarts(param).then((res) => {
         this.$toast.clear()
         if (res.code == 1) {
-          this.popupStatus = true
+          this.popupStatus = false
           this.$toast({
             type: 'success',
             message: '添加成功',
@@ -570,6 +570,7 @@ export default {
           this.$toast({
             message: res.msg
           })
+          this.popupStatus = false
         }
       })
     },
