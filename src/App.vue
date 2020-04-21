@@ -21,4 +21,5 @@ export default {
   src: url('/assets/css/PingFang Regular.tff')
   } */
 }
+input {-webkit-appearance:none; }
 </style>

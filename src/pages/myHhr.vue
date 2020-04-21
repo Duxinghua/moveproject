@@ -54,13 +54,17 @@ export default {
       userInfo: {},
       xflist: [],
       fxlist: [],
-      is_partner: 0
+      is_partner: 0,
+      is_apply: 0
     }
   },
   mounted () {
     this.getuserIndex()
-    if (this.$route.query.is_partner) {
+    if (!isNaN(this.$route.query.is_partner)) {
       this.is_partner = this.$route.query.is_partner
+    }
+    if (!isNaN(this.$route.query.is_apply)) {
+      this.is_apply = this.$route.query.is_apply
     }
   },
   methods: {
@@ -75,7 +79,11 @@ export default {
       this.$router.push({name: 'MyTx', params: {money: this.userInfo.money}})
     },
     partnerClick () {
-      this.$router.push({name: 'Partner'})
+      if (this.is_apply == 1) {
+        this.$router.push({name: 'Partner'})
+      } else {
+        this.$toast('您没有权限申请合伙人')
+      }
     },
     likeClickType (arg) {
       var Links

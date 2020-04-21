@@ -496,6 +496,10 @@ const server = {
   // 申请成为合伙人 /api/user/partnerApply
   partnerApply (data) {
     return post('user/partnerApply', data)
+  },
+  // 新增课程拼团列表 /api/course/tuanLists
+  coursesTuanLists (data) {
+    return post('course/tuanLists', data)
   }
 }
 

@@ -1,14 +1,14 @@
 <template>
-    <div class="group-item" @click="onLinkDetails(goodsData.goods_id)">
+    <div class="group-item" @click="onLinkDetails(goodsData.course_id)">
        <div class="goods-img">
-            <van-image :src="goodsData.images[0]">
+            <van-image :src="goodsData.image[0]">
                 <template v-slot:loading>
                     <van-loading type="spinner" size="20" />
                 </template>
             </van-image>
         </div>
       <div class="goods-content">
-            <div class="goods-title">{{goodsData.goods_name}}</div>
+            <div class="goods-title">{{goodsData.title}}</div>
             <div class="goods-subtitle">{{goodsData.description}}</div>
             <div class="goods-price">
               <div class="goods-tuan">{{goodsData.user_number}}人团</div>
@@ -47,13 +47,22 @@ export default {
         }
       })
     },
-    onLinkDetails (goodsId) {
-      this.$router.push({
-        path: '/goodsDetails?type=' + this.types,
-        query: {
-          goodsId
-        }
-      })
+    onLinkDetails (id) {
+      if (this.goodsData.type == 2) {
+        this.$router.push({
+          path: '/onlineCourseDetail?type=' + this.types,
+          query: {
+            id
+          }
+        })
+      } else if (this.goodsData.type == 3) {
+        this.$router.push({
+          path: '/offCourseDetail?type=' + this.types,
+          query: {
+            id
+          }
+        })
+      }
     }
   }
 }

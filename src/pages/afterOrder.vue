@@ -187,6 +187,7 @@ export default {
       border:2px solid rgba(243, 243, 243, 1);
       border-radius:8px;
       padding:22px;
+      min-height:167px;
     }
     .cs{
       display: flex;
@@ -223,6 +224,7 @@ export default {
         margin-bottom: 15px;
         border:2px solid rgba(243, 243, 243, 1);
         padding:15px;
+        min-height:167px;
       }
     }
   }

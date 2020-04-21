@@ -177,20 +177,27 @@ export default {
         justify-content: flex-start;
         flex-wrap: wrap;
         &-item{
-          width:fit-content;
-          height:55px;
-          padding-left:9px;
-          padding-right:9px;
-          box-sizing: border-box;
-          border:2px solid #E7E7E7;
-          margin-right:11px;
-          margin-top:10px;
-          font-size:15px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          color:#333;
-          border-radius: 44px;
+          // width:fit-content;
+          // height:55px;
+          // padding-left:9px;
+          // padding-right:9px;
+          // box-sizing: border-box;
+          // border:2px solid #E7E7E7;
+          // margin-right:11px;
+          // margin-top:10px;
+          // font-size:15px;
+          // display: flex;
+          // justify-content: center;
+          // align-items: center;
+          // color:#333;
+          // border-radius: 44px;
+              border-radius: 33px;
+              border: 1Px solid #E7E7E7;
+              padding: 8px 30px;
+              font-size: 26px;
+              color: #333333;
+              margin-right: 10px;
+              margin-top: 10px;
         }
       }
       .dpl{

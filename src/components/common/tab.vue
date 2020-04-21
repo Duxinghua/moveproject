@@ -2,7 +2,7 @@
 	<div class="tab-box">
 		<div class="tab-fixed" @click="onSearch">
         <img src="../../assets/images/huabansearchico.png" alt="">
-        <input type="text" v-model="searchText" class="input" placeholder="请输入关键字" disabled>
+        <span class="input" placeholder="请输入关键字">请输入关键字</span>
     </div>
 		<div class="tab-content">
 			<ul>
@@ -80,18 +80,27 @@ export default {
         width:33px;
         height:35px;
         left:72px;
-        top:50%;
-        transform: translateY(-50%)
+        top:40%;
+        transform: translateY(-40%);
+        z-index: 1001;
       }
-      input{
+      .input{
+        position: absolute;
+        top:0;
+        left:50%;
+        transform: translateX(-50%);
+        z-index: 1000;
         width:90%;
         height:70px;
+        line-height:70px;
         border-radius: 20px;
         padding-left:85px;
-        background:#FAFAFA;
+        background:white;
         border:none;
         font-size: 30px;
-        color:#333;
+        color:#999;
+        -webkit-appearance:none;
+        -webkit-tap-highlight-color:rgba(0,0,0,0);
       }
   }
   .tab-content {

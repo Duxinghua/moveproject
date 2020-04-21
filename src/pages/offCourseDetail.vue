@@ -170,6 +170,9 @@ export default {
     if (this.$route.query.sourceuid) {
       this.sourceuid = this.$route.query.sourceuid
     }
+    if (this.$route.query.type) {
+      this.type = this.$route.query.type
+    }
     this.courseDetail()
     this.courseTuanList()
   },
