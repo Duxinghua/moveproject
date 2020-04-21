@@ -188,9 +188,9 @@ export default {
   }
   &-qrcode{
     position: fixed;
-    top:45%;
+    top:50%;
     left:50%;
-    transform:translate(-50%,-45%);
+    transform:translate(-50%,-50%);
     width:448px;
     height:440px;
     z-index: 1;
@@ -198,9 +198,9 @@ export default {
   // 432px;
   &-wrap{
     position: fixed;
-    top:45%;
+    top:50%;
     left:50%;
-    transform: translate(-50%,-45%);
+    transform: translate(-50%,-50%);
     width:448px;
     height:440px;
     z-index: 2;

@@ -57,10 +57,10 @@ export default {
     // this.getGoodsList();
     if (this.$route.query.id) {
       var gc_id = this.$route.query.id
-      var keyword = this.$route.query.name
-      this.keywordValue = this.$route.query.name
+      // var keyword = this.$route.query.name
+      // this.keywordValue = this.$route.query.name
       this.param.gc_id = gc_id
-      this.param.keyword = keyword
+      // this.param.keyword = keyword
       this.getGoodsList()
     }
   },
@@ -97,7 +97,7 @@ export default {
       }
     },
     onCancel () {
-      this.$router.push('/shopHome')
+      this.$router.push('/')
     },
     onSearch () {
       this.keyword = this.keywordValue

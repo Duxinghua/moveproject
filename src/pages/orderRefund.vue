@@ -127,7 +127,12 @@ export default {
             }
           })
         } else {
-          _this.$toast(res.msg)
+          _this.$toast({
+            message: res.msg,
+            onClose: () => {
+              _this.$router.push({name: 'OrderList'})
+            }
+          })
         }
       })
     },

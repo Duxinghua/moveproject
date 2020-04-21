@@ -210,7 +210,7 @@ const router = new Router({
       name: 'Fall',
       component: Home,
       meta: {
-        title: '有梦不晚'
+        title: '匠心'
       }
     },
     {

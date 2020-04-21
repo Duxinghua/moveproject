@@ -19,7 +19,7 @@
       </router-link>
       <router-link class="menuitem" to="/Fall">
         <img :src="mrt === true ? require('../assets/images/mrico-a.png') : require('../assets/images/mrico.png') " alt="" />
-        <span :class="{active:mrt}">名人堂</span>
+        <span :class="{active:mrt}">匠心</span>
       </router-link>
       <router-link class="menuitem" to="/my">
         <img :src="wd === true ? require('../assets/images/wdico-a.png') : require('../assets/images/wdico.png')" alt="" />

@@ -15,7 +15,7 @@
         </div>
       </div>
       <div class="orderlist">
-        <div class="ordercontent" v-for="(goodsitem,index) in order_detail.goods" :key="index">
+        <div class="ordercontent" v-for="(goodsitem,index) in order_detail.goods" :key="index" @click="goodsClick(goodsitem)">
             <div class="ordercontentimg">
               <van-image :src="goodsitem.images">
                 <template v-slot:loading>
@@ -138,17 +138,20 @@ export default {
         {
           image: require('../assets/images/orderpay.png'),
           t1: '等待买家付款',
-          t2: '24小时后自动关闭'
+          t2: '24小时后自动关闭',
+          status: 9
         },
         {
-          image: require('../assets/images/ordersend.png'),
-          t1: '等待卖家发货',
-          t2: '卖家会尽快为您发货'
+          image: require('../assets/images/orderconfirm.png'),
+          t1: '请确认收货',
+          t2: '请检查货物并确认收货',
+          status: 3
         },
         {
           image: require('../assets/images/ordersend.png'),
           t1: '卖家已发货',
-          t2: '请卖家收到货之后，确认收货'
+          t2: '请卖家收到货之后，确认收货',
+          status: 2
         },
         {
           image: require('../assets/images/ordersuccess.png'),
@@ -163,24 +166,33 @@ export default {
         {
           image: require('../assets/images/orderclose.png'),
           t1: '订单已关闭',
-          t2: '请重新购买'
+          t2: '请重新购买',
+          status: 99
         },
         {
-          image: require('../assets/images/orderclose.png'),
+          image: require('../assets/images/ordertuan1.png'),
           t1: '申请退货中',
-          t2: '请耐心等待'
+          t2: '请耐心等待',
+          status: 9
         },
         {
-          image: require('../assets/images/orderclose.png'),
-          t1: '已退货',
-          t2: '欢迎下次购买'
+          image: require('../assets/images/orderpay.png'),
+          t1: '未支付',
+          t2: '请支持订单',
+          status: 0
+        },
+        {
+          image: require('../assets/images/orderpays.png'),
+          t1: '已支付',
+          t2: '请耐心等待发货',
+          status: 1
         }
-
       ],
       num: 3, // 上传数量
       localIds: [],
       imgList: [],
-      express: ''
+      express: '',
+      t_status: ''
     }
   },
   mounted () {
@@ -190,6 +202,14 @@ export default {
     this.getDetail()
   },
   methods: {
+    goodsClick (item) {
+      this.$router.push({
+        path: '/goodsDetails?type=single',
+        query: {
+          goodsId: item.goods_id
+        }
+      })
+    },
     onLook () {
       this.$router.push({
         path: '/groupDetails',

@@ -222,13 +222,14 @@ export default {
     },
     orderDetailHandler (obj) {
       if (obj.express.length < 4) {
-        this.$router.push({name: 'OrderDetail', query: {id: obj.order_id}})
+        this.$router.push({name: 'OrderDetail', query: {id: obj.order_id, t_status: obj.t_status}})
       } else {
         this.$router.push({
           name: 'OrderDetail',
           query: {
             id: obj.order_id,
-            express: obj.express
+            express: obj.express,
+            t_status: obj.t_status
           }
         })
       }

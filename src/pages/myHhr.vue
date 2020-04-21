@@ -137,7 +137,7 @@ export default {
     }
     .myhhbtn{
       position: absolute;
-      bottom: 100px;
+      bottom: 125px;
       left:50%;
       transform: translateX(-50%);
       width:601px;

@@ -1,7 +1,7 @@
 <template>
   <div class="orderdetail">
     <div class="orderdetail-top">
-      <div class="ordercontent">
+      <div class="ordercontent" @click="courseClick">
           <div class="ordercontentimg">
               <van-image :src="detail.image">
                 <template v-slot:loading>
@@ -103,6 +103,23 @@ export default {
     this.getCourseOrderIndex()
   },
   methods: {
+    courseClick () {
+      if (this.detail.type == 2) {
+        this.$router.push({
+          path: '/onlineCourseDetail?type=single',
+          query: {
+            id: this.detail.course_id
+          }
+        })
+      } else if (this.detail.type == 3) {
+        this.$router.push({
+          path: '/offCourseDetail?type=single',
+          query: {
+            id: this.detail.course_id
+          }
+        })
+      }
+    },
     sharelHandler (tid) {
       this.$router.push({path: '/coursegroupdetails', query: {id: tid}})
     },
