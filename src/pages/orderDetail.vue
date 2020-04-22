@@ -307,7 +307,7 @@ export default {
           }
           var status = res.data.status
           var t_id = res.data.t_id
-          if( t_id == 0) {
+          if (t_id == 0) {
             this.tips.map((item) => {
               if (item.status == status) {
                 this.order_detail.tipsimage = item.image

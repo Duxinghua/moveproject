@@ -229,6 +229,11 @@ export default {
           var image = res.data.image ? res.data.image[0] : ''
           this.isBuy = res.data.is_buy
           this.wxs(title, description, image)
+        } else if (res.code == 401 ) {
+          localStorage.setItem('page', location.href)
+          this.$router.push({
+            path: '/auth'
+          })
         }
       })
     },
@@ -244,6 +249,11 @@ export default {
           console.log(list)
           this.groupList = list
           // console.log(res.data)
+        } else if (res.code == 401) {
+          localStorage.setItem('page', location.href)
+          this.$router.push({
+            path: '/auth'
+          })
         }
       })
     },

@@ -30,7 +30,7 @@
               <span>拼团成功</span>
             </div>
             <div class="goods-submit" @click="showPopup" v-if="groupDetails.is_my == 0 && tuanStatus == 0">参与拼团</div>
-            <div class="goods-submit" @click="onShare" v-if="groupDetails.is_my == 1 && tuanStatus == 0">邀请拼团</div>
+            <div class="goods-submit" @click="onShare" v-if="is_buy == 1 && tuanStatus == 0">邀请拼团</div>
             <div class="goods-submit" @click="onLook" v-if="tuanStatus == 1">继续逛逛</div>
             <div class="goods-process">
                 <span>邀请好友拼团</span>
@@ -100,7 +100,7 @@
                       <span>拼团成功</span>
                     </div>
                     <div class="tuan-share" @click="showPopup"  v-if="groupDetails.is_my == 0 && tuanStatus == 0">参与拼团</div>
-                    <div class="tuan-share" @click="onShare" v-if="groupDetails.is_my == 1 && tuanStatus == 0">邀请拼团</div>
+                    <div class="tuan-share" @click="onShare" v-if="is_buy == 1 && tuanStatus == 0">邀请拼团</div>
                     <div class="tuan-share" @click="onLook" v-if="tuanStatus == 1">继续逛逛</div>
                     <div class="tuan-link" @click="onLinkOrder"><span>查看订单</span><van-icon name="arrow" /></div>
                 </div>
@@ -135,7 +135,8 @@ export default {
       wxShare: false,
       courseId: 0,
       orderId: 0,
-      timer: null
+      timer: null,
+      is_buy: 0
     }
   },
   mounted () {
@@ -162,9 +163,9 @@ export default {
     viewHandler () {
       var type = this.groupDetails.course.type
       if (type == 3) {
-        this.$router.push({name: 'OffCourseDetail', query: {id: this.courseId}})
+        this.$router.push({name: 'OffCourseDetail', query: {id: this.courseId, type: 'tuan'}})
       } else if (type == 2) {
-        this.$router.push({name: 'OnlineCourseDetail', query: {id: this.courseId}})
+        this.$router.push({name: 'OnlineCourseDetail', query: {id: this.courseId, type: 'tuan'}})
       }
     },
     onLook () {
@@ -307,7 +308,8 @@ export default {
       this.$router.push({
         path: path,
         query: {
-          id
+          id,
+          type: 'tuan'
         }
       })
     },
@@ -333,6 +335,7 @@ export default {
           this.wxs(title, description, image)
           this.tuanInfo(res.data.order_id)
           // 定时刷新对应的数据
+          clearInterval(this.timer)
           this.timer = null
           this.timer = setInterval(() => {
             if (that.tuanStatus == 0) {
@@ -342,6 +345,11 @@ export default {
               that.timer = null
             }
           }, 2000)
+        } else if (res.code == 401) {
+          localStorage.setItem('page', location.href)
+          this.$router.push({
+            path: '/auth'
+          })
         }
       })
     },
@@ -351,6 +359,7 @@ export default {
         if (res.code == 1) {
           this.tuanInfos = res.data
           this.tuanStatus = res.data.success
+          this.is_buy = res.data.is_buy
         }
       })
     },

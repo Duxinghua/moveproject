@@ -458,6 +458,11 @@ export default {
         if (res.code == 1) {
           this.goodsData = res.data
           this.skuList = res.data.specs
+        } else if (res.code == 401) {
+          localStorage.setItem('page', location.href)
+          this.$router.push({
+            path: '/auth'
+          })
         }
       })
     },
@@ -468,7 +473,6 @@ export default {
         goods_id: this.goodsId
       }
       this.$api.goodsComments(param).then((res) => {
-
         if (res.code == 1) {
           if (this.comments.length == 0) {
             // 第一次加载

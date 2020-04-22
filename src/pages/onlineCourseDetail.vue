@@ -423,6 +423,11 @@ export default {
           var description = res.data.description
           var image = res.data.image ? res.data.image[0] : ''
           this.wxs(title, description, image)
+        } else if (res.code == 401) {
+          localStorage.setItem('page', location.href)
+          this.$router.push({
+            path: '/auth'
+          })
         }
       })
     },

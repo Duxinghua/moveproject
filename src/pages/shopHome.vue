@@ -110,10 +110,16 @@ export default {
       this.$toast.clear()
       if (result.code == 1) {
         this.slideList = result.data
+      } else {
+        if (result.code == 401) {
+          localStorage.setItem('page', location.href)
+          this.$router.push({
+            path: '/auth'
+          })
+        }
       }
     },
     getGoodsList () {
-
       this.$toast.loading({
         duration: 0,
         message: '加载中...',
@@ -124,6 +130,8 @@ export default {
         if (res.code == 1) {
           this.newSale = res.data.new_sale
           this.todaySale = res.data.today_sale
+        } else {
+          // console.log(res)
         }
       })
     },

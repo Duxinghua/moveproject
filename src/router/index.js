@@ -83,7 +83,7 @@ const funcUrlDel = (name) => {
       obj[arr[i][0]] = arr[i][1]
     }
     delete obj[name]
-    var url = baseUrl + JSON.stringify(obj).replace(/[\'\{\ }]/g, '').replace(/\:/g,'=').replace(/\,/g,'&')
+    var url = baseUrl + JSON.stringify(obj).replace(/[\'\{\ }]/g, '').replace(/\:/g, '=').replace(/\,/g, '&')
     return url
   } else {
     return window.location.href
@@ -91,9 +91,9 @@ const funcUrlDel = (name) => {
 }
 
 const getToken = (data) => {
-  console.log(222)
   if (getSitem.getStr('token')) {
     Api.wxTokenCheck().then((result) => {
+      // alert(JSON.stringify(result))
       if (result.code === 1) {
         getSitem.setStr('token', result.data.token)
         Api.userIndex().then((result) => {
@@ -763,6 +763,14 @@ const router = new Router({
       }
     },
     {
+      path: '/auth',
+      name: 'auth',
+      component: () => import('@/pages/auth'),
+      meta: {
+        title: '授权'
+      }
+    },
+    {
       path: '/test',
       name: 'Test',
       component: Test,
@@ -789,7 +797,7 @@ router.beforeEach((to, from, next) => {
   } else {
     next()
   }
-  if (to.name === 'Invite') {
+  if (to.name === 'Invite' || to.name === 'auth') {
     next()
   } else {
     const agent = navigator.userAgent
@@ -815,7 +823,6 @@ router.beforeEach((to, from, next) => {
         window.location.href = url
         next()
       } else {
-        console.log(getSitem.getStr('token'), 'token')
         Api.wxTokenCheck().then((result) => {
           if (result.code === 1) {
             getSitem.setStr('token', result.data.token)

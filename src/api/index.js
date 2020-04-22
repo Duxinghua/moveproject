@@ -169,6 +169,10 @@ const server = {
   wxTokenCheck (data) {
     return post('/auth/check', data)
   },
+  // 刷新 token  /api/auth/refresh
+  wxRefreshToken (data) {
+    return post('/auth/refresh', data)
+  },
   // 发送验证码
   smsSend (data) {
   // 发送验证码 /api/sms/send
