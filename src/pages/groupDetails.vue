@@ -29,8 +29,8 @@
             </div>
             <div class="goods-time" v-if="groupDetails.user_number == groupDetails.current_number">拼团成功</div>
             <div class="goods-submit" @click="onLinkHome" v-if="groupDetails.user_number == groupDetails.current_number">随便逛逛</div>
-            <div class="goods-submit" @click="showPopup" v-if="(groupDetails.user_number != groupDetails.current_number) && groupDetails.is_my == 0">参与拼团</div>
-            <div class="goods-submit" @click="toggleShare" v-if="(groupDetails.user_number != groupDetails.current_number) && groupDetails.is_my == 1">邀请拼团</div>
+            <div class="goods-submit" @click="showPopup" v-if="tuanStatus == 0 && groupDetails.is_buy == 0">参与拼团</div>
+            <div class="goods-submit" @click="toggleShare" v-if="tuanStatus == 1 && groupDetails.is_buy == 1">邀请拼团</div>
             <div class="goods-process">
                 <span>邀请好友拼团</span>
                 <van-icon name="arrow" />
@@ -97,9 +97,9 @@
                 </div>
             </div>
         </van-popup>
-
-        <van-overlay :show="overlayStatus" @click="hideOverlay">
-            <div class="wrapper" @click.stop>
+        <div class="pd" v-show="overlayStatus" >
+        <div class="mb" @click="shideOverlay"></div>
+            <div class="wrapper" >
                 <div class="tuan-wrapper">
                     <div class="tuan-status"><img src="../assets/images/select.png" alt=""><span>{{tuanStatus == 0 ? '已支付' : '拼团成功'}}</span></div>
                     <div :class="['group-list',{'list-active1':groupDetails.user_number == 2,'list-active':groupDetails.user_number == 3}]">
@@ -121,7 +121,7 @@
                     <div class="tuan-link" @click="onLinkOrder"><span>查看订单</span><van-icon name="arrow" /></div>
                 </div>
             </div>
-        </van-overlay>
+        </div>
 
         <van-overlay :show="overlayStatus1" :z-index="100" @click="toggleShare">
 			<img class="share" src="../assets/images/shareimg.png" alt="">
@@ -253,7 +253,8 @@ export default {
         path: '/orderlist'
       })
     },
-    hideOverlay () {
+    shideOverlay () {
+      console.log('sss')
       this.overlayStatus = false
     },
     onLinkDetails (id) {
@@ -335,11 +336,24 @@ export default {
 		top: 0px;
 	}
 }
+.mb{
+  position: fixed;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 3
+}
 .wrapper {
+  position: fixed;
+  left:50%;
+  top:50%;
+  transform: translate(-50%,-50%);
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
   .tuan-wrapper{
     width: 600px;
     height: 585px;

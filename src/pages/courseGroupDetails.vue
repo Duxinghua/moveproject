@@ -29,7 +29,7 @@
             <div class="goods-time" v-if="tuanStatus == 1">
               <span>拼团成功</span>
             </div>
-            <div class="goods-submit" @click="showPopup" v-if="groupDetails.is_my == 0 && tuanStatus == 0">参与拼团</div>
+            <div class="goods-submit" @click="showPopup" v-if="is_buy == 0 && tuanStatus == 0">参与拼团</div>
             <div class="goods-submit" @click="onShare" v-if="is_buy == 1 && tuanStatus == 0">邀请拼团</div>
             <div class="goods-submit" @click="onLook" v-if="tuanStatus == 1">继续逛逛</div>
             <div class="goods-process">
@@ -99,7 +99,7 @@
                     <div class="goods-time" v-if="tuanStatus == 1">
                       <span>拼团成功</span>
                     </div>
-                    <div class="tuan-share" @click="showPopup"  v-if="groupDetails.is_my == 0 && tuanStatus == 0">参与拼团</div>
+                    <div class="tuan-share" @click="showPopup"  v-if="is_buy == 0 && tuanStatus == 0">参与拼团</div>
                     <div class="tuan-share" @click="onShare" v-if="is_buy == 1 && tuanStatus == 0">邀请拼团</div>
                     <div class="tuan-share" @click="onLook" v-if="tuanStatus == 1">继续逛逛</div>
                     <div class="tuan-link" @click="onLinkOrder"><span>查看订单</span><van-icon name="arrow" /></div>
