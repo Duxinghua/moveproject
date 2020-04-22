@@ -115,7 +115,7 @@ export default {
   // padding-bottom: 200px;
   .left{
     width:174px;
-    font-size:26px;
+    font-size:28px;
     color:#333;
     min-height: 100vh;
     background:white;
@@ -130,6 +130,7 @@ export default {
       position: relative;
       background:#FBF7F4;
       color:#CDAA79;
+      font-weight: bold;
     }
     .active::after{
       position: absolute;
@@ -155,7 +156,7 @@ export default {
       margin-top:30px;
       margin-right:20px;
       .catetitle{
-        font-size: 24px;
+        font-size: 26px;
         color:#6D8160;
         display: flex;
         width:100%;
@@ -184,7 +185,7 @@ export default {
             margin-bottom: 10px;
           }
           span{
-            font-size: 24px;
+            font-size: 26px;
             color:#333;
             width:100%;
             overflow: hidden;

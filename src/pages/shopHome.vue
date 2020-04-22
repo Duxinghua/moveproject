@@ -182,6 +182,24 @@ export default {
    width:700px!important;
    margin:auto;
   }
+  .home-banner-item{
+    width:100%;
+    height:100%;
+    /deep/ .van-image__img{
+      width:100%;
+      height:100%;
+      border-radius: 20px;
+    }
+    .van-image{
+      width:100%;
+      height:100%;
+      img{
+        width:100%;
+        height:100%;
+        border-radius: 20%;
+      }
+    }
+  }
   .home-banner{
     margin-top:200px;
     padding-top:25px;
