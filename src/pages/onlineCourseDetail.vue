@@ -206,10 +206,9 @@ export default {
     }
   },
   mounted () {
-    // if(!getSitem.getStr('mobile')){
-    //       this.$router.push({name:'Login'})
-    // }
-
+    if (!getSitem.getStr('mobile')) {
+      this.$router.push({name: 'Login'})
+    }
     this.courseId = this.$route.query.id
     if (this.$route.query.openid) {
       getSitem.setStr('pudd', this.$route.query.openid)

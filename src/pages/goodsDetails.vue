@@ -369,7 +369,9 @@ export default {
     })
   },
   mounted () {
-    console.log(getSitem.getStr('ispartner'))
+    if (!getSitem.getStr('mobile')) {
+      this.$router.push({name: 'Login'})
+    }
     this.goodsId = this.$route.query.goodsId
     if (this.$route.query.openid) {
       getSitem.setStr('pudd', this.$route.query.openid)

@@ -159,9 +159,9 @@ export default {
     }
   },
   mounted () {
-    // if(!getSitem.getStr('mobile')){
-    //       this.$router.push({name:'Login'})
-    // }
+    if (!getSitem.getStr('mobile')) {
+      this.$router.push({name: 'Login'})
+    }
     console.log(this.$route.query.id)
     this.courseId = this.$route.query.id
     if (this.$route.query.openid) {
