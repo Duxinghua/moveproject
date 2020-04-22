@@ -91,7 +91,7 @@ const funcUrlDel = (name) => {
 }
 
 const getToken = (data) => {
-  console.log(this.$api)
+  console.log(222)
   if (getSitem.getStr('token')) {
     Api.wxTokenCheck().then((result) => {
       if (result.code === 1) {
@@ -106,6 +106,7 @@ const getToken = (data) => {
     })
   } else {
     Api.wxLogin(data).then((result) => {
+      console.log(result, 'result')
       getSitem.setStr('open', true)
       if (result.code === 1) {
         getSitem.setStr('mobile', result.data.info.mobile)

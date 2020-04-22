@@ -50,7 +50,7 @@
         <span>¥{{order_detail.price_pay}}</span>
       </div>
       <div class="orderItem orderItemfix" v-if="order_detail.status == 1 && order_detail.t_id == 0 || order_detail.status == 3 && order_detail.is_comment == 0 ">
-          <span class="btn" v-if="order_detail.status == 1 && order_detail.t_id == 0" @click="refundHandler(order_detail.order_id)">退款</span>
+          <span class="btn" v-if="order_detail.status == 1 && order_detail.t_id == 0 && is_refund == 1" @click="refundHandler(order_detail.order_id)">退款</span>
           <span class="btn" v-if="order_detail.status == 3 && order_detail.is_comment == 0" @click="commentClickHandler(order_detail.order_id)">评价</span>
       </div>
     </div>
@@ -136,69 +136,87 @@ export default {
       ],
       tips: [
         {
+          image: require('../assets/images/ordernopay.png'),
+          t1: '未支付',
+          t2: '请立即支付订单',
+          status: 0
+        },
+        {
           image: require('../assets/images/orderpay.png'),
-          t1: '等待买家付款',
-          t2: '24小时后自动关闭',
+          t1: '已支付',
+          t2: '请耐心等待卖家发货',
+          status: 1
+        },
+        {
+          image: require('../assets/images/ordersend.png'),
+          t1: '已发货',
+          t2: '请耐心等待，收到货物请立即收货',
+          status: 2
+        },
+        {
+          image: require('../assets/images/orderconfirm.png'),
+          t1: '确认收货',
+          t2: '请验收货物，确认无误收货',
+          status: 3
+        },
+        {
+          image: require('../assets/images/ordertuan1.png'),
+          t1: '拼团中',
+          t2: '正在拼团中，快去邀请好友来参加',
+          status: 4
+        },
+        {
+          image: require('../assets/images/ordersend.png'),
+          t1: '申请退货中',
+          t2: '请耐心等待审核',
+          status: 8
+        },
+        {
+          image: require('../assets/images/orderclose.png'),
+          t1: '已退货',
+          t2: '已处理，如有问题请联系商家',
           status: 9
         },
         {
           image: require('../assets/images/orderconfirm.png'),
-          t1: '请确认收货',
-          t2: '请检查货物并确认收货',
-          status: 3
-        },
-        {
-          image: require('../assets/images/ordersend.png'),
-          t1: '卖家已发货',
-          t2: '请卖家收到货之后，确认收货',
-          status: 2
-        },
-        {
-          image: require('../assets/images/ordersuccess.png'),
-          t1: '交易成功',
-          t2: '买家已经确认收货'
-        },
-        {
-          image: require('../assets/images/orderclose.png'),
-          t1: '拼团订单',
-          t2: '参加人数越多，越容易成功'
-        },
-        {
-          image: require('../assets/images/orderclose.png'),
-          t1: '订单已关闭',
-          t2: '请重新购买',
+          t1: '已关闭',
+          t2: '请重新下单',
           status: 99
-        },
+        }
+      ],
+      tuantips: [
         {
           image: require('../assets/images/ordertuan1.png'),
-          t1: '申请退货中',
-          t2: '请耐心等待',
-          status: 9
-        },
-        {
-          image: require('../assets/images/orderpay.png'),
-          t1: '未支付',
-          t2: '请支持订单',
+          t1: '进行中',
+          t2: '拼团进行中，请邀请好友加入拼团',
           status: 0
         },
         {
-          image: require('../assets/images/orderpays.png'),
-          t1: '已支付',
-          t2: '请耐心等待发货',
+          image: require('../assets/images/ordertuan2.png'),
+          t1: '已完成',
+          t2: '拼团已完成',
           status: 1
+        },
+        {
+          image: require('../assets/images/ordertuan3.png'),
+          t1: '已解散',
+          t2: '请重新拼团',
+          status: 2
         }
       ],
       num: 3, // 上传数量
       localIds: [],
       imgList: [],
       express: '',
-      t_status: ''
+      t_status: '',
+      is_refund: ''
     }
   },
   mounted () {
     console.log(this.$route.query)
     this.order_id = this.$route.query.id
     this.express = this.$route.query.express
+    this.is_refund = this.$route.query.is_refund
     this.getDetail()
   },
   methods: {
@@ -288,17 +306,37 @@ export default {
             this.order_detail.addressInfo = ''
           }
           var status = res.data.status
-          console.log(status, 'status')
-          if (status == 99) {
-            status = 5
-          } else if (status == 8) {
-            status = 6
-          } else if (status == 9) {
-            status = 7
+          var t_id = res.data.t_id
+          if( t_id == 0) {
+            this.tips.map((item) => {
+              if (item.status == status) {
+                this.order_detail.tipsimage = item.image
+                this.order_detail.tipst1 = item.t1
+                this.order_detail.tipst2 = item.t2
+              }
+            })
+          } else {
+            console.log(status, 'status')
+            this.tuantips.map((item) => {
+              if (item.status == status) {
+                this.order_detail.tipsimage = item.image
+                this.order_detail.tipst1 = item.t1
+                this.order_detail.tipst2 = item.t2
+              } else if (status == 4) {
+                this.order_detail.tipsimage = this.tuantips[0].image
+                this.order_detail.tipst1 = this.tuantips[0].t1
+                this.order_detail.tipst2 = this.tuantips[0].t2
+              } else if (status == 9) {
+                this.order_detail.tipsimage = this.tuantips[2].image
+                this.order_detail.tipst1 = this.tuantips[2].t1
+                this.order_detail.tipst2 = this.tuantips[2].t2
+              } else if (status == 3) {
+                this.order_detail.tipsimage = this.tuantips[1].image
+                this.order_detail.tipst1 = this.tuantips[1].t1
+                this.order_detail.tipst2 = this.tuantips[1].t2
+              }
+            })
           }
-          this.order_detail.tipsimage = this.tips[status].image
-          this.order_detail.tipst1 = this.tips[status].t1
-          this.order_detail.tipst2 = this.tips[status].t2
           var list = []
           if (!res.data.goodsTuan) {
             this.order_detail.goodsTuan = {}
@@ -323,7 +361,6 @@ export default {
             }
             list.push(obj)
           }
-          console.log(list)
           this.order_detail.goodsTuan.users = list
         }
       })

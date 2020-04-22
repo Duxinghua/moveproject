@@ -229,7 +229,8 @@ export default {
           query: {
             id: obj.order_id,
             express: obj.express,
-            t_status: obj.t_status
+            t_status: obj.t_status,
+            is_refund: obj.is_refund
           }
         })
       }
