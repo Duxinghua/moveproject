@@ -222,7 +222,7 @@ export default {
     },
     orderDetailHandler (obj) {
       if (obj.express.length < 4) {
-        this.$router.push({name: 'OrderDetail', query: {id: obj.order_id, t_status: obj.t_status}})
+        this.$router.push({name: 'OrderDetail', query: {id: obj.order_id, t_status: obj.t_status, is_refund: obj.is_refund}})
       } else {
         this.$router.push({
           name: 'OrderDetail',
