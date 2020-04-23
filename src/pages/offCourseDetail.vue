@@ -53,7 +53,7 @@
         </p>
         <p>
           <span>主办单位</span>
-          <span>有梦不晚</span>
+          <span>有梦花居</span>
         </p>
       </div>
     </div>

@@ -219,7 +219,7 @@ const router = new Router({
       name: 'HomeSearch',
       component: HomeSearch,
       meta: {
-        title: '有梦不晚'
+        title: '有梦花居'
       }
     },
     {
@@ -275,7 +275,7 @@ const router = new Router({
       name: 'OrderCommit',
       component: OrderCommit,
       meta: {
-        title: '有梦不晚'
+        title: '有梦花居'
       }
     },
     {
@@ -291,7 +291,7 @@ const router = new Router({
       name: 'OrderSuccess',
       component: OrderSuccess,
       meta: {
-        title: '有梦不晚'
+        title: '有梦花居'
       }
     },
     {
@@ -299,7 +299,7 @@ const router = new Router({
       name: 'DoTask',
       component: DoTask,
       meta: {
-        title: '有梦不晚'
+        title: '有梦花居'
       }
     },
     {
@@ -629,7 +629,7 @@ const router = new Router({
       name: 'shopHome',
       component: () => import('@/pages/shopHome'),
       meta: {
-        title: '有梦不晚',
+        title: '有梦花居',
         keepAlive: true
       }
     },
@@ -647,7 +647,7 @@ const router = new Router({
       name: 'goodsDetails',
       component: () => import('@/pages/goodsDetails'),
       meta: {
-        title: '有梦不晚'
+        title: '有梦花居'
       }
     },
     {
@@ -655,7 +655,7 @@ const router = new Router({
       name: 'afterOrder',
       component: () => import('@/pages/afterOrder'),
       meta: {
-        title: '有梦不晚'
+        title: '有梦花居'
       }
     },
     {

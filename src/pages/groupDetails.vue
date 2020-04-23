@@ -29,8 +29,8 @@
             </div>
             <div class="goods-time" v-if="groupDetails.user_number == groupDetails.current_number">拼团成功</div>
             <div class="goods-submit" @click="onLinkHome" v-if="groupDetails.user_number == groupDetails.current_number">随便逛逛</div>
-            <div class="goods-submit" @click="showPopup" v-if="tuanStatus == 0 && groupDetails.is_buy == 0">参与拼团</div>
-            <div class="goods-submit" @click="toggleShare" v-if="tuanStatus == 1 && groupDetails.is_buy == 1">邀请拼团</div>
+            <div class="goods-submit" @click="showPopup" v-if="tuanStatus == 0 && is_buy == 0">参与拼团</div>
+            <div class="goods-submit" @click="toggleShare" v-if="tuanStatus == 0 && is_buy == 1">邀请拼团</div>
             <div class="goods-process">
                 <span>邀请好友拼团</span>
                 <van-icon name="arrow" />
@@ -149,7 +149,8 @@ export default {
       },
       groupList: [],
       wx: null,
-      is_buy: 0
+      is_buy: 0,
+      timer: null
     }
   },
   created () {
@@ -194,6 +195,11 @@ export default {
     if (tuanStatus == 0 || tuanStatus == 1) {
       this.overlayStatus = true
     }
+    clearInterval(this.timer)
+    this.timer = null
+    this.timer = setInterval(() => {
+      this.goodsTuanDetail()
+    }, 3000)
   },
   methods: {
     handlerView () {
@@ -254,7 +260,6 @@ export default {
       })
     },
     shideOverlay () {
-      console.log('sss')
       this.overlayStatus = false
     },
     onLinkDetails (id) {
@@ -281,8 +286,32 @@ export default {
           this.skuList = res.data.goods ? res.data.goods.specs : []
           this.groupList = res.data.hot || []
           this.is_buy = res.data.is_buy
+          this.tuanStatus = res.data.status
+          if (this.tuanStatus == 1) {
+            this.overlayStatus = false
+          } else {
+            this.overlayStatus = true
+          }
         } else {
           this.$toast(res.msg)
+        }
+      })
+    },
+    goodsTuanDetail () {
+      this.$api.goodsTuanDetail({t_id: this.groupId}).then((res) => {
+        if (res.code == 1) {
+          this.groupDetails.users = res.data.users
+          this.groupDetails.user_number = res.data.user_number
+          this.groupDetails.current_number = res.data.current_number
+          this.tuanStatus = res.data.status
+          this.is_buy = res.data.is_buy
+          if (this.tuanStatus == 1) {
+            clearInterval(this.timer)
+            this.timer = null
+            this.overlayStatus = false
+          } else {
+            // this.overlayStatus = true
+          }
         }
       })
     },
@@ -322,6 +351,10 @@ export default {
       })
     }
 
+  },
+  destroyed () {
+    clearInterval(this.timer)
+    this.timer = null
   }
 }
 

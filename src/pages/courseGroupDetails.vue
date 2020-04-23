@@ -327,6 +327,10 @@ export default {
           this.goodsData = res.data.course || {}
           this.courseId = res.data.course_id
           this.groupList = res.data.hot || []
+          this.tuanStatus = res.data.status
+          if (this.tuanStatus == 0) {
+            this.overlayStatus = true
+          }
           var obj = res.data.course
           var title = obj.title
           var description = obj.description
@@ -344,7 +348,7 @@ export default {
               clearInterval(that.timer)
               that.timer = null
             }
-          }, 2000)
+          }, 3000)
         } else if (res.code == 401) {
           localStorage.setItem('page', location.href)
           this.$router.push({

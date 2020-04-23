@@ -50,8 +50,9 @@ export default {
 
 <style lang='scss' scoped>
 .goods-item{
-    width: 333px;
-    margin-bottom: 40px;
+    width: 338px;
+    margin-bottom:30px;
+    margin-right:24px;
     .goods-img{
         width: 100%;
         height: 245px;

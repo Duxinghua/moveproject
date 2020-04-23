@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <span class="loginTip">欢迎来到有梦不晚</span>
+    <span class="loginTip">欢迎来到有梦花居</span>
     <div class="input-wrap">
       <img src="../assets/images/phone.png" alt="">
       <input type="text" placeholder="请输入手机号" v-model="phone" >

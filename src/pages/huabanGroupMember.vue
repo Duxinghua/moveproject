@@ -2,7 +2,7 @@
   <div class="huabanMember">
     <!-- <div class="member">
       <div class="img"><img src="../assets/images/img1.png" alt=""></div>
-      <span>有梦不晚XXX</span>
+      <span>有梦花居XXX</span>
       <div class="leader">创建者</div>
     </div> -->
     <div class="content">

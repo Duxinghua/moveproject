@@ -34,7 +34,7 @@
             </div>
             <NoData v-if="todaySale.length == 0" />
         </div>
-        <div class="sales">
+        <div class="sales sales-fix">
             <div class="title">新品上市</div>
             <div class="goods-list" v-if="newSale.length != 0">
                 <GoodsItem
@@ -220,11 +220,17 @@ export default {
       margin-bottom: 25px;
     }
   }
+  .sales-fix{
+    padding-top:0px;
+  }
   .goods-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     padding-bottom: 0px;
+    .goods-item:nth-child(2n){
+      margin-right: 0px;
+    }
   }
 }
 </style>

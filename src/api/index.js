@@ -118,6 +118,12 @@ const server = {
     return post('/goods_tuan', data)
   },
   /**
+	 * 商品拼团详情查询
+	 */
+  goodsTuanDetail (data) {
+    return post('/goods_tuan/detail', data)
+  },
+  /**
 	 * 商品拼团列表
 	 */
   goodsTuanLists (data) {
