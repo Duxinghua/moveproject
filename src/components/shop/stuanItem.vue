@@ -73,7 +73,7 @@ export default {
 width:100%;
 display: flex;
 flex-direction: row;
-padding-top:20px;
+padding-top:35px;
 box-sizing: border-box;
 border-bottom: 1px solid #ececec;
       .goods-img{
@@ -82,7 +82,7 @@ border-bottom: 1px solid #ececec;
         overflow: hidden;
         border-radius: 5px;
         margin-right:25px;
-        margin-bottom: 25px;
+        margin-bottom: 35px;
         .van-image{
             width: 100%;
             height: 100%;

@@ -822,7 +822,7 @@ export default {
   }
   .goods-group{
     background: #FBF8F5;
-    padding: 40px 25px 35px 25px;
+    padding: 25px 25px 0px 25px;
     border-bottom: 15px solid #F6F3EE;
     .group-header{
       display: flex;

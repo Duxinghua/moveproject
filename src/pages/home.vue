@@ -396,6 +396,9 @@ export default {
 #home-banner-carousel{
   height:380px !important;
 }
+.home-banner-item{
+  height: 380px !important;
+}
 #home-teacher-carousel{
   height:230px !important;
   margin-bottom: 26px;
@@ -458,6 +461,7 @@ export default {
       font-size: 32px;
       display: flex;
       flex-direction: row;
+      width:100%;
       align-items: center;
       margin-left:45px;
       color:white;
@@ -469,6 +473,7 @@ export default {
     }
     &-list li{
       font-size: 32px;
+      width:fit-content;
       margin-right:40px;
       transition: all 0.3s;
     }
@@ -579,7 +584,7 @@ export default {
       height:212px;
       justify-content: center;
       align-items: center;
-      margin:10px auto 26px auto;
+      margin:0 auto 26px auto;
       background:#FBF8F4;
       img{
         width:162px;

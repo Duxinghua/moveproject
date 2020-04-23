@@ -500,7 +500,7 @@ export default {
     .goods-group{
       // margin-top: 15px;
       background: #FBF8F5;
-      padding: 33px 25px;
+      padding:25px 25px 0 25px;
       border-bottom: 15px solid #F6F3EE;
       .group-header{
         display: flex;

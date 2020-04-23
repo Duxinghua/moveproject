@@ -698,7 +698,7 @@ export default {
   .goods-group {
     margin-top: 15px;
     background: #FFFFFF;
-    padding: 40px 25px 35px 25px;
+    padding:25px 25px 0 25px;
     .group-header {
       display: flex;
       justify-content: space-between;
@@ -736,7 +736,7 @@ export default {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 20px 0px;
+        padding: 25px 0px;
         img {
           width: 160px;
           height: 104px;
@@ -758,7 +758,7 @@ export default {
       justify-content: center;
       border-bottom: 1Px solid #f4f0ea;
       .tab-item {
-        padding-top: 45px;
+        padding-top: 30px;
         padding-bottom: 30px;
         position: relative;
         font-size: 32px;
