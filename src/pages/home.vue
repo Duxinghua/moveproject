@@ -415,10 +415,11 @@ export default {
   &-onlinecontent{
       display: flex;
       flex-direction: row;
+      width:100%;
       flex-wrap: wrap;
       box-sizing: border-box;
-      padding-left:26px;
-      padding-right:26px;
+      padding-left:25px;
+      padding-right:25px;
       margin:126px 0px;
       .van-list{
             display: flex;
@@ -429,6 +430,9 @@ export default {
             }
       }
       &-item:nth-child(2n){
+        margin-right:0px !important;
+      }
+      .home-course-content-item:nth-child(2n){
         margin-right:0px !important;
       }
   }
@@ -514,8 +518,8 @@ export default {
       flex-direction: row;
       flex-wrap: wrap;
       box-sizing: border-box;
-      padding-left:26px;
-      padding-right:26px;
+      padding-left:25px;
+      padding-right:25px;
       min-height: 225px;
       &-item:nth-child(2n){
         margin-right:0px !important;

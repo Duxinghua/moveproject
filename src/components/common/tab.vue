@@ -141,7 +141,7 @@ export default {
         content:'';
         width:2px;
         height:60%;
-        border-right:2px dashed #E3D29C;
+        // border-right:2px dashed #E3D29C;
         right:0;
         top:60%;
         transform: translateY(-60%)
@@ -154,6 +154,9 @@ export default {
         // transform: scale(1.3);
         color: #e3d29c;
       }
+    }
+    ul::-webkit-scrollbar {
+    display: none;
     }
   }
 }

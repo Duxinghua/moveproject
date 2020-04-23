@@ -175,6 +175,9 @@ export default {
     flex-wrap: wrap;
     justify-content: space-between;
     padding-bottom: 0px;
+    .goods-item:nth-child(2n){
+      margin-right: 0px!important;
+    }
   }
 }
 </style>

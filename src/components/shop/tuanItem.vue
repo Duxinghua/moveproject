@@ -73,7 +73,7 @@ border-bottom: 1px solid #ececec;
         overflow: hidden;
         border-radius: 5px;
         margin-right:25px;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         .van-image{
             width: 100%;
             height: 100%;
@@ -86,7 +86,7 @@ border-bottom: 1px solid #ececec;
         .goods-content{
           display: flex;
           flex-direction: column;
-          width:445px;
+          width:435px;
           .goods-title{
               color: #333333;
               font-size: 32px;

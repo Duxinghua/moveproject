@@ -17,7 +17,7 @@
             </van-swipe>
         </div>
         <div class="goods_menu">
-          <span :class="activeIndex == 1 ? 'active' : ''" @click="tabClick(1)">商城</span>
+          <span :class="activeIndex == 1 ? 'active' : ''" @click="tabClick(1)">商品</span>
           <span :class="activeIndex == 2 ? 'active' : ''" @click="tabClick(2)">课程</span>
         </div>
         <van-list

@@ -346,6 +346,7 @@ export default {
     &-info{
       display: flex;
       flex-direction: row;
+      box-sizing: border-box;
       padding-left:26px;
       padding-right:26px;
       margin-bottom: 26px;
@@ -358,7 +359,7 @@ export default {
         border-radius: 50%;
       }
       .myInfos{
-        width:555px;
+        width:554px;
         display: flex;
         flex-direction: column;
         &-wrap{
@@ -441,7 +442,7 @@ export default {
     &-ad{
       width:700px;
       height:160px;
-      margin:15px auto;
+      margin:26px auto;
       img{
         width:100%;
         height:100%;
@@ -452,6 +453,7 @@ export default {
       width:100%;
       display: flex;
       flex-direction: row;
+      margin-top:26px;
       margin-bottom: 26px;
       .oitem{
         width:25%;
@@ -460,8 +462,8 @@ export default {
         justify-content: center;
         align-items: center;
         img{
-          width:103px;
-          height:103px;
+          width:93px;
+          height:93px;
         }
         span{
           font-size: 30px;

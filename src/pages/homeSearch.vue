@@ -271,7 +271,7 @@ export default {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    margin-top: 38px;
+    margin-top: 25px;
   }
   &-users{
     display: flex;
@@ -292,6 +292,6 @@ export default {
 }
 .homeSearch-course-content,.homeSearch-user-content{
   width: 100%;
-  height: 100vh;
+  min-height: 60vh;
 }
 </style>

@@ -8,7 +8,7 @@
               </van-image>
           </div>
           <!-- <img class="course-img" :src="item.image[0]" alt=""> -->
-          <span>{{item.title}}</span>
+          <span class="cspan">{{item.title}}</span>
           <div class="course-people">
             <img :src="item.admin.avatar" alt="">
             <span>{{item.admin.nickname}}</span>
@@ -45,21 +45,22 @@ export default {
 .home-course-content-item{
         display: flex;
         flex-direction: column;
-        width:336px;
-        margin-right:26px;
-        margin-bottom: 26px;
+        width:337px;
+        margin-right:24px;
+        margin-bottom:24px;
         .course-img{
-          width:336px;
+          width:100%;
           height:225px;
           overflow: hidden;
           border-radius:8px;
+          font-size: 0;
          .van-image {
             width: 100%;
             height: 100%;
           }
 
         }
-        span{
+        .cspan{
           width:100%;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -72,6 +73,7 @@ export default {
         .course-people{
           display: flex;
           flex-direction: row;
+          width:100%;
           height:38px;
           align-items: center;
           img{

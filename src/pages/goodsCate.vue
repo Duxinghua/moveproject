@@ -147,6 +147,11 @@ export default {
   .right{
     display: flex;
     flex-direction: column;
+    width:576px;
+    padding-left:18px;
+    padding-right:18px;
+    padding-bottom: 220px;
+    box-sizing: border-box;
     .cateitem{
       display: flex;
       flex-direction: column;
@@ -154,7 +159,6 @@ export default {
       align-items: center;
       width:540px;
       margin-top:30px;
-      margin-right:20px;
       .catetitle{
         font-size: 26px;
         color:#6D8160;
