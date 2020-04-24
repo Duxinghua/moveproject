@@ -1040,7 +1040,7 @@ export default {
         font-size: 22px;
       }
     }
-    .tuan-box{
+    .tuan-box,.car-box{
       width:calc(100% - 225px);
       margin-right:5px;
     }
