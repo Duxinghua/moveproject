@@ -192,9 +192,11 @@
                 v-if="disabled"
             >合计<span>￥{{ skuIndex != -1 ? goodsData.price_tuan : '0.00'}}</span></div> -->
             <!-- <div> -->
-				<div class="home" @click="onLinkHome"><img class="carico" src="../assets/images/carhome.png" alt=""><span>首页</span></div>
-        <div class="gocar" @click="onLinkCar"><img src="../assets/images/car-ico.png" alt=""><span>购物车</span></div>
-        <div class="gocar" @click="kefuClick"><img src="../assets/images/kefu-ico.png" alt=""><span>客服</span></div>
+          <div class="hg">
+            <div class="home" @click="onLinkHome"><img class="carico" src="../assets/images/carhome.png" alt=""><span>首页</span></div>
+            <div class="gocar" @click="onLinkCar"><img src="../assets/images/car-ico.png" alt=""><span>购物车</span></div>
+            <div class="gocar" @click="kefuClick"><img src="../assets/images/kefu-ico.png" alt=""><span>客服</span></div>
+          </div>
 				<div class="tuan-box" v-if="type == 'tuan'">
 					<div
 						class="goods-group-btn"
@@ -997,13 +999,19 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 20px 0px 25px;
+    padding: 0px 15px;
     background: #fff;
+    .hg{
+      display: flex;
+      flex-direction: row;
+      width:220px;
+    }
     .home{
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      width:66px;
       img{
         width: 46px;
         height: 46px;
@@ -1018,6 +1026,7 @@ export default {
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      width:calc((100% - 66px)/2 );
       .carico{
         width:40px;
         height:40px;
@@ -1030,6 +1039,10 @@ export default {
         color: #999;
         font-size: 22px;
       }
+    }
+    .tuan-box{
+      width:calc(100% - 225px);
+      margin-right:5px;
     }
     .tuan-box,.car-box{
       display: flex;
@@ -1050,7 +1063,7 @@ export default {
     }
     .goods-group-btn {
       line-height: 1.2;
-      width: 240px;
+      width: 50%;
         height: 90px;
         color: #fff;
         background: #dcc98b;
@@ -1069,7 +1082,7 @@ export default {
     }
     .goods-buy-btn {
       line-height: 1.2;
-       width: 240px;
+       width: 50%;
         height: 90px;
         color: #f3d995;
         background: #6d8160;

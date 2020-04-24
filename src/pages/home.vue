@@ -459,14 +459,15 @@ export default {
     &-search{
       width:42px;
       height:42px;
+      margin-right:25px;
     }
     &-list{
       font-size: 32px;
       display: flex;
       flex-direction: row;
-      width:100%;
+      width:calc(100% - 42px - 25px);
       align-items: center;
-      margin-left:45px;
+      // margin-left:45px;
       color:white;
       .active{
         font-weight: 500;
@@ -477,7 +478,9 @@ export default {
     &-list li{
       font-size: 32px;
       width:fit-content;
-      margin-right:40px;
+      margin-right:35px;
+      display: flex;
+      justify-content: center;
       transition: all 0.3s;
     }
   }

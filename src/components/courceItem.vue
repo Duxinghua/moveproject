@@ -45,7 +45,7 @@ export default {
 .home-course-content-item{
         display: flex;
         flex-direction: column;
-        width:337px;
+        width:calc((100% - 24px)/2);
         margin-right:24px;
         margin-bottom:24px;
         .course-img{
@@ -86,7 +86,7 @@ export default {
             font-size: 26px;
             color:#898C87;
             font-weight: 500;
-            width:283px;
+            width:calc(100% - 38px - 15px);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
