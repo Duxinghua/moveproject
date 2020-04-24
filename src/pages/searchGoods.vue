@@ -161,12 +161,18 @@ export default {
     }
 
     .goods-list{
-        padding: 15px 25px;
+        padding: 0px 25px;
+        width:100%;
+        box-sizing: border-box;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
         // padding-top: 130px;
         padding-bottom: 0px;
+        .goods-item:nth-child(2n){
+          margin-right: 0px;
+        }
     }
+
 }
 </style>

@@ -86,9 +86,15 @@
       </div>
     </div>
     <div class="goods-action">
+      <div>
       <div class="goods-money" @click="homeClick">
-          <img src="../assets/images/carhome.png" alt="">
+          <img src="../assets/images/home-ico.png" alt="">
           <span>首页</span>
+      </div>
+      <div class="goods-money goods-kefu" @click="kefuClick">
+          <img src="../assets/images/kefu-ico.png" alt="">
+          <span>客服</span>
+      </div>
       </div>
       <div>
         <div class="goods-group-btn" @click="onTuan(courseId)" v-if="type == 'tuan'">
@@ -102,10 +108,12 @@
       </div>
     </div>
     <WxShare :show="wxShare" @toShare="toShare" />
+    <Message :reShow="shows" :tipText="kufumessage" @onClose="onClosef" />
   </div>
 </template>
 
 <script>
+import Message from '@/components/message.vue'
 import TeacherMsg from '@/components/teacherMsg.vue'
 import GroupItem from '@/components/cource/groupItem.vue'
 import WxShare from '@/components/wxshare.vue'
@@ -155,7 +163,9 @@ export default {
       imageShow: false,
       isBuy: 0,
       sourceuid: '',
-      type: 'single'
+      type: 'single',
+      kufumessage: '',
+      shows: false
     }
   },
   mounted () {
@@ -175,8 +185,22 @@ export default {
     }
     this.courseDetail()
     this.courseTuanList()
+    this.kefu()
   },
   methods: {
+    kefuClick () {
+      this.shows = true
+    },
+    kefu () {
+      this.$api.indexKefu().then((res) => {
+        if (res.code == 1) {
+          this.kufumessage = res.data
+        }
+      })
+    },
+    onClosef () {
+      this.shows = false
+    },
     // onSwipeChange (index) {
     //   this.swiperCurrent = index
     // },
@@ -403,7 +427,8 @@ export default {
   components: {
     TeacherMsg,
     WxShare,
-    GroupItem
+    GroupItem,
+    Message
   },
   computed: {
     buyClass () {
@@ -771,7 +796,7 @@ export default {
       width: 100%;
       height: 100px;
       display: flex;
-      justify-content: space-between;
+      justify-content:space-between;
       align-items: center;
       padding: 0px 20px 0px 25px;
       background: #fff;
@@ -795,6 +820,12 @@ export default {
       }
       >div{
         display: flex;
+      }
+      .goods-kefu{
+        margin-left:30px;
+        span{
+          color:#999;
+        }
       }
       .goods-group-btn{
         line-height: 1.3;

@@ -4,7 +4,7 @@
       <div class="my-header-info">
         <img class="avatar" :src="userInfo.avatar ? userInfo.avatar : require('../assets/images/people.png')" alt="">
         <div class="myInfos">
-          <div class="myInfos-wrap">
+          <div class="myInfoswrap">
             <div class="des">
               <span>{{userInfo.nickname}}</span>
               <span>{{userInfo.bio}}</span>
@@ -17,7 +17,7 @@
           <span class="myInfos-edit" @click="editHandler">编辑资料</span>
         </div>
       </div>
-      <div class="my-header-tab" style="display:none">
+      <!-- <div class="my-header-tab" style="display:none">
         <div class="tabitem" @click="likeClickHandler('gz')">
           <span>{{userInfo.follow}}</span>
           <span>我的关注</span>
@@ -34,7 +34,7 @@
           <span>{{userInfo.likes}}</span>
           <span>被喜欢</span>
         </div>
-      </div>
+      </div> -->
       <div class="my-header-oc">
         <div class="oitem" @click="likeClickHandler('st')">
           <img src="../assets/images/sp.png" alt="">
@@ -87,7 +87,7 @@
         <span>地址管理</span>
       </div>
     </div>
-    <img src="../assets/images/myfooter.png" class="myfooter">
+    <!-- <img src="../assets/images/myfooter.png" class="myfooter"> -->
     <div class="myqd" v-if="qdShow">
       <div class="t-mb" @click="qdCloseHandler"></div>
       <div class="t-body">
@@ -336,22 +336,21 @@ export default {
 .my{
   display: flex;
   flex-direction:column;
-  padding-top:34px;
+  padding:26px 26px 0px 26px;
+  box-sizing: border-box;
+  width:100%;
   min-height: 100vh;
   background:#fff;
   &-header{
     display: flex;
     flex-direction: column;
-    // border-bottom: 15px solid #FBF8F4;
+    width:100%;
     &-info{
+      width:100%;
       display: flex;
       flex-direction: row;
       box-sizing: border-box;
-      padding-left:26px;
-      padding-right:26px;
-      margin-bottom: 26px;
       justify-content: space-between;
-      width:100%;
       .avatar{
         width:118px;
         height:118px;
@@ -359,16 +358,17 @@ export default {
         border-radius: 50%;
       }
       .myInfos{
-        width:554px;
+        width:calc(100% - 118px - 26px);
+        // flex:1;
         display: flex;
         flex-direction: column;
-        &-wrap{
+        .myInfoswrap{
           display: flex;
           flex-direction: row;
           justify-content: space-between;
           width:100%;
           .des{
-            width:400px;
+            width:calc(100% - 128px - 26px);
             font-size: 32px;
             color: #333;
             display: flex;
@@ -400,7 +400,8 @@ export default {
           }
         }
         &-edit{
-          width:550px;
+          // width:550px;
+          flex:1;
           height:65px;
           background:rgba(255,255,255,1);
           border:2px solid rgba(205, 168, 113, 1);
@@ -440,9 +441,11 @@ export default {
       }
     }
     &-ad{
-      width:700px;
+      width:100%;
       height:160px;
-      margin:26px auto;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
       img{
         width:100%;
         height:100%;
@@ -482,8 +485,6 @@ export default {
       display: flex;
       flex-direction: row;
       align-items: center;
-      margin-left:26px;
-      margin-right:26px;
       border-bottom: 1px solid #F2EEE9;
       img{
         width:36px;
@@ -503,14 +504,14 @@ export default {
       }
     }
   }
-  .myfooter{
-    position: relative;
-    width:750px;
-    height:229px;
-    left:0;
-    bottom: 0;
-    // z-index: -1;
-  }
+  // .myfooter{
+  //   position: relative;
+  //   width:750px;
+  //   height:229px;
+  //   left:0;
+  //   bottom: 0;
+  //   // z-index: -1;
+  // }
   .myqd{
     .t-mb{
       position: fixed;

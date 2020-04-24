@@ -7,8 +7,8 @@
             @on-cate="onCate"
         />
         <div class="home-banner">
-            <van-swipe :autoplay="3000" id="home-banner-carousel" indicator-color="#F3D995"	>
-              <van-swipe-item v-for="(item, index) in slideList" :key="index">
+            <van-swipe :autoplay="3000" id="home-banner-carousel" indicator-color="#F3D995">
+              <van-swipe-item v-for="(item, index) in slideList" :key="index" @click="shopClick(item)">
                 <div class="home-banner-item">
                     <van-image :src="item.image">
                         <template v-slot:loading>
@@ -83,6 +83,9 @@ export default {
     this.goodsbanner()
   },
   methods: {
+    shopClick (item) {
+      location.href = item.url
+    },
     categorys () {
       this.$api.goodsCates().then((res) => {
         if (res.code == 1) {
@@ -112,10 +115,12 @@ export default {
         this.slideList = result.data
       } else {
         if (result.code == 401) {
-          localStorage.setItem('page', location.href)
-          this.$router.push({
-            path: '/auth'
-          })
+          if (localStorage.getItem('token')) {
+            localStorage.setItem('page', location.href)
+            this.$router.push({
+              path: '/auth'
+            })
+          }
         }
       }
     },
@@ -179,7 +184,7 @@ export default {
   }
   #home-banner-carousel{
    height:355px !important;
-   width:700px!important;
+   width:100%;
    margin:auto;
   }
   .home-banner-item{
@@ -203,6 +208,9 @@ export default {
   .home-banner{
     margin-top:200px;
     padding-top:25px;
+    padding-left:25px;
+    padding-right:25px;
+    width:100%;
     height:380px;
     box-sizing: border-box;
     background:#fbf8f5;
@@ -224,6 +232,7 @@ export default {
     padding-top:0px;
   }
   .goods-list {
+    width:100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;

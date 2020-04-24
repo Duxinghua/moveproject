@@ -114,9 +114,16 @@
         </div>
       </div>
       <div class="ondetail-action">
-        <div class="ondetail-money" @click="homeClick">
-          <img src="../assets/images/carhome.png" alt="">
-          <span>首页</span>
+        <div>
+          <div class="ondetail-money" @click="homeClick">
+            <img src="../assets/images/home-ico.png" alt="">
+            <span>首页</span>
+          </div>
+          <div class="ondetail-money ondetail-kufu" @click="kefuClick">
+            <img src="../assets/images/kefu-ico.png" alt="">
+            <span>客服</span>
+          </div>
+
         </div>
         <div>
             <div class="ondetail-group-btn" @click="onTrun(courseId)" v-if="type == 'tuan'">
@@ -162,10 +169,12 @@
         </div>
       </div>
     </div>
+    <Message :reShow="shows" :tipText="kufumessage" @onClose="onClosef" />
   </div>
 </template>
 
 <script>
+import Message from '@/components/message.vue'
 import TeacherMsg from '@/components/teacherMsg.vue'
 import TeacherWorks from '@/components/teacherWorks.vue'
 import GroupItem from '@/components/cource/groupItem.vue'
@@ -202,7 +211,9 @@ export default {
       huaType: 1,
       huaTypeIndex: 1,
       sourceuid: '',
-      type: 'single'
+      type: 'single',
+      kufumessage: '',
+      shows: false
     }
   },
   mounted () {
@@ -223,8 +234,22 @@ export default {
     this.flowerList()
     this.courseComment()
     this.courseTuanList()
+    this.kefu()
   },
   methods: {
+    kefuClick () {
+      this.shows = true
+    },
+    onClosef () {
+      this.shows = false
+    },
+    kefu () {
+      this.$api.indexKefu().then((res) => {
+        if (res.code == 1) {
+          this.kufumessage = res.data
+        }
+      })
+    },
     goGoodMall (id) {
       if (id > 0) {
         this.$router.push({name: 'goodsDetails', query: {goodsId: id}})
@@ -608,7 +633,8 @@ export default {
     TeacherWorks,
     NoData,
     GroupItem,
-    WxShare
+    WxShare,
+    Message
   }
 }
 </script>
@@ -1128,6 +1154,12 @@ export default {
     }
     >div{
       display: flex;
+    }
+    .ondetail-kufu{
+      margin-left:30px;
+      span{
+        color:#999;
+      }
     }
     .ondetail-group-btn{
       line-height: 1.3;

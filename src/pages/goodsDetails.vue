@@ -193,7 +193,8 @@
             >合计<span>￥{{ skuIndex != -1 ? goodsData.price_tuan : '0.00'}}</span></div> -->
             <!-- <div> -->
 				<div class="home" @click="onLinkHome"><img class="carico" src="../assets/images/carhome.png" alt=""><span>首页</span></div>
-        <div class="gocar" @click="onLinkCar"><img src="../assets/images/gocar.png" alt=""><span>购物车</span></div>
+        <div class="gocar" @click="onLinkCar"><img src="../assets/images/car-ico.png" alt=""><span>购物车</span></div>
+        <div class="gocar" @click="kefuClick"><img src="../assets/images/kefu-ico.png" alt=""><span>客服</span></div>
 				<div class="tuan-box" v-if="type == 'tuan'">
 					<div
 						class="goods-group-btn"
@@ -299,11 +300,13 @@
       <van-overlay :show="overlayStatus" :z-index="100" @click="toggleShare">
         <img src="../assets/images/shareimg.png" alt="">
       </van-overlay>
+      <Message :reShow="shows" :tipText="kufumessage" @onClose="onClosef" />
     </div>
 </template>
 
 <script>
 import GroupItem from '@/components/shop/groupItem'
+import Message from '@/components/message.vue'
 import getSitem from '@/utils/storage'
 import config from '@/utils/config'
 
@@ -333,11 +336,14 @@ export default {
       startPosition: 0,
       wx: null,
       type: 'single',
-      sourceuid: ''
+      sourceuid: '',
+      kufumessage: '',
+      shows: false
     }
   },
   components: {
-    GroupItem
+    GroupItem,
+    Message
   },
   created () {
     const data = {
@@ -383,8 +389,23 @@ export default {
     this.goodsIndex()
     this.goodsComments()
     this.goodsTuanLists()
+    this.kefu()
   },
   methods: {
+    kefuClick () {
+      this.shows = true
+      console.log('111', this.shows)
+    },
+    kefu () {
+      this.$api.indexKefu().then((res) => {
+        if (res.code == 1) {
+          this.kufumessage = res.data
+        }
+      })
+    },
+    onClosef () {
+      this.shows = false
+    },
     onLinkHome () {
       this.$router.push({
         path: '/'
@@ -1006,7 +1027,7 @@ export default {
         height: 46px;
       }
       span{
-        color: #afa187;
+        color: #999;
         font-size: 22px;
       }
     }

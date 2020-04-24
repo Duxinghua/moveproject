@@ -138,9 +138,12 @@ export default {
   display: flex;
   flex-direction: column;
   background:#FBF8F4;
+  width:100%;
   min-height: 100vh;
   &-item{
     padding:26px 26px 45px 26px;
+    box-sizing: border-box;
+    width:100%;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -153,7 +156,7 @@ export default {
       margin-right:20px;
     }
     &-right{
-      width:613px;
+      width:calc(100% - 65px - 20px);
       display: flex;
       flex-direction: column;
       .top{
@@ -224,7 +227,7 @@ export default {
         .goodsinfo{
           display: flex;
           flex-direction: column;
-          width:340px;
+          width:calc(100% - 186px - 31px);
           span{
             width:100%;
             overflow: hidden;

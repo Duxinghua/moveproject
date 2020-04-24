@@ -126,6 +126,8 @@ export default {
     align-items: flex-start;
     padding: 26px 0;
     border-bottom: 1px solid #F3F3F3;
+    width:100%;
+    box-sizing: border-box;
     .ico{
       width:82px;
       height:82px;
@@ -134,7 +136,7 @@ export default {
     .content{
       display: flex;
       flex-direction: column;
-      width:518px;
+      width:calc(100% - 82px - 22px - 37px );
       .s1{
         font-size: 32px;
         color:#333;

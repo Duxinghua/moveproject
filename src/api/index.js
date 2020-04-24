@@ -510,6 +510,10 @@ const server = {
   // 新增课程拼团列表 /api/course/tuanLists
   coursesTuanLists (data) {
     return post('course/tuanLists', data)
+  },
+  //  客服 api/index/kefu
+  indexKefu (data) {
+    return post('index/kefu', data)
   }
 }
 

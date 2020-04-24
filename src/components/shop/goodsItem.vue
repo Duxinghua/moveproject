@@ -50,7 +50,7 @@ export default {
 
 <style lang='scss' scoped>
 .goods-item{
-    width: 338px;
+    width: calc((100% - 24px)/2);
     margin-bottom:30px;
     margin-right:24px;
     .goods-img{
@@ -69,6 +69,7 @@ export default {
     }
     .goods-content{
         position: relative;
+        width:100%;
         .goods-title{
             color: #333333;
             font-size: 32px;
@@ -79,7 +80,7 @@ export default {
         }
         .goods-subtitle{
             color: #999999;
-            width: 260px;
+            width: calc(100% - 80px);
             font-size: 26px;
             margin-top: 5px;
             overflow: hidden;
@@ -89,6 +90,7 @@ export default {
         .goods-price{
             color: #995258;
             font-size: 30px;
+            width:70%;
         }
         .shopping{
             position: absolute;

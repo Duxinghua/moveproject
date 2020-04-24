@@ -7,6 +7,7 @@
 <script>
 import Api from '@/api/index'
 import getSitem from '@/utils/storage'
+import Config from '@/utils/config'
 export default {
   data () {
 
@@ -40,7 +41,11 @@ export default {
         Api.userIndex().then((result) => {
           if (result.code === 1) {
             getSitem.setStr('ispartner', result.data.is_partner)
-            location.href = localStorage.getItem('page')
+            if (localStorage.getItem('page')) {
+              location.href = localStorage.getItem('page')
+            } else {
+              location.href = Config.shareurls
+            }
           }
         })
       }

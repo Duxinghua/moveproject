@@ -2,7 +2,7 @@
     <div class="home">
         <div class="home-banner">
             <van-swipe :autoplay="3000" id="home-banner-carousel" indicator-color="#F3D995"	>
-              <van-swipe-item v-for="(item, index) in slideList" :key="index">
+              <van-swipe-item v-for="(item, index) in slideList" :key="index" @click="shopClick(item)">
                 <div class="home-banner-item">
                     <van-image :src="item.image">
                         <template v-slot:loading>
@@ -98,6 +98,9 @@ export default {
     this.getGoodsList()
   },
   methods: {
+    shopClick (item) {
+      location.href = item.url
+    },
     tabClick (index) {
       this.activeIndex = index
       this.current = 1
