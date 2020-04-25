@@ -195,7 +195,7 @@
           <div class="hg">
             <div class="home" @click="onLinkHome"><img class="carico" src="../assets/images/carhome.png" alt=""><span>首页</span></div>
             <div class="gocar" @click="onLinkCar"><img src="../assets/images/car-ico.png" alt=""><span>购物车</span></div>
-            <div class="gocar" @click="kefuClick"><img src="../assets/images/kefu-ico.png" alt=""><span>客服</span></div>
+            <div class="gocar gocar-fix" @click="kefuClick"><img src="../assets/images/kefu-ico.png" alt=""><span>客服</span></div>
           </div>
 				<div class="tuan-box" v-if="type == 'tuan'">
 					<div
@@ -999,19 +999,21 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 15px;
+    padding: 0px 25px;
     background: #fff;
     .hg{
       display: flex;
       flex-direction: row;
-      width:220px;
+      justify-content: center;
+      width:245px;
     }
     .home{
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width:66px;
+      width:50px;
+      margin-right:25px;
       img{
         width: 46px;
         height: 46px;
@@ -1026,7 +1028,8 @@ export default {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width:calc((100% - 66px)/2 );
+      width:70px;
+      margin-right:25px;
       .carico{
         width:40px;
         height:40px;
@@ -1040,8 +1043,12 @@ export default {
         font-size: 22px;
       }
     }
+    .gocar-fix{
+      width:50px;
+      margin-right:25px;
+    }
     .tuan-box,.car-box{
-      width:calc(100% - 225px);
+      width:calc(100% - 245px);
       margin-right:5px;
     }
     .tuan-box,.car-box{

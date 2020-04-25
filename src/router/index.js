@@ -782,8 +782,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  next()
-  return;
   // console.log(to)
   // getSitem.remove('token')
   // getSitem.remove('mobile')
