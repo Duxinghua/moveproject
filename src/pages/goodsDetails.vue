@@ -1048,8 +1048,7 @@ export default {
       margin-right:25px;
     }
     .tuan-box,.car-box{
-      width:calc(100% - 245px);
-      margin-right:5px;
+      width:calc(100% - 245px)
     }
     .tuan-box,.car-box{
       display: flex;
