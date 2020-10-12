@@ -1,5 +1,6 @@
 import Api from '@/api/index'
 import config from './config'
+
 const wxSing = {
 
   init (title, description, shareUrl, image) {

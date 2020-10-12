@@ -1,762 +1,628 @@
 <template>
-  <div class="home">
-    <div class="home-top">
-      <img class="home-top-search" src="../assets/images/search.png" @click="searchHandle()" alt="">
-      <ul class="home-top-list">
-        <li :class="{active:current == 0}" @click="menuHandler(0)">推荐</li>
-        <li :class="{active:current == 1}" @click="menuHandler(1)">名师</li>
-        <li :class="{active:current == 2}" @click="menuHandler(2)">线上课程</li>
-        <li :class="{active:current == 3}" @click="menuHandler(3)">线下课程</li>
-      </ul>
-    </div>
-    <div class="home-tj-content" v-if="pageType == 0">
-      <div class="home-banner">
-            <van-swipe :autoplay="3000" id="home-banner-carousel" indicator-color="#F3D995">
-              <van-swipe-item v-for="(item, index) in slideList" :key="index" @click="shopClick(item)" >
-                <div class="home-banner-item">
-                    <van-image :src="item.image">
-                        <template v-slot:loading>
-                            <van-loading
-                                type="spinner"
-                                size="20"
-                            />
-                        </template>
-                    </van-image>
-                </div>
-              </van-swipe-item>
-            </van-swipe>
+	<div class="home">
+		<div class="topmenu">
+			<div class="address" @click="goPos">
+				<div class="city">{{local.city}}</div>
+				<van-icon color="#bbbbbb" name="arrow-down" />
+			</div>
+			<div class="brana">货搬搬</div>
+		</div>
+		<div class="servermenu">
+      <div class="submenus">
+        <img src="../assets/images/homeico.png" class="homeico" />
       </div>
-      <div class="home-course">
-        <TitleItem title="线下课程" />
-        <div class="home-course-content">
-          <CourceItem v-for="(cource,index) in offcourseList" :item="cource" :key="index"/>
-        </div>
-        <MoreText moreText="更多课程" moreName="OffCourseList" />
+      <div :class="['submenu', serverIndex == 1 ? 'active' : '']" @click="serverHandler(1)">
+        拉货
       </div>
-      <div class="home-teacher">
-        <TitleItem title="名师推荐" />
-          <swiper class="swiper-content" :options="swiperOption" >
-              <swiper-slide v-for="(item,index) in schoolList" :key="index">
-                <div class="home-teacher-item" >
-                <img  :src="item.avatar" alt="">
-                <div class="teacherinfo">
-                  <span class="teacher-name">{{item.nickname}}</span>
-                  <span class="teacher-des">{{item.keywords}}</span>
-                  <div class="teacher-btn">
-                    <span @click="teacherInfoHandle(item.id)">详情</span>
-                    <img src="../assets/images/teachersq.png" alt="">
-                  </div>
-                </div>
-                </div>
-              </swiper-slide>
-              <div class="swiper-button-prev" slot="button-prev"></div>
-              <div class="swiper-button-next" slot="button-next"></div>
-          </swiper>
-
-        <MoreText moreText="更多名师" moreName="TeacherList"/>
+      <div :class="['submenu', serverIndex == 2 ? 'active' : '']"  @click="serverHandler(2)">
+        搬家
       </div>
-      <div class="home-course home-onlinecourse">
-        <TitleItem title="线上课程" />
-        <div class="home-course-content">
-          <CourceItem v-for="(cource,index) in oncourseList" :item="cource" :key="index"/>
-          <NoData v-if="oncourseList.length == 0"/>
-        </div>
-        <MoreText moreText="更多课程" moreName="OnlineCourseList"/>
-
+      <div class="submenu"  @click="serverHandler(3)">
+        劳务工
       </div>
-      <div class="home-video" @click="videoClickHandle">
-        <TitleItem title="直播约课" />
-        <el-carousel indicator-position="none" :interval="4000" type="card" id="home-video-carousel" @change="cardChange" >
-          <el-carousel-item v-for="(item,index) in videoList" :key="index" >
-            <img  class="home-video-img" :src="item.image ? item.image[0] : ''" />
-          </el-carousel-item>
-        </el-carousel>
-        <div class="home-video-course">
-          <span class="videoTitle">{{videoDetail.title}}</span>
-          <div class="videoDes">
-            <img class="videoAvatar" :src="videoDetail.admin.avatar" />
-            <span class="videoPerson">{{videoDetail.admin.nickname}}</span>
+      <div :class="['submenu', serverIndex == 4 ? 'active' : '']"  @click="serverHandler(4)">
+        租车
+      </div>
+		</div>
+    <div class="serverlh" v-if="serverIndex == 1 || serverIndex == 4">
+      <div class="carwrap">
+        <div :class="['caritem',cartIndex == index ? 'cartActive' : '' ,serverIndex == 4 ? 'caritemed' : '']" v-for="(item,index) in carList" :key="index" @click="cartHandler(index)">
+          {{item.carName}}
+          <div class="" v-if="(carList.length-1) == index" @click="cateHandler">
+            <img src="../assets/images/cateico.png" class="cateico" />
           </div>
         </div>
-        <MoreText moreText="更多直播" />
+      </div>
+      <div class="carinfo" @click="carInfo(cartObject)">
+        <img :src="cartObject.picUrl" class="carsico" />
+        <div class="carinfowrap">
+          <div class="c1 cline">载重:{{cartObject.carCapacity}}公斤</div>
+          <div class="c2 cline">长宽高:{{cartObject.carLwh}}</div>
+          <div class="c3 cline">载货体积:{{cartObject.carVolume}}方</div>
+        </div>
+        <van-icon name="arrow" color="#bbbbbb" />
       </div>
     </div>
-    <div class="home-ms-content" v-if="pageType == 1">
-      <van-list
-        v-model="loading"
-        v-show="TeacherLists.length > 0"
-        :finished="finished"
-        finished-text="没有更多了"
-        :immediate-check="false"
-        @load="onLoad"
-      >
-        <div class="home-mingshi">
-          <div class="home-mingshi-item" v-for="item in TeacherLists" :key="item.id">
-            <img :src="item.avatar" alt="">
-            <div class="home-mingshi-item-des">
-              <span class="teacher-name">{{item.nickname}}</span>
-              <p class="teacher-des">{{item.keywords}}</p>
-              <div class="home-course-more">
-                  <img src="../assets/images/moreleft.png" alt="">
-                  <span @click="teacherInfoHandle(item.id)">了解更多</span>
-                  <img src="../assets/images/moreright.png" alt="">
-              </div>
+    <div class="addresssearch" v-if="serverIndex == 1 || serverIndex == 4">
+      <van-steps direction="vertical" :active="active" active-icon="circle" inactive-icon="circle">
+        <van-step v-for="(item,index) in adList" :key="index">
+          <div class="addressdiy"  @click="setaddHandler(index)">
+            <div class="a1" v-if="item.name">{{item.name}}</div>
+            <div class="a2" v-if="item.name">{{item.address}}</div>
+            <div class="a3" v-if="!item.name">{{index == 0 ? '请写发货地址' : '请写收货地址'}}</div>
+            <div class="a4" @click.stop="deleAddHandler(index)">
+               <img v-if="index > 0 && adList.length > 2" src="../assets/images/delete.png" class="delete" />
+            </div>
+          </div>
+        </van-step>
+      </van-steps>
+      <div class="addbtn" @click="addHandler">
+        <van-icon name="plus" />
+        <span>添加收货地址</span>
+      </div>
+    </div>
+    <div class="movelist" v-if="serverIndex == 2">
+      <div class="moveitem" v-for="(item,index) in carList" :key="index">
+        <img :src="item.picUrl" class="carico" />
+        <div class="carinfo">
+          <div class="carnamewrap">
+            <div class="carname">{{item.carName}}</div>
+            <div class="cartag" v-if="item.spec">{{item.spec}}</div>
+          </div>
+          <div class="cardes">
+            {{item.remarks}}
+          </div>
+          <div class="cardes">
+            车厢长宽高：{{item.carLwh}}
+          </div>
+          <div class="pricewrap">
+            <div class="pr">
+              ¥{{item.minPrice}}<span>起</span>
+            </div>
+            <div class="btnw" @click="orderTodo">
+              立即下单
             </div>
           </div>
         </div>
-      </van-list>
-      <NoData v-if="TeacherLists.length == 0"/>
+        <van-icon name="arrow" color="#999999" size="16"/>
+      </div>
     </div>
-    <div class="home-onlinecontent" v-if="pageType == 2 || pageType == 3">
-      <van-list
-        v-model="Onlinesloading"
-        v-show="OnlinesLists.length > 0"
-        :finished="Onlinesfinished"
-        finished-text="没有更多了"
-        :immediate-check="false"
-        @load="onLoadOn"
-      >
-      <CourceItem v-for="(cource,index) in OnlinesLists" :item="cource" :key="index"/>
-      </van-list>
+    <div class="paybtn" v-if="serverIndex == 1">
+      <div class="paytop" style="display:none">
+        <div class="pay1">
+          <span>¥</span>200
+        </div>
+        <div class="payinfo" @click="priceDetail">
+          <span>价格明细</span>
+          <van-icon name="arrow" color="#666666"/>
+        </div>
+      </div>
+      <div class="paybot" >
+        <div class="yuyue"  @click="orderTodo">
+          预约
+        </div>
+        <div class="order" @click="orderTodo">
+          立即下单
+        </div>
+      </div>
     </div>
-
-    <Footer :mrt="true" />
-  </div>
+    <iframe id="geoPage" width=0 height=0 frameborder=0  style="display:none;" scrolling="no"
+    src="https://apis.map.qq.com/tools/geolocation?key=F5DBZ-PHD6F-KV2JJ-NQAFE-YYZ43-VXBH7&referer=myapp">
+    </iframe>
+	</div>
 </template>
 
 <script>
-import TitleItem from '@/components/titleItem.vue'
-import MoreText from '@/components/moreItem.vue'
-import CourceItem from '@/components/courceItem.vue'
-import Footer from '@/components/footer.vue'
-import NoData from '@/components/nodata'
-// import ApiModel from '@/api'
+
 
 export default {
-  name: 'Fall',
+  name: 'home',
   data () {
     return {
-      slideList: [
-      ],
-      offcourseList: [],
-      oncourseList: [],
-      videoList: [],
-      schoolList: [
-      ], // 推荐页名师
-      TeacherLists: [], // 名师列表页名师
-      OnlinesLists: [],
-      Onlinestotal: 0,
-      current: 0,
-      OnlinesCurrent: 1,
-      Onlinesloading: false,
-      Onlinesfinished: false,
-      pageType: 0,
-      total: 0,
-      page: 1,
-      loading: false,
-      finished: false,
-      theacherCurrent: 0,
-      swiperOption: {
-        spaceBetween: 30,
-        centeredSlides: true,
-        autoplay: {
-          delay: 3000,
-          disableOnInteraction: false
+      serverIndex:1,
+      serverType:{
+        1:'PULL_CARGO',
+        2:'CHANGE_HOUSE',
+        3:'HIRE_WORKER',
+        4:'RENT_CAR'
+      },
+      cartObject:{},
+      cartIndex:0,
+      cartPageNum:1,
+      cartPageSize:4,
+      carList:[],
+      active:0,
+      adList:[
+        {
+          name:'',
+          address:''
         },
-        speed: 3000,
-        prevButton: '.swiper-button-prev', // 上一张
-        nextButton: '.swiper-button-next', // 下一张
-        paginationClickable: true,
-        observer: true,
-        observerParents: true
-        // onProgress:function(i,x){
-        //   console.log(i,x)
-        // }
-
-      },
-      videoDetail: {
-        admin: {}
-      },
-      videoIndex: 0
+        {
+          name:'',
+          address:''
+        }
+      ],
+      local:{
+        city:''
+      }
     }
   },
   mounted () {
-    this.getCourseList()
-    this.getTeacherRec()
-    this.indexBanner()
+    localStorage.setItem('orderType',this.serverIndex)
+    var list = localStorage.getItem('adList')
+    if(list){
+      this.adList = JSON.parse(list)
+      this.active = this.adList.length
+    }
+    this.serverHandler(1)
+    var that = this
+    window.addEventListener('message', function(event) {
+        // 接收位置信息
+        that.local = event.data ? event.data : { city: ''};
+        if(that.local.city){
+          localStorage.setItem('local',JSON.stringify(that.local))
+          that.getAllCart()
+        }
+        that.$forceUpdate()
+    }, false)
+    if(localStorage.getItem('sCar') == 1){
+      var cart = localStorage.getItem('cartObject')
+      this.cartObject = cart ? JSON.parse(cart) : {}
+    }
+  },
+  computed:{
   },
   methods: {
-    shopClick (item) {
-      location.href = item.url
-    },
-    indexBanner () {
-      this.$api.indexBanner({type: 1}).then((res) => {
-        if (res.code == 1) {
-          this.slideList = res.data
+    getAllCart(){
+      var data = {
+        serverType:this.serverType[this.serverIndex],
+        operCenter:this.local.city,
+        pageno:this.cartPageNum,
+        pagesize:this.cartPageSize
+      }
+      this.$api.carStyleFindPage(data).then((result)=>{
+        this.carList = result.list
+        if(localStorage.getItem('sCar') == 0){
+          this.cartObject = result.list[0]
         }
       })
     },
-    menuHandler (index) {
-      this.current = index
-      this.pageType = index
-      if (index == 2 || index == 3) {
-        this.Onlinestotal = 0
-        this.OnlinesLists = []
-        this.OnlinesCurrent = 1
-        this.Onlinesloading = false
-        this.Onlinesfinished = false
-        this.getOfCourseList()
+    serverHandler(index) {
+      this.serverIndex = index
+      localStorage.setItem('orderType',this.serverIndex)
+      if(index == 1){
+        this.cartPageSize = 4
+        this.getAllCart()
+      }else if(index == 2){
+        this.cartPageSize = 100
+        this.getAllCart()
+      }else if(index == 4){
+        // this.carList = this.carList2
+      }else if(index == 3){
+        this.$router.push('/platformpricing')
       }
     },
-    cardChange (index) {
-      // console.log(index, 'cardindex')
-      this.videoIndex = index
-      this.videoDetail = this.videoList[index]
+    //
+    cartHandler(index){
+      this.cartIndex = index
+      this.cartObject = this.carList[index]
+      localStorage.setItem('cartObject',JSON.stringify(this.cartObject))
     },
-    onChange (index) {
-      this.current = index
+    goPos(){
+      this.$router.push('/city')
     },
-    clear () {
-      localStorage.clear()
+    cateHandler(){
+      var type = this.serverType[this.serverIndex]
+      this.$router.push({path:'/cart',query:{type:type,operCenter:this.local.city}})
     },
-    clickInput () {
-      this.$router.push({path: '/search'})
+    carInfo(item){
+      this.$router.push({path:'/cartinfo',query:{carType:item.carType}})
     },
-    teacherInfoHandle (index) {
-      this.$router.push({path: '/teacherDetail', query: {index}})
+    orderTodo(){
+      this.$router.push('/confirmorder')
     },
-    videoClickHandle () {
-      var id = this.videoList[this.videoIndex].course_id
-      this.$router.push({path: '/videodetail', query: {courseId: id}})
+    priceDetail(){
+      this.$router.push('/pricedetail')
     },
-    searchHandle () {
-      this.$router.push({name: 'HomeSearch'})
-    },
-    getTeacherRec () {
-      const paramRec = {
-        page: 1,
-        pageSize: 4,
-        recommend: 1
+    addHandler(){
+      var obj = {
+        name:'',
+        address:''
       }
-      const paramL = {
-        page: this.page,
-        pageSize: 10,
-        recommend: 0
-      }
-      this.$api.teacherList(paramRec).then((res) => {
-        if (res.code === 1) {
-          this.schoolList = res.data.data
-          // console.log(res.data)
-        }
-      })
-      this.$toast.loading({
-        duration: 0,
-        message: '加载中...',
-        forbidClick: true
-      })
-      this.$api.teacherList(paramL).then((res) => {
-        this.$toast.clear()
-        if (res.code === 1) {
-          this.loading = false
-          // console.log(res.data)
-          if (this.TeacherLists.length == 0) {
-            // 第一次加载
-            this.TeacherLists = res.data.data || []
-            this.total = res.data.total
-          } else if (this.TeacherLists.length < this.total) {
-            // 加载更多
-            this.TeacherLists = this.TeacherLists.concat(res.data.data)
-          }
-          if (this.TeacherLists.length >= this.total) {
-            // 全部加载完成
-            this.finished = true
-          }
-        }
-      })
+      this.adList.push(obj)
     },
-    getCourseList () {
-      const paramOff = {
-        page: 1,
-        pageSize: 4,
-        type: 3, // 线下
-        recommend: 1
-      }
-      const paramOn = {
-        page: 1,
-        pageSize: 4,
-        type: 2, // 线上
-        recommend: 1
-      }
-      const paramV = {
-        page: 1,
-        pageSize: 5,
-        type: 1 // 直播
-      }
-
-      this.$api.courseList(paramOff).then((res) => {
-        if (res.code === 1) {
-          this.offcourseList = res.data.data
-          // console.log(res.data)
-        }
-      })
-      this.$api.courseList(paramOn).then((res) => {
-        if (res.code === 1) {
-          this.oncourseList = res.data.data
-          // console.log(res.data)
-        }
-      })
-      this.$api.courseList(paramV).then((res) => {
-        if (res.code === 1) {
-          this.videoList = res.data.data
-          this.videoDetail = this.videoList[0]
-          // console.log(res.data.data)
-        }
-      })
+    setaddHandler(index){
+      localStorage.setItem('adList',JSON.stringify(this.adList))
+      this.$router.push({path:'/sendaddress',query:{index:index}})
     },
-    getOfCourseList () {
-      var param = {}
-      const paramOff = {
-        page: this.OnlinesCurrent,
-        pageSize: 10,
-        type: 3 // 线下
-      }
-      const paramOn = {
-        page: this.OnlinesCurrent,
-        pageSize: 10,
-        type: 2 // 线上
-      }
-      if (this.pageType == 2) {
-        param = paramOn
-      } else if (this.pageType == 3) {
-        param = paramOff
-      }
-      this.$toast.loading({
-        duration: 0,
-        message: '加载中...',
-        forbidClick: true
-      })
-      this.$api.courseList(param).then((res) => {
-        this.$toast.clear()
-        if (res.code == 1) {
-          this.Onlinesloading = false
-          if (this.OnlinesLists.length == 0) {
-            // 第一次加载
-            this.OnlinesLists = res.data.data || []
-            this.Onlinestotal = res.data.total
-          } else if (this.OnlinesLists.length < this.Onlinestotal) {
-            // 加载更多
-            this.OnlinesLists = this.OnlinesLists.concat(res.data.data)
-          }
-          if (this.OnlinesLists.length >= this.Onlinestotal) {
-            // 全部加载完成
-            this.Onlinesfinished = true
-          }
-        }
-      })
-    },
-    onLoadOn () {
-      if (this.OnlinesLists.length < this.Onlinestotal) {
-        this.OnlinesCurrent++
-        this.getOfCourseList()
-      }
-    },
-    onLoad () {
-      if (this.TeacherLists.length < this.total) {
-        this.page++
-        this.getTeacherRec()
-      }
+    deleAddHandler(index){
+      this.adList.splice(index,1)
     }
   },
   components: {
-    TitleItem,
-    MoreText,
-    CourceItem,
-    Footer,
-    NoData
+
   },
   computed: {
-    // swiper() {
-    //   return this.$refs.mySwiper.swiper
-    // }
+
   }
 }
 </script>
 
 <style lang='scss' scoped>
-.swiper-content{
-  width:100%;
-  height:230px;
-  margin-bottom: 26px;
-  .swiper-button-next {
-    background:url('../assets/images/right.png') no-repeat;
-    background-size: 80% 80%;
-  }
-  .swiper-button-prev{
-    background:url('../assets/images/left.png') no-repeat;
-    background-size: 80% 80%;
-  }
-}
-#home-banner-carousel{
-  height:380px !important;
-}
-.home-banner-item{
-  height: 380px !important;
-}
-#home-teacher-carousel{
-  height:230px !important;
-  margin-bottom: 26px;
-}
-#home-video-carousel{
-  height:calc(425px * 1.2) !important
-}
-.theacherContent{
-  position: relative;
-}
-.home{
-  display: flex;
-  flex-direction: column;
-  width:100%;
-  background:#FBF8F4;
-  min-height: 100vh;
-  &-onlinecontent{
-      display: flex;
-      flex-direction: row;
-      width:100%;
-      flex-wrap: wrap;
-      box-sizing: border-box;
-      padding-left:25px;
-      padding-right:25px;
-      margin:126px 0px;
-      .van-list{
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            /deep/ .van-list__finished-text{
-              width:100%;
-            }
-      }
-      &-item:nth-child(2n){
-        margin-right:0px !important;
-      }
-      .home-course-content-item:nth-child(2n){
-        margin-right:0px !important;
-      }
-  }
-  &-top{
-    width:100%;
-    height:98px;
-    background:url("../assets/images/tab-bg.png") 100% 100% no-repeat;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-left:30px;
-    padding-right:30px;
+	.home {
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+    padding-bottom: 220px;
     box-sizing: border-box;
-    position: fixed;
-    top:0;
-    left:0;
-    z-index:99999;
-    &-search{
-      width:42px;
-      height:42px;
-      margin-right:25px;
-    }
-    &-list{
-      font-size: 32px;
-      display: flex;
-      flex-direction: row;
-      width:calc(100% - 42px - 25px);
-      align-items: center;
-      // margin-left:45px;
-      color:white;
-      .active{
-        font-weight: 500;
-        transform: scale(1.3);
-        color:#E3D29C;
-      }
-    }
-    &-list li{
-      font-size: 32px;
-      width:fit-content;
-      margin-right:35px;
-      display: flex;
-      justify-content: center;
-      transition: all 0.3s;
-    }
-  }
-  &-banner{
-    width:100%;
-    height:380px;
-    display: block;
-    position: relative;
-    &-item{
-      width:100%;
-      height:370px;
-      overflow: hidden;
-      .van-image{
-        width:100%;
-        height:100%;
-      }
-    }
-    &-indicator{
-      display: flex;
-      flex-direction: row;
-      position: absolute;
-      left:50%;
-      bottom:42px;
-      transform: translateX(-50%)
-    }
-    &-indicator span{
-      width:15px;
-      height:15px;
-      border-radius: 50%;
-      display: block;
-      background:white;
-      margin-left:7px;
-      margin-right:7px;
-    }
-    &-indicator .active{
-      background: #E3D29C
-    }
-  }
-  &-course{
-    display: flex;
-    flex-direction: column;
-    border-bottom: 15px solid #F6F3EE;
-    padding-bottom: 30px;
-    &-content{
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      box-sizing: border-box;
-      padding-left:25px;
-      padding-right:25px;
-      min-height: 225px;
-      &-item:nth-child(2n){
-        margin-right:0px !important;
-      }
-
-      /deep/ .nodata{
-        position: relative;
-        top: 120px;
-      }
-    }
-
-  }
-  &-teacher{
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 30px;
-    border-bottom: 15px solid #F6F3EE;
-    /deep/ .el-carousel__arrow {
-      font-size: 36px;
-      color:#697D5D;
-    }
-    /deep/ .el-carousel__arrow--left{
-      // width:21px;
-      // height:39px;
-      background: transparent;
-      // background:url('../assets/images/left.png') no-repeat;
-    }
-    /deep/ .el-carousel__arrow--right{
-      // width:21px;
-      // height:39px;
-      background: transparent;
-      // background:url('../assets/images/right.png') no-repeat;
-    }
-    .custom-indicator {
-      // transform: translateY(-50%);
-      img:first-child{
-        position: absolute;
-        top:50%;
-        transform: translateY(-50%);
-        width:21px;
-        height:39px;
-        left:26px;
-      }
-      img:last-child{
-        position: absolute;
-        top:50%;
-        transform: translateY(-50%);
-        width:21px;
-        height:39px;
-        right:26px;
-      }
-    }
-    &-item{
-      display: flex;
-      flex-direction: row;
-      width:90%;
-      height:212px;
-      justify-content: center;
-      align-items: center;
-      margin:0 auto 26px auto;
-      background:#FBF8F4;
-      img{
-        width:162px;
-        height:212px;
-        margin-right:28px;
-      }
-      .teacherinfo{
-        display: flex;
-        flex-direction: column;
-        width:calc(90% - 28px - 162px);
-        .teacher-name{
-          font-size: 32px;
-          color:#333;
-          font-weight: 500;
-        }
-        .teacher-des{
-          width:100%;
-          font-size: 26px;
-          color:#898C87;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          line-height:36px;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          margin-top:20px;
-        }
-        .teacher-btn{
-          color:#CDA871;
-          font-size: 30px;
-          font-weight: 500;
-          width:150px;
-          height:58px;
-          line-height: 58px;
-          text-align: center;
-          border: 2px solid #CDA871;
-          border-radius: 29px;
-          margin-top:20px;
-          position: relative;
-          span{
-            position: absolute;
-            left:45%;
-            top:50%;
-            transform: translate(-45%,-50%)
-          }
-          img{
-            position: absolute;
-            left:70%;
-            top:50%;
-            transform: translate(-70%,-50%);
-            width:11px;
-            height:21px;
-            margin-left:10px;
-          }
-        }
-      }
-    }
-  }
-  &-video{
-    box-sizing: border-box;
-    padding-left:26px;
-    padding-right:26px;
-    padding-bottom: 126px;
-    &-img{
-      width:calc(319px * 1.2);
-      height:calc(425px * 1.2);
-      margin-right:0px !important;
-    }
-    &-course{
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      margin-top:33px;
-      margin-bottom:33px;
-      .videoTitle{
-        font-size:30px;
-        color:#333;
-      }
-      .videoDes{
+		background:#f5f6f7;
+		.topmenu{
+			height:100px;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			position: relative;
+			padding:0 30px;
+      background: white;
+      .address{
         display: flex;
         flex-direction: row;
-        margin-top:22px;
-        .videoAvatar{
-          width:38px;
-          height:38px;
-          border-radius: 50%;
-          margin-right:12px;
+        align-items: center;
+        /deep/ .van-icon{
+          font-size: 32px;
         }
-        .videoPerson{
-          font-size:26px;
-          color:#898C87;
+        .city{
+          font-size: 18px;
+          margin-right: 10px;
+        }
+      }
+			.brana{
+				position: absolute;
+				font-size: 32px;
+				font-weight: bold;
+				color:#333333;
+				top:50%;
+				left:50%;
+				transform: translate(-50%,-50%);
+			}
+    }
+    .servermenu{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      height:90px;
+      width: 100%;
+      padding:0 30px;
+      box-sizing: border-box;
+      overflow: hidden;
+      .submenus{
+        width:12%;
+        display: flex;
+        .homeico{
+          width:40px;
+          height:40px;
+          margin-right:auto;
+        }
+      }
+      .submenu{
+        display: flex;
+        width: 22%;
+        font-size: 30px;
+        .homeico{
+          width:40px;
+          height:40px;
+          margin-right:auto;
+        }
+      }
+      .active{
+        color:#28ae3a;
+        position: relative;
+      }
+      .active::after{
+        position: absolute;
+        width:30px;
+        height:30px;
+        content:'';
+        background:white;
+        bottom: -50px;
+        left:15px;
+        transform:rotate(-45deg);
+      }
+    }
+    .serverlh{
+      width:690px;
+      margin:0 auto;
+      height:350px;
+      border-radius: 20px;
+      background:white;
+      padding:30px;
+      box-sizing: border-box;
+      border-top:1px solid transparent;
+      display: flex;
+      flex-direction: column;
+      .carwrap{
+        display: flex;
+        flex-direction: row;
+        .caritem{
+          font-size: 18px;
+          width:25%;
+          text-align: left;
+          position: relative;
+          .cateico{
+            width:40px;
+            height:40px;
+            position: absolute;
+            right:0;
+            top:50%;
+            transform: translateY(-50%);
+          }
+        }
+        .caritemed{
+          width:20%;
+        }
+        .cartActive{
+          color:#28ae3a;
+        }
+      }
+      .carinfo{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-top:70px;
+        margin-bottom: 70px;
+        /deep/ .van-icon{
+          font-size: 32px;
+        }
+        .carsico{
+          width:282px;
+          height:128px;
+          margin-right:30px;
+        }
+        .carinfowrap{
+          display: flex;
+          flex-direction: column;
+          font-size: 16px;
+          line-height: 42px;
+          color:#333333;
+          flex:1 1 auto;
+          .cline{
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
         }
       }
     }
-  }
-  &-mingshi{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin-top: 13px;
-    background:#FBF8F4;
-    min-height: 1284px;
-    &-item{
+    .addresssearch{
+        width:690px;
+        margin:20px auto;
+        background: white;
+        border-radius: 20px;
+        padding:30px 30px 130px 30px;
+        box-sizing: border-box;
+        position: relative;
+        /deep/ .van-step__line{
+          background: #e5e6e7!important;
+        }
+        /deep/ .van-hairline:last-of-type .van-icon-circle{
+          color:#ff561e;
+        }
+        /deep/ .van-hairline:not(:first-child):not(:last-child) .van-icon{
+          font-size: 0.2rem!important;
+          color:#333333;
+        }
+        /deep/ .van-hairline:not(:first-child):not(:last-child) .van-icon-circle::before{
+          background:#333333;
+          border-radius: 50%;
+          font-size: 0.2rem!important;
+        }
+        /deep/ .van-hairline:nth-of-type(1) .van-icon-circle{
+          color:#28ae3a;
+        }
+        /deep/ .van-icon-circle::before {
+          background: white;
+        }
+        /deep/ .van-step--vertical .van-step__circle-container{
+          top:70px;
+        }
+        /deep/ .van-step--vertical .van-step__line{
+          top:70px;
+        }
+        /deep/ .van-step--vertical{
+          padding-right:0px!important;
+        }
+        .addressdiy{
+          display: flex;
+          flex-direction: column;
+          height:100px;
+          justify-content: center;
+          position: relative;
+          .a4{
+              width:100px;
+              height:100px;
+              position: absolute;
+              right:0;
+              top:0;
+            .delete{
+              width:32px;
+              height:32px;
+              position: absolute;
+              right:0;
+              top:50%;
+              transform: translateY(-50%);
+            }
+          }
+
+        }
+        .addbtn{
+          position: absolute;
+          left:50%;
+          transform: translateX(-50%);
+          bottom: 50px;
+          width:250px;
+          height:60px;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          border-radius: 30px;
+          border:1px solid #e8e8e8;
+          font-size: 18px;
+        }
+    }
+    .movelist{
+      width:690px;
+      margin:0 auto;
       display: flex;
-      flex-direction: row;
-      width: 95%;
-      padding: 28px 0;
-      margin: 0 auto;
-      border-bottom: 1px solid #ECF2E9;
-      justify-content: center;
-      align-items: center;
-      img{
-        width:162px;
-        height:212px;
-        margin-right:28px;
-      }
-      &-des{
+      flex-direction: column;
+      .moveitem{
+        width:100%;
+        background: white;
+        height:305px;
         display: flex;
-        flex-direction: column;
-        width:calc(95% - 28px - 162px);
-        .teacher-name{
-          font-size: 32px;
-          color:#333;
-          font-weight: 500;
+        flex-direction: row;
+        align-items: center;
+        padding:30px;
+        box-sizing: border-box;
+        border-radius: 20px;
+        overflow: hidden;
+        .carico{
+          width:240px;
+          height:120px;
+          margin-right:20px;
         }
-        .teacher-des{
-          width:100%;
-          font-size: 26px;
-          color:#898C87;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          line-height:36px;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          margin-top: 16px;
-        }
-        // .moretext {
-        //   justify-content: left;
-        // }
-        .home-course-more{
+        .carinfo{
+          display: flex;
+          flex-direction: column;
+          width:340px;
+          .carnamewrap{
             display: flex;
             flex-direction: row;
             align-items: center;
-            justify-content: left;
-            font-size: 28px;
-            height:36px;
-            color:#738965;
-            line-height: 36px;
-            margin-top: 20px;
-            margin-bottom: 13px;
-            img{
-              width:17px;
-              height:25px;
-              margin: 0;
+            margin-bottom: 10px;
+            .carname{
+              font-size: 35px;
+              color:#333333;
+              margin-right:15px;
             }
+            .cartag{
+              padding:0 10px;
+              font-size: 20px;
+              color:#ff561e;
+              height:35px;
+              line-height: 35px;
+              border-radius: 15px;
+              border:1px solid #ff561e;
+              background:#ffeee8;
+            }
+          }
+          .cardes{
+            font-size: 16px;
+            line-height: 50px;
+            padding-right:20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+            width:100%;
+          }
+          .pricewrap{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-top:15px;
+            .pr{
+              font-size: 18px;
+              color:#28ae3a;
+              span{
+                color:#999999;
+              }
+            }
+            .btnw{
+              margin-left:auto;
+              width:170px;
+              height:60px;
+              border-radius: 30px;
+              overflow: hidden;
+              line-height: 60px;
+              text-align: center;
+              background: #28ae3a;
+              font-size: 18px;
+              color:white;
+            }
+          }
         }
       }
     }
-  }
-}
-.home-tj-content,.home-ms-content{
-  display: flex;
-  flex-direction: column;
-  margin-top:98px;
-}
-
+    .paybtn{
+      width:100%;
+      min-height:100px;
+      background:white;
+      position: fixed;
+      left:0;
+      bottom: 0;
+      z-index: 30000;
+      -moz-box-shadow:-1px 0px 5px -2px #b9b8b8;
+      -webkit-box-shadow:-1px 0px 5px -2px #b9b8b8;
+      box-shadow:-1px 0px 5px -2px#b9b8b8;
+      display: flex;
+      flex-direction: column;
+      .paytop{
+        height: 100px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding:0 30px;
+        box-sizing: border-box;
+        border-bottom: 1px solid #f4f3f3;
+        .pay1{
+         font-size: 50px;
+         color:#28ae3a;
+         span{
+           font-size: 30px;
+         }
+        }
+        .payinfo{
+          font-size: 16px;
+          color:#666666;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin-left:auto;
+          /deep/ .van-icon{
+            font-size: 16px;
+          }
+        }
+      }
+      .paybot{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding:0 30px;
+        box-sizing: border-box;
+        height: 100px;
+        .yuyue{
+          width:270px;
+          height:80px;
+          border-radius: 40px;
+          background: #186823;
+          line-height: 80px;
+          font-size:30px;
+          text-align: center;
+          color:white;
+          margin-right:30px;
+        }
+        .order{
+          flex:1;
+          height: 80px;
+          line-height: 80px;
+          text-align: center;
+          color:white;
+          font-size: 30px;
+          background: #28ae3a;
+          border-radius: 40px;
+        }
+      }
+    }
+	}
 </style>

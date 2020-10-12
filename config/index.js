@@ -12,8 +12,11 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'https://youmeng.qixiuu.com',
-        changeOrigin: true
+        target: 'http://106.52.164.64:8184',
+        changeOrigin: true,
+        pathRewrite:{
+          '^/api':''
+        }
       }
     },
     // Various Dev Server settings

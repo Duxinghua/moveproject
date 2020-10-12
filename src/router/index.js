@@ -2,58 +2,6 @@ import Vue from 'vue'
 import getSitem from '@/utils/storage'
 import Api from '@/api/index'
 import Router from 'vue-router'
-import Home from '@/pages/home'
-import HomeSearch from '@/pages/homeSearch'
-import TeacherList from '@/pages/teacherList'
-import TeacherDetail from '@/pages/teacherDetail'
-import OffCourseList from '@/pages/offCourseList'
-import OffCourseDetail from '@/pages/offCourseDetail'
-import OnlineCourseDetail from '@/pages/onlineCourseDetail'
-import OnlineCourseList from '@/pages/onlineCourseList'
-import CourseGroupDetails from '@/pages/courseGroupDetails'
-import CourseAllGroup from '@/pages/courseAllGroup'
-import OrderCommit from '@/pages/orderCommit'
-import SubmitCourseOrder from '@/pages/submitCourseOrder'
-import OrderSuccess from '@/pages/orderSuccess'
-import DoTask from '@/pages/doTask'
-import Huaban from '@/pages/huaban'
-import HuabanGroupDetail from '@/pages/huabanGroupDetail'
-import HuabanTzDetail from '@/pages/huabanTzDetail'
-import HuabanMoreGroupList from '@/pages/huabanMoreGroupList'
-import HuabanMyGroupList from '@/pages/HuabanMyGroupList'
-import HuabanGroupList from '@/pages/huabanGroupList'
-import HuabanJoinGroup from '@/pages/huabanJoinGroup'
-import HuabanGroupMember from '@/pages/huabanGroupMember'
-import HuabanTzfp from '@/pages/huabanTzfp'
-import HuabanTzList from '@/pages/huabanTzList'
-import HuabanSearch from '@/pages/huabanSearch'
-import HuabanUserInfo from '@/pages/huabanUserInfo'
-import OrderList from '@/pages/orderlist'
-import OrderDetail from '@/pages/OrderDetail'
-import OrderRefund from '@/pages/orderRefund'
-import OrderComment from '@/pages/orderComment'
-import CourseOrderList from '@/pages/courseOrderList'
-import CourseOrderDetail from '@/pages/courseOrderDetail'
-import Invite from '@/pages/invite'
-import MyEdit from '@/pages/myEdit'
-import MyModify from '@/pages/myModify'
-import MyBx from '@/pages/myBx'
-import MyFs from '@/pages/myFs'
-import MyGz from '@/pages/myGz'
-import MyXf from '@/pages/myXf'
-import MyFx from '@/pages/myFx'
-import MyTx from '@/pages/myTx'
-import MyTz from '@/pages/myTz'
-import MyXx from '@/pages/myXx'
-import MyYx from '@/pages/myYx'
-import MyYq from '@/pages/myYq'
-import MyYy from '@/pages/myYy'
-import MyPl from '@/pages/myPl'
-import About from '@/pages/about'
-import VideoDetail from '@/pages/videodetail'
-import My from '@/pages/my'
-import Login from '@/pages/login'
-import Test from '@/pages/test'
 
 Vue.use(Router)
 
@@ -70,122 +18,6 @@ const GetUrlParame = (parameName) => {
     return ''
   }
 }
-
-const funcUrlDel = (name) => {
-  var loca = window.location
-  var baseUrl = loca.origin + loca.pathname + '?'
-  var query = loca.search.substr(1)
-  if (query.indexOf(name) > -1) {
-    var obj = {}
-    var arr = query.split('&')
-    for (var i = 0; i < arr.length; i++) {
-      arr[i] = arr[i].split('=')
-      obj[arr[i][0]] = arr[i][1]
-    }
-    delete obj[name]
-    var url = baseUrl + JSON.stringify(obj).replace(/[\'\{\ }]/g, '').replace(/\:/g, '=').replace(/\,/g, '&')
-    return url
-  } else {
-    return window.location.href
-  }
-}
-
-const getToken = (data) => {
-  if (getSitem.getStr('token')) {
-    Api.wxTokenCheck().then((result) => {
-      // alert(JSON.stringify(result))
-      if (result.code === 1) {
-        getSitem.setStr('token', result.data.token)
-        Api.userIndex().then((result) => {
-          console.log(result, 'aa')
-          if (result.code === 1) {
-            getSitem.setStr('ispartner', result.data.is_partner)
-          }
-        })
-      }
-    })
-  } else {
-    Api.wxLogin(data).then((result) => {
-      console.log(result, 'result')
-      getSitem.setStr('open', true)
-      if (result.code === 1) {
-        getSitem.setStr('mobile', result.data.info.mobile)
-        getSitem.setStr('token', result.data.info.token)
-        getSitem.setStr('openid', result.data.info.openid)
-        getSitem.setStr('userid', result.data.info.user_id)
-        Api.userIndex().then((result) => {
-          if (result.code === 1) {
-            getSitem.setStr('ispartner', result.data.is_partner)
-          }
-        })
-        if (getSitem.getStr('open')) {
-          location.reload()
-        } else {
-          getSitem.setStr('open', false)
-        }
-      } else {
-
-      }
-    })
-  }
-  if (getSitem.getStr('pudd')) {
-    var params = {
-      openid: getSitem.getStr('pudd')
-    }
-    Api.userBindTopUserId(params).then((res) => {
-      if (res.code === 1) {
-        getSitem.remove('pudd')
-      }
-    })
-  }
-}
-
-/*
-const getToken = async (data, url) => {
-  // alert('gettoken')
-  const result = await loginByCode(data)
-  console.log('result', '请求token')
-  // alert('getToken请求开启')
-  getSitem.setStr('open', true)
-  if (result.code === 1) {
-    // alert('getToken请求成功')
-    // alert(JSON.stringify(result))
-    getSitem.setStr('token', result.data.token)
-    if (getSitem.getStr('open')) {
-      location.reload()
-    } else {
-      getSitem.setStr('open', false)
-    }
-    // alert(getSitem.getStr('pudd'))
-    // alert(getSitem.getStr('token'))
-    if (getSitem.getStr('pudd')) {
-      if (!getSitem.getStr('token')) {
-        // alert('token you')
-        return
-      }
-      let data = {
-        token: getSitem.getStr('token'),
-        pudd: getSitem.getStr('pudd')
-      }
-      const re = await userFriend(data)
-      if (re.code === 1) {
-        // alert('userFriend')
-        getSitem.remove('pudd')
-      } else {
-        // alert(JSON.stringify(re.msg))
-      }
-    }
-  } else {
-    // alert('getToken请求失败')
-    // alert(JSON.stringify(result))
-    console.log(JSON.stringify(result), 'error')
-  }
-  // var goback = GetUrlParame('state')
-  // var url = decodeURIComponent(goback)
-  // console.log(url, 'url')
-  // window.location.href = url
-}
-*/
 
 // 路由切换时 页面位置
 const scrollBehavior = (to, from, savedPosition) => {
@@ -207,559 +39,147 @@ const router = new Router({
   scrollBehavior,
   routes: [
     {
-      path: '/Fall',
-      name: 'Fall',
-      component: Home,
+      path: '/',
+      name: 'Home',
+      component: () => import('@/pages/home'),
       meta: {
-        title: '匠心'
+        title: '货搬搬'
       }
     },
     {
-      path: '/homeSearch',
-      name: 'HomeSearch',
-      component: HomeSearch,
+      path: '/cart',
+      name: 'Cart',
+      component: () => import('@/pages/cart'),
       meta: {
-        title: '有梦花居'
+        title: '全部车型'
       }
     },
     {
-      path: '/offcoursedetail',
-      name: 'OffCourseDetail',
-      component: OffCourseDetail,
+      path: '/cartinfo',
+      name: 'Cartinfo',
+      component: () => import('@/pages/cartinfo'),
       meta: {
-        title: '线下课程'
+        title: '车辆详情'
       }
     },
     {
-      path: '/offcourselist',
-      name: 'OffCourseList',
-      component: OffCourseList,
+      path: '/chooseaddress',
+      name: 'Chooseaddress',
+      component: () => import('@/pages/chooseaddress'),
       meta: {
-        title: '线下课程'
+        title: '发货地信息'
       }
     },
     {
-      path: '/onlinecoursedetail',
-      name: 'OnlineCourseDetail',
-      component: OnlineCourseDetail,
+      path: '/sendaddress',
+      name: 'Sendaddress',
+      component: () => import('@/pages/sendaddress'),
       meta: {
-        title: '线上课程'
+        title: '发货地址'
       }
     },
     {
-      path: '/onlinecourselist',
-      name: 'OnlineCourseList',
-      component: OnlineCourseList,
+      path: '/pricedetail',
+      name: 'Pricedetail',
+      component: () => import('@/pages/pricedetail'),
       meta: {
-        title: '线上课程'
+        title: '价格明细'
       }
     },
     {
-      path: '/teacherList',
-      name: 'TeacherList',
-      component: TeacherList,
+      path: '/confirmorder',
+      name: 'Confirmorder',
+      component: () => import('@/pages/confirmorder'),
       meta: {
-        title: '名师列表'
+        title: '确认订单'
       }
     },
     {
-      path: '/teacherDetail',
-      name: 'TeacherDetail',
-      component: TeacherDetail,
+      path: '/need',
+      name: 'Need',
+      component: () => import('@/pages/need'),
       meta: {
-        title: '名师详情'
+        title: '额外需求'
       }
     },
     {
-      path: '/ordercommit',
-      name: 'OrderCommit',
-      component: OrderCommit,
+      path: '/agreement',
+      name: 'Agreement',
+      component: () => import('@/pages/agreement'),
       meta: {
-        title: '有梦花居'
+        title: '服务协议'
       }
     },
     {
-      path: '/submitcourseorder',
-      name: 'SubmitCourseOrder',
-      component: SubmitCourseOrder,
+      path: '/ordernote',
+      name: 'Ordernote',
+      component: () => import('@/pages/ordernote'),
       meta: {
-        title: '提交订单'
+        title: '订单备注'
       }
     },
     {
-      path: '/orderSuccess',
-      name: 'OrderSuccess',
-      component: OrderSuccess,
+      path: '/platformstandard',
+      name: 'Platformstandard',
+      component: () => import('@/pages/platformstandard'),
       meta: {
-        title: '有梦花居'
+        title: '平台标准计价'
       }
     },
     {
-      path: '/dotask',
-      name: 'DoTask',
-      component: DoTask,
+      path: '/platformpricing',
+      name: 'Platformpricing',
+      component: () => import('@/pages/platformpricing'),
       meta: {
-        title: '有梦花居'
+        title: '平台定价'
       }
     },
     {
-      path: '/huaban',
-      name: 'Huaban',
-      component: Huaban,
+      path: '/accountingrules',
+      name: 'Accountingrules',
+      component: () => import('@/pages/accountingrules'),
       meta: {
-        title: '花伴'
+        title: '计费规则说明'
       }
     },
     {
-      path: '/huabangroupdetail',
-      name: 'HuabanGroupDetail',
-      component: HuabanGroupDetail,
+      path: '/company',
+      name: 'Company',
+      component: () => import('@/pages/company'),
       meta: {
-        title: '小组详情'
+        title: '企业展示'
       }
     },
     {
-      path: '/huabangroupmember',
-      name: 'HuabanGroupMember',
-      component: HuabanGroupMember,
+      path: '/bigitem',
+      name: 'Bigitem',
+      component: () => import('@/pages/bigitem'),
       meta: {
-        title: '小组成员'
+        title: '大件物品'
       }
     },
     {
-      path: '/huabantzlist',
-      name: 'HuabanTzList',
-      component: HuabanTzList,
+      path: '/selectwork',
+      name: 'Selectwork',
+      component: () => import('@/pages/selectwork'),
       meta: {
-        title: '贴子列表'
-      }
-
-    },
-    {
-      path: '/huabantzdetail',
-      name: 'HuabanTzDetail',
-      component: HuabanTzDetail,
-      meta: {
-        title: '贴子详情'
+        title: '选择工种'
       }
     },
     {
-      path: '/huabangrouplist',
-      name: 'HuabanGroupList',
-      component: HuabanGroupList,
+      path: '/city',
+      name: 'City',
+      component: () => import('@/pages/city'),
       meta: {
-        title: '社区小组'
-      }
-    },
-    {
-      path: '/huabanmoregrouplist',
-      name: 'HuabanMoreGroupList',
-      component: HuabanMoreGroupList,
-      meta: {
-        title: '推荐圈子'
-      }
-    },
-    {
-      path: '/huabanmygrouplist',
-      name: 'HuabanMyGroupList',
-      component: HuabanMyGroupList,
-      meta: {
-        title: '我加入的圈子'
-      }
-
-    },
-    {
-      path: '/huabanjoingroup',
-      name: 'HuabanJoinGroup',
-      component: HuabanJoinGroup,
-      meta: {
-        title: '加入社区小组'
-      }
-    },
-    {
-      path: '/huabantzfp',
-      name: 'HuabanTzfp',
-      component: HuabanTzfp,
-      meta: {
-        title: '发布贴子'
-      }
-    },
-    {
-      path: '/huabansearch',
-      name: 'HuabanSearch',
-      component: HuabanSearch,
-      meta: {
-        title: '花伴搜索'
-      }
-    },
-    {
-      path: '/huabanuserinfo',
-      name: 'HuabanUserInfo',
-      component: HuabanUserInfo,
-      meta: {
-        title: '用户信息'
-      }
-    },
-    {
-      path: '/my',
-      name: 'My',
-      component: My,
-      meta: {
-        title: '我的'
-      }
-    },
-    {
-      path: '/invite',
-      name: 'Invite',
-      component: Invite,
-      meta: {
-        title: '好友邀请'
-      }
-    },
-    {
-      path: '/myedit',
-      name: 'MyEdit',
-      component: MyEdit,
-      meta: {
-        title: '我的'
-      }
-    },
-    {
-      path: '/mymodify',
-      name: 'MyModify',
-      component: MyModify,
-      meta: {
-        title: '修改资料'
-      }
-    },
-    {
-      path: '/mygz',
-      name: 'MyGz',
-      component: MyGz,
-      meta: {
-        title: '我的关注'
-      }
-    },
-    {
-      path: '/myxf',
-      name: 'MyXf',
-      component: MyXf,
-      meta: {
-        title: '我的花币'
-      }
-    },
-    {
-      path: '/myfs',
-      name: 'MyFs',
-      component: MyFs,
-      meta: {
-        title: '我的粉丝'
-      }
-    },
-    {
-      path: '/mybx',
-      name: 'MyBx',
-      component: MyBx,
-      meta: {
-        title: '被喜欢'
-      }
-    },
-    {
-      path: '/myfx',
-      name: 'MyFx',
-      component: MyFx,
-      meta: {
-        title: '我的分销'
-      }
-    },
-    {
-      path: '/mytx',
-      name: 'MyTx',
-      component: MyTx,
-      meta: {
-        title: '我的提现'
-      }
-    },
-    {
-      path: '/mytx',
-      name: 'MyTx',
-      component: MyTx,
-      meta: {
-        title: '我的提现'
-      }
-    },
-    {
-      path: '/myyq',
-      name: 'MyYq',
-      component: MyYq,
-      meta: {
-        title: '我的邀请'
-      }
-    },
-    {
-      path: '/myXx',
-      name: 'MyXx',
-      component: MyXx,
-      meta: {
-        title: '消息中心'
-      }
-    },
-    {
-      path: '/myyy',
-      name: 'MyYy',
-      component: MyYy,
-      meta: {
-        title: '课程中心'
-      }
-    },
-    {
-      path: '/mytz',
-      name: 'MyTz',
-      component: MyTz,
-      meta: {
-        title: '我的贴子'
-      }
-    },
-    {
-      path: '/myyx',
-      name: 'MyYx',
-      component: MyYx,
-      meta: {
-        title: '登陆认证协议'
-      }
-    },
-    {
-      path: '/mypl',
-      name: 'MyPl',
-      component: MyPl,
-      meta: {
-        title: '我的评论'
-      }
-    },
-    {
-      path: '/about',
-      name: 'About',
-      component: About,
-      meta: {
-        title: '关于我们'
-      }
-    },
-    {
-      path: '/videodetail',
-      name: 'VideoDetail',
-      component: VideoDetail,
-      meta: {
-        title: '预课详情'
-      }
-    },
-    {
-      path: '/orderlist',
-      name: 'OrderList',
-      component: OrderList,
-      meta: {
-        title: '商品订单'
-      }
-    },
-    {
-      path: '/orderdetail',
-      name: 'OrderDetail',
-      component: OrderDetail,
-      meta: {
-        title: '商品订单详情'
-      }
-    },
-    {
-      path: '/orderrefund',
-      name: 'OrderRefund',
-      component: OrderRefund,
-      meta: {
-        title: '申请退款'
-      }
-    },
-    {
-      path: '/ordercomment',
-      name: 'OrderComment',
-      component: OrderComment,
-      meta: {
-        title: '订单评论'
-      }
-    },
-    {
-      path: '/courseorderlist',
-      name: 'CourseOrderList',
-      component: CourseOrderList,
-      meta: {
-        title: '课程订单'
-      }
-    },
-    {
-      path: '/coursegroupdetails',
-      name: 'CourseGroupDetails',
-      component: CourseGroupDetails,
-      meta: {
-        title: '课程拼团详情'
-      }
-    },
-    {
-      path: '/courseallgroup',
-      name: 'CourseAllGroup',
-      component: CourseAllGroup,
-      meta: {
-        title: '课程拼团列表'
-      }
-    },
-    {
-      path: '/courseorderdetail',
-      name: 'CourseOrderDetail',
-      component: CourseOrderDetail,
-      meta: {
-        title: '课程订单详情'
+        title: '选择城市'
       }
     },
     {
       path: '/login',
       name: 'Login',
-      component: Login,
+      component: () => import('@/pages/login'),
       meta: {
         title: '登录'
-      }
-    },
-    {
-      path: '/',
-      name: 'shopHome',
-      component: () => import('@/pages/shopHome'),
-      meta: {
-        title: '有梦花居',
-        keepAlive: true
-      }
-    },
-    {
-      path: '/tuan',
-      name: 'Tuan',
-      component: () => import('@/pages/tuan'),
-      meta: {
-        title: '拼团',
-        keepAlive: true
-      }
-    },
-    {
-      path: '/goodsDetails',
-      name: 'goodsDetails',
-      component: () => import('@/pages/goodsDetails'),
-      meta: {
-        title: '有梦花居'
-      }
-    },
-    {
-      path: '/afterorder',
-      name: 'afterOrder',
-      component: () => import('@/pages/afterOrder'),
-      meta: {
-        title: '有梦花居'
-      }
-    },
-    {
-      path: '/searchGoods',
-      name: 'searchGoods',
-      component: () => import('@/pages/searchGoods'),
-      meta: {
-        title: '搜索'
-      }
-    },
-    {
-      path: '/submitOrder',
-      name: 'submitOrder',
-      component: () => import('@/pages/submitOrder'),
-      meta: {
-        title: '订单'
-      }
-    },
-    {
-      path: '/addressList',
-      name: 'addressList',
-      component: () => import('@/pages/addressList'),
-      meta: {
-        title: '收货地址'
-      }
-    },
-    {
-      path: '/editAddress',
-      name: 'editAddress',
-      component: () => import('@/pages/editAddress'),
-      meta: {
-        title: '新增地址'
-      }
-    },
-    {
-      path: '/shop',
-      name: 'shop',
-      component: () => import('@/pages/shop'),
-      meta: {
-        title: '购物车'
-      }
-    },
-    {
-      path: '/allGroup',
-      name: 'allGroup',
-      component: () => import('@/pages/allGroup'),
-      meta: {
-        title: '全部拼团'
-      }
-    },
-    {
-      path: '/groupDetails',
-      name: 'groupDetails',
-      component: () => import('@/pages/groupDetails'),
-      meta: {
-        title: '拼团详情'
-      }
-    },
-    {
-      path: '/goodsCate',
-      name: 'GoodsCate',
-      component: () => import('@/pages/goodsCate'),
-      meta: {
-        title: '目录分类'
-      }
-    },
-    {
-      path: '/shopCate',
-      name: 'ShopCate',
-      component: () => import('@/pages/shopCate'),
-      meta: {
-        title: '商品分类'
-      }
-    },
-    {
-      path: '/myHhR',
-      name: 'MyHhr',
-      component: () => import('@/pages/myHhr'),
-      meta: {
-        title: '合伙人'
-      }
-    },
-    {
-      path: '/myHho',
-      name: 'MyHho',
-      component: () => import('@/pages/myHho'),
-      meta: {
-        title: '合伙人订单'
-      }
-    },
-    {
-      path: '/myHhl',
-      name: 'MyHhl',
-      component: () => import('@/pages/myHhl'),
-      meta: {
-        title: '合伙人列表'
-      }
-    },
-    {
-      path: '/partner',
-      name: 'Partner',
-      component: () => import('@/pages/partner'),
-      meta: {
-        title: '合伙人申请'
       }
     },
     {
@@ -773,7 +193,7 @@ const router = new Router({
     {
       path: '/test',
       name: 'Test',
-      component: Test,
+      component: () => import('@/pages/test'),
       meta: {
         title: '测试'
       }
@@ -782,7 +202,12 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  // console.log(to)
+  if(!localStorage.getItem('sCar')){
+    localStorage.setItem('sCar',0)
+  }
+  next()
+  return;
+  // console.log(to
   // getSitem.remove('token')
   // getSitem.remove('mobile')
   // getSitem.remove('open')

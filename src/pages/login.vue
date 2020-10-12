@@ -1,254 +1,183 @@
 <template>
-  <div class="login">
-    <span class="loginTip">欢迎来到有梦花居</span>
-    <div class="input-wrap">
-      <img src="../assets/images/phone.png" alt="">
-      <input type="text" placeholder="请输入手机号" v-model="phone" >
-    </div>
-    <div class="input-wrap input-wrap-btn">
-      <img src="../assets/images/phone.png" alt="">
-      <input class="yz" type="text" placeholder="请输入短信验证码" v-model="captcha">
-      <span class="btns" @click="sendClickHandler">{{timerText}}</span>
-    </div>
-    <div class="xy-wrap">
-      <img @click="xyClickHandler" :src="yx ? require('../assets/images/select.png') : require('../assets/images/noselect.png')" alt="">
-      <div>我已同意 <router-link :to="{ name: 'MyYx'}"><span>《实名认证与隐私安全保障》</span></router-link>协议</div>
-    </div>
-    <div class="btn" @click="login">
-      确认提交
-    </div>
-    <img class="myfooter" src="../assets/images/myfooter.png" alt="">
-    <div class="tipmessage" v-if="tipmessage">
-      <img src="../assets/images/logintip.png" alt="">
-      <span>{{error}}</span>
+  <div class="content">
+    <div class="loginwrap">
+      <div class="logintitle">登录</div>
+      <div class="inputwrap">
+        <img
+          src="../assets/images/mobile.png"
+          class="loginico"
+        />
+        <van-field
+          v-model="mobile"
+          type="number"
+          placeholder="请输入手机号"
+        />
+      </div>
+      <div class="inputcode">
+        <div class="inputwrap codewrap">
+          <img
+            src="../assets/images/code.png"
+            class="loginico"
+          />
+          <van-field
+            v-model="code"
+            type="number"
+            placeholder="请输入验证码"
+          />
+        </div>
+        <div
+          class="codebtns"
+          @click="getCode"
+        >
+          {{timerText}}
+        </div>
+      </div>
+      <div
+        class="inputloginbtn"
+        @click="loginHandler"
+      >
+        登录
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import config from '@/utils/config'
-import getSitem from '@/utils/storage'
+import config from "@/utils/config";
+import getSitem from "@/utils/storage";
 export default {
-  name: 'Login',
-  data () {
+  name: "Login",
+  data() {
     return {
-      time: 60,
-      timeFlag: true,
-      timer: null,
-      timerText: '获取验证码',
-      yx: true,
-      tipmessage: false,
-      phone: null,
-      captcha: null,
-      name: '',
-      arg: ''
-    }
+      timer: 60,
+      timeFlag: null,
+      timerText: "获取验证码",
+      mobile: "",
+      code: "",
+      flag: true,
+    };
   },
-  mounted () {
-    if (this.$route.query.name) {
-      this.name = this.$route.query.name
-    }
-    if (this.$route.query.arg) {
-      this.arg = this.$route.query.arg
-    }
-    // alert(arg)
-    // alert(name)
-  },
+  mounted() {},
   methods: {
-    xyClickHandler () {
-      this.yx = !this.yx
-    },
-    sendClickHandler () {
-      if (!this.phone) {
-        this.$toast('请输入手机号')
-        return
-      }
-      if (!/^\d{11}$/.test(this.phone)) {
-        this.$toast('请输入正确的手机号')
-        return
-      }
-      var _this = this
-      if (this.timeFlag) {
-        this.$api.smsSend({mobile: this.phone, event: 'send'}).then((res) => {
-          this.timeFlag = false
-          this.timer = setInterval(() => {
-            if (this.time === 0) {
-              clearInterval(this.timer)
-              this.time = 60
-              this.timer = null
-              this.timeFlag = true
-              this.timerText = '获取验证码'
-            } else {
-              this.time--
-              this.timerText = this.time + 's'
-            }
-          }, 1000)
-        })
-      } else {
-        this.$toast('60s之内只能发一次')
-      }
-    },
-    login () {
-      if (!this.captcha) {
-        this.$toast('请输入验证码')
-        return
-      }
-      if (!this.phone) {
-        this.$toast('请输入手机号')
-        return
-      }
-      var params = {
-        mobile: this.phone,
-        captcha: this.captcha,
-        event: 'send'
-      }
-      var _this = this
-      this.$api.authSaveMobile(params).then((res) => {
-        if (res.code === 1) {
-          this.$toast({
-            message: res.msg,
-            onClose: () => {
-              getSitem.setStr('mobile', res.data.mobile)
-              if (_this.name) {
-                location.href = config.baseurl + _this.arg
+    getCode() {
+      var data = {
+        mobile: this.mobile,
+      };
+      if (this.flag) {
+        this.$api.shortmessagelogin(data).then((result) => {
+          if (result.code == 200) {
+            this.$toast(result.msg);
+            this.flag = false;
+            clearInterval(this.timeFlag);
+            this.timeFlag = setInterval(() => {
+              if (this.timer != 0) {
+                this.timer--;
+                this.timerText = this.timer + " S";
               } else {
-                _this.$router.go(-1)
+                this.timer = 60;
+                this.timerText = "获取验证码";
+                clearInterval(this.timeFlag);
+                this.timeFlag = null;
               }
-            }
-          })
-        } else {
-          this.$toast(res.msg)
+            }, 1000);
+          } else {
+            this.$toast(result.msg);
+          }
+        });
+      }
+    },
+    loginHandler() {
+      var data = {
+        mobile: this.mobile,
+        validateCode: this.code,
+      };
+      this.$api.loginByMobileAndVlidateCode(data).then((result) => {
+        if (result.code == 200) {
+          this.$toast(result.msg);
+          localStorage.setItem("token", result.data);
+          this.$router.push("/");
         }
-      })
-    }
+      });
+    },
   },
-  destroyed () {
-    clearInterval(this.timer)
-    this.time = 60
-    this.timer = null
-    this.timeFlag = true
-  }
-
-}
+  destroyed() {
+    this.timer = 60;
+    this.timerText = "获取验证码";
+    clearInterval(this.timeFlag);
+    this.timeFlag = null;
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.tipmessage{
-  width:100%;
-  height:88px;
-  background:white;
-  box-shadow:0px 12px 12px 1px rgba(0, 0, 0, 0.05);
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  position: fixed;
-  left:0;
-  top:0;
-  img{
-    width:49px;
-    height:49px;
-    margin-right:22px;
-    margin-left:22px;
-  }
-  span{
-    font-size: 30px;
-    color:#666666;
-  }
-}
-.login{
+.content {
   display: flex;
   flex-direction: column;
-  padding-left:26px;
-  padding-right:26px;
-  background:white;
-  min-height: 100vh;
-  .loginTip{
-    font-size: 36px;
-    color:#333;
-    margin-top: 160px;
-    margin-bottom: 70px;
-  }
-  input{
-    width:100%;
-    font-size: 26px;
-    height: 100%;
-    color:#999999;
-    background:#F8F8F8;
-    border:none;
-    border-radius: 44px;
-    padding-left: 76px;
-  }
-  .input-wrap{
-    height:88px;
-    width:100%;
-    position: relative;
-    margin-bottom: 32px;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  .loginwrap {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    img{
-      width:30px;
-      height:34px;
-      position: absolute;
-      top:50%;
-      left:26px;
-      transform: translateY(-50%)
+    flex-direction: column;
+    width: 530px;
+    .logintitle {
+      color: #28ae3a;
+      font-size: 42px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 120px;
     }
-  }
-  .input-wrap-btn{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    .yz{
-      width:60%;
-    }
-    .btns{
-      width:35%;
-      height:88px;
-      color:#333333;
-      font-size: 26px;
-      border:2px solid #F1F1F1;
-      border-radius: 44px;
+    .inputwrap {
+      position: relative;
       display: flex;
-      justify-content: center;
+      flex-direction: row;
       align-items: center;
+      width: 100%;
+      height: 90px;
+      border-radius: 10px;
+      border: 1px solid #28ae3a;
+      margin-bottom: 40px;
+      padding: 15px;
+      box-sizing: border-box;
+      .loginico {
+        width: 40px;
+        height: 40px;
+        margin-right: 15px;
+      }
     }
-  }
-  .xy-wrap{
-    display: flex;
-    flex-direction: row;
-    font-size: 24px;
-    color:#999999;
-    padding-left:5px;
-    margin-top: 40px;
-    margin-bottom: 99px;
-    img{
-      width:34px;
-      height:34px;
-      margin-right:10px;
+    .inputcode {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
 
+      .codewrap {
+        width: 320px;
+        margin-right: 40px;
+        margin-bottom: 0px;
+      }
+      .codebtns {
+        width: 170px;
+        height: 90px;
+        border-radius: 10px;
+        font-size: 16px;
+        background: #28ae3a;
+        line-height: 90px;
+        color: white;
+        text-align: center;
+      }
     }
-    span{
-      color:#6D8160;
+    .inputloginbtn {
+      width: 100%;
+      height: 90px;
+      border-radius: 10px;
+      line-height: 90px;
+      background: #28ae3a;
+      text-align: center;
+      font-size: 18px;
+      color: white;
+      margin-top: 80px;
     }
-  }
-  .btn{
-    background:#738666;
-    width:677px;
-    height:88px;
-    line-height:88px;
-    text-align: center;
-    margin:0 auto;
-    font-size: 36px;
-    color:#F3D995;
-    border-radius: 44px;
-  }
-  .myfooter{
-    position: fixed;
-    left:0;
-    bottom: 0;
-    height:200px;
-    width:100%;
   }
 }
 </style>

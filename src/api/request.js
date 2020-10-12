@@ -12,9 +12,8 @@ if (process.env.NODE_ENV === 'production') {
 axios.interceptors.request.use(
   config => {
     config.headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      token: localStorage.getItem('token')
-      // token: 'b1e908ea-1bbb-4a58-944d-a76fd26ac11f'
+      'Content-Type': 'application/json',
+      Authorization: localStorage.getItem('token')
     }
     config.data = qs.stringify(config.data)
     return config
