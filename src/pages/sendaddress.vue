@@ -1,143 +1,167 @@
 <template>
   <div class="sendaddress">
-    <AddressMenu :adretext="adretext" :adreadonly="adreadonly" @addressInput="addressInput" />
+    <AddressMenu
+      :adretext="adretext"
+      :adreadonly="adreadonly"
+      :addressplaceholder="addressplaceholder"
+      @addressInput="addressInput"
+    />
     <div class="addresswrap">
-      <div class="addressitem" v-for="(item,sindex) in adList" :key="sindex" @click="adItemHandler(sindex)">
+      <div
+        class="addressitem"
+        v-for="(item,sindex) in adList"
+        :key="sindex"
+        @click="adItemHandler(item,sindex)"
+      >
         <div class="addresstop">
-         {{item.name}}
+          {{item.address}}
         </div>
         <div class="addressbottom">
           <div class="ad1">
-           {{item.address}}
+            {{item.address}}
           </div>
           <div class="ad2">
-           {{item.juli}}
+            {{item.juli}}
           </div>
         </div>
       </div>
     </div>
+    <div
+      class="map"
+      id="map"
+    ></div>
   </div>
 </template>
 
 <script>
-import AddressMenu from '@/components/addressMenu'
-import { post, get } from '../api/request'
+import AddressMenu from "@/components/addressMenu";
 export default {
-  components:{
-    AddressMenu
+  components: {
+    AddressMenu,
   },
-  data(){
+  data() {
     return {
-      adretext:'武汉',
-      adreadonly:false,
-      qid:0,
-      adList:[
-        {
-          id:0,
-          name:'昊城景都',
-          address:'葛店开发区祥达锦苑21栋一单元',
-          jule:'2.4KM'
-        },
-        {
-          id:1,
-          name:'昊城景都',
-          address:'葛店开发区祥达锦苑21栋一单元',
-          jule:'2.4KM'
-        }
-      ]
+      map: {},
+      adretext: "武汉",
+      addressplaceholder:'从哪儿发',
+      adreadonly: false,
+      adList: [
+      ],
+      result:{},
+      index: 0
+    };
+  },
+  mounted() {
+    this.index = this.$route.query.index;
+    if(this.$route.query.index == 0){
+      this.addressplaceholder = '从哪儿发'
+    }else{
+      this.addressplaceholder = '到达哪儿'
     }
   },
-  mounted(){
-    this.qid = this.$route.query.index
-  },
-  methods:{
-    addressInput(e){
-      this.gets().then((result) => {
-        console.log(result,'result')
-      })
+  methods: {
+    addressInput(e) {
+      var that = this;
+      this.map = new AMap.Map("map", {
+        resizeEnable: true,
+      });
+      AMap.service(["AMap.PlaceSearch"], function() {
+        //构造地点查询类
+        var placeSearch = new AMap.PlaceSearch({
+          pageSize: 100, // 单页显示结果条数
+          pageIndex: 1, // 页码
+          city: that.adretext, // 兴趣点城市
+        });
+        //关键字查询
+        placeSearch.search(e,(s,res)=>{
+          console.log(res)
+          if(s == 'complete' && res.info == 'OK'){
+            that.result = res.poiList
+            that.adList = res.poiList.pois
+          }
+        })
+
+      });
     },
-    gets(){
-      return get('https://apis.map.qq.com/ws/place/v1/suggestion/?region=北京&keyword=美食&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77',{})
-    },
-    adItemHandler(index){
-      var list = localStorage.getItem('adList')
-      if(list){
-        list = JSON.parse(list)
-        list[this.qid] = this.adList[index]
-        localStorage.setItem('adList',JSON.stringify(list))
+    adItemHandler(item,index) {
+      var list = localStorage.getItem("adList");
+      if (list) {
+        list = JSON.parse(list);
+      }else{
+        list = []
       }
+      list[this.index] = item
+      localStorage.setItem("adList", JSON.stringify(list));
       this.$router.push({
-        path:'/',
-        query:{
-          // obj:JSON.stringify(obj)
-        }
-      })
-    }
-  }
-}
+        path: "/chooseaddress",
+        query:{index:this.index}
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.sendaddress{
+.sendaddress {
   display: flex;
   flex-direction: column;
-  background:#f5f6f7;
+  background: #f5f6f7;
   min-height: 100vh;
-  .addresswrap{
+  .addresswrap {
     display: flex;
     flex-direction: column;
-    margin-top:20px;
-    .addressitem{
+    margin-top: 20px;
+    .addressitem {
       display: flex;
       flex-direction: column;
-      padding:30px;
+      padding: 30px;
       box-sizing: border-box;
       background: white;
       border-bottom: 1px solid #f5f6f7;
-      .addresstop{
+      .addresstop {
         display: flex;
         flex-direction: row;
         position: relative;
-        padding-left:60px;
+        padding-left: 60px;
         box-sizing: border-box;
         font-size: 32px;
-        color:#333333;
+        color: #333333;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-      .addresstop::after{
+      .addresstop::after {
         position: absolute;
-        content:'';
-        left:0;
-        top:50%;
+        content: "";
+        left: 0;
+        top: 50%;
         transform: translateY(-50%);
-        width:32px;
-        height:32px;
-        background:url('../assets/images/adposa.png') no-repeat;
+        width: 32px;
+        height: 32px;
+        background: url("../assets/images/adposa.png") no-repeat;
         background-size: 100% 100%;
       }
-      .addressbottom{
+      .addressbottom {
         display: flex;
         flex-direction: row;
         align-items: center;
-        padding-left:60px;
+        padding-left: 60px;
         box-sizing: border-box;
         font-size: 24px;
-        margin-top:10px;
-        color:#b5b5b5;
-        .ad1{
-          flex:1;
+        margin-top: 10px;
+        color: #b5b5b5;
+        .ad1 {
+          flex: 1;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
-        .ad2{
-          margin-left:30px;
+        .ad2 {
+          margin-left: 30px;
         }
       }
     }
-    .addressitem:last-child{
+    .addressitem:last-child {
       border-bottom: 1px solid transparent;
     }
   }

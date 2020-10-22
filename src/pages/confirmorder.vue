@@ -236,7 +236,7 @@
     <div class="pricepay">
       <div class="priceb">
         <span>¥</span>
-        200
+        {{money_total}}
       </div>
       <div
         class="priceinfo"
@@ -266,7 +266,7 @@
       <div class="payClass">
         <div class="paytprice">
           <span>¥</span>
-          200
+          <!-- {{money_total}} -->
         </div>
         <div class="paytypes">
           <div class="paytips">选择支付方式</div>
@@ -370,14 +370,20 @@ export default {
       goodWidthList:[],
       goodHeightList:[],
       housefloorList:[],
-      phonepattern:/^1[3456789]\d{9}$/
+      phonepattern:/^1[3456789]\d{9}$/,
+      serverType:{
+        1:'PULL_CARGO',//拉货
+        2:'CHANGE_HOUSE',//搬家
+        3:'HIRE_WORKER',//劳务工
+        4:'RENT_CAR'//租车
+      },
+      money_total:0
     };
   },
   mounted() {
     if(localStorage.getItem('refer')){
       this.refer = JSON.parse(localStorage.getItem('refer'))
     }
-
     if (this.$route.query.remarks) {
       this.refer.remarks = this.$route.query.remarks;
     }
@@ -399,9 +405,62 @@ export default {
         localStorage.setItem('refer',JSON.stringify(this.refer))
       }
     }
-
+    this.CalcSimplePrice()
+    this.getCoupon()
   },
   methods: {
+    //获取优惠券
+    getCoupon(){
+      var orderType = localStorage.getItem('orderType')
+      var data = {
+        applicableType:this.serverType[orderType]
+      }
+      this.$api.couponManagefindPage(data).then((result) => {
+        console.log(result)
+      })
+
+    },
+    CalcSimplePrice(){
+      //订单类型
+      var orderType = localStorage.getItem('orderType')
+      //已选车型
+      var cartObject = JSON.parse(localStorage.getItem('cartObject'))
+      //开通地区
+      var city = localStorage.getItem('city')
+      //距离
+      var routeKilometer = parseInt(localStorage.getItem('routeKilometer'))/1000
+      //地址列表
+      var adlist = JSON.parse(localStorage.getItem('adList'))
+      var orderRouteList = []
+      adlist.map((item,index)=>{
+        var locations = item.location
+        if(locations){
+          var obj = {
+            address1:item.name,
+            address2:item.address,
+            longitude:locations.lng,
+            latitude:locations.lat,
+            sort:index+1
+          }
+          orderRouteList.push(obj)
+        }
+      })
+      var data = {
+        'serverType':this.serverType[orderType],
+        'carTypeSeqId':cartObject.seqId,
+        'ownerCity':city,
+        'routeKilometer':routeKilometer,
+        'orderRouteList':orderRouteList
+      }
+
+      data = JSON.stringify(data)
+      this.$api.orderHeadCalcPrice(data).then((result)=>{
+        if(result.code == 200){
+          this.money_total = result.data
+        }
+      })
+
+    },
     phoneHandler(){
       if(!/^1[3456789]\d{9}$/.test(this.refer.phone)){
         return this.$toast('请输入正确的手机号')

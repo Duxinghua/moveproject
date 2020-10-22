@@ -139,6 +139,9 @@ export default {
       margin-bottom: 40px;
       padding: 15px;
       box-sizing: border-box;
+      /deep/ .van-cell{
+        line-height: 1!important;
+      }
       .loginico {
         width: 40px;
         height: 40px;

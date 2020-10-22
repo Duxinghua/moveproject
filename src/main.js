@@ -6,6 +6,7 @@ import App from './App'
 import router from './router'
 import 'amfe-flexible/index.js'
 import  Bus from './utils/bus.js'
+import api from './api/index'
 import $ from 'jquery'
 import Vant from 'vant'
 import VueWechatTitle from 'vue-wechat-title'
@@ -31,8 +32,6 @@ Vue.prototype.DateFormat = function(date,fmt)
  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
  return fmt;
 }
-
-import api from '@/api/index'
 
 Vue.prototype.$api = api
 Vue.prototype.$Bus = Bus

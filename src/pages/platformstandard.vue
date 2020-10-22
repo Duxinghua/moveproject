@@ -122,7 +122,6 @@ export default {
   },
   mounted(){
     this.getOther(true,this.platform.attachType)
-    this.getOther(false,'HOUSE_FLOOR')
     var platform = localStorage.getItem('platform')
     if(platform){
       this.platform = JSON.parse(platform)
@@ -148,28 +147,25 @@ export default {
           var list3 = []
           Object.keys(obj).forEach((value)=>{
             if(value == '货物最长'){
-              var o = obj[value][0]
-              o.keyValue = value
-              o.text = o.catItem
-              list1.push(o)
+              list1 = obj[value]
+              list1.map((item)=>{
+                item.text = item.catItem + (item.price ? '  ¥'+item.price : '')
+              })
             }else if(value == '货物最高'){
-              var o = obj[value][0]
-              o.keyValue = value
-              o.text = o.catItem
-              list2.push(o)
+              list2 = obj[value]
+              list1.map((item)=>{
+                item.text = item.catItem + (item.price ? '  ¥'+item.price : '')
+              })
+
             }else if(value == '楼层'){
-              var o = obj[value][0]
-              o.keyValue = value
-              o.text = o.catItem
-              list3.push(o)
+              list3 = obj[value]
             }
           })
-          if(flag){
-            this.goodWidthList = list1
-            this.goodHeightList = list2
-          }else{
-            this.housefloorList = list3
-          }
+
+          this.goodWidthList = list1
+          this.goodHeightList = list2
+          this.housefloorList = list3
+
         }
       })
     },

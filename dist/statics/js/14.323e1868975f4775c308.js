@@ -1,2 +1,2 @@
 webpackJsonp([14],{YXWd:function(t,e){},Yaje:function(t,e,a){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var n={render:function(){var t=this.$createElement;return(this._self._c||t)("div",{staticClass:"cartinfo"})},staticRenderFns:[]};var i=a("VU/8")({name:"Cartinfo",data:function(){return{carType:"",detail:{}}},mounted:function(){this.carType=this.$route.query.carType,this.getDetail()},methods:{getDetail:function(){var t=this,e={carType:this.carType};this.$api.sysCarTypeFindPage(e).then(function(e){t.detail=e.data})}}},n,!1,function(t){a("YXWd")},"data-v-7011e7b0",null);e.default=i.exports}});
-//# sourceMappingURL=14.323e1868975f4775c308.js.map?v=1602519544087
+//# sourceMappingURL=14.323e1868975f4775c308.js.map?v=1603016763852

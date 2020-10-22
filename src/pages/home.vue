@@ -2,7 +2,7 @@
 	<div class="home">
 		<div class="topmenu">
 			<div class="address" @click="goPos">
-				<div class="city">{{local.city}}</div>
+				<div class="city">{{city}}</div>
 				<van-icon color="#bbbbbb" name="arrow-down" />
 			</div>
 			<div class="brana">货搬搬</div>
@@ -106,9 +106,7 @@
         </div>
       </div>
     </div>
-    <iframe id="geoPage" width=0 height=0 frameborder=0  style="display:none;" scrolling="no"
-    src="https://apis.map.qq.com/tools/geolocation?key=F5DBZ-PHD6F-KV2JJ-NQAFE-YYZ43-VXBH7&referer=myapp">
-    </iframe>
+    <div id='container'></div>
 	</div>
 </template>
 
@@ -142,33 +140,59 @@ export default {
           address:''
         }
       ],
-      local:{
-        city:''
-      }
+      city:'武汉市'
     }
   },
   mounted () {
+    this.getAllCart()
     localStorage.setItem('orderType',this.serverIndex)
+    var that = this
+    var map = new AMap.Map('container', {
+        resizeEnable: true
+    });
+    AMap.plugin('AMap.Geolocation', function() {
+        var geolocation = new AMap.Geolocation({
+            enableHighAccuracy: true,//是否使用高精度定位，默认:true
+            timeout: 10000,          //超过10秒后停止定位，默认：5s
+            buttonPosition:'RB',    //定位按钮的停靠位置
+            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+            zoomToAccuracy: true,   //定位成功后是否自动调整地图视野到定位点
+
+        });
+        map.addControl(geolocation);
+        geolocation.getCurrentPosition(function(status,result){
+          console.log(result,'result')
+          console.log(status,'status')
+            if(status=='complete'){
+              var obj = {}
+              obj.lng = result.position.lng
+              obj.lat = result.position.lat
+              obj.addressComponent = result.addressComponent
+              obj.formattedAddress = result.formattedAddress
+              that.city = obj.addressComponent.city
+              that.serverHandler(1)
+              that.getAllCart()
+              localStorage.setItem('locations',obj)
+            }else{
+              that.city = '武汉市'
+              //that.$toast('定位失败，请检查是否有权限');
+            }
+            localStorage.setItem('city',that.city)
+        });
+    });
     var list = localStorage.getItem('adList')
     if(list){
-      this.adList = JSON.parse(list)
+      list = JSON.parse(list)
+      this.adList = list
+      console.log(this.adList,'ADLIST')
       this.active = this.adList.length
-    }
-    this.serverHandler(1)
-    var that = this
-    window.addEventListener('message', function(event) {
-        // 接收位置信息
-        that.local = event.data ? event.data : { city: ''};
-        if(that.local.city){
-          localStorage.setItem('local',JSON.stringify(that.local))
-          that.getAllCart()
-        }
-        that.$forceUpdate()
-    }, false)
+   }
+
     if(localStorage.getItem('sCar') == 1){
       var cart = localStorage.getItem('cartObject')
       this.cartObject = cart ? JSON.parse(cart) : {}
     }
+
   },
   computed:{
   },
@@ -176,7 +200,7 @@ export default {
     getAllCart(){
       var data = {
         serverType:this.serverType[this.serverIndex],
-        operCenter:this.local.city,
+        operCenter:this.city,
         pageno:this.cartPageNum,
         pagesize:this.cartPageSize
       }
@@ -213,12 +237,26 @@ export default {
     },
     cateHandler(){
       var type = this.serverType[this.serverIndex]
-      this.$router.push({path:'/cart',query:{type:type,operCenter:this.local.city}})
+      this.$router.push({path:'/cart',query:{type:type,operCenter:this.city}})
     },
     carInfo(item){
       this.$router.push({path:'/cartinfo',query:{carType:item.carType}})
     },
     orderTodo(){
+      var list = localStorage.getItem('adList')
+      list = JSON.parse(list)
+      var arr = []
+      list.map((item)=>{
+        if(item.location){
+          var il = item.location
+          arr.push([il.lng,il.lat])
+        }
+      })
+      if(arr.length < 2){
+        return this.$toast('请认真选择发货或收货地址')
+      }
+      var dis =  AMap.GeometryUtil.distanceOfLine(arr);
+      localStorage.setItem('routeKilometer',dis)
       this.$router.push('/confirmorder')
     },
     priceDetail(){
@@ -233,7 +271,7 @@ export default {
     },
     setaddHandler(index){
       localStorage.setItem('adList',JSON.stringify(this.adList))
-      this.$router.push({path:'/sendaddress',query:{index:index}})
+      this.$router.push({path:'/chooseaddress',query:{index:index}})
     },
     deleAddHandler(index){
       this.adList.splice(index,1)

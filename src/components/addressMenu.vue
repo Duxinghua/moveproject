@@ -12,7 +12,7 @@
             name="circle"
             color="#28ae3a"
           />
-          <van-field v-model="address" maxlength="500" :clearable="true" :readonly="adreadonly" label="" placeholder="从哪儿发" @input="addressInput"/>
+          <van-field v-model="address" maxlength="500" :clearable="true" :readonly="adreadonly" label="" :placeholder="addressplaceholder" @input="addressInput"/>
         </div>
     </div>
     <div class="aheight">
@@ -31,6 +31,10 @@ export default {
     adreadonly:{
       type:Boolean,
       default:true
+    },
+    addressplaceholder:{
+      type:String,
+      default:'从哪儿发'
     }
   },
   data(){
@@ -63,6 +67,7 @@ export default {
     position: fixed;
     left:0;
     top:0;
+    z-index: 300000;
     .adleft {
       width: 160px;
       height: 100%;

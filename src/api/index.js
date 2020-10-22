@@ -1,25 +1,33 @@
-import { post, get } from './request'
+import httpv2 from "./httpv2.js";
+import httpv1 from "./httpv1.js";
 
 const server = {
   //登陆短信 /shortmessage/login
-  shortmessagelogin(data){
-    return get('/shortmessage/login', data)
+  shortmessagelogin(params){
+    return httpv1({method:"Get",url:"/shortmessage/login", params})
   },
   // 短信验证登陆 /custlogin/loginByMobileAndVlidateCode
-  loginByMobileAndVlidateCode(data){
-    return get('/custlogin/loginByMobileAndVlidateCode', data)
+  loginByMobileAndVlidateCode(params){
+    return httpv1({method:"Get",url:'/custlogin/loginByMobileAndVlidateCode', params})
   },
   //车型详情查询（全部车型） GET /sysCarType/findPage
-  sysCarTypeFindPage(data){
-    return get('/sysCarType/findPage', data)
+  sysCarTypeFindPage(params){
+    return httpv1({method:"Get",url:'/sysCarType/findPage', params})
   },
   //查询全部车型 /carStyle/findPage
-  carStyleFindPage(data){
-    return get('/carStyle/findPage', data)
+  carStyleFindPage(params){
+    return httpv1({method:"Get",url:'/carStyle/findPage', params})
   },
   //车型附加价格明细 GET /carStyleDet/findMap
-  carStyleDetFindMap(data){
-    return get('/carStyleDet/findMap', data)
+  carStyleDetFindMap(params){
+    return httpv1({method:"Get",url:'/carStyleDet/findMap', params})
+  },
+  // 订单基本价格/orderHead/calcPrice
+  orderHeadCalcPrice(data){
+    return httpv1({method:"Post",url:'/orderHead/calcPrice',data})
+  },
+  couponManagefindPage(params){
+    return httpv2({method:"Get",url:'/couponManage/findPage', params})
   }
 }
 
