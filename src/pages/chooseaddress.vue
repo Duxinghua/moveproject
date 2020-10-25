@@ -1,5 +1,6 @@
 <template>
   <div class="chooseaddress">
+    <TopNav :menu="menutext"/>
     <div class="menu">
       <div class="adleft">
         <div class="addr">
@@ -68,8 +69,12 @@
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 export default {
   name: "Chooseaddress",
+  components:{
+    TopNav
+  },
   data() {
     return {
       map: null,
@@ -86,15 +91,18 @@ export default {
       noSearchShow: false, //无搜索结果提示，无搜索结果时会显示暂无搜索结果
       regeocode:{},
       addressplaceholder:'从哪儿发',
-      index:0
+      index:0,
+      menutext:''
     };
   },
   mounted() {
     this.city = "武汉市";
     if(this.$route.query.index == 0){
       this.addressplaceholder = '从哪儿发'
+      this.menutext= '发货地信息'
     }else{
       this.addressplaceholder = '到达哪儿'
+      this.menutext= '收货地址'
     }
     this.index = this.$route.query.index
     var list = localStorage.getItem('adList')
@@ -131,7 +139,12 @@ export default {
       list = JSON.parse(list)
       list[this.index]['obj'] = obj
       localStorage.setItem('adList',JSON.stringify(list))
-      this.$router.push({path:'/',query:{}})
+      var orderType = localStorage.getItem('orderType')
+      if(orderType == 1){
+        this.$router.push({path:'/',query:{}})
+      }else if(orderType == 2){
+        this.$router.push({path:'/confirmorder',query:{}})
+      }
     },
     targetHandler(){
        this.$router.push({path:'/sendaddress',query:{index:this.index}})
@@ -248,7 +261,7 @@ export default {
   }
   .map {
     width: 100%;
-    height: 700px;
+    height: 600px;
   }
   .confirmInformation{
     width: 100%;

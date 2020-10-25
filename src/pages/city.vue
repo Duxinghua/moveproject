@@ -1,5 +1,6 @@
 <template>
   <div class="city">
+   <TopNav :menu="menutext"/>
     <van-search
       v-model="searchvalue"
       show-action
@@ -27,14 +28,19 @@
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 import Data from '../utils/cityData.js'
 export default {
   name:'City',
+  components:{
+    TopNav
+  },
   data(){
     return {
       cityValue:'武汉市',
       searchvalue:'',
-      cityData:Data.cityData
+      cityData:Data.cityData,
+      menutext:'选择城市'
     }
   },
   mounted(){

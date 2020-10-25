@@ -1,5 +1,6 @@
 <template>
   <div class="need">
+      <TopNav :menu="menutext"/>
     <div class="needtitle">
       计价方式
     </div>
@@ -7,8 +8,9 @@
       <van-radio-group
         v-model="priceType"
         checked-color="#28ae3a"
+        @change="priceTypeChange"
       >
-        <van-radio name="STANDARD" @click="getPlatformHandler">
+        <van-radio name="STANDARD" @click="getPlatformHandler" >
           <div class="payitem">
             <span class="payname">平台标准计价</span>
             <van-icon name="warning-o" color="#333333" size="18"/>
@@ -25,7 +27,7 @@
       <div class="needtitle needtitlefix">
         其他服务
       </div>
-      <van-checkbox-group v-model="serverArr">
+      <van-checkbox-group v-model="serverArr" @change="serverArrHandler">
         <van-checkbox :name="item.seqId"  checked-color="#28ae3a" v-for="(item,index) in otherList" :key="index">
           <div class="severitem">
             <span>{{item.catItem}}</span>
@@ -43,13 +45,18 @@
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 export default {
   name: "Need",
+  components:{
+    TopNav
+  },
   data() {
     return {
       priceType:"DISCUSS",
       serverArr:[],
-      otherList:[]
+      otherList:[],
+      menutext:'额外需求'
     };
   },
   mounted(){
@@ -60,6 +67,21 @@ export default {
     }
   },
   methods: {
+    priceTypeChange(e){
+      var obj = {}
+      obj.priceType = e
+      localStorage.setItem('need',JSON.stringify(obj))
+    },
+    serverArrHandler(e){
+      e.map((oitem) => {
+        this.otherList.map((sitem) => {
+          if(oitem.seqId == sitem.seqId){
+            sitem.checked = true
+          }
+        })
+      })
+      localStorage.setItem('otherList',JSON.stringify(this.otherList))
+    },
     getPlatformHandler(){
        this.$router.push('/platformstandard')
     },
@@ -75,15 +97,17 @@ export default {
           Object.keys(obj).forEach((value)=>{
             var o = obj[value][0]
             o.keyValue = value
+            o.checked = false
             list.push(o)
           })
           this.otherList = list
+          localStorage.setItem('otherList',JSON.stringify(this.otherList))
         }
       })
     },
     needHandler(e){
       var obj = {}
-      obj.priceType = this.priceType
+      obj.priceType = this.serverArrHandler
       var otherServer = []
       this.serverArr.forEach((value) => {
         for(var a in this.otherList){

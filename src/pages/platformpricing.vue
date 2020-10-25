@@ -1,5 +1,6 @@
 <template>
   <div class="platformpricing">
+      <TopNav :menu="menutext"/>
       <div class="itemtitle">
         工种选择
       </div>
@@ -8,8 +9,7 @@
           label="选择工种"
           v-model="worktype"
           input-align="right"
-          clearable
-          readonly
+          :clearable="true"
           placeholder="请选择"
           right-icon="arrow"
           @click="itemHandler('worktype')"
@@ -31,21 +31,29 @@
       <div class="vanpos">
           <van-field
             label="选择劳务工人数"
-            v-model="worktype"
+            v-model="workerUserCnt"
             input-align="right"
             placeholder="请填写人数"
-            @click="itemHandler('worktype')"
+            @click="itemHandler('workerUserCnt')"
           />
       </div>
-      <van-field
-        label="服务工期"
-        v-model="worktimetype"
-        input-align="right"
-        readonly
-        placeholder="请选择工期类型"
-        right-icon="arrow"
-        @click="itemHandler('worktimetype')"
-      />
+          <van-field
+            label="服务工期"
+            v-model="worktimetype"
+            input-align="right"
+            readonly
+            placeholder="请选择工期类型"
+            right-icon="arrow"
+            @click="itemHandler('worktimetype')"
+          />
+        <van-field
+          label=""
+          v-if="worktimetype"
+          v-model="workerTimeQty"
+          input-align="left"
+          placeholder="请填写服务时间"
+          @click="itemHandler('workerTimeQty')"
+        />
       <van-field
         label="服务区域"
         v-model="areatext"
@@ -106,6 +114,7 @@
             active-color="#28ae3a"
             size="14"
             inactive-color="#999999"
+            @change="change"
           />
         </div>
         <div class="diyprice" v-if="diyprice">
@@ -116,6 +125,8 @@
             clearable
             placeholder="请输入自定义价格"
             @click="itemHandler('diyprice')"
+            @change="change"
+
           />
         </div>
     </van-cell-group>
@@ -146,7 +157,7 @@
     <div class="pricepay">
       <div class="priceb">
         <span>¥</span>
-        200
+        {{money}}
       </div>
       <div
         class="priceinfo"
@@ -196,14 +207,19 @@
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 import areaList from '../utils/area.js'
 export default {
   name:'platformpricing',
+  components:{
+    TopNav
+  },
   data(){
     return {
       name:'',
       time:'',
       phone:'',
+      workerUserCnt:'',
       remark:'',
       worktype:'',
       areaShow:false,
@@ -220,19 +236,69 @@ export default {
       address:'',
       areatext:'',
       areavalue:'',
+      workerRegion:'',
       areaObj:[],
       areaList:areaList,
+      money:0,
+      workerTimeQty:'',
       columns: [
         {
+          diy:'时',
           text: '按小时计算'
         },
         {
+          diy:'天',
           text: '按天计算'
         }
-      ]
+      ],
+      menutext:'发布需求',
+      timetype:'',
+      detail:{}
     }
   },
+  mounted(){
+    var worktype1 = localStorage.getItem('workTypeName')
+    var worktype2 = localStorage.getItem('workTypeName2')
+    var remarks = localStorage.getItem("remarks")
+    this.worktype = worktype1 + '-' +worktype2
+    this.remark = remarks
+  },
   methods:{
+    change(){
+      this.getorderHeadCalcPrice()
+    },
+    getorderHeadCalcPrice(){
+      var data = {
+        "orderDate": this.DateFormat(this.currentDate, "yyyy-MM-dd hh:mm:ss"),
+        "orderType": "ACTUAL_TIME",
+        "serverType": "HIRE_WORKER",
+        "ownerCity": localStorage.getItem('city'),
+        "priceType": this.diyprice ? "DISCUSS" : "STANDARD",
+        "receiverName": this.name,
+        "receiverMobileNo": this.phone,
+        "mobileProtected": true,
+        "couponSeqId": null,
+        "couponName": null,
+        "couponMoney": 10,
+        "orderDescribe": this.remark,
+        "workTypeName": this.worktype.split("-")[0],
+        "workTypeName2": this.worktype.split("-")[1],
+        "workTypeUnit": this.timetype,
+        "workerUserCnt": 1,
+        "workerTimeQty": 1,
+        "workerRegion": this.workerRegion,
+        "workerAddress": this.address
+      }
+      if(data.priceType == 'DISCUSS'){
+        data.totalMoney = this.pricetext
+      }
+      this.detail = data
+      this.$api.orderHeadCalcPrice(data).then((result) => {
+          if(result.code == 200){
+            this.money = result.data
+          }
+      })
+    },
     formatter(type, val) {
       if (type === "year") {
         return `${val}年`;
@@ -253,6 +319,7 @@ export default {
     timeConfirm(e) {
       this.time = this.DateFormat(e, "yyyy-MM-dd hh:mm:ss");
       this.timeshow = false;
+      this.getorderHeadCalcPrice()
     },
     itemHandler(tag){
       if(tag == 'worktimetype'){
@@ -261,6 +328,10 @@ export default {
         this.areaShow = true
       }else if(tag == 'time'){
         this.timeshow = true
+      }else if(tag == 'worktype'){
+         this.$router.push('/selectwork')
+      }else if(tag == 'remark'){
+        this.$router.push({path:'/ordernote'})
       }
     },
     areacancelHandler(){
@@ -270,17 +341,23 @@ export default {
       this.worktimeShow = false
     },
     areaconfirmHandler(e){
+      this.workerRegion = e[2].name
+      console.log(this.workerRegion,'ss')
       this.areavalue = e[0].code+'-'+e[1].code+'-'+e[2].code
       this.areatext = e[0].name+'-'+e[1].name+'-'+e[2].name
       this.areaObj = e
       this.areaShow = false
     },
     confirmHandler(e){
+      this.timetype = e.diy
       this.worktimetype = e.text
       this.worktimeShow = false
     },
     linkHandler(index){
-
+      if(index == 2){
+        localStorage.setItem('detail',JSON.stringify(this.detail))
+        this.$router.push({ path: "/pricedetail",query:{index:3} });
+      }
     },
     payTodo(){
 
@@ -430,7 +507,7 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
-    z-index: 5555555;
+    z-index: 900;
     .priceb {
       font-size: 50px;
       color: #28ae3a;

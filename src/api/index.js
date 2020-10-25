@@ -14,6 +14,10 @@ const server = {
   sysCarTypeFindPage(params){
     return httpv1({method:"Get",url:'/sysCarType/findPage', params})
   },
+  //车型详情根据id查 GET /carStyle/getByPk
+  carStyleGetByPk(params){
+    return httpv1({method:"Get",url:'/carStyle/getByPk', params})
+  },
   //查询全部车型 /carStyle/findPage
   carStyleFindPage(params){
     return httpv1({method:"Get",url:'/carStyle/findPage', params})
@@ -26,6 +30,31 @@ const server = {
   orderHeadCalcPrice(data){
     return httpv1({method:"Post",url:'/orderHead/calcPrice',data})
   },
+  //GET /custWorkType/findWorkLevel根据属性查询第一级工种
+  custWorkTypeFindWorkLevel(params){
+    return httpv1({method:"Get",url:'/custWorkType/findWorkLevel',params})
+  },
+  // GET /custWorkType/findMap按二级工种分类返回
+  custWorkTypeFindMap(params){
+    return httpv1({method:"Get",url:'/custWorkType/findMap',params})
+  },
+  //sys/appeal/imgUpload 图片上传
+  appealimgUpload(data){
+    return httpv1({method:"Post",url:'/sys/appeal/imgUpload',data})
+  },
+  //明细 /orderHead/calcPricePullDet
+  orderHeadCalcPricePullDet(data){
+    return httpv1({method:"Post",url:'/orderHead/calcPricePullDet',data})
+  },
+  // /orderHead/calcHireWorkerDet劳务工价格明细
+  orderHeadCalcHireWorkerDet(data){
+    return httpv1({method:"Post",url:'/orderHead/calcHireWorkerDet',data})
+  },
+  // /orderHead/insert订单主信息，保存
+  orderHeadInsert(data){
+    return httpv1({method:"Post",url:'/orderHead/insert',data})
+  },
+  //优惠券
   couponManagefindPage(params){
     return httpv2({method:"Get",url:'/couponManage/findPage', params})
   }

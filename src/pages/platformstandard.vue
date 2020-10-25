@@ -1,5 +1,6 @@
 <template>
   <div class="platformstandard">
+    <TopNav :menu="menutext"/>
     <div class="tabnav">
       <div :class="['tabitem',tabIndex == 1 ? 'active' : '']" @click="tabHandler(1,'STAND1')">
         整车
@@ -72,9 +73,9 @@
       <div class="number" @click="largeHandler">
         <div class="labelwrap">
           <span>大件物品数量</span>
-          <van-icon name="warning-o" size="16px" />
+          <van-icon name="warning-o" size="16px" style="display:none"/>
         </div>
-        <van-stepper v-model="platform.goodnumber" disabled  :min="minNumber" disable-input theme="round" button-size="16" />
+        <van-stepper v-model="platform.goodnumber"   :min="minNumber" disable-input theme="round" button-size="16" />
       </div>
       <div class="number numberfix"   @click="itemHandler('goodrule')">
         <span>计费规则说明</span>
@@ -93,22 +94,28 @@
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 export default {
   name:'Platformstandard',
+  components:{
+    TopNav
+  },
   data(){
     return {
+      menutext:'平台标准计价',
       tabIndex:1,
       platform:{
         attachType:'STAND1',
         goodwidth:'',
         goodwidthobj:{},
         goodheight:'',
-        goodwidthobj:{},
+        goodheightobj:{},
         goodsend:'',
         goodsendobj:{},
         goodreceive:'',
         goodreceiveobj:{},
-        goodnumber:1
+        goodnumber:1,
+        attachPriceObj:{}
       },
       minNumber:0,
       unitshow:false,
@@ -145,34 +152,59 @@ export default {
           var list1 = []
           var list2 = []
           var list3 = []
+          var list4 = {}
           Object.keys(obj).forEach((value)=>{
             if(value == '货物最长'){
               list1 = obj[value]
               list1.map((item)=>{
-                item.text = item.catItem + (item.price ? '  ¥'+item.price : '')
+                item.text = item.catItem + (item.price ? '  ¥'+item.price : '免费')
               })
             }else if(value == '货物最高'){
               list2 = obj[value]
-              list1.map((item)=>{
-                item.text = item.catItem + (item.price ? '  ¥'+item.price : '')
+              list2.map((item)=>{
+                item.text = item.catItem + (item.price ? '  ¥'+item.price : '免费')
               })
 
             }else if(value == '楼层'){
               list3 = obj[value]
+              list3.map((item)=>{
+                item.text = item.remarks + (item.price ? '  ¥'+item.price : '免费')
+              })
+            }else if(value == '基础帮运费'){
+              if(obj[value]){
+                list4 = obj[value][0]
+              }
             }
           })
 
           this.goodWidthList = list1
           this.goodHeightList = list2
           this.housefloorList = list3
-
+          this.platform.attachPriceObj = list4
+          localStorage.setItem('platform',JSON.stringify(this.platform))
         }
       })
     },
     tabHandler(index,text){
       this.tabIndex = index
       this.platform.attachType = text
+      this.platform = {
+        attachType:text,
+        goodwidth:'',
+        goodwidthobj:{},
+        goodheight:'',
+        goodheightobj:{},
+        goodsend:'',
+        goodsendobj:{},
+        goodreceive:'',
+        goodreceiveobj:{},
+        goodnumber:1,
+        attachPriceObj:{}
+      }
       localStorage.setItem('platform',JSON.stringify(this.platform))
+      this.goodWidthList = []
+      this.goodHeightList = []
+      this.housefloorList = []
       this.getOther(true,this.platform.attachType)
     },
     itemHandler(tag){
@@ -201,6 +233,7 @@ export default {
       }
     },
     largeHandler(){
+      return
       this.$router.push('/bigitem')
     },
     needHandler(){

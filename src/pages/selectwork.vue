@@ -1,18 +1,20 @@
 <template>
+<div class="worklist">
+  <TopNav :menu="menutext"/>
   <div class="selectwork">
     <div class="left">
-      <div :class="['litem',listIndex == item.id ? 'active' : '']" v-for="(item,index) in list" :key="index" @click="listItemHandler(item)">
-        {{item.name}}
+      <div :class="['litem',listIndex == index ? 'active' : '']" v-for="(item,index) in list" :key="index" @click="listItemHandler(index)">
+        {{item}}
       </div>
     </div>
     <div class="right">
       <div class="rightitem">
         <div class="righttitle">
-          装修工
+          {{workName}}
         </div>
         <div class="rightcontentwrap">
-          <div :class="['rightcontent',contentIndex == index ? 'active' : '']" v-for="(item,index) in 10" :key="index" @click="contentHandler(index)">
-              电视1
+          <div :class="['rightcontent',contentIndex == index ? 'active' : '']" v-for="(item,index) in cateList" :key="index" @click="contentHandler(index,item.workName2)">
+             {{item.workName2}}
           </div>
         </div>
       </div>
@@ -21,47 +23,61 @@
       <van-button type="primary" color="#28ae3a" round block size="small" @click="needHandler">确定</van-button>
     </div>
   </div>
+</div>
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 export default {
   name:'Selectwork',
+  components:{
+    TopNav
+  },
   data(){
     return {
-      listIndex:1,
+      listIndex:0,
+      workName:'',
+      menutext:'选择工种',
       contentIndex:0,
-      list:[
-        {
-          id:'1',
-          name:'装修工'
-        },
-        {
-          id:'2',
-          name:'水泥工'
-        },
-        {
-          id:'3',
-          name:'搬运工'
-        },
-        {
-          id:'4',
-          name:'木工'
-        },
-        {
-          id:'5',
-          name:'其它'
-        }
-      ]
+      list:[],
+      cateList:[]
     }
+  },
+  mounted(){
+    this.getcustWorkTypeFindWorkLevel()
   },
   methods:{
     needHandler(){
-
+      this.$router.push('/platformpricing')
     },
-    listItemHandler(item){
-      this.listIndex = item.id
+    getcustWorkTypeFindWorkLevel(){
+      this.$api.custWorkTypeFindWorkLevel({}).then((result) => {
+        if(result.code == 200){
+          this.list = result.data
+          this.workName = this.list[0]
+          this.getcustWorkTypeFindMap()
+        }
+      })
     },
-    contentHandler(index){
+    getcustWorkTypeFindMap(){
+      var data = {
+        workName:this.workName
+      }
+      this.$api.custWorkTypeFindMap(data).then((result) =>{
+        if(result.code == 200){
+          this.cateList = result.data
+          localStorage.setItem('workTypeName2',this.cateList[0].workName2)
+        }
+      })
+    },
+    listItemHandler(index){
+      this.listIndex = index
+      this.workName = this.list[index]
+      localStorage.setItem('workTypeName',this.workName)
+      this.getcustWorkTypeFindMap()
+    },
+    contentHandler(index,workTypeName2){
+      localStorage.setItem('workTypeName2',workTypeName2)
       this.contentIndex = index
     }
   }
@@ -69,6 +85,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.worklist{
+  display: flex;
+  flex-direction: column;
+}
   .selectwork{
     display: flex;
     flex-direction: row;
@@ -80,9 +100,6 @@ export default {
       flex-direction: column;
       min-height: 100vh;
       background: #f5f6f7;
-      position: fixed;
-      left:0;
-      top:0;
       .litem{
         width:100%;
         height:100px;
@@ -110,7 +127,6 @@ export default {
     }
     .right{
       width:calc(100% - 180px);
-      margin-left:180px;
       overflow: scroll;
       display: flex;
       flex-direction: column;

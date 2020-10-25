@@ -1,12 +1,13 @@
 <template>
   <div class="pricedetail">
+     <TopNav :menu="menutext"/>
     <div class="pricetop">
       <div class="price">
         <span>¥</span>
-        200
+        {{content.payMoney}}
       </div>
-      <div class="lc">总里程9公里</div>
-      <div class="des">
+      <div class="lc" v-if="content.routeKilometer">总里程{{content.routeKilometer}}公里</div>
+      <div class="des" v-if="content.routeKilometer">
         若产生高速费、停车费和搬运费，请用户额外支付；<br/>
         若涉及逾时等侯费，请与司机按收费标准结算
       </div>
@@ -16,20 +17,12 @@
         <div class="pricetitle">
           基础费用
         </div>
-        <div class="pricew">
+        <div class="pricew" v-for="(item,index) in content.list1" :key="index">
           <div class="pt">
-            起步价(小面包车)
+            {{item.name}}({{item.name2}})
           </div>
           <div class="pr">
-            ¥20
-          </div>
-        </div>
-        <div class="pricew">
-          <div class="pt">
-            超里程(4公里 )
-          </div>
-          <div class="pr">
-            ¥20
+            {{item.propValue}}
           </div>
         </div>
       </div>
@@ -37,20 +30,12 @@
         <div class="pricetitle">
           额外费用
         </div>
-        <div class="pricew">
+        <div class="pricew" v-for="(item,index) in content.list2" :key="index">
           <div class="pt">
-           楼层费
+           {{item.name}}({{item.name2}})
           </div>
           <div class="pr">
-            ¥20
-          </div>
-        </div>
-        <div class="pricew">
-          <div class="pt">
-            大件物品附加费
-          </div>
-          <div class="pr">
-            ¥20
+            ¥{{item.propValue}}
           </div>
         </div>
       </div>
@@ -59,11 +44,72 @@
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 export default {
   name:'Pricedetail',
+  components:{
+    TopNav
+  },
   data(){
     return {
+      detail:{},
+      content:{},
+      menutext:'价格明细'
+    }
+  },
+  methods:{
+    getDetail(data){
+      this.$api.orderHeadCalcPricePullDet(data).then((result) =>{
+        if(result.code == 200){
+          var c = result.data
+          var list1 = []
+          var  list2 = []
+          Object.keys(c.map).forEach((value) => {
+            if(value == '基础费用'){
+              list1 = c.map[value]
+            }else if(value == '额外费用'){
+              list2 = c.map[value]
+            }
+          })
+          result.data.list1 = list1
+          result.data.list2 = list2
+          this.content = result.data
+        }
+      })
+    },
+    getworkDetail(data){
+      this.$api.orderHeadCalcHireWorkerDet(data).then((result) => {
+        if(result.code == 200){
+                    var c = result.data
+          var list1 = []
+          var  list2 = []
+          Object.keys(c.map).forEach((value) => {
+            if(value == '基础费用'){
+              list1 = c.map[value]
+            }else if(value == '额外费用'){
+              list2 = c.map[value]
+            }
+          })
+          result.data.list1 = list1
+          result.data.list2 = list2
+          this.content = result.data
+        }
+      })
+    }
 
+  },
+  mounted(){
+    var index = this.$route.query.index
+    console.log(index)
+    var detail = localStorage.getItem('detail')
+    if(detail){
+      detail = JSON.parse(detail)
+      this.detail = detail
+      if(index != 3){
+        this.getDetail(detail)
+      }else{
+        this.getworkDetail(detail)
+      }
     }
   }
 

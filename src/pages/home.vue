@@ -1,73 +1,163 @@
 <template>
-	<div class="home">
-		<div class="topmenu">
-			<div class="address" @click="goPos">
-				<div class="city">{{city}}</div>
-				<van-icon color="#bbbbbb" name="arrow-down" />
-			</div>
-			<div class="brana">货搬搬</div>
-		</div>
-		<div class="servermenu">
-      <div class="submenus">
-        <img src="../assets/images/homeico.png" class="homeico" />
+  <div class="home">
+    <div class="topmenu">
+      <div
+        class="address"
+        @click="goPos"
+      >
+        <div class="city">{{city}}</div>
+        <van-icon
+          color="#bbbbbb"
+          name="arrow-down"
+        />
       </div>
-      <div :class="['submenu', serverIndex == 1 ? 'active' : '']" @click="serverHandler(1)">
+      <div class="brana">货搬搬</div>
+    </div>
+    <div class="servermenu">
+      <div class="submenus">
+        <img
+          src="../assets/images/homeico.png"
+          class="homeico"
+        />
+      </div>
+      <div
+        :class="['submenu', serverIndex == 1 ? 'active' : '']"
+        @click="serverHandler(1)"
+      >
         拉货
       </div>
-      <div :class="['submenu', serverIndex == 2 ? 'active' : '']"  @click="serverHandler(2)">
+      <div
+        :class="['submenu', serverIndex == 2 ? 'active' : '']"
+        @click="serverHandler(2)"
+      >
         搬家
       </div>
-      <div class="submenu"  @click="serverHandler(3)">
+      <div
+        class="submenu"
+        @click="serverHandler(3)"
+      >
         劳务工
       </div>
-      <div :class="['submenu', serverIndex == 4 ? 'active' : '']"  @click="serverHandler(4)">
+      <div
+        :class="['submenu', serverIndex == 4 ? 'active' : '']"
+        @click="serverHandler(4)"
+      >
         租车
       </div>
-		</div>
-    <div class="serverlh" v-if="serverIndex == 1 || serverIndex == 4">
+    </div>
+    <div
+      class="serverlh"
+      v-if="serverIndex == 1 || serverIndex == 4"
+    >
       <div class="carwrap">
-        <div :class="['caritem',cartIndex == index ? 'cartActive' : '' ,serverIndex == 4 ? 'caritemed' : '']" v-for="(item,index) in carList" :key="index" @click="cartHandler(index)">
+        <div
+          :class="['caritem',cartIndex == index ? 'cartActive' : '' ,serverIndex == 4 ? 'caritemed' : '']"
+          v-for="(item,index) in carList"
+          :key="index"
+          @click="cartHandler(index)"
+        >
           {{item.carName}}
-          <div class="" v-if="(carList.length-1) == index" @click="cateHandler">
-            <img src="../assets/images/cateico.png" class="cateico" />
-          </div>
+        </div>
+        <div
+          class="cateicowrap"
+          @click="cateHandler"
+        >
+          <img
+            src="../assets/images/cateico.png"
+            class="cateico"
+          />
         </div>
       </div>
-      <div class="carinfo" @click="carInfo(cartObject)">
-        <img :src="cartObject.picUrl" class="carsico" />
+      <div
+        class="carinfo"
+        @click="carInfo(cartObject)"
+      >
+        <img
+          :src="cartObject.picUrl"
+          class="carsico"
+        />
         <div class="carinfowrap">
           <div class="c1 cline">载重:{{cartObject.carCapacity}}公斤</div>
           <div class="c2 cline">长宽高:{{cartObject.carLwh}}</div>
           <div class="c3 cline">载货体积:{{cartObject.carVolume}}方</div>
         </div>
-        <van-icon name="arrow" color="#bbbbbb" />
+        <van-icon
+          name="arrow"
+          color="#bbbbbb"
+        />
       </div>
     </div>
-    <div class="addresssearch" v-if="serverIndex == 1 || serverIndex == 4">
-      <van-steps direction="vertical" :active="active" active-icon="circle" inactive-icon="circle">
-        <van-step v-for="(item,index) in adList" :key="index">
-          <div class="addressdiy"  @click="setaddHandler(index)">
-            <div class="a1" v-if="item.name">{{item.name}}</div>
-            <div class="a2" v-if="item.name">{{item.address}}</div>
-            <div class="a3" v-if="!item.name">{{index == 0 ? '请写发货地址' : '请写收货地址'}}</div>
-            <div class="a4" @click.stop="deleAddHandler(index)">
-               <img v-if="index > 0 && adList.length > 2" src="../assets/images/delete.png" class="delete" />
+    <div
+      class="addresssearch"
+      v-if="serverIndex == 1 || serverIndex == 4"
+    >
+      <van-steps
+        direction="vertical"
+        :active="active"
+        active-icon="circle"
+        inactive-icon="circle"
+      >
+        <van-step
+          v-for="(item,index) in adList"
+          :key="index"
+        >
+          <div
+            class="addressdiy"
+            @click="setaddHandler(index)"
+          >
+            <div
+              class="a1"
+              v-if="item.name"
+            >{{item.name}}</div>
+            <div
+              class="a2"
+              v-if="item.name"
+            >{{item.address}}</div>
+            <div
+              class="a3"
+              v-if="!item.name"
+            >{{index == 0 ? '请写发货地址' : '请写收货地址'}}</div>
+            <div
+              class="a4"
+              @click.stop="deleAddHandler(index)"
+            >
+              <img
+                v-if="index > 0 && adList.length > 2"
+                src="../assets/images/delete.png"
+                class="delete"
+              />
             </div>
           </div>
         </van-step>
       </van-steps>
-      <div class="addbtn" @click="addHandler">
+      <div
+        class="addbtn"
+        @click="addHandler"
+      >
         <van-icon name="plus" />
         <span>添加收货地址</span>
       </div>
     </div>
-    <div class="movelist" v-if="serverIndex == 2">
-      <div class="moveitem" v-for="(item,index) in carList" :key="index">
-        <img :src="item.picUrl" class="carico" />
+    <div
+      class="movelist"
+      v-if="serverIndex == 2"
+    >
+      <div
+        class="moveitem"
+        v-for="(item,index) in carList"
+        :key="index"
+      >
+        <img
+          :src="item.picUrl"
+          class="carico"
+        />
         <div class="carinfo">
           <div class="carnamewrap">
             <div class="carname">{{item.carName}}</div>
-            <div class="cartag" v-if="item.spec">{{item.spec}}</div>
+            <div
+              class="cartag"
+              v-if="item.spec"
+            >{{item.spec}}</div>
           </div>
           <div class="cardes">
             {{item.remarks}}
@@ -79,588 +169,631 @@
             <div class="pr">
               ¥{{item.minPrice}}<span>起</span>
             </div>
-            <div class="btnw" @click="orderTodo">
+            <div
+              class="btnw"
+              @click="mevohome(item)"
+            >
               立即下单
             </div>
           </div>
         </div>
-        <van-icon name="arrow" color="#999999" size="16"/>
+        <van-icon
+          name="arrow"
+          color="#999999"
+          size="16"
+        />
       </div>
     </div>
-    <div class="paybtn" v-if="serverIndex == 1">
-      <div class="paytop" style="display:none">
+    <div
+      class="paybtn"
+      v-if="serverIndex == 1 || serverIndex == 4"
+    >
+      <div
+        class="paytop"
+        style="display:none"
+      >
         <div class="pay1">
           <span>¥</span>200
         </div>
-        <div class="payinfo" @click="priceDetail">
+        <div
+          class="payinfo"
+          @click="priceDetail"
+        >
           <span>价格明细</span>
-          <van-icon name="arrow" color="#666666"/>
+          <van-icon
+            name="arrow"
+            color="#666666"
+          />
         </div>
       </div>
-      <div class="paybot" >
-        <div class="yuyue"  @click="orderTodo">
+      <div class="paybot">
+        <!-- orderType (string, optional): 订单类型，实时，预约 = ['APPOINTMENT', 'ACTUAL_TIME'] -->
+        <div
+          class="yuyue"
+          @click="orderTodo('ACTUAL_TIME')"
+        >
           预约
         </div>
-        <div class="order" @click="orderTodo">
+        <div
+          class="order"
+          @click="orderTodo('APPOINTMENT')"
+        >
           立即下单
         </div>
       </div>
     </div>
     <div id='container'></div>
-	</div>
+  </div>
 </template>
 
 <script>
-
-
 export default {
-  name: 'home',
-  data () {
+  name: "home",
+  data() {
     return {
-      serverIndex:1,
-      serverType:{
-        1:'PULL_CARGO',
-        2:'CHANGE_HOUSE',
-        3:'HIRE_WORKER',
-        4:'RENT_CAR'
+      serverIndex: 1,
+      serverType: {
+        1: "PULL_CARGO",
+        2: "CHANGE_HOUSE",
+        3: "HIRE_WORKER",
+        4: "RENT_CAR",
       },
-      cartObject:{},
-      cartIndex:0,
-      cartPageNum:1,
-      cartPageSize:4,
-      carList:[],
-      active:0,
-      adList:[
+      cartObject: {},
+      cartIndex: 0,
+      cartPageNum: 1,
+      cartPageSize: 4,
+      carList: [],
+      active: 0,
+      adList: [
         {
-          name:'',
-          address:''
+          name: "",
+          address: "",
         },
         {
-          name:'',
-          address:''
-        }
+          name: "",
+          address: "",
+        },
       ],
-      city:'武汉市'
-    }
+      city: "武汉",
+    };
   },
-  mounted () {
-    this.getAllCart()
-    localStorage.setItem('orderType',this.serverIndex)
-    var that = this
-    var map = new AMap.Map('container', {
-        resizeEnable: true
+  mounted() {
+    this.getAllCart();
+    localStorage.setItem("orderType", this.serverIndex);
+    var that = this;
+    var map = new AMap.Map("container", {
+      resizeEnable: true,
     });
-    AMap.plugin('AMap.Geolocation', function() {
-        var geolocation = new AMap.Geolocation({
-            enableHighAccuracy: true,//是否使用高精度定位，默认:true
-            timeout: 10000,          //超过10秒后停止定位，默认：5s
-            buttonPosition:'RB',    //定位按钮的停靠位置
-            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-            zoomToAccuracy: true,   //定位成功后是否自动调整地图视野到定位点
-
-        });
-        map.addControl(geolocation);
-        geolocation.getCurrentPosition(function(status,result){
-          console.log(result,'result')
-          console.log(status,'status')
-            if(status=='complete'){
-              var obj = {}
-              obj.lng = result.position.lng
-              obj.lat = result.position.lat
-              obj.addressComponent = result.addressComponent
-              obj.formattedAddress = result.formattedAddress
-              that.city = obj.addressComponent.city
-              that.serverHandler(1)
-              that.getAllCart()
-              localStorage.setItem('locations',obj)
-            }else{
-              that.city = '武汉市'
-              //that.$toast('定位失败，请检查是否有权限');
-            }
-            localStorage.setItem('city',that.city)
-        });
-    });
-    var list = localStorage.getItem('adList')
-    if(list){
-      list = JSON.parse(list)
-      this.adList = list
-      console.log(this.adList,'ADLIST')
-      this.active = this.adList.length
-   }
-
-    if(localStorage.getItem('sCar') == 1){
-      var cart = localStorage.getItem('cartObject')
-      this.cartObject = cart ? JSON.parse(cart) : {}
-    }
-
-  },
-  computed:{
-  },
-  methods: {
-    getAllCart(){
-      var data = {
-        serverType:this.serverType[this.serverIndex],
-        operCenter:this.city,
-        pageno:this.cartPageNum,
-        pagesize:this.cartPageSize
-      }
-      this.$api.carStyleFindPage(data).then((result)=>{
-        this.carList = result.list
-        if(localStorage.getItem('sCar') == 0){
-          this.cartObject = result.list[0]
+    AMap.plugin("AMap.Geolocation", function() {
+      var geolocation = new AMap.Geolocation({
+        enableHighAccuracy: true, //是否使用高精度定位，默认:true
+        timeout: 10000, //超过10秒后停止定位，默认：5s
+        buttonPosition: "RB", //定位按钮的停靠位置
+        buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+        zoomToAccuracy: true, //定位成功后是否自动调整地图视野到定位点
+      });
+      map.addControl(geolocation);
+      geolocation.getCurrentPosition(function(status, result) {
+        console.log(result, "result");
+        console.log(status, "status");
+        if (status == "complete") {
+          var obj = {};
+          obj.lng = result.position.lng;
+          obj.lat = result.position.lat;
+          obj.addressComponent = result.addressComponent;
+          obj.formattedAddress = result.formattedAddress;
+          that.city = obj.addressComponent.city;
+          that.serverHandler(1);
+          that.getAllCart();
+          localStorage.setItem("locations", obj);
+        } else {
+          that.city = "武汉";
+          //that.$toast('定位失败，请检查是否有权限');
         }
-      })
+        localStorage.setItem("city", that.city);
+      });
+    });
+    var list = localStorage.getItem("adList");
+    if (list) {
+      list = JSON.parse(list);
+      this.adList = list;
+      console.log(this.adList, "ADLIST");
+      this.active = this.adList.length;
+    }
+
+    if (localStorage.getItem("sCar") == 1) {
+      var cart = localStorage.getItem("cartObject");
+      this.cartObject = cart ? JSON.parse(cart) : {};
+    }
+  },
+  computed: {},
+  methods: {
+    getAllCart() {
+      var data = {
+        serverType: this.serverType[this.serverIndex],
+        operCenter: this.city,
+        pageno: this.cartPageNum,
+        pagesize: this.cartPageSize,
+      };
+      this.$api.carStyleFindPage(data).then((result) => {
+        this.carList = result.list;
+        if (localStorage.getItem("sCar") == 0) {
+          this.cartObject = result.list[0];
+          localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
+        }
+      });
     },
     serverHandler(index) {
-      this.serverIndex = index
-      localStorage.setItem('orderType',this.serverIndex)
-      if(index == 1){
-        this.cartPageSize = 4
-        this.getAllCart()
-      }else if(index == 2){
-        this.cartPageSize = 100
-        this.getAllCart()
-      }else if(index == 4){
+      this.carList = [];
+      this.serverIndex = index;
+      localStorage.setItem("orderType", this.serverIndex);
+      if (index == 1) {
+        this.cartPageSize = 4;
+        this.getAllCart();
+      } else if (index == 2) {
+        this.cartPageSize = 100;
+        this.getAllCart();
+      } else if (index == 4) {
+        this.getAllCart();
         // this.carList = this.carList2
-      }else if(index == 3){
-        this.$router.push('/platformpricing')
+      } else if (index == 3) {
+        this.$router.push("/platformpricing");
       }
+    },
+    mevohome(item) {
+      localStorage.setItem("cartObject", JSON.stringify(item));
+      this.$router.push("/confirmorder");
     },
     //
-    cartHandler(index){
-      this.cartIndex = index
-      this.cartObject = this.carList[index]
-      localStorage.setItem('cartObject',JSON.stringify(this.cartObject))
+    cartHandler(index) {
+      this.cartIndex = index;
+      this.cartObject = this.carList[index];
+      localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
     },
-    goPos(){
-      this.$router.push('/city')
+    goPos() {
+      this.$router.push("/city");
     },
-    cateHandler(){
-      var type = this.serverType[this.serverIndex]
-      this.$router.push({path:'/cart',query:{type:type,operCenter:this.city}})
+    cateHandler() {
+      var type = this.serverType[this.serverIndex];
+      this.$router.push({
+        path: "/cart",
+        query: { type: type, operCenter: this.city },
+      });
     },
-    carInfo(item){
-      this.$router.push({path:'/cartinfo',query:{carType:item.carType}})
+    carInfo(item) {
+      this.$router.push({
+        path: "/cartinfo",
+        query: { seqId: item.seqId },
+      });
     },
-    orderTodo(){
-      var list = localStorage.getItem('adList')
-      list = JSON.parse(list)
-      var arr = []
-      list.map((item)=>{
-        if(item.location){
-          var il = item.location
-          arr.push([il.lng,il.lat])
+    orderTodo(ordertype) {
+      //priceType (string, optional): 计价方式 = ['STANDARD', 'DISCUSS']
+      localStorage.setItem("placeOrder", ordertype);
+      if (ordertype == 1) {
+        var list = localStorage.getItem("adList");
+        list = JSON.parse(list);
+        var arr = [];
+        list.map((item) => {
+          if (item.location) {
+            var il = item.location;
+            arr.push([il.lng, il.lat]);
+          }
+        });
+        if (arr.length < 2) {
+          return this.$toast("请认真选择发货或收货地址");
         }
-      })
-      if(arr.length < 2){
-        return this.$toast('请认真选择发货或收货地址')
+        var dis = AMap.GeometryUtil.distanceOfLine(arr);
+        localStorage.setItem("routeKilometer", dis);
+      } else if (ordertype == 2) {
       }
-      var dis =  AMap.GeometryUtil.distanceOfLine(arr);
-      localStorage.setItem('routeKilometer',dis)
-      this.$router.push('/confirmorder')
+      this.$router.push("/confirmorder");
     },
-    priceDetail(){
-      this.$router.push('/pricedetail')
+    priceDetail() {
+      this.$router.push("/pricedetail");
     },
-    addHandler(){
+    addHandler() {
       var obj = {
-        name:'',
-        address:''
-      }
-      this.adList.push(obj)
+        name: "",
+        address: "",
+      };
+      this.adList.push(obj);
     },
-    setaddHandler(index){
-      localStorage.setItem('adList',JSON.stringify(this.adList))
-      this.$router.push({path:'/chooseaddress',query:{index:index}})
+    setaddHandler(index) {
+      localStorage.setItem("adList", JSON.stringify(this.adList));
+      this.$router.push({ path: "/chooseaddress", query: { index: index } });
     },
-    deleAddHandler(index){
-      this.adList.splice(index,1)
-    }
+    deleAddHandler(index) {
+      this.adList.splice(index, 1);
+    },
   },
-  components: {
-
-  },
-  computed: {
-
-  }
-}
+  components: {},
+  computed: {},
+};
 </script>
 
 <style lang='scss' scoped>
-	.home {
-		display: flex;
-		flex-direction: column;
-		min-height: 100vh;
-    padding-bottom: 220px;
-    box-sizing: border-box;
-		background:#f5f6f7;
-		.topmenu{
-			height:100px;
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			position: relative;
-			padding:0 30px;
-      background: white;
-      .address{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        /deep/ .van-icon{
-          font-size: 32px;
-        }
-        .city{
-          font-size: 18px;
-          margin-right: 10px;
-        }
-      }
-			.brana{
-				position: absolute;
-				font-size: 32px;
-				font-weight: bold;
-				color:#333333;
-				top:50%;
-				left:50%;
-				transform: translate(-50%,-50%);
-			}
-    }
-    .servermenu{
+.home {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-bottom: 220px;
+  box-sizing: border-box;
+  background: #f5f6f7;
+  .topmenu {
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    position: relative;
+    padding: 0 30px;
+    background: white;
+    .address {
       display: flex;
       flex-direction: row;
       align-items: center;
-      height:90px;
-      width: 100%;
-      padding:0 30px;
-      box-sizing: border-box;
-      overflow: hidden;
-      .submenus{
-        width:12%;
-        display: flex;
-        .homeico{
-          width:40px;
-          height:40px;
-          margin-right:auto;
-        }
+      /deep/ .van-icon {
+        font-size: 32px;
       }
-      .submenu{
-        display: flex;
-        width: 22%;
-        font-size: 30px;
-        .homeico{
-          width:40px;
-          height:40px;
-          margin-right:auto;
-        }
+      .city {
+        font-size: 18px;
+        margin-right: 10px;
       }
-      .active{
-        color:#28ae3a;
+    }
+    .brana {
+      position: absolute;
+      font-size: 32px;
+      font-weight: bold;
+      color: #333333;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+  .servermenu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 90px;
+    width: 100%;
+    padding: 0 30px;
+    box-sizing: border-box;
+    overflow: hidden;
+    .submenus {
+      width: 12%;
+      display: flex;
+      .homeico {
+        width: 40px;
+        height: 40px;
+        margin-right: auto;
+      }
+    }
+    .submenu {
+      display: flex;
+      width: 22%;
+      font-size: 30px;
+      .homeico {
+        width: 40px;
+        height: 40px;
+        margin-right: auto;
+      }
+    }
+    .active {
+      color: #28ae3a;
+      position: relative;
+    }
+    .active::after {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      content: "";
+      background: white;
+      bottom: -50px;
+      left: 15px;
+      transform: rotate(-45deg);
+    }
+  }
+  .serverlh {
+    width: 690px;
+    margin: 0 auto;
+    height: 350px;
+    border-radius: 20px;
+    background: white;
+    padding: 30px;
+    box-sizing: border-box;
+    border-top: 1px solid transparent;
+    display: flex;
+    flex-direction: column;
+    .carwrap {
+      display: flex;
+      flex-direction: row;
+      position: relative;
+      .caritem {
+        font-size: 18px;
+        width: 25%;
+        text-align: left;
         position: relative;
       }
-      .active::after{
+      .cateicowrap {
         position: absolute;
-        width:30px;
-        height:30px;
-        content:'';
-        background:white;
-        bottom: -50px;
-        left:15px;
-        transform:rotate(-45deg);
-      }
-    }
-    .serverlh{
-      width:690px;
-      margin:0 auto;
-      height:350px;
-      border-radius: 20px;
-      background:white;
-      padding:30px;
-      box-sizing: border-box;
-      border-top:1px solid transparent;
-      display: flex;
-      flex-direction: column;
-      .carwrap{
-        display: flex;
-        flex-direction: row;
-        .caritem{
-          font-size: 18px;
-          width:25%;
-          text-align: left;
-          position: relative;
-          .cateico{
-            width:40px;
-            height:40px;
-            position: absolute;
-            right:0;
-            top:50%;
-            transform: translateY(-50%);
-          }
-        }
-        .caritemed{
-          width:20%;
-        }
-        .cartActive{
-          color:#28ae3a;
-        }
-      }
-      .carinfo{
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-top:70px;
-        margin-bottom: 70px;
-        /deep/ .van-icon{
-          font-size: 32px;
-        }
-        .carsico{
-          width:282px;
-          height:128px;
-          margin-right:30px;
-        }
-        .carinfowrap{
-          display: flex;
-          flex-direction: column;
-          font-size: 16px;
-          line-height: 42px;
-          color:#333333;
-          flex:1 1 auto;
-          .cline{
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-          }
-        }
-      }
-    }
-    .addresssearch{
-        width:690px;
-        margin:20px auto;
-        background: white;
-        border-radius: 20px;
-        padding:30px 30px 130px 30px;
-        box-sizing: border-box;
-        position: relative;
-        /deep/ .van-step__line{
-          background: #e5e6e7!important;
-        }
-        /deep/ .van-hairline:last-of-type .van-icon-circle{
-          color:#ff561e;
-        }
-        /deep/ .van-hairline:not(:first-child):not(:last-child) .van-icon{
-          font-size: 0.2rem!important;
-          color:#333333;
-        }
-        /deep/ .van-hairline:not(:first-child):not(:last-child) .van-icon-circle::before{
-          background:#333333;
-          border-radius: 50%;
-          font-size: 0.2rem!important;
-        }
-        /deep/ .van-hairline:nth-of-type(1) .van-icon-circle{
-          color:#28ae3a;
-        }
-        /deep/ .van-icon-circle::before {
-          background: white;
-        }
-        /deep/ .van-step--vertical .van-step__circle-container{
-          top:70px;
-        }
-        /deep/ .van-step--vertical .van-step__line{
-          top:70px;
-        }
-        /deep/ .van-step--vertical{
-          padding-right:0px!important;
-        }
-        .addressdiy{
-          display: flex;
-          flex-direction: column;
-          height:100px;
-          justify-content: center;
-          position: relative;
-          .a4{
-              width:100px;
-              height:100px;
-              position: absolute;
-              right:0;
-              top:0;
-            .delete{
-              width:32px;
-              height:32px;
-              position: absolute;
-              right:0;
-              top:50%;
-              transform: translateY(-50%);
-            }
-          }
-
-        }
-        .addbtn{
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        .cateico {
+          width: 40px;
+          height: 40px;
           position: absolute;
-          left:50%;
-          transform: translateX(-50%);
-          bottom: 50px;
-          width:250px;
-          height:60px;
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-          border-radius: 30px;
-          border:1px solid #e8e8e8;
-          font-size: 18px;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
         }
+      }
+      .caritemed {
+        width: 20%;
+      }
+      .cartActive {
+        color: #28ae3a;
+      }
     }
-    .movelist{
-      width:690px;
-      margin:0 auto;
+    .carinfo {
       display: flex;
-      flex-direction: column;
-      .moveitem{
-        width:100%;
-        background: white;
-        height:305px;
+      flex-direction: row;
+      align-items: center;
+      margin-top: 70px;
+      margin-bottom: 70px;
+      /deep/ .van-icon {
+        font-size: 32px;
+      }
+      .carsico {
+        width: 282px;
+        height: 128px;
+        margin-right: 30px;
+      }
+      .carinfowrap {
         display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding:30px;
-        box-sizing: border-box;
-        border-radius: 20px;
-        overflow: hidden;
-        .carico{
-          width:240px;
-          height:120px;
-          margin-right:20px;
-        }
-        .carinfo{
-          display: flex;
-          flex-direction: column;
-          width:340px;
-          .carnamewrap{
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin-bottom: 10px;
-            .carname{
-              font-size: 35px;
-              color:#333333;
-              margin-right:15px;
-            }
-            .cartag{
-              padding:0 10px;
-              font-size: 20px;
-              color:#ff561e;
-              height:35px;
-              line-height: 35px;
-              border-radius: 15px;
-              border:1px solid #ff561e;
-              background:#ffeee8;
-            }
-          }
-          .cardes{
-            font-size: 16px;
-            line-height: 50px;
-            padding-right:20px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            display: inline-block;
-            width:100%;
-          }
-          .pricewrap{
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            margin-top:15px;
-            .pr{
-              font-size: 18px;
-              color:#28ae3a;
-              span{
-                color:#999999;
-              }
-            }
-            .btnw{
-              margin-left:auto;
-              width:170px;
-              height:60px;
-              border-radius: 30px;
-              overflow: hidden;
-              line-height: 60px;
-              text-align: center;
-              background: #28ae3a;
-              font-size: 18px;
-              color:white;
-            }
-          }
+        flex-direction: column;
+        font-size: 16px;
+        line-height: 42px;
+        color: #333333;
+        flex: 1 1 auto;
+        .cline {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
     }
-    .paybtn{
-      width:100%;
-      min-height:100px;
-      background:white;
-      position: fixed;
-      left:0;
-      bottom: 0;
-      z-index: 30000;
-      -moz-box-shadow:-1px 0px 5px -2px #b9b8b8;
-      -webkit-box-shadow:-1px 0px 5px -2px #b9b8b8;
-      box-shadow:-1px 0px 5px -2px#b9b8b8;
+  }
+  .addresssearch {
+    width: 690px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 20px;
+    padding: 30px 30px 130px 30px;
+    box-sizing: border-box;
+    position: relative;
+    /deep/ .van-step__line {
+      background: #e5e6e7 !important;
+    }
+    /deep/ .van-hairline:last-of-type .van-icon-circle {
+      color: #ff561e;
+    }
+    /deep/ .van-hairline:not(:first-child):not(:last-child) .van-icon {
+      font-size: 0.2rem !important;
+      color: #333333;
+    }
+    /deep/
+      .van-hairline:not(:first-child):not(:last-child)
+      .van-icon-circle::before {
+      background: #333333;
+      border-radius: 50%;
+      font-size: 0.2rem !important;
+    }
+    /deep/ .van-hairline:nth-of-type(1) .van-icon-circle {
+      color: #28ae3a;
+    }
+    /deep/ .van-icon-circle::before {
+      background: white;
+    }
+    /deep/ .van-step--vertical .van-step__circle-container {
+      top: 70px;
+    }
+    /deep/ .van-step--vertical .van-step__line {
+      top: 70px;
+    }
+    /deep/ .van-step--vertical {
+      padding-right: 0px !important;
+    }
+    .addressdiy {
       display: flex;
       flex-direction: column;
-      .paytop{
+      height: 100px;
+      justify-content: center;
+      position: relative;
+      .a4 {
+        width: 100px;
         height: 100px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding:0 30px;
-        box-sizing: border-box;
-        border-bottom: 1px solid #f4f3f3;
-        .pay1{
-         font-size: 50px;
-         color:#28ae3a;
-         span{
-           font-size: 30px;
-         }
+        position: absolute;
+        right: 0;
+        top: 0;
+        .delete {
+          width: 32px;
+          height: 32px;
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
         }
-        .payinfo{
+      }
+    }
+    .addbtn {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 50px;
+      width: 250px;
+      height: 60px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      border-radius: 30px;
+      border: 1px solid #e8e8e8;
+      font-size: 18px;
+    }
+  }
+  .movelist {
+    width: 690px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    .moveitem {
+      width: 100%;
+      background: white;
+      height: 305px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 30px;
+      box-sizing: border-box;
+      border-radius: 20px;
+      overflow: hidden;
+      .carico {
+        width: 240px;
+        height: 120px;
+        margin-right: 20px;
+      }
+      .carinfo {
+        display: flex;
+        flex-direction: column;
+        width: 340px;
+        .carnamewrap {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          margin-bottom: 10px;
+          .carname {
+            font-size: 35px;
+            color: #333333;
+            margin-right: 15px;
+          }
+          .cartag {
+            padding: 0 10px;
+            font-size: 20px;
+            color: #ff561e;
+            height: 35px;
+            line-height: 35px;
+            border-radius: 15px;
+            border: 1px solid #ff561e;
+            background: #ffeee8;
+          }
+        }
+        .cardes {
           font-size: 16px;
-          color:#666666;
+          line-height: 50px;
+          padding-right: 20px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: inline-block;
+          width: 100%;
+        }
+        .pricewrap {
           display: flex;
           flex-direction: row;
           align-items: center;
-          margin-left:auto;
-          /deep/ .van-icon{
-            font-size: 16px;
+          margin-top: 15px;
+          .pr {
+            font-size: 18px;
+            color: #28ae3a;
+            span {
+              color: #999999;
+            }
+          }
+          .btnw {
+            margin-left: auto;
+            width: 170px;
+            height: 60px;
+            border-radius: 30px;
+            overflow: hidden;
+            line-height: 60px;
+            text-align: center;
+            background: #28ae3a;
+            font-size: 18px;
+            color: white;
           }
         }
       }
-      .paybot{
+    }
+  }
+  .paybtn {
+    width: 100%;
+    min-height: 100px;
+    background: white;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 30000;
+    -moz-box-shadow: -1px 0px 5px -2px #b9b8b8;
+    -webkit-box-shadow: -1px 0px 5px -2px #b9b8b8;
+    box-shadow: -1px 0px 5px -2px#b9b8b8;
+    display: flex;
+    flex-direction: column;
+    .paytop {
+      height: 100px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0 30px;
+      box-sizing: border-box;
+      border-bottom: 1px solid #f4f3f3;
+      .pay1 {
+        font-size: 50px;
+        color: #28ae3a;
+        span {
+          font-size: 30px;
+        }
+      }
+      .payinfo {
+        font-size: 16px;
+        color: #666666;
         display: flex;
         flex-direction: row;
         align-items: center;
-        padding:0 30px;
-        box-sizing: border-box;
-        height: 100px;
-        .yuyue{
-          width:270px;
-          height:80px;
-          border-radius: 40px;
-          background: #186823;
-          line-height: 80px;
-          font-size:30px;
-          text-align: center;
-          color:white;
-          margin-right:30px;
-        }
-        .order{
-          flex:1;
-          height: 80px;
-          line-height: 80px;
-          text-align: center;
-          color:white;
-          font-size: 30px;
-          background: #28ae3a;
-          border-radius: 40px;
+        margin-left: auto;
+        /deep/ .van-icon {
+          font-size: 16px;
         }
       }
     }
-	}
+    .paybot {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0 30px;
+      box-sizing: border-box;
+      height: 100px;
+      .yuyue {
+        width: 270px;
+        height: 80px;
+        border-radius: 40px;
+        background: #186823;
+        line-height: 80px;
+        font-size: 30px;
+        text-align: center;
+        color: white;
+        margin-right: 30px;
+      }
+      .order {
+        flex: 1;
+        height: 80px;
+        line-height: 80px;
+        text-align: center;
+        color: white;
+        font-size: 30px;
+        background: #28ae3a;
+        border-radius: 40px;
+      }
+    }
+  }
+}
 </style>

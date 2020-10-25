@@ -1,4 +1,6 @@
 <template>
+<div class="list">
+<TopNav :menu="menutext"/>
 <div class="cartwrap">
   <div class="cartitem" v-for="(item,index) in carList" :key="index" @click="cartHandler(item)">
     <img :src="item.picUrl"  class="cartico" />
@@ -7,16 +9,22 @@
     </div>
   </div>
 </div>
+</div>
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 export default {
   name:'Cart',
+  components:{
+    TopNav
+  },
   data(){
     return {
       type:'',
       operCenter:'',
-      carList:[]
+      carList:[],
+      menutext:'全部车型'
     }
   },
   mounted(){
@@ -52,6 +60,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.list{
+  display: flex;
+  flex-direction: column;
+}
 .cartwrap{
   display: flex;
   flex-direction: row;

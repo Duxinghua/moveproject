@@ -66,7 +66,7 @@ export default {
     background: white;
     position: fixed;
     left:0;
-    top:0;
+    // top:0;
     z-index: 300000;
     .adleft {
       width: 160px;

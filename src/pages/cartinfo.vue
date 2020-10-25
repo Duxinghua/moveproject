@@ -1,28 +1,62 @@
 <template>
 <div class="cartinfo">
-
+    <TopNav :menu="menutext"/>
+    <div class="cartinfowrap">
+      <div class="carimgwrap">
+        <img :src="detail.picUrl" class="cartimg" />
+      </div>
+      <div class="cartitem">
+        <div class="carttitle">
+          载货空间及重量
+        </div>
+        <div class="cartlist">
+          <div class="line">
+            载重:{{detail.carCapacity}}公斤
+          </div>
+          <div class="line">
+            长宽高:{{detail.carLwh}}
+          </div>
+          <div class="line">
+            载货体积:{{detail.carVolume}}
+          </div>
+        </div>
+      </div>
+      <div class="cartitem">
+        <div class="carttitle">
+          用车参考
+        </div>
+        <div class="cartlist">
+          <div class="line">{{detail.remarks}}</div>
+        </div>
+      </div>
+    </div>
 </div>
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 export default {
   name:'Cartinfo',
+  components:{
+    TopNav
+  },
   data(){
     return {
-      carType:'',
-      detail:{}
+      seqId:'',
+      detail:{},
+      menutext:'车辆详情',
     }
   },
   mounted(){
-    this.carType = this.$route.query.carType
+    this.seqId = this.$route.query.seqId
     this.getDetail()
   },
   methods:{
     getDetail(){
       var data = {
-        carType:this.carType
+        seqId:this.seqId
       }
-      this.$api.sysCarTypeFindPage(data).then((result)=>{
+      this.$api.carStyleGetByPk(data).then((result)=>{
         this.detail = result.data
       })
     }
@@ -33,6 +67,56 @@ export default {
 <style lang="scss" scoped>
 .cartinfo{
   display: flex;
-  flex-direction: column
+  flex-direction: column;
+  .cartinfowrap{
+    display: flex;
+    flex-direction: column;
+    .carimgwrap{
+      width:100%;
+      height:427px;
+      background: #f5f6f7;
+      position: relative;
+      .cartimg{
+        position: absolute;
+        width:50%;
+        left:50%;
+        top:50%;
+        transform: translate(-50%,-50%);
+      }
+    }
+    .cartitem{
+      display: flex;
+      padding:30px;
+      box-sizing: border-box;
+      flex-direction: column;
+      .carttitle{
+        font-size: 28px;
+        font-weight: bold;
+        padding-left:28px;
+        position: relative;
+      }
+      .carttitle:before{
+        content:'';
+        position: absolute;
+        left:0;
+        top:50%;
+        width:5px;
+        height:70%;
+        background: #00c400;
+        transform: translateY(-50%);
+      }
+      .cartlist{
+        display: flex;
+        flex-direction: column;
+        width:100%;
+        padding-top:20px;
+        box-sizing: border-box;
+        .line{
+          font-size: 24px;
+          line-height: 48px;
+        }
+      }
+    }
+  }
 }
 </style>

@@ -22,4 +22,7 @@ export default {
   } */
 }
 input {-webkit-appearance:none; }
+.van-uploader__upload{
+  background-color: white!important
+}
 </style>

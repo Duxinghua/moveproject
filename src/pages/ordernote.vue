@@ -1,5 +1,8 @@
 <template>
+<div class="orderwrap">
+  <TopNav :menu="menutext"/>
   <div class="ordernote">
+
   <van-field
     v-model="remarks"
     rows="2"
@@ -14,20 +17,26 @@
     <div class="imgtitle">
       上传搬家照片
     </div>
-    <van-uploader v-model="fileList" multiple  :max-count="9" :after-read="afterRead"  />
+    <van-uploader v-model="fileList" multiple  :max-count="9" :after-read="afterRead" :before-delete="beforedelete"  />
   </div>
   <van-button type="primary" size="small" round block @click="messageHandler">确定</van-button>
   </div>
+</div>
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 export default {
   name:'Ordernote',
+  components:{
+    TopNav
+  },
   data(){
     return {
       remarks:'',
       fileList:[],
-      orderType:2
+      orderType:2,
+      menutext:'订单备注'
     }
   },
   mounted(){
@@ -35,21 +44,39 @@ export default {
   },
   methods:{
     messageHandler(){
-      // if(!this.remarks.length){
-      //    this.$toast('请输入订单备注信息');
-      //    return
-      // }
       localStorage.setItem('remarks',this.remarks)
-      this.$router.push({ path: "/confirmorder" ,query:{remarks:this.remarks}});
+      if(this.orderType == 3){
+        this.$router.push({ path: "/platformpricing" ,query:{remarks:this.remarks}});
+      }else{
+        localStorage.setItem('fileList',JSON.stringify(this.fileList))
+        this.$router.push({ path: "/confirmorder" ,query:{remarks:this.remarks}});
+      }
     },
-    afterRead(e){
-      console.log(e)
+    afterRead(e,detail){
+      console.log(detail)
+      var data = new FormData();
+      data.append('file', e.file)
+      this.$api.appealimgUpload(data).then((result) => {
+        if(result.code == 200){
+          this.fileList[detail.index].viewUrl = result.data.viewUrl
+        }else{
+          return this.$toast(result.msg)
+        }
+      })
+    },
+    beforedelete(e,detail){
+      var index = detail.index
+      this.fileList.splice(index,1)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.orderwrap{
+  display: flex;
+  flex-direction: column;
+}
 .ordernote{
   display: flex;
   flex-direction: column;

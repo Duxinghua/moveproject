@@ -1,5 +1,6 @@
 <template>
   <div class="sendaddress">
+    <TopNav :menu="menutext"/>
     <AddressMenu
       :adretext="adretext"
       :adreadonly="adreadonly"
@@ -34,10 +35,12 @@
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 import AddressMenu from "@/components/addressMenu";
 export default {
   components: {
     AddressMenu,
+    TopNav
   },
   data() {
     return {
@@ -45,6 +48,7 @@ export default {
       adretext: "武汉",
       addressplaceholder:'从哪儿发',
       adreadonly: false,
+      menutext:'',
       adList: [
       ],
       result:{},
@@ -55,8 +59,10 @@ export default {
     this.index = this.$route.query.index;
     if(this.$route.query.index == 0){
       this.addressplaceholder = '从哪儿发'
+      this.menutext= '发货地信息'
     }else{
       this.addressplaceholder = '到达哪儿'
+      this.menutext= '收货地址'
     }
   },
   methods: {

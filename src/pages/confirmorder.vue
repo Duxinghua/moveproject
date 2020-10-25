@@ -1,6 +1,6 @@
 <template>
   <div class="confirmorder">
-
+    <TopNav :menu="menutext"/>
     <van-cell-group v-if="orderType == 1">
       <van-field
         label="额外需求"
@@ -66,7 +66,10 @@
         基础服务
       </div>
       <div class="itemwraps">
-        <div class="itemdiy"  @click="itemHandler('changecar')">
+        <div
+          class="itemdiy"
+          @click="itemHandler('gohomecar')"
+        >
           <span class="itemlabel">已选车型</span>
           <span class="itemvalue">{{refer.carType}}</span>
           <van-icon
@@ -86,8 +89,11 @@
         </div>
       </div>
     </div>
-    <div class="orderwrap" v-if="orderType == 2 && refer.moveHelp">
-    <div class="itemtitle" >
+    <div
+      class="orderwrap"
+      v-if="orderType == 2 && refer.moveHelp"
+    >
+      <div class="itemtitle">
         搬运楼层
       </div>
       <van-cell-group>
@@ -120,47 +126,52 @@
       </div>
       <div class="itemwraps itemwrapsmb">
         <div class="addresswrap">
-          <div class="addressitem">
-            <div class="ico">
+          <div
+            class="addressitem"
+            @click="itemHandler('chooseaddress',index)"
+            v-for="(item,index) in adList"
+            :key="index"
+            v-if="index < 2"
+          >
+            <div :class="['ico',index == 1 ? 'red' :'']">
             </div>
             <div class="add">
-              <span class="a1" v-if="true">请填写搬出地址</span>
-              <span class="a2" v-if="false">
-                光谷鼎创国际
+              <span
+                class="a1"
+                v-if="!item.name"
+              >请填写搬出地址</span>
+              <span
+                class="a2"
+                v-if="item.name"
+              >
+                {{item.name}}
               </span>
-              <span class="a3" v-if="false">
-                湖北武汉
-              </span>
-            </div>
-          </div>
-          <div class="addressitem">
-            <div class="ico red">
-            </div>
-            <div class="add">
-              <span class="a1" v-if="true">请填写搬入地址</span>
-              <span class="a2" v-if="false">
-                光谷鼎创国际
-              </span>
-              <span class="a3" v-if="false">
-                湖北武汉
+              <span
+                class="a3"
+                v-if="item.name"
+              >
+                {{item.address}}
               </span>
             </div>
           </div>
         </div>
         <div class="addresstime">
-        <van-field
-          label="预约时间"
-          v-model="refer.time"
-          input-align="right"
-          readonly
-          placeholder="请选择时间"
-          right-icon="arrow"
-          @click="itemHandler('time')"
-        />
+          <van-field
+            label="预约时间"
+            v-model="refer.time"
+            input-align="right"
+            readonly
+            placeholder="请选择时间"
+            right-icon="arrow"
+            @click="itemHandler('time')"
+          />
         </div>
       </div>
     </div>
-    <div class="orderwrap2" v-if="orderType == 2">
+    <div
+      class="orderwrap2"
+      v-if="orderType == 2"
+    >
       <van-field
         label="大件物品"
         v-model="refer.largeGoods"
@@ -175,29 +186,84 @@
         v-model="refer.remarks"
         input-align="right"
         readonly
-        placeholder="填写订单备注需求"
+        placeholder="搬家物品及图片备注"
         right-icon="arrow"
         @click="itemHandler('remarks')"
       />
-        <van-field
-          label="姓名"
-          v-model="refer.name"
-          input-align="right"
-          clearable
-          placeholder="请输入联系人姓名"
-          @click="itemHandler('name')"
-          @blur="nameBlurHandler"
-        />
-        <van-field
-          label="联系人电话"
-          v-model="refer.phone"
-          input-align="right"
-          clearable
-          placeholder="请输入联系人电话"
-          @click="itemHandler('phone')"
-          @blur="phoneHandler"
-        />
+      <van-field
+        label="姓名"
+        v-model="refer.name"
+        input-align="right"
+        clearable
+        placeholder="请输入联系人姓名"
+        @click="itemHandler('name')"
+        @blur="nameBlurHandler"
+      />
+      <van-field
+        label="联系人电话"
+        v-model="refer.phone"
+        input-align="right"
+        clearable
+        placeholder="请输入联系人电话"
+        @click="itemHandler('phone')"
+        @blur="phoneHandler"
+      />
 
+    </div>
+    <div class="need" v-if="orderType == 4">
+      <div class="needtitle">
+        计价方式
+      </div>
+      <div class="needprice">
+        <van-radio-group
+          v-model="priceType"
+          checked-color="#28ae3a"
+          @change="priceTypeChange"
+        >
+          <van-radio name="STANDARD" style="display:none">
+            <!--             @click="getPlatformHandler" -->
+            <div class="payitem">
+              <span class="payname">平台标准计价</span>
+              <van-icon
+                name="warning-o"
+                color="#333333"
+                size="18"
+              />
+            </div>
+          </van-radio>
+          <van-radio name="DISCUSS">
+            <div class="payitem">
+              <span class="payname">与司机协商计划</span>
+            </div>
+          </van-radio>
+        </van-radio-group>
+      </div>
+      <div
+        class="otherwrap"
+        v-if="otherList.length"
+      >
+        <div class="needtitle needtitlefix">
+          其他服务
+        </div>
+        <van-checkbox-group
+          v-model="serverArr"
+          @change="serverArrHandler"
+        >
+          <van-checkbox
+            :name="item.seqId"
+            checked-color="#28ae3a"
+            v-for="(item,index) in otherList"
+            :key="index"
+          >
+            <div class="severitem">
+              <span>{{item.catItem}}</span>
+              <div :class="['fee',item.price == 0 ? 'gray': '']">
+                {{item.remarks}}
+              </div>
+            </div>
+          </van-checkbox>
+        </van-checkbox-group>
+      </div>
     </div>
     <div class="couponwrap">
       <van-field
@@ -327,36 +393,52 @@
       />
     </van-popup>
     <!-- 楼层选择 -->
-    <van-popup v-model="unitshow" round position="bottom" :style="{ 'min-height': '100px' }">
-      <van-picker show-toolbar title="选择楼层" :columns="columns"  @cancel="cancelHandler" @confirm="confirmHandler" />
+    <van-popup
+      v-model="unitshow"
+      round
+      position="bottom"
+      :style="{ 'min-height': '100px' }"
+    >
+      <van-picker
+        show-toolbar
+        title="选择楼层"
+        :columns="columns"
+        @cancel="cancelHandler"
+        @confirm="confirmHandler"
+      />
     </van-popup>
 
   </div>
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 export default {
   name: "Confirmorder",
+  components:{
+    TopNav
+  },
   data() {
     return {
-      refer:{
+      priceType: "DISCUSS",
+      refer: {
         need: "",
         remarks: "",
         time: "",
         name: "",
         phone: "",
         coupon: "",
-        largeGoods:"请选择",
+        largeGoods: "请选择",
         carType: "请选择",
         safe: false,
         rulechecked: false,
-        goodsend:'',
-        goodsendobj:{},
-        goodreceive:'',
-        goodreceiveobj:{},
-        moveHelp: false
+        goodsend: "",
+        goodsendobj: {},
+        goodreceive: "",
+        goodreceiveobj: {},
+        moveHelp: false,
       },
-      cartObject:{},
+      cartObject: {},
       orderType: 1,
       payshow: false,
       paytype: 1,
@@ -364,153 +446,408 @@ export default {
       currentDate: new Date(),
       minDate: new Date(2020, 0, 1),
       maxDate: new Date(2050, 10, 1),
-      unitshow:false,
-      flag:1,
+      unitshow: false,
+      flag: 1,
       columns: [],
-      goodWidthList:[],
-      goodHeightList:[],
-      housefloorList:[],
-      phonepattern:/^1[3456789]\d{9}$/,
-      serverType:{
-        1:'PULL_CARGO',//拉货
-        2:'CHANGE_HOUSE',//搬家
-        3:'HIRE_WORKER',//劳务工
-        4:'RENT_CAR'//租车
+      goodWidthList: [],
+      goodHeightList: [],
+      housefloorList: [],
+      attachPriceObj: {},
+      phonepattern: /^1[3456789]\d{9}$/,
+      serverType: {
+        1: "PULL_CARGO", //拉货
+        2: "CHANGE_HOUSE", //搬家
+        3: "HIRE_WORKER", //劳务工
+        4: "RENT_CAR", //租车
       },
-      money_total:0
+      money_total: 0,
+      adList: [
+        {
+          name: "",
+          address: "",
+        },
+        {
+          name: "",
+          address: "",
+        },
+      ],
+      platform: {
+        attachType: "STAND1",
+        goodwidth: "",
+        goodwidthobj: {},
+        goodheight: "",
+        goodheightobj: {},
+        goodsend: "",
+        goodsendobj: {},
+        goodreceive: "",
+        goodreceiveobj: {},
+        goodnumber: 1,
+        attachPriceObj: {},
+      },
+      serverArr: [],
+      otherList: [],
+      detail:{},
+      menutext:'确认订单'
     };
   },
   mounted() {
-    if(localStorage.getItem('refer')){
-      this.refer = JSON.parse(localStorage.getItem('refer'))
+    if (localStorage.getItem("refer")) {
+      this.refer = JSON.parse(localStorage.getItem("refer"));
     }
     if (this.$route.query.remarks) {
       this.refer.remarks = this.$route.query.remarks;
     }
-    this.orderType = localStorage.getItem('orderType')
-    if(this.orderType == 1){
-      var need = localStorage.getItem('need')
-      if(need){
-        this.refer.need = '是'
+    this.orderType = localStorage.getItem("orderType");
+    if (this.orderType == 1) {
+      var need = localStorage.getItem("need");
+      if (need) {
+        this.refer.need = "是";
       }
-    }else if(this.orderType == 2){
-      this.cartObject = localStorage.getItem('cartObject') ? JSON.parse(localStorage.getItem('cartObject')) : {}
-      this.refer.carType = this.cartObject ? this.cartObject.carName : '请选择'
-      localStorage.setItem('refer',JSON.stringify(this.refer))
-      this.getOther(false,'HOUSE_FLOOR')
-      var large_goods = localStorage.getItem('large_goods')
-      if(large_goods){
-        large_goods = JSON.parse(large_goods)
-        this.refer.largeGoods = '已选择'
-        localStorage.setItem('refer',JSON.stringify(this.refer))
+    } else if (this.orderType == 1) {
+      this.cartObject = localStorage.getItem("cartObject")
+        ? JSON.parse(localStorage.getItem("cartObject"))
+        : {};
+      this.refer.carType = this.cartObject ? this.cartObject.carName : "请选择";
+      localStorage.setItem("refer", JSON.stringify(this.refer));
+      this.getOther(false, "HOUSE_FLOOR");
+      var large_goods = localStorage.getItem("large_goods");
+      if (large_goods) {
+        large_goods = JSON.parse(large_goods);
+        this.refer.largeGoods = "已选择";
+        localStorage.setItem("refer", JSON.stringify(this.refer));
+      }
+    } else if (this.orderType == 2) {
+      this.getOther(true, "STAND1");
+      var adList = localStorage.getItem("adList");
+      if (adList) {
+        adList = JSON.parse(adList);
+        this.adList = adList;
+        var arr = [];
+        adList.map((item) => {
+          if (item.location) {
+            var il = item.location;
+            arr.push([il.lng, il.lat]);
+          }
+        });
+        if (arr.length < 2) {
+          return this.$toast("请认真选择发货或收货地址");
+        }
+        var dis = AMap.GeometryUtil.distanceOfLine(arr);
+        localStorage.setItem("routeKilometer", dis);
+      }
+      var large_goods = localStorage.getItem("large_goods");
+      if (large_goods) {
+        large_goods = JSON.parse(large_goods);
+        if (large_goods.total) {
+          this.refer.largeGoods = "已选择";
+        } else {
+          this.refer.largeGoods = "";
+        }
       }
     }
-    this.CalcSimplePrice()
-    this.getCoupon()
+    this.getOther(false, "OTHER");
+    this.CalcSimplePrice();
+    this.getCoupon();
   },
   methods: {
+    priceTypeChange(e) {},
+    serverArrHandler(e) {},
     //获取优惠券
-    getCoupon(){
-      var orderType = localStorage.getItem('orderType')
+    getCoupon() {
+      var orderType = localStorage.getItem("orderType");
       var data = {
-        applicableType:this.serverType[orderType]
-      }
+        applicableType: this.serverType[orderType],
+      };
       this.$api.couponManagefindPage(data).then((result) => {
-        console.log(result)
-      })
-
+        console.log(result);
+      });
     },
-    CalcSimplePrice(){
+    CalcSimplePrice() {
       //订单类型
-      var orderType = localStorage.getItem('orderType')
+      var orderType = localStorage.getItem("orderType");
       //已选车型
-      var cartObject = JSON.parse(localStorage.getItem('cartObject'))
+      var cartObject = JSON.parse(localStorage.getItem("cartObject"));
       //开通地区
-      var city = localStorage.getItem('city')
+      var city = localStorage.getItem("city");
       //距离
-      var routeKilometer = parseInt(localStorage.getItem('routeKilometer'))/1000
+      var routeKilometer =
+        parseInt(localStorage.getItem("routeKilometer")) / 1000;
       //地址列表
-      var adlist = JSON.parse(localStorage.getItem('adList'))
-      var orderRouteList = []
-      adlist.map((item,index)=>{
-        var locations = item.location
-        if(locations){
+      var adlist = JSON.parse(localStorage.getItem("adList"));
+
+      var orderRouteList = [];
+      adlist.map((item, index) => {
+        var locations = item.location;
+        if (locations) {
           var obj = {
-            address1:item.name,
-            address2:item.address,
-            longitude:locations.lng,
-            latitude:locations.lat,
-            sort:index+1
+            address1: item.name,
+            address2: item.address,
+            longitude: locations.lng,
+            latitude: locations.lat,
+            sort: index + 1,
+          };
+          orderRouteList.push(obj);
+        }
+      });
+      //大物件
+      var largeGoodsCnt = 0;
+      var attachPrice = 0;
+      var attachType = "";
+      var priceType = "";
+      var orderPriceList = [];
+      //其他服务
+      var otherListServer = localStorage.getItem("otherList");
+      //平台类型选择
+      //标准及协商选择
+      var need = localStorage.getItem("need");
+      if (need) {
+        need = JSON.parse(need);
+        var need_type = Object.keys(need);
+        if (need_type.length) {
+          priceType = need.priceType;
+        }
+      }
+      if (otherListServer) {
+        otherListServer = JSON.parse(otherListServer);
+        otherListServer.map((item) => {
+          var obj = {
+            refSeqId: item.seqId,
+            propName: item.catItem,
+            checked: item.checked,
+          };
+          orderPriceList.push(obj);
+        });
+      }
+      //平台服务
+      var platform = localStorage.getItem("platform");
+      if (platform) {
+        platform = JSON.parse(platform);
+        console.log(platform,'goodheightobj')
+        if (priceType == "STANDARD") {
+          //货物高度
+          var k1 = Object.keys(platform.goodheightobj);
+          console.log(k1,'k1')
+          if (k1.length) {
+            var obj = {
+              refSeqId: platform.goodheightobj.seqId,
+              propName: platform.goodheightobj.catType,
+            };
+            orderPriceList.push(obj);
           }
-          orderRouteList.push(obj)
+          //货物宽度
+          var k2 = Object.keys(platform.goodwidthobj);
+          if (k2.length) {
+            var obj = {
+              refSeqId: platform.goodwidthobj.seqId,
+              propName: platform.goodwidthobj.catType,
+            };
+            orderPriceList.push(obj);
+          }
+          //发货楼层
+          var k3 = Object.keys(platform.goodsendobj);
+          if (k3.length) {
+            var obj = {
+              refSeqId: platform.goodsendobj.seqId,
+              propName: platform.goodsendobj.catType,
+            };
+            orderPriceList.push(obj);
+          }
+          //接收楼层
+          var k4 = Object.keys(platform.goodreceiveobj);
+          if (k4.length) {
+            var obj = {
+              refSeqId: platform.goodreceiveobj.seqId,
+              propName: platform.goodreceiveobj.catType,
+            };
+            orderPriceList.push(obj);
+          }
         }
-      })
-      var data = {
-        'serverType':this.serverType[orderType],
-        'carTypeSeqId':cartObject.seqId,
-        'ownerCity':city,
-        'routeKilometer':routeKilometer,
-        'orderRouteList':orderRouteList
+        //大物件
+        largeGoodsCnt = platform.goodnumber;
+        //基础搬运费
+        var k5 = Object.keys(platform.attachPriceObj);
+        if (k5.length) {
+          attachPrice = platform.attachPriceObj.price;
+        }
+        //标准选车 大小 platformstandard
+        var k6 = localStorage.getItem("platformstandard");
+        k6 = JSON.parse(k6);
+        var k6l = Object.keys(k6);
+        if (k6l.length) {
+          attachType = k6.attachType;
+        }
       }
 
-      data = JSON.stringify(data)
-      this.$api.orderHeadCalcPrice(data).then((result)=>{
-        if(result.code == 200){
-          this.money_total = result.data
-        }
-      })
+      //根据时间分订单类型
+      var placeOrder = localStorage.getItem("placeOrder");
 
-    },
-    phoneHandler(){
-      if(!/^1[3456789]\d{9}$/.test(this.refer.phone)){
-        return this.$toast('请输入正确的手机号')
-      }else{
-        localStorage.setItem('refer',JSON.stringify(this.refer))
-      }
-    },
-    nameBlurHandler(){
-       localStorage.setItem('refer',JSON.stringify(this.refer))
-    },
-    safeChangeHandler(){
-       localStorage.setItem('refer',JSON.stringify(this.refer))
-    },
-    getOther(flag,attachType){
       var data = {
-        headSeqId:JSON.parse(localStorage.getItem('cartObject')).seqId,
-        attachType:attachType
+        orderType: placeOrder,
+        serverType: this.serverType[orderType],
+        carTypeSeqId: cartObject.seqId,
+        ownerCity: city,
+        routeKilometer: routeKilometer,
+        orderRouteList: orderRouteList,
+        orderPriceList: orderPriceList,
+        largeGoodsCnt: largeGoodsCnt,
+        attachPrice: attachPrice,
+        orderDescribe: this.refer.remarks,
+        couponSeqId: null,
+        couponName: null,
+        couponMoney: 0,
+        mobileProtected: this.refer.safe,
+        receiverName: this.refer.name,
+        receiverMobileNo: this.refer.receiverMobileNos,
+      };
+      if (data.serverType == "PULL_CARGO") {
+        data.needTransfer = false;
       }
-      this.$api.carStyleDetFindMap(data).then((result)=>{
-        if(result.code == 200){
-          var obj = result.data
-          var list1 = []
-          var list2 = []
-          var list3 = []
-          Object.keys(obj).forEach((value)=>{
-            if(value == '货物最长'){
-              var o = obj[value][0]
-              o.keyValue = value
-              o.text = o.catItem
-              list1.push(o)
-            }else if(value == '货物最高'){
-              var o = obj[value][0]
-              o.keyValue = value
-              o.text = o.catItem
-              list2.push(o)
-            }else if(value == '楼层'){
-              var o = obj[value][0]
-              o.keyValue = value
-              o.text = o.catItem
-              list3.push(o)
-            }
-          })
-          if(flag){
-            this.goodWidthList = list1
-            this.goodHeightList = list2
+      if (attachType) {
+        data.attachType = attachType;
+      }
+      if (data.serverType == "CHANGE_HOUSE") {
+        data.orderType = "ACTUAL_TIME";
+        var orderPicList = localStorage.getItem("fileList");
+        if (orderPicList) {
+          var imglist = [];
+          orderPicList = JSON.parse(orderPicList);
+          orderPicList.map((item) => {
+            var obj = {
+              picUrl: item.viewUrl,
+            };
+            imglist.push(obj);
+          });
+        }
+        data.orderDate = this.refer.time;
+        data.orderPicList = imglist;
+        data.needTransfer = this.refer.moveHelp ? true : false;
+        if (data.needTransfer) {
+          var s = this.refer.goodsendobj;
+          var s1 = Object.keys(s);
+          if (s1.length) {
+            var obj = {
+              refSeqId: s.seqId,
+              propName: s.catType,
+            };
+            data.orderPriceList.push(obj);
+          }
+          var r = this.refer.goodreceiveobj;
+          var r1 = Object.keys(r);
+          if (r1.length) {
+            var obj = {
+              refSeqId: r.seqId,
+              propName: r.catType,
+            };
+            data.orderPriceList.push(obj);
+          }
+        }
+        var large_goods = localStorage.getItem("large_goods");
+        if (large_goods) {
+          large_goods = JSON.parse(large_goods).resObj;
+          Object.keys(large_goods).map((item) => {
+            large_goods[item].map((sitem) => {
+              if (sitem.number) {
+                var obj = {
+                  refSeqId: sitem.seqId,
+                  propName: sitem.catType,
+                  qty: sitem.number,
+                };
+                data.orderPriceList.push(obj);
+              }
+            });
+          });
+        }
+      }
+      this.detail = data
+      // data = JSON.stringify(data)
+      this.$api.orderHeadCalcPrice(data).then((result) => {
+        if (result.code == 200) {
+          this.money_total = result.data;
+        }
+      });
+    },
+    phoneHandler() {
+      if (!/^1[3456789]\d{9}$/.test(this.refer.phone)) {
+        return this.$toast("请输入正确的手机号");
+      } else {
+        localStorage.setItem("refer", JSON.stringify(this.refer));
+      }
+    },
+    nameBlurHandler() {
+      localStorage.setItem("refer", JSON.stringify(this.refer));
+    },
+    safeChangeHandler() {
+      localStorage.setItem("refer", JSON.stringify(this.refer));
+      this.CalcSimplePrice();
+    },
+    getOther(flag, attachType) {
+      var data = {
+        headSeqId: JSON.parse(localStorage.getItem("cartObject")).seqId,
+        attachType: attachType,
+      };
+      var that = this;
+      this.$api.carStyleDetFindMap(data).then((result) => {
+        if (result.code == 200) {
+          var obj = result.data;
+          var list1 = [];
+          var list2 = [];
+          var list3 = [];
+          var list4 = {};
+          var list5 = []
+          if(attachType != 'OTHER'){
+            Object.keys(obj).forEach((value) => {
+              if (value == "货物最长") {
+                var o = obj[value][0];
+                o.keyValue = value;
+                o.text = o.catItem;
+                list1.push(o);
+              } else if (value == "货物最高") {
+                var o = obj[value][0];
+                o.keyValue = value;
+                o.text = o.catItem;
+                list2.push(o);
+              } else if (value == "楼层") {
+                var o = obj[value];
+                var lists = [];
+                o.map((item) => {
+                  item.text =
+                    item.remarks +
+                    " " +
+                    item.catItem +
+                    "楼 " +
+                    (item.price == 0 ? "免费" : "¥" + item.price);
+                  lists.push(item);
+                });
+                list3 = lists;
+              } else if (value == "基础帮运费") {
+                var o = obj[value][0];
+                o.keyValue = value;
+                o.text = o.catItem;
+                list4 = o;
+              }
+            });
           }else{
-            this.housefloorList = list3
+            var obj = result.data
+            var list = []
+            Object.keys(obj).forEach((value)=>{
+              var o = obj[value][0]
+              o.keyValue = value
+              o.checked = false
+              list.push(o)
+            })
+            this.otherList = list
+            localStorage.setItem('otherList',JSON.stringify(this.otherList))
+
+          }
+          if (flag) {
+            that.goodWidthList = list1;
+            that.goodHeightList = list2;
+            that.housefloorList = list3;
+          } else {
+            that.housefloorList = list3;
           }
         }
-      })
+      });
     },
     formatter(type, val) {
       if (type === "year") {
@@ -526,46 +863,57 @@ export default {
       }
       return val;
     },
-    itemHandler(tag) {
+    itemHandler(tag, index) {
       if (tag == "time") {
         this.timeshow = true;
       } else if (tag == "remarks") {
         this.$router.push({ path: "/ordernote" });
       } else if (tag == "need") {
         this.$router.push({ path: "/need" });
-      } else if(tag == "goodsend"){
-        this.flag = 1
-        this.unitshow = true
-        this.columns = this.housefloorList
-      } else if(tag == 'goodreceive'){
-        this.columns = this.housefloorList
-        this.flag = 2
-        this.unitshow = true
-      } else if(tag == 'changecar'){
-        this.$router.push({ path: "/cart",query:{type:'CHANGE_HOUSE',operCenter:JSON.parse(localStorage.getItem('local')).city}});
-      } else if(tag == 'largeGoods'){
+      } else if (tag == "goodsend") {
+        this.flag = 1;
+        this.unitshow = true;
+        this.columns = this.housefloorList;
+      } else if (tag == "goodreceive") {
+        this.columns = this.housefloorList;
+        this.flag = 2;
+        this.unitshow = true;
+      } else if (tag == "changecar") {
+        this.$router.push({
+          path: "/cart",
+          query: {
+            type: "CHANGE_HOUSE",
+            operCenter: JSON.parse(localStorage.getItem("local")).city,
+          },
+        });
+      } else if (tag == "largeGoods") {
         this.$router.push({ path: "/bigitem" });
+      } else if (tag == "gohomecar") {
+        this.$router.push({ path: "/" });
+      } else if (tag == "chooseaddress") {
+        this.$router.push({ path: "/chooseaddress", query: { index: index } });
       }
     },
-    cancelHandler(){
-      this.unitshow = false
+    cancelHandler() {
+      this.unitshow = false;
     },
-    confirmHandler(e){
-      if(this.flag == 1){
-        this.refer.goodsend = e.text
-        this.refer.goodsendobj = e
-        localStorage.setItem('refer',JSON.stringify(this.refer))
-      }else if(this.flag == 2){
-        this.refer.goodreceive = e.text
-        this.refer.goodreceiveobj = e
-        localStorage.setItem('refer',JSON.stringify(this.refer))
+    confirmHandler(e) {
+      if (this.flag == 1) {
+        this.refer.goodsend = e.text;
+        this.refer.goodsendobj = e;
+        localStorage.setItem("refer", JSON.stringify(this.refer));
+      } else if (this.flag == 2) {
+        this.refer.goodreceive = e.text;
+        this.refer.goodreceiveobj = e;
+        localStorage.setItem("refer", JSON.stringify(this.refer));
       }
-      this.unitshow = false
+      this.unitshow = false;
     },
     linkHandler(index) {
       if (index == 1) {
         this.$router.push({ path: "/agreement" });
       } else if (index == 2) {
+        localStorage.setItem('detail',JSON.stringify(this.detail))
         this.$router.push({ path: "/pricedetail" });
       }
     },
@@ -574,7 +922,7 @@ export default {
     },
     timeConfirm(e) {
       this.refer.time = this.DateFormat(e, "yyyy-MM-dd hh:mm:ss");
-      localStorage.setItem('refer',JSON.stringify(this.refer))
+      localStorage.setItem("refer", JSON.stringify(this.refer));
       this.timeshow = false;
     },
     payTodo() {
@@ -590,6 +938,124 @@ export default {
   flex-direction: column;
   background: #f5f6f7;
   min-height: 100vh;
+  .need {
+    display: flex;
+    flex-direction: column;
+    background: #f5f6f7;
+    padding: 0 30px 30px 30px;
+    box-sizing: border-box;
+    .otherwrap {
+      display: flex;
+      flex-direction: column;
+    }
+    .needtitle {
+      font-size: 18px;
+      color: #999999;
+      margin-top: 30px;
+    }
+    .needtitlefix {
+      margin-bottom: 30px;
+    }
+    .needprice {
+      width: 100%;
+      min-height: 100px;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      padding: 0 30px;
+      box-sizing: border-box;
+      margin-top: 20px;
+    }
+    /deep/ .van-radio {
+      display: flex;
+      flex-direction: row-reverse;
+      border-bottom: 1px solid #f5f6f7;
+    }
+    /deep/ .van-radio__label {
+      display: flex;
+      flex: 1;
+      margin-left: 0px;
+      .payitem {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex: 1;
+        height: 100px;
+        .payname {
+          font-size: 20px;
+          color: #333333;
+          margin-right: 20px;
+        }
+      }
+    }
+    /deep/ .van-checkbox-group {
+      display: flex;
+      flex-direction: column;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    /deep/ .van-checkbox {
+      display: flex;
+      flex-direction: row-reverse;
+      padding: 0 30px;
+      box-sizing: border-box;
+    }
+    /deep/ .van-checkbox__label {
+      flex: 1;
+      margin-left: 0px !important;
+      .severitem {
+        display: flex;
+        flex-direction: row;
+        height: 100px;
+        align-items: center;
+        font-size: 18px;
+        color: #333333;
+        span {
+          margin-right: 20px;
+        }
+        .fee {
+          height: 40px;
+          line-height: 40px;
+          text-align: center;
+          padding-left: 20px;
+          padding-right: 20px;
+          border-radius: 20px;
+          border: 1px solid #ff561e;
+          color: #ff561e;
+          background: #ffeee8;
+          font-size: 24px;
+        }
+        .gray {
+          border: 1px solid #888888;
+          background: white;
+          color: #888888;
+        }
+      }
+    }
+    .fixedbtn {
+      display: flex;
+      padding: 0 30px;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100px;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 2000;
+      background: white;
+    }
+    /deep/ .van-button--small {
+      width: 100%;
+      height: 80px;
+    }
+  }
+  /deep/ .van-uploader__upload {
+    background-color: white !important;
+    background: white !important;
+  }
   /deep/ .van-cell-group {
     width: 690px;
     margin: 30px auto;
@@ -618,6 +1084,7 @@ export default {
     box-sizing: border-box;
     width: 690px;
     margin: 30px auto;
+
     .itemdiy {
       display: flex;
       flex-direction: row;
@@ -646,98 +1113,98 @@ export default {
     .ld {
       padding-right: 12px;
     }
-    .addresswrap{
+    .addresswrap {
       display: flex;
       flex-direction: column;
       position: relative;
       z-index: 2;
-      .addressitem{
+      .addressitem {
         display: flex;
         flex-direction: row;
         align-items: center;
-        min-height:90px;
+        min-height: 90px;
         position: relative;
-        .ico{
-          width:10px;
-          height:10px;
+        .ico {
+          width: 10px;
+          height: 10px;
           background: white;
           border-radius: 50%;
-          border:4px solid #28ae3a;
-          margin-right:30px;
+          border: 4px solid #28ae3a;
+          margin-right: 30px;
         }
-        .red{
-          border:4px solid #ff561e;
+        .red {
+          border: 4px solid #ff561e;
         }
-        .add{
+        .add {
           display: flex;
           flex-direction: column;
           justify-content: center;
-          .a1{
+          .a1 {
             font-size: 18px;
-            color:#999999;
+            color: #999999;
           }
-          .a2{
+          .a2 {
             font-size: 34px;
-            color:#333333;
-            padding-top:30px;
+            color: #333333;
+            padding-top: 30px;
           }
-          .a3{
+          .a3 {
             font-size: 18px;
-            color:#999999;
+            color: #999999;
             padding-bottom: 30px;
           }
         }
       }
-      .addressitem::after{
+      .addressitem::after {
         position: absolute;
         right: 0;
         bottom: 0;
-        content:'';
-        height:2px;
-        width:calc(100% - 60px);
+        content: "";
+        height: 2px;
+        width: calc(100% - 60px);
         background: #f2f2f2;
       }
-      .addressitem:nth-of-type(2) ::after{
+      .addressitem:nth-of-type(2) ::after {
         background: transparent;
       }
     }
-    .addresswrap:after{
+    .addresswrap:after {
       position: absolute;
-      content: '';
-      top:25%;
-      left:8px;
-      width:1px;
-      height:50%;
+      content: "";
+      top: 25%;
+      left: 8px;
+      width: 1px;
+      height: 50%;
       z-index: -1;
-      border-left:1px dashed #f2f2f2;
+      border-left: 1px dashed #f2f2f2;
     }
-    .addresstime{
+    .addresstime {
       display: flex;
       position: relative;
-      /deep/ .van-cell{
-        padding-left:0px!important;
-        padding-right:15px!important;
+      /deep/ .van-cell {
+        padding-left: 0px !important;
+        padding-right: 15px !important;
       }
     }
-    .addresstime:after{
+    .addresstime:after {
       position: absolute;
-      top:0;
-      left:-30px;
-      height:1px;
-      width:calc(100% + 46px);
-      content:'';
-      background:#f2f2f2;
+      top: 0;
+      left: -30px;
+      height: 1px;
+      width: calc(100% + 46px);
+      content: "";
+      background: #f2f2f2;
     }
   }
-  .itemwrapsmb{
-    margin-bottom: 0px!important;
+  .itemwrapsmb {
+    margin-bottom: 0px !important;
   }
-  .orderwrap2{
-    width:690px;
-    margin:30px auto 0 auto;
+  .orderwrap2 {
+    width: 690px;
+    margin: 30px auto 0 auto;
     display: flex;
     flex-direction: column;
-    /deep/ .van-cell{
+    /deep/ .van-cell {
       margin-bottom: 30px;
     }
   }
@@ -803,7 +1270,7 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
-    z-index: 11111;
+    z-index: 900;
     .priceb {
       font-size: 50px;
       color: #28ae3a;

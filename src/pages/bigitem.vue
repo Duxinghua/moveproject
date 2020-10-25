@@ -1,4 +1,6 @@
 <template>
+<div class="bigitemwrap">
+  <TopNav :menu="menutext"/>
   <div class="bigitem">
     <div class="left">
       <div
@@ -53,11 +55,16 @@
       >确定</van-button>
     </div>
   </div>
+</div>
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 export default {
   name: "Bigitem",
+  components:{
+    TopNav
+  },
   data() {
     return {
       listIndex: 0,
@@ -66,6 +73,7 @@ export default {
       list: [],
       selectList: [],
       resObj: {},
+      menutext:'大件物品'
     };
   },
   mounted() {
@@ -120,18 +128,21 @@ export default {
         resObj:this.resObj
       }
       localStorage.setItem('large_goods',JSON.stringify(obj))
-      var orderType = localStorage.getItem('orderType')
-      this.$router.push('/platformstandard')
+      this.$router.push('/confirmorder')
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.bigitemwrap{
+  display: flex;
+  flex-direction: column;
+}
 .bigitem {
   display: flex;
   flex-direction: row;
-  height: 100vh;
+  min-height: 100vh;
   background: white;
   /deep/ .van-stepper__plus,
   /deep/ .van-stepper__minus {
@@ -163,9 +174,6 @@ export default {
     flex-direction: column;
     min-height: 100vh;
     background: #f5f6f7;
-    position: fixed;
-    left: 0;
-    top: 0;
     .litem {
       width: 100%;
       height: 100px;
@@ -193,7 +201,7 @@ export default {
   }
   .right {
     width: calc(100% - 180px);
-    margin-left: 180px;
+    // margin-left: 180px;
     overflow: scroll;
     display: flex;
     flex-direction: column;
