@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-Hans-CN">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1" />
+  <meta name="renderer" content="webkit" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0 ,viewport-fit=cover" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="applicable-device" content="pc,mobile" />
+  <meta name="screen-orientation" content="portrait" />
+  <meta name="x5-orientation" content="portrait" />
+  <meta name="keywords" content="货搬搬" />
+  <meta name="description" content="货搬搬" />
+  <title>货搬搬</title>
+  <link rel="canonical" href="" />
+  <link rel="shortcut icon" href="" type="image/x-icon" />
+  <link rel="stylesheet" href="css/idangerous.swiper.css">
+  <link rel="stylesheet" href="css/idangerous.swiper.scrollbar.css">
+  <link rel="stylesheet" href="css/default.css">
+  <link rel="stylesheet" type="text/css" href="css/areaStyle.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+  <script type="text/javascript" src="js/modal_dialog.js"></script>
+  <script type="text/javascript" src="js/config.js"></script>
+  <script type="text/javascript" src="js/idangerous.swiper.min.js"></script>
+  <script type="text/javascript" src="js/idangerous.swiper.scrollbar-2.1.js"></script>
+  <script type="text/javascript" src="js/jquery.form.js"></script>
+  <script type="text/javascript" src="js/charfirstPinyin.js"></script>
+  <script type="text/javascript" src='js/area.js'></script>
+  <script type="text/javascript" src="js/main.js"></script>
+</head>
+
+<body>
+  <div class="headerwrap">
+    <div class="header">
+      <div class="content menuwrap">
+        <img src="images/logo.png" class="logo" />
+        <ul class="menuul">
+          <li><a href="./index.html">首页</a></li>
+          <li><a href="./lahuo.html">拉货</a></li>
+          <li><a class="active" href="./banjia.html">搬家</a></li>
+          <li><a href="./laowu.html">劳务工</a></li>
+          <li><a href="./hehuo.html">合伙人</a></li>
+          <li><a href="./news.html">新闻动态</a></li>
+          <li><a href="./about.html">关于我们</a></li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+    <div class="clearheight"></div>
+  </div>
+  <div class="home-banner fei-banner">
+    <div class="swiper-container">
+      <div class="swiper-wrapper" id="home-swiper-wrapper">
+
+      </div>
+    </div>
+    <div class="pagination" style="display: none;"></div>
+  </div>
+  <div class="feiwrap">
+    <div class="content">
+      <p class="feititle">
+        申请加盟
+      </p>
+      <form enctype="multipart/form-data" id="form1">
+        <div class="inputwrap clearfix">
+          <span class="jointitle">
+            营业执照
+          </span>
+          <div class="inputfile">
+            <img src="images/jia.png" class="inputjia" />
+            <input type="file" name="file" class="inputname uploadfile uploadfilepicUrl" data="picUrl" />
+            <img class="uploadimg" />
+            <img src="images/close.png" class="imgcloseu" data="picUrl" />
+          </div>
+        </div>
+      </form>
+      <form enctype="multipart/form-data" id="form2">
+        <div class="inputwrap clearfix">
+          <span class="jointitle">
+            公司LOGO图片
+          </span>
+          <div class="inputfile">
+            <img src="images/jia.png" class="inputjia" />
+            <input type="file" name="file" class="inputname uploadfilelog" data="log" />
+            <img class="uploadimg" />
+            <img src="images/close.png" class="imgcloseu" data="log" />
+          </div>
+        </div>
+      </form>
+      <div class="inputwrap clearfix">
+        <span class="jointitle adjointitle">
+          公司名称
+        </span>
+        <input type="text" placeholder="输入公司名称" data="enterpriseName" class="address enterpriseName adinputwrap" />
+      </div>
+      <div class="inputwrap clearfix">
+        <span class="jointitle adjointitle">
+          公司地址
+        </span>
+        <input type="text" placeholder="省/市/区" readonly data="ownerCity" id="ownerCity"
+          class="address ownerCity adinputwrap area_input region" />
+      </div>
+      <div class="inputwrap clearfix">
+        <span class="jointitle adjointitle">
+          公司详细地址
+        </span>
+        <input type="text" placeholder="输入您的公司地址" data="address" class="address addressvalue adinputwrap" />
+      </div>
+      <div class="inputwrap clearfix">
+        <span class="jointitle adjointitle">
+          代理人
+        </span>
+        <input type="text" placeholder="输入您的姓名" data="legalName" class="address legalName adinputwrap" />
+      </div>
+      <div class="inputwrap clearfix">
+        <span class="jointitle adjointitle">
+          电话
+        </span>
+        <input type="text" placeholder="输入您的手机号" data="linkMobile" class="address mobile linkMobile adinputwrap" />
+      </div>
+      <div class="inputwrap clearfix">
+        <span class="jointitle adjointitle adjointitlewrap">
+          验证码
+        </span>
+        <input type="text" placeholder="输入验证码" data="verificationCode" class="address verificationCode adinputwrap" />
+        <span class="joinwraps getcode ">获取验证码</span>
+      </div>
+      <div class="inputwrap clearfix">
+        <span class="jointitle adjointitle">
+          紧急联系人电话
+        </span>
+        <input type="text" placeholder="输入您的手机号" data="urgeLinkMobile" class="address urgeLinkMobile adinputwrap" />
+      </div>
+      <div class="joinbuttonwrap clearfix">
+        <span class="joinbtn submit">提交</span>
+        <span class="joinbtn joincencel reset">重置<span>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="content">
+      <div class="footertop clearfix">
+        <div class="footeritem">
+          <h2 class="footertitle">友情链接</h2>
+          <ul class="footerlink">
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+          </ul>
+        </div>
+        <div class="footeritem">
+          <h2 class="t1">全国服务热线</h2>
+          <p class="p1">400-6789-121</p>
+          <h2 class="t1 fmg">官方电话</h2>
+          <p class="p1">027-86860707</p>
+        </div>
+        <div class="footeritem">
+          <h2 class="t1">微信扫码进入小程序</h2>
+          <div class="codewrap clearfix">
+            <div class="codeitem">
+              <img src="images/qrcode.png" class="qrcode" />
+              <span class="codetitle">用户端小程序</span>
+            </div>
+            <div class="codeitem">
+              <img src="images/qrcode.png" class="qrcode" />
+              <span class="codetitle">服务端小程序</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footerbottom">
+      <div class="content footerheight">
+        <ul class="ulfooterlink clearfix">
+          <li><a href="" target="_blank">拉货</a></li>
+          <li><a href="" target="_blank">搬家</a></li>
+          <li><a href="" target="_blank">劳务工</a></li>
+          <li><a href="" target="_blank">合伙人</a></li>
+          <li><a href="" target="_blank">关于我们</a></li>
+        </ul>
+        <p class="beian">鄂ICP备17024613号-1 丨Copyright©2018 货搬搬</p>
+      </div>
+    </div>
+
+  </div>
+  <script type="text/javascript">
+    $(function () {
+      var submitData = {}
+      var s = 60
+      var timer = null
+      $.ajax({
+        type: "GET",
+        url: $.host + 'SysCarouselChart/findList',
+        data: {
+          type: 'MOVE_HOUSE'
+        },
+        dataType: "json",
+        success: function (res) {
+          if (res.code == 200) {
+            var s = res.data
+            var html = ''
+            for (var i = 0, l = s.length; i < l; i++) {
+              html += '<div class="swiper-slide shome-swiper-slide">'
+              html += '<img src="' + s[i].pic + '" class="shome-banner-img" />'
+              html += '</div>'
+            }
+            $('#home-swiper-wrapper').html(html)
+            var mySwiper = new Swiper('.home-banner .swiper-container', {
+              // autoplay: 3000, //可选选项，自动滑动
+              // loop: true,
+              pagination: '.home-banner .pagination',
+              paginationClickable: true
+            })
+          }
+        }
+      });
+      $("#ownerCity").areaSelector();
+      //文件上传处理
+      $('.uploadfilepicUrl').on('change', function (e) {
+        var filePath = $(this).val() //获取到input的value，里面是文件的路径
+        var fileFormat = filePath.substring(filePath.lastIndexOf(".")).toLowerCase()
+        var that = this
+        //检查是否是图片
+        if (!fileFormat.match(/.png|.jpg|.jpeg/)) {
+          $modal({
+            type: 'message',
+            timeout: 2500,
+            content: '请上传png,jpg,jpeg文件格式的图片',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        } else {
+
+          $("#form1").ajaxSubmit({
+            success: function (res) {
+              res = JSON.parse(res)
+              console.log(res, 'res')
+              if (res.code == 200) {
+                $modal({
+                  type: 'message',
+                  timeout: 2500,
+                  content: res.msg,
+                  center: true,
+                  top: 100,
+                  transition: 300,
+                  closable: false,
+                })
+                var data = res.data
+                submitData.picUrl = data.viewUrl
+                $(that).parent().find('.uploadimg').attr('src', data.viewUrl)
+                $(that).parent().find('.uploadimg').css('display', 'block');
+                $(that).parent().find('.imgcloseu').css('display', 'block');
+              }
+            },
+            error: function (error) {
+              $modal({
+                type: 'message',
+                timeout: 2500,
+                content: '上传错误',
+                center: true,
+                top: 100,
+                transition: 300,
+                closable: false,
+              })
+              return;
+            },
+            url: $.host + 'sys/appeal/imgUploadPC',
+            /*设置post提交到的页面*/
+            type: "post",
+            /*设置表单以post方法提交*/
+            dataType: "text" /*设置返回值类型为文本*/
+          });
+
+        }
+      })
+
+      $('.uploadfilelog').on('change', function (e) {
+        var filePath = $(this).val() //获取到input的value，里面是文件的路径
+        var fileFormat = filePath.substring(filePath.lastIndexOf(".")).toLowerCase()
+        var that = this
+        //检查是否是图片
+        if (!fileFormat.match(/.png|.jpg|.jpeg/)) {
+          $modal({
+            type: 'message',
+            timeout: 2500,
+            content: '请上传png,jpg,jpeg文件格式的图片',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        } else {
+
+          $("#form2").ajaxSubmit({
+            success: function (res) {
+              res = JSON.parse(res)
+              console.log(res, 'res')
+              if (res.code == 200) {
+                $modal({
+                  type: 'message',
+                  timeout: 2500,
+                  content: res.msg,
+                  center: true,
+                  top: 100,
+                  transition: 300,
+                  closable: false,
+                })
+                var data = res.data
+                submitData.log = data.viewUrl
+                $(that).parent().find('.uploadimg').attr('src', data.viewUrl)
+                $(that).parent().find('.uploadimg').css('display', 'block');
+                $(that).parent().find('.imgcloseu').css('display', 'block');
+              }
+            },
+            error: function (error) {
+              $modal({
+                type: 'message',
+                timeout: 2500,
+                content: '上传错误',
+                center: true,
+                top: 100,
+                transition: 300,
+                closable: false,
+              })
+              return;
+            },
+            url: $.host + 'sys/appeal/imgUploadPC',
+            /*设置post提交到的页面*/
+            type: "post",
+            /*设置表单以post方法提交*/
+            dataType: "text" /*设置返回值类型为文本*/
+          });
+
+        }
+      })
+      //清除图片
+      $('.imgcloseu').on('click', function () {
+        var target = this.attr('data')
+        if (target == 'picUrl') {
+          submitData.picUrl = ''
+        } else if (target == 'log') {
+          submitData.log = ''
+        }
+        $(this).parent().find('.inputname').val('')
+        $(this).parent().find('.uploadimg').css('display', 'none');
+        $(this).parent().find('.imgcloseu').css('display', 'none');
+      })
+      //重置
+      $(document).on('click', '.reset', function () {
+        submitData = {}
+        $('.uploadfilepicUrl').val('')
+        $('.uploadfilelog').val('')
+        $('.enterpriseName').val('')
+        $('.ownerCity').val('')
+        $('.addressvalue').val('')
+        $('.legalName').val('')
+        $('.linkMobile').val('')
+        $('.verificationCode').val('')
+        $('.urgeLinkMobile').val('')
+      })
+      //提交
+      $(document).on('click', '.submit', function () {
+        submitData.enterpriseName = $('.enterpriseName').val()
+        submitData.region = $('.ownerCity').val()
+        submitData.address = $('.addressvalue').val()
+        submitData.legalName = $('.legalName').val()
+        submitData.linkMobile = $('.linkMobile').val()
+        submitData.verificationCode = $('.verificationCode').val()
+        submitData.urgeLinkMobile = $('.urgeLinkMobile').val()
+        submitData.applyChannel = 'OFFICIAL_WEBSITE'
+        if (!submitData.picUrl) {
+          $modal({
+            type: 'message',
+            timeout: 2000,
+            content: '请上传营业执照',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        }
+        if (!submitData.log) {
+          $modal({
+            type: 'message',
+            timeout: 2000,
+            content: '请上传公司logo',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        }
+        if (!submitData.enterpriseName) {
+          $modal({
+            type: 'message',
+            timeout: 2000,
+            content: '请输入公司名称',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        }
+        if (!submitData.region) {
+          $modal({
+            type: 'message',
+            timeout: 2000,
+            content: '请输入公司地址',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        }else{
+          var s = submitData.region
+          var arr = s.split("/")
+          submitData.ownerCity = arr[1]
+          submitData. region = arr[2]
+        }
+        if (!submitData.address) {
+          $modal({
+            type: 'message',
+            timeout: 2000,
+            content: '请输入公司详细地址',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        }
+        if (!submitData.legalName) {
+          $modal({
+            type: 'message',
+            timeout: 2000,
+            content: '请输入代理人',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        }
+        if (!submitData.linkMobile) {
+          $modal({
+            type: 'message',
+            timeout: 2000,
+            content: '请输入手机号',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        }
+        if (!submitData.verificationCode) {
+          $modal({
+            type: 'message',
+            timeout: 2000,
+            content: '请输入验证码',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        }
+        if (!submitData.urgeLinkMobile) {
+          $modal({
+            type: 'message',
+            timeout: 2000,
+            content: '请输入紧急联系人',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        }
+        $.ajax({
+          type: "POST",
+          url: $.host + 'custEnterpriseApply/insert',
+          data: JSON.stringify(submitData),
+          dataType: "json",
+          contentType: 'application/json;charset=UTF-8',
+          success: function (res) {
+            if (res.code == 200) {
+              $modal({
+                type: 'message',
+                timeout: 2000,
+                content: res.msg,
+                center: true,
+                top: 100,
+                transition: 300,
+                closable: false,
+              })
+            } else {
+              $modal({
+                type: 'message',
+                timeout: 2000,
+                content: res.msg,
+                center: true,
+                top: 100,
+                transition: 300,
+                closable: false,
+              })
+            }
+          }
+        })
+
+      })
+      $(document).on("click", ".getcode", function () {
+        var mobile = $(".mobile").val()
+        if (!/^1(3|4|5|6|7|8|9)\d{9}$/.test(mobile)) {
+          $modal({
+            type: 'message',
+            timeout: 2500,
+            content: '请输入正确的手机号',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return false;
+        }
+        if (s == 60) {
+          send(mobile)
+        } else {
+          $modal({
+            type: 'message',
+            timeout: 2500,
+            content: '一分钟之内只能发一次',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+        }
+
+      })
+
+      function send(mobile) {
+        $.ajax({
+          type: "GET",
+          url: $.host + 'shortmessage/joinMsg',
+          data: {
+            mobile: mobile
+          },
+          dataType: "json",
+          success: function (res) {
+            if (res.code == 200) {
+
+              timer = setInterval(function () {
+                if (s != 0) {
+                  s--
+                  $('.getcode').text('请等待,' + s + 'S')
+                } else if (s == 0) {
+                  clearInterval(timer)
+                  $('.getcode').text('获取验证码')
+                  s = 60
+                }
+
+
+              }, 1000)
+
+              $modal({
+                type: 'message',
+                timeout: 2500,
+                content: res.msg,
+                center: true,
+                top: 100,
+                transition: 300,
+                closable: false,
+              })
+            }
+          }
+        })
+      }
+    })
+  </script>
+</body>
+
+</html>
