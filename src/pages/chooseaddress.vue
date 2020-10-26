@@ -96,7 +96,11 @@ export default {
     };
   },
   mounted() {
-    this.city = "武汉市";
+    var cityobj = localStorage.getItem('locations')
+    if(cityobj){
+      cityobj = JSON.parse(cityobj)
+      this.center = [cityobj.lng,cityobj.lat]
+    }
     if(this.$route.query.index == 0){
       this.addressplaceholder = '从哪儿发'
       this.menutext= '发货地信息'
@@ -112,6 +116,9 @@ export default {
         if(item.location){
           var location = item.location
           this.center = [location.lng,location.lat]
+          this.name = item.obj.name
+          this.phone = item.obj.phone
+          this.unit = item.obj.unit
         }
       }
     })

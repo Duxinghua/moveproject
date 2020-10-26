@@ -13,6 +13,7 @@
         v-for="(item,sindex) in adList"
         :key="sindex"
         @click="adItemHandler(item,sindex)"
+        v-if="item.address"
       >
         <div class="addresstop">
           {{item.address}}

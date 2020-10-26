@@ -671,10 +671,12 @@ export default {
         }
         //标准选车 大小 platformstandard
         var k6 = localStorage.getItem("platformstandard");
+        if(k6){
         k6 = JSON.parse(k6);
         var k6l = Object.keys(k6);
         if (k6l.length) {
           attachType = k6.attachType;
+        }
         }
       }
 

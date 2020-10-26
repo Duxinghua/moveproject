@@ -264,6 +264,7 @@ export default {
     var map = new AMap.Map("container", {
       resizeEnable: true,
     });
+
     AMap.plugin("AMap.Geolocation", function() {
       var geolocation = new AMap.Geolocation({
         enableHighAccuracy: true, //是否使用高精度定位，默认:true
@@ -285,19 +286,41 @@ export default {
           that.city = obj.addressComponent.city;
           that.serverHandler(1);
           that.getAllCart();
-          localStorage.setItem("locations", obj);
+          localStorage.setItem("locations", JSON.stringify(obj));
         } else {
           that.city = "武汉";
-          //that.$toast('定位失败，请检查是否有权限');
+          AMap.plugin('AMap.Geocoder', function() {
+              var geocoder = new AMap.Geocoder({
+                // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+                city: '武汉'
+              })
+              geocoder.getLocation('武汉', function(status, result) {
+                if (status === 'complete' && result.info === 'OK') {
+                  var s = result.geocodes[0]
+                  var obj = {};
+                    obj.lng = s.location.lng;
+                    obj.lat = s.location.lat;
+                    obj.addressComponent = s.addressComponent;
+                    obj.formattedAddress = s.formattedAddress;
+                  }
+                  console.log(obj,'sss')
+                  localStorage.setItem("locations", JSON.stringify(obj));
+              })
+
+          })
         }
         localStorage.setItem("city", that.city);
       });
     });
     var list = localStorage.getItem("adList");
+    console.log(list,'list')
     if (list) {
       list = JSON.parse(list);
       this.adList = list;
-      console.log(this.adList, "ADLIST");
+      this.adList.map((item)=>{
+        item.name = item.obj.formattedAddress
+        item.address = item.obj.infos
+      })
       this.active = this.adList.length;
     }
 
