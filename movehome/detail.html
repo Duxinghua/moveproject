@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="css/pagination.css">
   <link rel="stylesheet" href="css/default.css">
   <link rel="stylesheet" href="css/style.css">
+  <script type="text/javascript" src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
   <script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
   <script type="text/javascript" src="js/config.js"></script>
   <script type="text/javascript" src="js/idangerous.swiper.min.js"></script>
@@ -41,13 +42,13 @@
       <div class="content menuwrap">
         <img src="images/logo.png" class="logo" />
         <ul class="menuul">
-          <li><a  href="./index.html">首页</a></li>
-          <li><a   href="./lahuo.html" >拉货</a></li>
-          <li><a  href="./banjia.html" >搬家</a></li>
+          <li><a href="./index.html">首页</a></li>
+          <li><a href="./lahuo.html">拉货</a></li>
+          <li><a href="./banjia.html">搬家</a></li>
           <li><a href="./laowu.html">劳务工</a></li>
-          <li><a  href="./hehuo.html">合伙人</a></li>
-          <li><a  class="active"  href="./news.html" >新闻动态</a></li>
-          <li><a  href="./about.html">关于我们</a></li>
+          <li><a href="./hehuo.html">合伙人</a></li>
+          <li><a class="active" href="./news.html">新闻动态</a></li>
+          <li><a href="./about.html">关于我们</a></li>
         </ul>
         <div class="clearfix"></div>
       </div>
@@ -65,7 +66,7 @@
       <p class="detaildes">
 
       </p>
-      <div class="detailcontent">                     
+      <div class="detailcontent">
       </div>
       <div class="detailpage clearfix">
       </div>
@@ -77,21 +78,21 @@
         <div class="footeritem">
           <h2 class="footertitle">友情链接</h2>
           <ul class="footerlink">
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
-            <li><a href="#" target="_blank" >武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="#" target="_blank">武汉市搬家</a></li>
           </ul>
         </div>
         <div class="footeritem">
@@ -114,21 +115,22 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="footerbottom">
+      <div class="content footerheight">
+        <ul class="ulfooterlink clearfix">
+          <li><a href="" target="_blank">拉货</a></li>
+          <li><a href="" target="_blank">搬家</a></li>
+          <li><a href="" target="_blank">劳务工</a></li>
+          <li><a href="" target="_blank">合伙人</a></li>
+          <li><a href="" target="_blank">关于我们</a></li>
+        </ul>
+        <p class="beian">鄂ICP备17024613号-1 丨Copyright©2018 货搬搬</p>
       </div>
-      <div class="footerbottom">
-        <div class="content footerheight">
-          <ul class="ulfooterlink clearfix">
-            <li><a href="" target="_blank">拉货</a></li>
-            <li><a href="" target="_blank">搬家</a></li>
-            <li><a href="" target="_blank">劳务工</a></li>
-            <li><a href="" target="_blank">合伙人</a></li>
-            <li><a href="" target="_blank">关于我们</a></li>
-          </ul>
-          <p class="beian">鄂ICP备17024613号-1 丨Copyright©2018 货搬搬</p>
-        </div>
-      </div>
+    </div>
 
   </div>
+  <div id="iCenter"></div>
   <script type="text/javascript">
     $(function () {
       var seqId = $.getUrlParam('seqId')
@@ -140,26 +142,28 @@
         },
         dataType: "json",
         success: function (res) {
-         if(res.code == 200){
-          var obj = res.data
-          $(".detailtitle").html(obj.title)
-          var des = ''
-          des += '<span>作者：'+obj.author+'</span>'
-          des += '<span>发布时间：'+obj.releaseDate+'</span>'
-          des += '<span>阅读次数：'+obj.readNum+'</span>'
-          $(".detaildes").html(des)
-          var content = ''
-          content += '<p>'+obj.content+'</p>'
-          $('.detailcontent').html(content)
-          var page = ''
-          if(obj.lastSeqId){
-            page += '<a class="detailnext" href="./detail.html?seqId='+obj.lastSeqId+'">上一篇：'+obj.lastTitle+'</a>'
+          if (res.code == 200) {
+            var obj = res.data
+            $(".detailtitle").html(obj.title)
+            var des = ''
+            des += '<span>作者：' + obj.author + '</span>'
+            des += '<span>发布时间：' + obj.releaseDate + '</span>'
+            des += '<span>阅读次数：' + obj.readNum + '</span>'
+            $(".detaildes").html(des)
+            var content = ''
+            content += '<p>' + obj.content + '</p>'
+            $('.detailcontent').html(content)
+            var page = ''
+            if (obj.lastSeqId) {
+              page += '<a class="detailnext" href="./detail.html?seqId=' + obj.lastSeqId + '">上一篇：' + obj
+                .lastTitle + '</a>'
+            }
+            if (obj.nextSeqId) {
+              page += '<a class="detailprev" href="./detail.html?seqId=' + obj.nextSeqId + '">下一篇：' + obj
+                .nextTitle + '</a>'
+            }
+            $('.detailpage').html(page)
           }
-          if(obj.nextSeqId){
-            page += '<a class="detailprev" href="./detail.html?seqId='+obj.nextSeqId+'">下一篇：'+obj.nextTitle+'</a>'
-          }
-          $('.detailpage').html(page)
-         }
         }
       })
       $.ajax({
@@ -170,7 +174,7 @@
         },
         dataType: "json",
         success: function (res) {
-          
+
         }
       })
 

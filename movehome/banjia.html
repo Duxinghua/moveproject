@@ -66,7 +66,7 @@
       </p>
       <p class="p2"></p>
       <img src="images/serverinfobg.png" class="serverinfobg" />
-    </div>为用户解决找人工服务难的问题，优化自有资源(货车、工人），精准匹配车和服务人员，快速上门服务，实现线上线下无缝对接。服务内容涵盖了搬家、拉货、装卸、家政、收纳、打包、计时工等。为用户提供多维度、全方位的一站式物流服务。
+    </div>
   </div>
   <div class="serveradvantage">
     <img src="images/advantage.png" class="serverinfo" />
@@ -113,7 +113,7 @@
       <div class="server-banner">
         <div class="swiper-container">
           <div class="swiper-wrapper" id="server-banner-type">
-        
+
           </div>
           <div class="pagination"></div>
           <img src="images/left.png" class="leftbtn">
@@ -129,7 +129,7 @@
         <!-- <img src="images/arrow.png" class="servermoretext"/> -->
       </a>
       <div class="newswrap clearfix">
-        <div class="newitem">
+        <!-- <div class="newitem">
           <img src="images/newimg.png" class="newimg" />
           <div class="newdes">
             <p class="emovep1">黄蚂蚁搬家公司</p>
@@ -142,35 +142,8 @@
               <span class="emoveadress">武汉市汉阳区闽东国际大厦A栋17楼</span>
             </p>
           </div>
-        </div>
-        <div class="newitem">
-          <img src="images/newimg.png" class="newimg" />
-          <div class="newdes">
-            <p class="emovep1">黄蚂蚁搬家公司</p>
-            <p class="emovep2">
-              <img src="images/emovead.png" class="emovead" />
-              <span class="emoveadress">武汉市汉阳区闽东国际大厦A栋17楼</span>
-            </p>
-            <p class="emovep2">
-              <img src="images/emoveph.png" class="emovead" />
-              <span class="emoveadress">武汉市汉阳区闽东国际大厦A栋17楼</span>
-            </p>
-          </div>
-        </div>
-        <div class="newitem">
-          <img src="images/newimg.png" class="newimg" />
-          <div class="newdes">
-            <p class="emovep1">黄蚂蚁搬家公司</p>
-            <p class="emovep2">
-              <img src="images/emovead.png" class="emovead" />
-              <span class="emoveadress">武汉市汉阳区闽东国际大厦A栋17楼</span>
-            </p>
-            <p class="emovep2">
-              <img src="images/emoveph.png" class="emovead" />
-              <span class="emoveadress">武汉市汉阳区闽东国际大厦A栋17楼</span>
-            </p>
-          </div>
-        </div>
+        </div> -->
+
     </div>
   </div>
   </div>
@@ -236,8 +209,8 @@
     $(function () {
       //搬家公司列表
       var enterData = {
-        ownerCity:'武汉',
-        region:'洪山区',
+        ownerCity:'',
+        region:'',
         pageno:1,
         pagesize:3
       }
@@ -247,9 +220,28 @@
         data: enterData,
         dataType: "json",
         success: function (res) {
-         if(res.code == 200){
-           
-         }
+
+           console.log(res)
+           var html = ''
+           var data = res.list
+            $.map(data,function(i,v){
+             html +=  '<div class="newitem">'
+             html +=  '<img src="'+i.log+'" class="newimg" />'
+             html +=  '<div class="newdes">'
+             html +=  '<p class="emovep1">'+i.enterpriseName+'</p>'
+             html +=  '<p class="emovep2">'
+             html +=  '<img src="images/emovead.png" class="emovead" />'
+             html +=  '<span class="emoveadress">'+i.address+'</span>'
+             html +=  '</p>'
+             html +=  '<p class="emovep2">'
+             html += '<img src="images/emoveph.png" class="emovead" />'
+             html += '<span class="emoveadress">'+i.linkMobile+'</span>'
+             html += '</p>'
+             html += '</div>'
+             html += '</div>'
+            })
+          $(".newswrap").html(html)
+
         }
       })
 
@@ -287,7 +279,7 @@
           type:'GET',
           url: $.host + '/carStyle/findCarList',
           data: {
-            operCenter: arg
+            cityName: arg
           },
           dataType: "json",
           success: function (res) {
@@ -335,7 +327,7 @@
             $('.rightbtn').click(function () {
               mySwiperCar.swipeNext();
             })
-     
+
            }
           }
         })

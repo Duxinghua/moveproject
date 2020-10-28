@@ -76,7 +76,7 @@
             <input class="meleftinput verificationCode" placeholder="验证码" />
             <span class="melebtn getcode ">获取验证码</span>
           </div>
-          
+
           <input class="meleftinput wxId" placeholder="您的微信" />
           <input class="meleftinput email" placeholder="您的邮箱" />
           <textarea class="melefttextarea messageContent" placeholder="请将您的反馈信息告速我们" >
@@ -187,32 +187,32 @@
         var mobile = $(".mobile").val()
         if(!/^1(3|4|5|6|7|8|9)\d{9}$/.test(mobile)){
           $modal({
-            type: 'message', 
-            timeout: 2500,  
-            content: '请输入正确的手机号', 
+            type: 'message',
+            timeout: 2500,
+            content: '请输入正确的手机号',
             center: true,
-            top:100, 
-            transition: 300, 
-            closable: false, 
+            top:100,
+            transition: 300,
+            closable: false,
           })
-          return false; 
-        } 
+          return false;
+        }
         if(s == 60){
           send(mobile)
         }else{
           $modal({
-            type: 'message', 
-            timeout: 2500,  
-            content: '一分钟之内只能发一次', 
+            type: 'message',
+            timeout: 2500,
+            content: '一分钟之内只能发一次',
             center: true,
-            top:100, 
-            transition: 300, 
-            closable: false, 
+            top:100,
+            transition: 300,
+            closable: false,
           })
         }
-       
+
       })
-      function send(mobile){      
+      function send(mobile){
         $.ajax({
           type: "GET",
           url: $.host + 'shortmessage/leavingMsg',
@@ -222,7 +222,7 @@
           dataType: "json",
           success: function (res) {
             if(res.code == 200){
-            
+
                   timer = setInterval(function(){
                     if(s != 0){
                       s--
@@ -232,18 +232,18 @@
                       $('.getcode').text('获取验证码')
                       s = 60
                     }
-                    
-                    
+
+
                   },1000)
-                
+
                 $modal({
-                  type: 'message', 
-                  timeout: 2500,  
-                  content: res.msg, 
+                  type: 'message',
+                  timeout: 2500,
+                  content: res.msg,
                   center: true,
-                  top:100, 
-                  transition: 300, 
-                  closable: false, 
+                  top:100,
+                  transition: 300,
+                  closable: false,
                 })
             }
           }
@@ -264,89 +264,89 @@
       $(document).on("click",'.mebtns',function(){
         if(!$('.name').val()){
           $modal({
-                  type: 'message', 
-                  timeout: 2500,  
-                  content: '请输入姓名', 
+                  type: 'message',
+                  timeout: 2500,
+                  content: '请输入姓名',
                   center: true,
-                  top:100, 
-                  transition: 300, 
-                  closable: false, 
+                  top:100,
+                  transition: 300,
+                  closable: false,
           })
           return
         }
         if(!$('.mobile').val()){
           $modal({
-                  type: 'message', 
-                  timeout: 2500,  
-                  content: '请输入手机号', 
+                  type: 'message',
+                  timeout: 2500,
+                  content: '请输入手机号',
                   center: true,
-                  top:100, 
-                  transition: 300, 
-                  closable: false, 
+                  top:100,
+                  transition: 300,
+                  closable: false,
           })
           return
         }
         if(!$('.verificationCode').val()){
           $modal({
-                  type: 'message', 
-                  timeout: 2500,  
-                  content: '请输入验证码', 
+                  type: 'message',
+                  timeout: 2500,
+                  content: '请输入验证码',
                   center: true,
-                  top:100, 
-                  transition: 300, 
-                  closable: false, 
+                  top:100,
+                  transition: 300,
+                  closable: false,
           })
           return
         }
         if(!$('.email').val()){
           $modal({
-                  type: 'message', 
-                  timeout: 2500,  
-                  content: '请输入邮箱', 
+                  type: 'message',
+                  timeout: 2500,
+                  content: '请输入邮箱',
                   center: true,
-                  top:100, 
-                  transition: 300, 
-                  closable: false, 
+                  top:100,
+                  transition: 300,
+                  closable: false,
           })
           return
         }else if(!/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test($('.email').val())){
           $modal({
-                  type: 'message', 
-                  timeout: 2500,  
-                  content: '请输入正确的邮箱地址', 
+                  type: 'message',
+                  timeout: 2500,
+                  content: '请输入正确的邮箱地址',
                   center: true,
-                  top:100, 
-                  transition: 300, 
-                  closable: false, 
+                  top:100,
+                  transition: 300,
+                  closable: false,
           })
           return
         }
         if(!$('.wxId').val()){
           $modal({
-                  type: 'message', 
-                  timeout: 2500,  
-                  content: '请输入微信号', 
+                  type: 'message',
+                  timeout: 2500,
+                  content: '请输入微信号',
                   center: true,
-                  top:100, 
-                  transition: 300, 
-                  closable: false, 
+                  top:100,
+                  transition: 300,
+                  closable: false,
           })
           return
         }
         if(!$('.messageContent').val()){
           $modal({
-                  type: 'message', 
-                  timeout: 2500,  
-                  content: '请输入留言内容', 
+                  type: 'message',
+                  timeout: 2500,
+                  content: '请输入留言内容',
                   center: true,
-                  top:100, 
-                  transition: 300, 
-                  closable: false, 
+                  top:100,
+                  transition: 300,
+                  closable: false,
           })
           return
         }
         submit()
-       
+
       })
       function submit(){
         var data ={
@@ -365,23 +365,23 @@
           success: function (res) {
             if(res.code == 200){
               $modal({
-                  type: 'message', 
-                  timeout: 2500,  
-                  content: res.msg, 
+                  type: 'message',
+                  timeout: 2500,
+                  content: res.msg,
                   center: true,
-                  top:100, 
-                  transition: 300, 
-                  closable: false, 
+                  top:100,
+                  transition: 300,
+                  closable: false,
                 })
             }else{
               $modal({
-                  type: 'message', 
-                  timeout: 2500,  
-                  content: res.msg, 
+                  type: 'message',
+                  timeout: 2500,
+                  content: res.msg,
                   center: true,
-                  top:100, 
-                  transition: 300, 
-                  closable: false, 
+                  top:100,
+                  transition: 300,
+                  closable: false,
                 })
             }
           }

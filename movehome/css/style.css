@@ -149,7 +149,7 @@ font-family: Microsoft YaHei;
 font-weight: 400;
 color: #222222;
 }
-.diy-slide-left .line2{  
+.diy-slide-left .line2{
 font-size: 24px;
 font-family: Microsoft YaHei;
 font-weight: 400;
@@ -295,6 +295,16 @@ color: #222222;
   float:left;
   line-height: 38px;
   margin-left:20px;
+  z-index: 2;
+}
+.inarrow{
+  position: relative;
+  right:20px;
+  top:50%;
+  margin-top:-5px;
+  width:10px;
+  height:10px;
+  z-index: 1;
 }
 .servercartwrap{
   width:25%;
@@ -307,7 +317,7 @@ color: #222222;
   width:144px;
   height:38px;
   display: block;
-  margin:0 auto 58px auto; 
+  margin:0 auto 58px auto;
 }
 .server-banner .leftbtn{
   cursor: pointer;
@@ -608,7 +618,7 @@ margin-top:10px;
   width:143px;
   height:39px;
   display: block;
-  margin:0 auto 60px auto; 
+  margin:0 auto 60px auto;
 }
 .serverlahuo .p2,
 .serverlahuo .p1{
@@ -673,7 +683,7 @@ color: #999999;
   display: block;
   margin:0 auto 35px auto;
 }
-.adtitle{ 
+.adtitle{
 height: 28px;
 font-size: 28px;
 font-family: Microsoft YaHei;
@@ -697,7 +707,7 @@ text-align: center;
 }
 .lahuoservercartype{
   height: 674px;
-  
+
 }
 .lahuoservercartypeco{
   position: relative;
@@ -739,6 +749,7 @@ line-height: 30px;
 }
 .emovep2{
   display: inline-block;
+  width: 100%;
   height:16px;
   margin-top:20px;
 }
@@ -749,7 +760,7 @@ line-height: 30px;
 }
 .emoveadress{
   display: inline-block;
-  line-height: 16px; 
+  line-height: 16px;
 font-size: 14px;
 font-family: Microsoft YaHei;
 font-weight: 400;
@@ -987,6 +998,18 @@ color: #222222;
 .lahuoitem .llico{
   width:180px;
   height:180px;
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #cac9c9;
+}
+.lahuoitem .llico img{
+  position: absolute;
+  left:50%;
+  top:50%;
+  width:50%;
+  margin-left:-25%;
+  margin-top:-25%;
 }
 .lahuoitem .lltext{
   font-size: 18px;
@@ -998,6 +1021,12 @@ color: #222222;
   text-align: center;
   margin-top:22px;
   margin-bottom: 62px;
+}
+.lahuoitem:hover .llico{
+  background:#45C055;
+}
+.lahuoitem:hover .lltext{
+  color:#45C055;
 }
 .llactive .lltext{
   color:#45C055;
@@ -1660,7 +1689,7 @@ margin-bottom: 24px;
   text-align: left;
   padding:0 20px;
   box-sizing: border-box;
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 .meinputwrap .meleftinput{
   width:320px;
@@ -1688,7 +1717,7 @@ border: 1px solid #CCCCCC;
 border-radius: 4px;
 padding:20px;
 box-sizing: border-box;
-margin-bottom: 30px; 
+margin-bottom: 30px;
 }
 .messagebtn{
   display: block;

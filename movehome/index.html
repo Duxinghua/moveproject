@@ -24,13 +24,18 @@
   <link rel="stylesheet" href="css/idangerous.swiper.scrollbar.css">
   <link rel="stylesheet" href="css/default.css">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tyle.css">
   <script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
   <script type="text/javascript" src="js/config.js"></script>
   <script type="text/javascript" src="js/idangerous.swiper.min.js"></script>
   <script type="text/javascript" src="js/idangerous.swiper.scrollbar-2.1.js"></script>
+  <script type="text/javascript" src="js/cityTemplate.js"></script>
   <link rel="stylesheet" type="text/css" href="js/M_select/M_select.css">
   <script src="js/M_select/M_select.js"></script>
   <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript">
+
+  </script>
 </head>
 
 <body>
@@ -57,7 +62,7 @@
   <div class="home-banner">
     <div class="swiper-container">
       <div class="swiper-wrapper" id="home-swiper-wrapper">
- 
+
       </div>
     </div>
     <div class="pagination"></div>
@@ -67,16 +72,15 @@
       <div class="servercartwrap clearfix">
         <img src="images/servercartype.png" class="servercartico" />
         <div class="serverselect">
-          <select class="select01">
-          <option value="01">第一个下拉</option>
-          <option value="03">第三个下拉</option>
-          </select>
+          <input type="text" placeholder="选择城市" id="place" name=""  readonly/>
+          <div id="in_city" style="display: none"></div>
+          <img src="images/inarrow.png" class="inarrow"/>
       </div>
       </div>
       <div class="server-banner">
         <div class="swiper-container">
           <div class="swiper-wrapper" id="server-banner-type">
-            <div class="swiper-slide red-slide diy-slide clearfix">
+            <!-- <div class="swiper-slide red-slide diy-slide clearfix">
               <div class="diy-slide-left">
                 <div class="line1">
                   <span class="li1">￥</span>
@@ -103,7 +107,7 @@
               <div class="diy-slide-right">
                 <img src="https://yooyioos.oss-cn-beijing.aliyuncs.com/20200311/che.jpg" class="carico" />
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
         <div class="pagination"></div>
@@ -128,7 +132,7 @@
 
         </div>
         <div class="newitem newdiy" id="news_dynamic">
-          
+
         </div>
         <div class="newitem" id="cert-banner">
           <div class="newsheader clearfix">
@@ -209,10 +213,35 @@
 
   <script type="text/javascript">
     $(function () {
+      var cityA = $(".city_a_le1 a"); //城市
+	    var pla = $("#place");  //出发地
+	    // 默认值
+	    inCity.width = "348";  //城市选择框  宽
+	    inCity.height = "auto";  //城市选择框  高
+	    inCity.id = "#in_city";  //城市选择框  父级ID
+	    inCity.Children = '.city_a_le1';  //城市名box
+	    // 初始化 城市HTML模板
+	    $(inCity.id).prepend(inCity._template.join(''));
+	    inCity.Hot(cityA);
+
+	    //城市 导航
+	    var apay = $(".screen a");
+
+	    var placeThis; //当前选择标签
+      apay.click(function(obj){  //城市导航
+	        inCity.payment($(this));
+	    })
+
+	    inCity.place(pla); //出发地
+      inCity.cityClick(cityA,function(data){
+       send(data)
+      }); //显示赋值城市
+
+
       // link测试
       var htmlimg = ''
-      for (var i = 0, l = 12; i < l; i++) {
-        htmlimg += '<a href="#" target="_blank"><img src="images/baidu.png" class="linklogo" /></a>'
+      for (var i = 1, l = 26; i < l; i++) {
+        htmlimg += '<a href="#" target="_blank"><img src="logo/'+i+'.jpg" class="linklogo" /></a>'
       }
       $('.logowrap').html(htmlimg)
 
@@ -347,13 +376,13 @@
         }
       })
       //运营中心服务车型
-      send('武汉')
+      send('111')
       function send(arg){
         $.ajax({
           type:'GET',
           url: $.host + '/carStyle/findCarList',
           data: {
-            operCenter: arg
+            cityName: arg
           },
           dataType: "json",
           success: function (res) {
@@ -365,11 +394,11 @@
               html += '<div class="diy-slide-left">'
               html += '<div class="line1">'
               html += '<span class="li1">￥</span>'
-              html += '<span class="li2">320</span>'
-              html += '<span class="li3">/24公里</span>'
+              html += '<span class="li2">'+v.minPrice+'</span>'
+              html += '<span class="li3">/'+v.minConditon+'公里</span>'
               html += '</div>'
               html += '<div class="line2">'
-              html += '超里程：￥8元/公里'
+              html += '超里程：￥'+v.addPrice+'元/公里'
               html += '</div>'
               html += '<div class="line3">'
               html += '<span class="li1">载重</span>'
@@ -401,23 +430,8 @@
             $('.rightbtn').click(function () {
               mySwiperCar.swipeNext();
             })
-     
+
            }
-          }
-        })
-      }
-      //获取运营城市
-      getCity()
-      function getCity(){
-        $.ajax({
-          type:'GET',
-          url: $.host + '/sysCity/findPage',
-          data: {
-            status: true
-          },
-          dataType: "json",
-          success: function (res) {
-            console.log(res)
           }
         })
       }

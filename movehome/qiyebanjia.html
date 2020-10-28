@@ -26,6 +26,7 @@
   <link rel="stylesheet" href="css/default.css">
   <link rel="stylesheet" href="css/style.css">
   <script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
+  <script type="text/javascript" src="js/config.js"></script>
   <script type="text/javascript" src="js/idangerous.swiper.min.js"></script>
   <script type="text/javascript" src="js/idangerous.swiper.scrollbar-2.1.js"></script>
   <script type="text/javascript" src="js/underscore.js"></script>
@@ -76,102 +77,19 @@
         </span>
       </div>
       <div class="qitemwrap clearfix">
-        <div class="qitem">
+        <!-- <div class="qitem">
           <img src="images/qitem.png" class="qitemico" />
           <div class="qitembottom">
             <p class="qtitle">黄蚂蚁搬家公司</p>
             <p class="paddress paddresstop">武汉市汉阳区闽东国际大厦A栋17楼</p>
             <p class="paddress paddresstop">电话：027-86860707 </p>
           </div>
-        </div>
-
-        <div class="qitem">
-          <img src="images/qitem.png" class="qitemico" />
-          <div class="qitembottom">
-            <p class="qtitle">黄蚂蚁搬家公司</p>
-            <p class="paddress paddresstop">武汉市汉阳区闽东国际大厦A栋17楼</p>
-            <p class="paddress paddresstop">电话：027-86860707 </p>
-          </div>
-        </div>
+        </div> -->
 
 
-        <div class="qitem">
-          <img src="images/qitem.png" class="qitemico" />
-          <div class="qitembottom">
-            <p class="qtitle">黄蚂蚁搬家公司</p>
-            <p class="paddress paddresstop">武汉市汉阳区闽东国际大厦A栋17楼</p>
-            <p class="paddress paddresstop">电话：027-86860707 </p>
-          </div>
-        </div>
 
 
-        <div class="qitem">
-          <img src="images/qitem.png" class="qitemico" />
-          <div class="qitembottom">
-            <p class="qtitle">黄蚂蚁搬家公司</p>
-            <p class="paddress paddresstop">武汉市汉阳区闽东国际大厦A栋17楼</p>
-            <p class="paddress paddresstop">电话：027-86860707 </p>
-          </div>
-        </div>
 
-
-        <div class="qitem">
-          <img src="images/qitem.png" class="qitemico" />
-          <div class="qitembottom">
-            <p class="qtitle">黄蚂蚁搬家公司</p>
-            <p class="paddress paddresstop">武汉市汉阳区闽东国际大厦A栋17楼</p>
-            <p class="paddress paddresstop">电话：027-86860707 </p>
-          </div>
-        </div>
-
-
-        <div class="qitem">
-          <img src="images/qitem.png" class="qitemico" />
-          <div class="qitembottom">
-            <p class="qtitle">黄蚂蚁搬家公司</p>
-            <p class="paddress paddresstop">武汉市汉阳区闽东国际大厦A栋17楼</p>
-            <p class="paddress paddresstop">电话：027-86860707 </p>
-          </div>
-        </div>
-
-
-        <div class="qitem">
-          <img src="images/qitem.png" class="qitemico" />
-          <div class="qitembottom">
-            <p class="qtitle">黄蚂蚁搬家公司</p>
-            <p class="paddress paddresstop">武汉市汉阳区闽东国际大厦A栋17楼</p>
-            <p class="paddress paddresstop">电话：027-86860707 </p>
-          </div>
-        </div>
-
-
-        <div class="qitem">
-          <img src="images/qitem.png" class="qitemico" />
-          <div class="qitembottom">
-            <p class="qtitle">黄蚂蚁搬家公司</p>
-            <p class="paddress paddresstop">武汉市汉阳区闽东国际大厦A栋17楼</p>
-            <p class="paddress paddresstop">电话：027-86860707 </p>
-          </div>
-        </div>
-
-
-        <div class="qitem">
-          <img src="images/qitem.png" class="qitemico" />
-          <div class="qitembottom">
-            <p class="qtitle">黄蚂蚁搬家公司</p>
-            <p class="paddress paddresstop">武汉市汉阳区闽东国际大厦A栋17楼</p>
-            <p class="paddress paddresstop">电话：027-86860707 </p>
-          </div>
-        </div>
-
-        <div class="qitem">
-          <img src="images/qitem.png" class="qitemico" />
-          <div class="qitembottom">
-            <p class="qtitle">黄蚂蚁搬家公司</p>
-            <p class="paddress paddresstop">武汉市汉阳区闽东国际大厦A栋17楼</p>
-            <p class="paddress paddresstop">电话：027-86860707 </p>
-          </div>
-        </div>
 
 
       </div>
@@ -238,38 +156,45 @@
   </div>
   <script type="text/javascript">
     $(function () {
-      var mySwiper = new Swiper('.home-banner .swiper-container', {
-        // autoplay: 3000, //可选选项，自动滑动
-        // loop: true,
-        pagination: '.home-banner .pagination',
-        paginationClickable: true
-      })
-      var mySwiperCar = new Swiper('.server-banner .swiper-container', {
-        autoplay: 3500, //可选选项，自动滑动
-        loop: true,
-        pagination: '.server-banner .pagination',
-        paginationClickable: true
-      })
-      $('.leftbtn').click(function(){
-        mySwiperCar.swipePrev(); 
-      })
-      $('.rightbtn').click(function(){
-        mySwiperCar.swipeNext(); 
-      })
-
-      var mySwipercert = new Swiper('.cert-banner .swiper-container', {
-        autoplay: 3000, //可选选项，自动滑动
-        loop: true,
-        pagination: '.cert-banner .pagination',
-        paginationClickable: true
-      })
-
-      // link测试
-      var htmlimg = ''
-      for(var i=0,l=12;i<l;i++){
-        htmlimg += '<a href="#" target="_blank"><img src="images/baidu.png" class="linklogo" /></a>'
+      var pagesize = 20
+      var pageno = 1
+      var total = 1
+      getdata()
+      function getdata(){
+      var enterData = {
+        ownerCity:'',
+        region:'',
+        pageno:pageno,
+        pagesize:pagesize
       }
-      $('.logowrap').html(htmlimg)
+      $.ajax({
+        type: "GET",
+        url: $.host + 'custEnterpriseApply/findListPage',
+        data: enterData,
+        dataType: "json",
+        success: function (res) {
+
+           console.log(res)
+           var html = ''
+           var data = res.list
+            $.map(data,function(i,v){
+              html += '<div class="qitem">'
+              html += '<img src="'+i.log+'" class="qitemico" />'
+              html += '<div class="qitembottom">'
+              html += '<p class="qtitle">'+i.enterpriseName+'</p>'
+              html += '<p class="paddress paddresstop">'+i.address+'</p>'
+              html += '<p class="paddress paddresstop">电话：'+i.linkMobile+'</p>'
+              html += '</div>'
+              html += '</div>'
+            })
+          $(".qitemwrap").html(html)
+          total = res.total
+
+        }
+      })
+    }
+
+
 
 
       new pagination({
@@ -278,9 +203,10 @@
           startPage: 1,    //默认第一页
           currentPage: 2,          //当前页码
           totalItemCount: 10,    //项目总数,大于0，显示页码总数
-          totalPageCount: 20,        //总页数
+          totalPageCount: total,        //总页数
                 callback:function(pageNum){
-                    console.info(pageNum);
+                  pageno = pageNum
+                  getdata()
                 }
           });
 
