@@ -111,17 +111,21 @@ export default {
     this.index = this.$route.query.index
     var list = localStorage.getItem('adList')
     list = JSON.parse(list)
-    list.map((item,index) =>{
-      if(index == this.index){
-        if(item.location){
-          var location = item.location
-          this.center = [location.lng,location.lat]
-          this.name = item.obj.name
-          this.phone = item.obj.phone
-          this.unit = item.obj.unit
+    if(list.length){
+      list.map((item,index) =>{
+        if(index == this.index){
+          if(item.location){
+            var location = item.location
+            this.center = [location.lng,location.lat]
+          }
+          if(item.obj){
+            this.name = item.obj.name ? item.obj.name : ''
+            this.phone = item.obj.phone ? item.obj.phone : ''
+            this.unit = item.obj.unit ? item.obj.unit : ''
+          }
         }
-      }
-    })
+      })
+    }
     this.adMap();
   },
   methods: {

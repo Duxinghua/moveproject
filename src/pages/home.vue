@@ -277,6 +277,12 @@ export default {
       geolocation.getCurrentPosition(function(status, result) {
         console.log(result, "result");
         console.log(status, "status");
+        var ordertype = localStorage.getItem('orderType')
+        if(!ordertype){
+          ordertype = 1
+        }
+         that.serverHandler(ordertype);
+        that.getAllCart();
         if (status == "complete") {
           var obj = {};
           obj.lng = result.position.lng;
@@ -284,8 +290,7 @@ export default {
           obj.addressComponent = result.addressComponent;
           obj.formattedAddress = result.formattedAddress;
           that.city = obj.addressComponent.city;
-          that.serverHandler(1);
-          that.getAllCart();
+          console.log(111,222)
           localStorage.setItem("locations", JSON.stringify(obj));
         } else {
           that.city = "武汉";
@@ -318,20 +323,24 @@ export default {
       list = JSON.parse(list);
       this.adList = list;
       this.adList.map((item)=>{
-        item.name = item.obj.formattedAddress
-        item.address = item.obj.infos
+        if(item.obj){
+          item.name = item.obj.formattedAddress
+          item.address = item.obj.infos
+        }
       })
       this.active = this.adList.length;
     }
 
-    if (localStorage.getItem("sCar") == 1) {
-      var cart = localStorage.getItem("cartObject");
-      this.cartObject = cart ? JSON.parse(cart) : {};
-    }
+    // if (localStorage.getItem("sCar") == 1) {
+    //   var cart = localStorage.getItem("cartObject");
+    //   this.cartObject = cart ? JSON.parse(cart) : {};
+    //   if(this.cartObject)
+    // }
   },
   computed: {},
   methods: {
     getAllCart() {
+      console.log('all')
       var data = {
         serverType: this.serverType[this.serverIndex],
         operCenter: this.city,
@@ -340,9 +349,23 @@ export default {
       };
       this.$api.carStyleFindPage(data).then((result) => {
         this.carList = result.list;
+        console.log(result.list,'list')
         if (localStorage.getItem("sCar") == 0) {
           this.cartObject = result.list[0];
           localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
+        }
+        var cartObject = JSON.parse(localStorage.getItem('cartObject'))
+        if (localStorage.getItem("sCar") == 1) {
+          this.carList.map((item,index)=>{
+            console.log(index)
+            if(item.seqId == cartObject.seqId){
+              this.cartIndex = index
+              this.cartObject = this.carList[index]
+            }else{
+              this.cartIndex = -1
+              this.cartObject = cartObject
+            }
+          })
         }
       });
     },
@@ -372,6 +395,7 @@ export default {
       this.cartIndex = index;
       this.cartObject = this.carList[index];
       localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
+      localStorage.setItem("sCar",0)
     },
     goPos() {
       this.$router.push("/city");
