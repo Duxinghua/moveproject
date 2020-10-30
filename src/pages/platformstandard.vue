@@ -14,13 +14,13 @@
     </div>
     <div class="wrapp">
       <div class="carinfo">
-        <img src="../assets/images/car.png" class="carico" />
+        <img :src="cartObject.picUrl" class="carico" />
         <div class="des">
           <div class="dd">
-            载重：500公斤
+            载重：{{cartObject.carCapacity}}公斤
           </div>
           <div class="dd">
-            载贷体积：2.7万
+            载贷体积：{{cartObject.carVolume}}方
           </div>
         </div>
       </div>
@@ -124,7 +124,8 @@ export default {
       unitText:'选择楼层',
       goodWidthList:[],
       goodHeightList:[],
-      housefloorList:[]
+      housefloorList:[],
+      cartObject:{}
     }
   },
   mounted(){
@@ -138,6 +139,10 @@ export default {
       large_goods = JSON.parse(large_goods)
       this.platform.goodnumber = large_goods.total
       localStorage.setItem('platform',JSON.stringify(this.platform))
+    }
+    var cartObject = localStorage.getItem('cartObject')
+    if(cartObject){
+      this.cartObject = JSON.parse(cartObject)
     }
   },
   methods:{
