@@ -212,13 +212,14 @@
         }
       });
 
-      send('武汉')
+      send('111')
       function send(arg){
         $.ajax({
           type:'GET',
           url: $.host + '/carStyle/findCarList',
           data: {
-            operCenter: arg
+            cityName: arg,
+            serverType:'PULL_CARGO'
           },
           dataType: "json",
           success: function (res) {

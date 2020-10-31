@@ -248,75 +248,65 @@ export default {
         {
           name: "",
           address: "",
+          center:"",
+          obj:""
         },
         {
           name: "",
           address: "",
+          center:"",
+          obj:""
         },
       ],
       city: "武汉",
     };
   },
   mounted() {
-    this.getAllCart();
-    localStorage.setItem("orderType", this.serverIndex);
+    var orderType = localStorage.getItem('orderType')
+    if(orderType){
+      orderType = orderType
+      this.serverIndex = orderType
+    }else{
+       orderType = this.serverIndex
+       localStorage.setItem("orderType", this.serverIndex);
+    }
     var that = this;
     var map = new AMap.Map("container", {
       resizeEnable: true,
     });
-
-    AMap.plugin("AMap.Geolocation", function() {
-      var geolocation = new AMap.Geolocation({
-        enableHighAccuracy: true, //是否使用高精度定位，默认:true
-        timeout: 10000, //超过10秒后停止定位，默认：5s
-        buttonPosition: "RB", //定位按钮的停靠位置
-        buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-        zoomToAccuracy: true, //定位成功后是否自动调整地图视野到定位点
+    if(this.$route.query.name){
+      this.city = this.$route.query.name
+      this.selectCity()
+    }else{
+      AMap.plugin("AMap.Geolocation", function() {
+        var geolocation = new AMap.Geolocation({
+          enableHighAccuracy: true, //是否使用高精度定位，默认:true
+          timeout: 10000, //超过10秒后停止定位，默认：5s
+          buttonPosition: "RB", //定位按钮的停靠位置
+          buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+          zoomToAccuracy: true, //定位成功后是否自动调整地图视野到定位点
+        });
+        map.addControl(geolocation);
+        geolocation.getCurrentPosition(function(status, result) {
+          console.log(result, "result");
+          console.log(status, "status");
+          if (status == "complete") {
+            var obj = {};
+            obj.lng = result.position.lng;
+            obj.lat = result.position.lat;
+            obj.addressComponent = result.addressComponent;
+            obj.formattedAddress = result.formattedAddress;
+            that.city = obj.addressComponent.city;
+            localStorage.setItem("locations", JSON.stringify(obj));
+            that.serverHandler(that.serverIndex);
+          } else {
+            that.city = "长沙市";
+            that.selectCity()
+          }
+          localStorage.setItem("city", that.city);
+        });
       });
-      map.addControl(geolocation);
-      geolocation.getCurrentPosition(function(status, result) {
-        console.log(result, "result");
-        console.log(status, "status");
-        var ordertype = localStorage.getItem('orderType')
-        if(!ordertype){
-          ordertype = 1
-        }
-         that.serverHandler(ordertype);
-        that.getAllCart();
-        if (status == "complete") {
-          var obj = {};
-          obj.lng = result.position.lng;
-          obj.lat = result.position.lat;
-          obj.addressComponent = result.addressComponent;
-          obj.formattedAddress = result.formattedAddress;
-          that.city = obj.addressComponent.city;
-          console.log(111,222)
-          localStorage.setItem("locations", JSON.stringify(obj));
-        } else {
-          that.city = "武汉";
-          AMap.plugin('AMap.Geocoder', function() {
-              var geocoder = new AMap.Geocoder({
-                // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
-                city: '武汉'
-              })
-              geocoder.getLocation('武汉', function(status, result) {
-                if (status === 'complete' && result.info === 'OK') {
-                  var s = result.geocodes[0]
-                  var obj = {};
-                    obj.lng = s.location.lng;
-                    obj.lat = s.location.lat;
-                    obj.addressComponent = s.addressComponent;
-                    obj.formattedAddress = s.formattedAddress;
-                  }
-                  console.log(obj,'sss')
-                  localStorage.setItem("locations", JSON.stringify(obj));
-              })
-
-          })
-        }
-        localStorage.setItem("city", that.city);
-      });
-    });
+    }
     var list = localStorage.getItem("adList");
     console.log(list,'list')
     if (list) {
@@ -330,45 +320,64 @@ export default {
       })
       this.active = this.adList.length;
     }
-
-    // if (localStorage.getItem("sCar") == 1) {
-    //   var cart = localStorage.getItem("cartObject");
-    //   this.cartObject = cart ? JSON.parse(cart) : {};
-    //   if(this.cartObject)
-    // }
+    console.log(this.cartIndex,'cartindex')
   },
   computed: {},
   methods: {
+    //选择城市调用
+    selectCity(){
+          var that = this
+          AMap.plugin('AMap.Geocoder', function() {
+              var geocoder = new AMap.Geocoder({
+                // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+                city: that.city
+              })
+              geocoder.getLocation( that.city, function(status, result) {
+                if (status === 'complete' && result.info === 'OK') {
+                  var s = result.geocodes[0]
+                  var obj = {};
+                    obj.lng = s.location.lng;
+                    obj.lat = s.location.lat;
+                    obj.addressComponent = s.addressComponent;
+                    obj.formattedAddress = s.formattedAddress;
+                  }
+                  localStorage.setItem("locations", JSON.stringify(obj));
+                  that.serverHandler(that.serverIndex);
+              })
+
+          })
+    },
+    // 获取车型
     getAllCart() {
-      console.log('all')
       var data = {
         serverType: this.serverType[this.serverIndex],
-        operCenter: this.city,
+        operCenter: this.city.replace('市',''),
         pageno: this.cartPageNum,
         pagesize: this.cartPageSize,
       };
       this.$api.carStyleFindPage(data).then((result) => {
         this.carList = result.list;
-        console.log(result.list,'list')
-        if (localStorage.getItem("sCar") == 0) {
+        console.log(result.list,'list',localStorage.getItem("sCar") == 1)
+        if (!localStorage.getItem("sCar")) {
+          localStorage.setItem("sCar",1)
           this.cartObject = result.list[0];
           localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
-        }
-        var cartObject = JSON.parse(localStorage.getItem('cartObject'))
-        if (localStorage.getItem("sCar") == 1) {
+        }else if (localStorage.getItem("sCar") == 1) {
+          var cartObject = JSON.parse(localStorage.getItem('cartObject'))
           this.carList.map((item,index)=>{
-            console.log(index)
             if(item.seqId == cartObject.seqId){
+                console.log(index)
               this.cartIndex = index
               this.cartObject = this.carList[index]
-            }else{
-              this.cartIndex = -1
-              this.cartObject = cartObject
+               console.log( this.cartIndex,'index')
+              this.$forceUpdate()
             }
           })
         }
       });
+       console.log( this.cartIndex,'index')
     },
+    //切换类型
     serverHandler(index) {
       this.carList = [];
       this.serverIndex = index;
@@ -395,10 +404,10 @@ export default {
       this.cartIndex = index;
       this.cartObject = this.carList[index];
       localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
-      localStorage.setItem("sCar",0)
+      localStorage.setItem("sCar",1)
     },
     goPos() {
-      this.$router.push("/city");
+      this.$router.push({path:"/city",query:{type:1}});
     },
     cateHandler() {
       var type = this.serverType[this.serverIndex];

@@ -408,6 +408,19 @@
       />
     </van-popup>
 
+    <!-- 优惠券 -->
+    <van-popup
+      v-model="couponshow"
+      closeable
+      round
+      position="bottom"
+      :style="{'min-height':'100px'}"
+    >
+    <div class="couponlist">
+
+    </div>
+    </van-popup>
+
   </div>
 </template>
 
@@ -436,7 +449,7 @@ export default {
         goodsendobj: {},
         goodreceive: "",
         goodreceiveobj: {},
-        moveHelp: false,
+        moveHelp: false
       },
       cartObject: {},
       orderType: 1,
@@ -487,7 +500,8 @@ export default {
       serverArr: [],
       otherList: [],
       detail:{},
-      menutext:'确认订单'
+      menutext:'确认订单',
+      couponshow:true
     };
   },
   mounted() {
@@ -496,6 +510,26 @@ export default {
     }
     if (this.$route.query.remarks) {
       this.refer.remarks = this.$route.query.remarks;
+    }
+    //计算距离
+    var adList = localStorage.getItem("adList");
+    if (adList) {
+        adList = JSON.parse(adList);
+        this.adList = adList;
+        var arr = [];
+        adList.map((item) => {
+          if (item.center) {
+            var il = JSON.parse(item.center);
+            console.log(il)
+            arr.push(il);
+          }
+        });
+        console.log(arr)
+        if (arr.length > 1) {
+          // return this.$toast("请认真选择发货或收货地址");
+         var dis = AMap.GeometryUtil.distanceOfLine(arr);
+         localStorage.setItem("routeKilometer", dis);
+        }
     }
     this.orderType = localStorage.getItem("orderType");
     if (this.orderType == 1) {
@@ -518,23 +552,7 @@ export default {
       }
     } else if (this.orderType == 2) {
       this.getOther(true, "STAND1");
-      var adList = localStorage.getItem("adList");
-      if (adList) {
-        adList = JSON.parse(adList);
-        this.adList = adList;
-        var arr = [];
-        adList.map((item) => {
-          if (item.location) {
-            var il = item.location;
-            arr.push([il.lng, il.lat]);
-          }
-        });
-        if (arr.length < 2) {
-          return this.$toast("请认真选择发货或收货地址");
-        }
-        var dis = AMap.GeometryUtil.distanceOfLine(arr);
-        localStorage.setItem("routeKilometer", dis);
-      }
+
       var large_goods = localStorage.getItem("large_goods");
       if (large_goods) {
         large_goods = JSON.parse(large_goods);
@@ -577,7 +595,7 @@ export default {
 
       var orderRouteList = [];
       adlist.map((item, index) => {
-        var locations = item.location;
+        var locations = JSON.parse(item.center);
         if (locations) {
           var obj = {
             address1: item.name,
@@ -670,14 +688,7 @@ export default {
           attachPrice = platform.attachPriceObj.price;
         }
         //标准选车 大小 platformstandard
-        var k6 = localStorage.getItem("platformstandard");
-        if(k6){
-        k6 = JSON.parse(k6);
-        var k6l = Object.keys(k6);
-        if (k6l.length) {
-          attachType = k6.attachType;
-        }
-        }
+        attachType = platform.attachType
       }
 
       //根据时间分订单类型
@@ -687,6 +698,8 @@ export default {
         orderType: placeOrder,
         serverType: this.serverType[orderType],
         carTypeSeqId: cartObject.seqId,
+        carType:cartObject.carType,
+        priceType:priceType,
         ownerCity: city,
         routeKilometer: routeKilometer,
         orderRouteList: orderRouteList,
@@ -699,7 +712,7 @@ export default {
         couponMoney: 0,
         mobileProtected: this.refer.safe,
         receiverName: this.refer.name,
-        receiverMobileNo: this.refer.receiverMobileNos,
+        receiverMobileNo: this.refer.phone,
       };
       if (data.serverType == "PULL_CARGO") {
         data.needTransfer = false;

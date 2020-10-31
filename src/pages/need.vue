@@ -61,9 +61,10 @@ export default {
   },
   mounted(){
     this.getOther()
-    var platformstandard = localStorage.getItem('platformstandard')
-    if(platformstandard){
-      this.priceType = 'STANDARD'
+    var need = localStorage.getItem('need')
+    if(need){
+      need = JSON.parse(need)
+      this.priceType = need.priceType
     }
   },
   methods: {
@@ -73,14 +74,19 @@ export default {
       localStorage.setItem('need',JSON.stringify(obj))
     },
     serverArrHandler(e){
-      e.map((oitem) => {
-        this.otherList.map((sitem) => {
-          if(oitem.seqId == sitem.seqId){
-            sitem.checked = true
-          }
+      localStorage.setItem('serverArr',JSON.stringify(e))
+      var otherList = localStorage.getItem('otherList')
+      if(otherList){
+        otherList = JSON.parse(otherList)
+        otherList.map((item) => {
+           e.map((sitem) => {
+             if(sitem == item.seqId){
+               item.checked = true
+             }
+           })
         })
-      })
-      localStorage.setItem('otherList',JSON.stringify(this.otherList))
+        localStorage.setItem('serverArr',JSON.stringify(otherList))
+      }
     },
     getPlatformHandler(){
        this.$router.push('/platformstandard')
@@ -101,33 +107,45 @@ export default {
             list.push(o)
           })
           this.otherList = list
-          localStorage.setItem('otherList',JSON.stringify(this.otherList))
+          var serverArr = localStorage.getItem('serverArr')
+          if(serverArr){
+            serverArr = JSON.parse(serverArr)
+            this.otherList.map((item) => {
+              serverArr.map((sitem) => {
+                if(item.seqId == sitem){
+                  item.checked = true
+                }
+              })
+            })
+            localStorage.setItem('otherList',JSON.stringify(this.otherList))
+            this.serverArr = serverArr
+          }else{
+            localStorage.setItem('otherList',JSON.stringify(this.otherList))
+          }
         }
       })
     },
     needHandler(e){
-      var obj = {}
-      obj.priceType = this.serverArrHandler
-      var otherServer = []
-      this.serverArr.forEach((value) => {
-        for(var a in this.otherList){
-          if(this.otherList[a].seqId == value){
-            otherServer.push(this.otherList[a])
+        if(this.priceType == 'STANDARD'){
+          var platform = localStorage.getItem('platform')
+          if(platform){
+            platform = JSON.parse(platform)
+            if(!platform.goodwidth){
+              return this.$toast('请选择货物最长')
+            }
+            if(!platform.goodheight){
+              return this.$toast('请选择货物最高')
+            }
+            if(!platform.goodsend){
+              return this.$toast('请选择搬运楼层发货地')
+            }
+            if(!platform.goodreceive){
+              return this.$toast('请选择搬运楼层收货地')
+            }
           }
+
         }
-      })
-      obj.otherServer = otherServer
-      localStorage.setItem('need',JSON.stringify(obj))
-      var platformstandard = localStorage.getItem('platformstandard')
-      if(this.priceType == 'STANDARD'){
-        if(!platformstandard){
-           this.$router.push('/platformstandard')
-        }else{
-           this.$router.push('/confirmorder')
-        }
-      }else{
-         this.$router.push('/confirmorder')
-      }
+        this.$router.push('/confirmorder')
     }
   }
 };

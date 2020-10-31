@@ -1,14 +1,20 @@
 <template>
   <div class="chooseaddress">
-    <TopNav :menu="menutext"/>
+    <TopNav :menu="menutext" />
     <div class="menu">
-      <div class="adleft">
+      <div
+        class="adleft"
+        @click.stop="goads"
+      >
         <div class="addr">
-          武汉
+          {{city}}
         </div>
         <van-icon name="arrow-down" />
       </div>
-      <div class="adright"  @click="targetHandler">
+      <div
+        class="adright"
+        @click="targetHandler"
+      >
         <van-icon
           name="circle"
           color="#28ae3a"
@@ -27,39 +33,57 @@
     >
     </div>
     <div class="confirmInformation">
-      <div class="addresswrap" @click="targetHandler">
-        <img src="../assets/images/pos.png" class="icoa" />
+      <div
+        class="addresswrap"
+        @click="targetHandler"
+      >
+        <img
+          src="../assets/images/pos.png"
+          class="icoa"
+        />
         <div class="adinfo">
           <div class="name">{{regeocode.formattedAddress}}</div>
           <div class="infos">{{regeocode.infos}}</div>
         </div>
       </div>
       <div class="addresswrap unitwrap">
-        <img src="../assets/images/unit.png" class="icoa" />
-          <van-field
+        <img
+          src="../assets/images/unit.png"
+          class="icoa"
+        />
+        <van-field
           v-model="unit"
           label=""
           placeholder="请输入楼层及门牌号"
         />
       </div>
       <div class="addresswrap unitwrap">
-         <img src="../assets/images/concat.png" class="icoa" />
-          <van-field
+        <img
+          src="../assets/images/concat.png"
+          class="icoa"
+        />
+        <van-field
           v-model="name"
           label=""
           placeholder="请输入联系人姓名"
         />
       </div>
       <div class="addresswrap unitwrap">
-         <img src="../assets/images/mobile1.png" class="icoa" />
-          <van-field
+        <img
+          src="../assets/images/mobile1.png"
+          class="icoa"
+        />
+        <van-field
           v-model="phone"
           label=""
           placeholder="请输入联系号码"
         />
       </div>
       <div class="addresswrap ad">
-        <div class="adbtn" @click="confirmHandler">
+        <div
+          class="adbtn"
+          @click="confirmHandler"
+        >
           确定
         </div>
       </div>
@@ -69,11 +93,11 @@
 </template>
 
 <script>
-import TopNav from '@/components/topnav.vue'
+import TopNav from "@/components/topnav.vue";
 export default {
   name: "Chooseaddress",
-  components:{
-    TopNav
+  components: {
+    TopNav,
   },
   data() {
     return {
@@ -81,84 +105,133 @@ export default {
       marker: null,
       city: "",
       address: "",
-      unit:"",
-      name:"",
-      phone:"",
+      unit: "",
+      name: "",
+      phone: "",
       center: [114.660358, 30.489513], //经度+纬度
       search_key: "", //搜索值
       lists: [], //地点列表
       search_list: [], //搜索结果列表
       noSearchShow: false, //无搜索结果提示，无搜索结果时会显示暂无搜索结果
-      regeocode:{},
-      addressplaceholder:'从哪儿发',
-      index:0,
-      menutext:''
+      regeocode: {},
+      addressplaceholder: "从哪儿发",
+      index: 0,
+      menutext: "",
     };
   },
   mounted() {
-    var cityobj = localStorage.getItem('locations')
-    if(cityobj){
-      cityobj = JSON.parse(cityobj)
-      this.center = [cityobj.lng,cityobj.lat]
-    }
-    if(this.$route.query.index == 0){
-      this.addressplaceholder = '从哪儿发'
-      this.menutext= '发货地信息'
-    }else{
-      this.addressplaceholder = '到达哪儿'
-      this.menutext= '收货地址'
-    }
-    this.index = this.$route.query.index
-    var list = localStorage.getItem('adList')
-    list = JSON.parse(list)
-    if(list.length){
-      list.map((item,index) =>{
-        if(index == this.index){
-          if(item.location){
-            var location = item.location
-            this.center = [location.lng,location.lat]
+      if (this.$route.query.index == 0) {
+        this.addressplaceholder = "从哪儿发";
+        this.menutext = "发货地信息";
+      } else {
+        this.addressplaceholder = "到达哪儿";
+        this.menutext = "收货地址";
+      }
+      this.index = this.$route.query.index;
+    //选择其他城市
+    if (this.$route.query.city) {
+      var that = this;
+      this.city = this.$route.query.city;
+      AMap.plugin("AMap.Geocoder", function() {
+        var geocoder = new AMap.Geocoder({
+          // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+          city: that.city,
+        });
+        geocoder.getLocation(that.city, function(status, result) {
+          if (status === "complete" && result.info === "OK") {
+            var s = result.geocodes[0];
+            var obj = {};
+            obj.lng = s.location.lng;
+            obj.lat = s.location.lat;
+            obj.addressComponent = s.addressComponent;
+            obj.formattedAddress = s.formattedAddress;
+            that.center = [obj.lng,obj.lat]
+            that.getLngaTodo()
+          }else{
+            that.getLngaTodo()
           }
-          if(item.obj){
-            this.name = item.obj.name ? item.obj.name : ''
-            this.phone = item.obj.phone ? item.obj.phone : ''
-            this.unit = item.obj.unit ? item.obj.unit : ''
-          }
-        }
-      })
+
+
+        });
+      });
+    } else {
+      this.city = localStorage.getItem("city");
+      var cityobj = localStorage.getItem("locations");
+      if (cityobj) {
+        cityobj = JSON.parse(cityobj);
+        this.center = [cityobj.lng, cityobj.lat];
+      }
+      this.getLngaTodo()
+
+
     }
-    this.adMap();
   },
   methods: {
-    confirmHandler(){
-      var obj = this.regeocode
-      if(!this.unit){
-        return this.$toast('请输入楼层及门牌号')
-      }else{
-        obj.unit = this.unit
+    //获取经度之后地址处理
+    getLngaTodo(){
+      var list = localStorage.getItem("adList");
+      list = JSON.parse(list);
+      if (list.length) {
+        list.map((item, index) => {
+          if (index == this.index) {
+            if (item.location) {
+              var location = item.location;
+              this.center = [location.lng, location.lat];
+            }
+            if (item.obj) {
+              this.name = item.obj.name ? item.obj.name : "";
+              this.phone = item.obj.phone ? item.obj.phone : "";
+              this.unit = item.obj.unit ? item.obj.unit : "";
+            }
+          }
+        });
       }
-      if(!this.name){
-        return this.$toast('请输入联系人姓名')
-      }else{
-        obj.name = this.name
+      this.adMap();
+    },
+    //选择地图
+    goads() {
+      var data = {
+        index: this.index,
+        type: 2,
+      };
+      this.$router.push({
+        path: "/city",
+        query: data,
+      });
+    },
+    confirmHandler() {
+      var obj = this.regeocode;
+      if (!this.unit) {
+        return this.$toast("请输入楼层及门牌号");
+      } else {
+        obj.unit = this.unit;
       }
-      if(!this.phone){
-        return this.$toast('请输入联系号码')
-      }else{
-        obj.phone = this.phone
+      if (!this.name) {
+        return this.$toast("请输入联系人姓名");
+      } else {
+        obj.name = this.name;
       }
-      var list = localStorage.getItem('adList')
-      list = JSON.parse(list)
-      list[this.index]['obj'] = obj
-      localStorage.setItem('adList',JSON.stringify(list))
-      var orderType = localStorage.getItem('orderType')
-      if(orderType == 1){
-        this.$router.push({path:'/',query:{}})
-      }else if(orderType == 2){
-        this.$router.push({path:'/confirmorder',query:{}})
+      if (!this.phone) {
+        return this.$toast("请输入联系号码");
+      } else {
+        obj.phone = this.phone;
+      }
+      console.log(obj)
+      var list = localStorage.getItem("adList");
+      var center = localStorage.getItem("center")
+      list = JSON.parse(list);
+      list[this.index].obj = obj;
+      list[this.index].center = center
+      localStorage.setItem("adList", JSON.stringify(list));
+      var orderType = localStorage.getItem("orderType");
+      if (orderType == 1) {
+        this.$router.push({ path: "/", query: {} });
+      } else if (orderType == 2) {
+        this.$router.push({ path: "/confirmorder", query: {} });
       }
     },
-    targetHandler(){
-       this.$router.push({path:'/sendaddress',query:{index:this.index}})
+    targetHandler() {
+      this.$router.push({ path: "/sendaddress", query: { index: this.index } });
     },
     adMap() {
       var that = this;
@@ -172,6 +245,8 @@ export default {
       var currentCenter = this.map.getCenter(); //此方法是获取当前地图的中心点
       this.center = [currentCenter.lng, currentCenter.lat]; //将获取到的中心点的纬度经度赋值给data的center
       //根据地图中心点查附近地点，此方法在下方
+      //存储
+
       this.centerSearch();
       //监听地图移动事件，并在移动结束后获取地图中心点并更新地点列表
       this.marker = new AMap.Marker({
@@ -189,13 +264,15 @@ export default {
         currentCenter = that.map.getCenter();
 
         this.center = [currentCenter.lng, currentCenter.lat];
+        localStorage.setItem("center", JSON.stringify(this.center));
         //根据地图中心点查附近地点
         this.centerSearch();
       };
       // 绑定事件移动地图事件
       this.map.on("moveend", moveendFun);
-      this.map.on('click', function(e){
-        that.center = [e.lnglat.lng,e.lnglat.lat];
+      this.map.on("click", function(e) {
+        that.center = [e.lnglat.lng, e.lnglat.lat];
+        localStorage.setItem("center", JSON.stringify(that.center));
         that.centerSearch();
       });
     },
@@ -222,10 +299,14 @@ export default {
             });
             that.marker.setMap(that.map);
             //that.marker.setAnimation('AMAP_ANIMATION_BOUNCE');
-            that.regeocode = result.regeocode
-            var addressComponent = result.regeocode.addressComponent
-            that.regeocode.infos = addressComponent.district+addressComponent.township+addressComponent.street+addressComponent.streetNumber
-            console.log(result)
+            that.regeocode = result.regeocode;
+            var addressComponent = result.regeocode.addressComponent;
+            that.regeocode.infos =
+              addressComponent.district +
+              addressComponent.township +
+              addressComponent.street +
+              addressComponent.streetNumber;
+            console.log(result);
           }
         });
       });
@@ -274,62 +355,62 @@ export default {
     width: 100%;
     height: 600px;
   }
-  .confirmInformation{
+  .confirmInformation {
     width: 100%;
     min-height: 300px;
     display: flex;
     flex-direction: column;
     border-radius: 40px;
     background: white;
-    margin-top:20px;
-    .addresswrap{
+    margin-top: 20px;
+    .addresswrap {
       height: 140px;
       border-bottom: 2px solid #f2f2f2;
-      padding:0 30px;
+      padding: 0 30px;
       display: flex;
       flex-direction: row;
       align-items: center;
-      /deep/ .van-cell{
-        padding-right:0px;
-        padding-left:0px;
+      /deep/ .van-cell {
+        padding-right: 0px;
+        padding-left: 0px;
       }
-      .icoa{
-        width:40px;
-        height:40px;
+      .icoa {
+        width: 40px;
+        height: 40px;
         margin-right: 30px;
       }
-      .adinfo{
+      .adinfo {
         display: flex;
         flex-direction: column;
-        flex:1;
-        .name{
+        flex: 1;
+        .name {
           font-size: 30px;
-          color:#000000;
+          color: #000000;
           // display: inline-block;
           // overflow: hidden;
           // text-overflow: ellipsis;
           // white-space: nowrap;
         }
-        .infos{
+        .infos {
           font-size: 16px;
-          color:#929292;
+          color: #929292;
         }
       }
     }
-    .unitwrap{
-      height:90px;
+    .unitwrap {
+      height: 90px;
     }
-    .ad{
-      height:100px;
+    .ad {
+      height: 100px;
       display: flex;
       justify-content: center;
       align-items: center;
-      .adbtn{
-        width:100%;
-        height:80px;
+      .adbtn {
+        width: 100%;
+        height: 80px;
         border-radius: 40px;
-        background:#28ae3a;
-        color:white;
+        background: #28ae3a;
+        color: white;
         line-height: 80px;
         text-align: center;
         font-size: 35px;

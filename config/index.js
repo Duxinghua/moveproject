@@ -10,16 +10,18 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    // 'http://106.52.164.64:8184',
+    //http://106.52.164.64:8183
     proxyTable: {
       '/v1': {
-        target: 'http://106.52.164.64:8184',
+        target: 'http://192.168.0.210:8084',
         changeOrigin: true,
         pathRewrite:{
           '^/v1':''
         }
       },
       '/v2': {
-        target: 'http://106.52.164.64:8183',
+        target: 'http://192.168.0.210:8083',
         changeOrigin: true,
         pathRewrite:{
           '^/v2':''

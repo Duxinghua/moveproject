@@ -1,6 +1,6 @@
 <template>
   <div class="city">
-   <TopNav :menu="menutext"/>
+    <TopNav :menu="menutext" />
     <van-search
       v-model="searchvalue"
       show-action
@@ -14,13 +14,24 @@
       </template>
     </van-search>
     <div class="adposwrap">
-      <img src="../assets/images/adposs.png" class="adpossico" />
+      <img
+        src="../assets/images/adposs.png"
+        class="adpossico"
+      />
       <span class="adtext">当前位置:{{cityValue}}</span>
     </div>
     <van-index-bar>
-      <div v-for="(item,index) in cityData" :key="index">
-       <van-index-anchor :index="item.name" />
-       <van-cell :title="sitem.name" v-for="(sitem,sindex) in item.cities" :key="sindex" />
+      <div
+        v-for="(item,index) in cityData"
+        :key="index"
+      >
+        <van-index-anchor :index="item.name" />
+        <van-cell
+          :title="sitem.name"
+          v-for="(sitem,sindex) in item.cities"
+          :key="sindex"
+          @click.stop="targetHandler(sitem)"
+        />
       </div>
     </van-index-bar>
 
@@ -28,60 +39,113 @@
 </template>
 
 <script>
-import TopNav from '@/components/topnav.vue'
-import Data from '../utils/cityData.js'
+import TopNav from "@/components/topnav.vue";
+import Data from "../utils/cityData.js";
 export default {
-  name:'City',
-  components:{
-    TopNav
+  name: "City",
+  components: {
+    TopNav,
   },
-  data(){
+  data() {
     return {
-      cityValue:'武汉市',
-      searchvalue:'',
-      cityData:Data.cityData,
-      menutext:'选择城市'
+      cityValue: "武汉市",
+      searchvalue: "",
+      cityData: Data.cityData,
+      menutext: "选择城市",
+      urltype: "",
+      serverType: {
+        1: "PULL_CARGO",
+        2: "CHANGE_HOUSE",
+        3: "HIRE_WORKER",
+        4: "RENT_CAR",
+      },
+      saveindex:2
+    };
+  },
+  mounted() {
+    if (localStorage.getItem("local")) {
+      var obj = JSON.parse(localStorage.getItem("local"));
+      this.cityValue = obj.city;
+      this.$forceUpdate();
+    }
+    if (this.$route.query.type) {
+      this.urltype = this.$route.query.type;
+    }
+    if(this.$route.query.index){
+      this.saveindex = this.$route.query.index
     }
   },
-  mounted(){
-    if(localStorage.getItem('local')){
-      var obj = JSON.parse(localStorage.getItem('local'))
-      this.cityValue = obj.city
-      this.$forceUpdate()
+  methods: {
+    getAllCart(city) {
+      if (this.urltype == 1) {
+        var ordertype = localStorage.getItem('orderType')
+        var data = {
+          serverType: this.serverType[ordertype],
+          operCenter: city.replace("市", ""),
+          pageno: this.cartPageNum,
+          pagesize: this.cartPageSize,
+        };
+        this.$api.carStyleFindPage(data).then((result) => {
+          if (result.total > 0) {
+            if (this.urltype == 1) {
+              this.$router.push({
+                path: "/",
+                query: {
+                  name: item.name,
+                },
+              });
+            }
+          } else {
+            this.$toast("此运营中心暂时没有开通");
+            this.$router.push({
+              path: "/",
+              query: {},
+            });
+          }
+        });
+      } else if(this.urltype == 2){
+        var data = {
+          index:this.saveindex,
+          city:city
+        }
+        this.$router.push({
+              path: "/chooseaddress",
+              query: data,
+        });
+      }
+    },
+    onSearch() {},
+    targetHandler(item) {
+      this.getAllCart(item.name)
     }
   },
-  methods:{
-    onSearch(){
-
-    }
-  }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-.city{
+.city {
   display: flex;
   flex-direction: column;
-  min-height:100vh;
-  background:white;
-  /deep/ .van-search__action{
-    padding-right:30px;
+  min-height: 100vh;
+  background: white;
+  /deep/ .van-search__action {
+    padding-right: 30px;
   }
-  .adposwrap{
+  .adposwrap {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding:0 30px;
+    padding: 0 30px;
     box-sizing: border-box;
-    height:80px;
-    .adpossico{
-      width:35px;
-      height:35px;
-      margin-right:15px;
+    height: 80px;
+    .adpossico {
+      width: 35px;
+      height: 35px;
+      margin-right: 15px;
     }
-    .adtext{
+    .adtext {
       font-size: 30px;
-      color:#333333;
+      color: #333333;
     }
   }
 }

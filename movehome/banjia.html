@@ -280,7 +280,8 @@
           type:'GET',
           url: $.host + '/carStyle/findCarList',
           data: {
-            cityName: arg
+            cityName: arg,
+            serverType:'CHANGE_HOUSE'
           },
           dataType: "json",
           success: function (res) {
