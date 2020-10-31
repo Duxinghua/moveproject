@@ -111,9 +111,10 @@
           <img src="images/arrow.png" class="servermoretext"/>
         </a>
       <div class="server-banner">
-        <div class="swiper-container">
-          <div class="swiper-wrapper" id="server-banner-type">
+          <div class="swiper-container">
+            <div class="swiper-wrapper" id="server-banner-type">
 
+            </div>
           </div>
           <div class="pagination"></div>
           <img src="images/left.png" class="leftbtn">
@@ -272,8 +273,8 @@
          }
         }
       });
-
-      send('武汉')
+      var cityName = localStorage.getItem('cityName')
+      send(cityName)
       function send(arg){
         $.ajax({
           type:'GET',

@@ -376,7 +376,9 @@
         }
       })
       //运营中心服务车型
-      send('111')
+      var cityName = '111'
+      send(cityName)
+      localStorage.setItem('cityName',cityName)
       function send(arg){
         $.ajax({
           type:'GET',

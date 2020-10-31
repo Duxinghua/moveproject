@@ -171,34 +171,6 @@
   </div>
   <script type="text/javascript">
     $(function () {
-
-      var mySwiperCar = new Swiper('.server-banner .swiper-container', {
-        autoplay: 3500, //可选选项，自动滑动
-        loop: true,
-        pagination: '.server-banner .pagination',
-        paginationClickable: true
-      })
-      $('.leftbtn').click(function(){
-        mySwiperCar.swipePrev();
-      })
-      $('.rightbtn').click(function(){
-        mySwiperCar.swipeNext();
-      })
-
-      var mySwipercert = new Swiper('.cert-banner .swiper-container', {
-        autoplay: 3000, //可选选项，自动滑动
-        loop: true,
-        pagination: '.cert-banner .pagination',
-        paginationClickable: true
-      })
-
-      // link测试
-      var htmlimg = ''
-      for(var i=0,l=12;i<l;i++){
-        htmlimg += '<a href="#" target="_blank"><img src="images/baidu.png" class="linklogo" /></a>'
-      }
-      $('.logowrap').html(htmlimg)
-
       // 轮播图
       $.ajax({
         type: "GET",

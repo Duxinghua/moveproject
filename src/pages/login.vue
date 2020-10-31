@@ -57,7 +57,12 @@ export default {
       flag: true,
     };
   },
-  mounted() {},
+  mounted() {
+          var token = localStorage.getItem('token')
+          var tokenresult = this.decodeToken(token)
+          console.log(tokenresult)
+
+  },
   methods: {
     getCode() {
       var data = {
@@ -96,6 +101,7 @@ export default {
           this.$toast(result.msg);
           localStorage.clear()
           localStorage.setItem("token", result.data);
+
           this.$router.push("/");
         }
       });
@@ -117,6 +123,12 @@ export default {
   align-items: center;
   justify-content: center;
   height: 100vh;
+  background: url("../assets/images/bg.png") no-repeat;
+  background-size: 100% 100%;
+  z-index: 100;
+  /deep/ .van-cell{
+    background:transparent;
+  }
   .loginwrap {
     display: flex;
     flex-direction: column;

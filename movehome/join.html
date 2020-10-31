@@ -115,9 +115,15 @@
       </div>
       <div class="inputwrap clearfix">
         <span class="jointitle adjointitle">
+          法人
+        </span>
+        <input type="text" placeholder="输入法人" data="legalName" class="address legalName adinputwrap" />
+      </div>
+      <div class="inputwrap clearfix">
+        <span class="jointitle adjointitle">
           代理人
         </span>
-        <input type="text" placeholder="输入您的姓名" data="legalName" class="address legalName adinputwrap" />
+        <input type="text" placeholder="输入代理人" data="proxyName" class="address proxyName adinputwrap" />
       </div>
       <div class="inputwrap clearfix">
         <span class="jointitle adjointitle">
@@ -369,24 +375,32 @@
         $(this).parent().find('.imgcloseu').css('display', 'none');
       })
       //重置
-      $(document).on('click', '.reset', function () {
+      function reset(){
         submitData = {}
         $('.uploadfilepicUrl').val('')
         $('.uploadfilelog').val('')
         $('.enterpriseName').val('')
         $('.ownerCity').val('')
+        $('.proxyName').val('')
         $('.addressvalue').val('')
         $('.legalName').val('')
         $('.linkMobile').val('')
         $('.verificationCode').val('')
         $('.urgeLinkMobile').val('')
+        $(".inputfile input").val('')
+        $(".inputfile .uploadimg").attr('src','').hide()
+        $(".inputfile .imgcloseu").hide()
+      }
+      $(document).on('click', '.reset', function () {
+        reset()
       })
       //提交
       $(document).on('click', '.submit', function () {
         submitData.enterpriseName = $('.enterpriseName').val()
-        submitData.region = $('.ownerCity').val()
+        submitData.region = $('#ownerCity').val()
         submitData.address = $('.addressvalue').val()
         submitData.legalName = $('.legalName').val()
+        submitData.proxyName = $('.proxyName').val()
         submitData.linkMobile = $('.linkMobile').val()
         submitData.verificationCode = $('.verificationCode').val()
         submitData.urgeLinkMobile = $('.urgeLinkMobile').val()
@@ -439,10 +453,9 @@
           })
           return;
         }else{
-          var s = submitData.region
-          var arr = s.split("/")
-          submitData.ownerCity = arr[1]
-          submitData. region = arr[2]
+          var addressinfo = new String(submitData.region).toString().split("/")
+          submitData.ownerCity = $.trim(addressinfo[1])
+          submitData.region = $.trim(addressinfo[2])
         }
         if (!submitData.address) {
           $modal({
@@ -457,6 +470,18 @@
           return;
         }
         if (!submitData.legalName) {
+          $modal({
+            type: 'message',
+            timeout: 2000,
+            content: '请输入法人',
+            center: true,
+            top: 100,
+            transition: 300,
+            closable: false,
+          })
+          return;
+        }
+        if (!submitData.proxyName) {
           $modal({
             type: 'message',
             timeout: 2000,
@@ -504,12 +529,12 @@
           })
           return;
         }
+        console.log(JSON.stringify(submitData))
         $.ajax({
           type: "POST",
           url: $.host + 'custEnterpriseApply/insert',
           data: JSON.stringify(submitData),
-          dataType: "json",
-          contentType: 'application/json;charset=UTF-8',
+          contentType: 'application/json',
           success: function (res) {
             if (res.code == 200) {
               $modal({
@@ -521,6 +546,7 @@
                 transition: 300,
                 closable: false,
               })
+              reset()
             } else {
               $modal({
                 type: 'message',

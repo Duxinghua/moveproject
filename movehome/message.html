@@ -360,10 +360,11 @@
         $.ajax({
           type: "POST",
           url: $.host + 'onlineMessage/insert',
-          data: data,
-          dataType: "json",
+          data: JSON.stringify(data),
+          contentType:'application/json',
           success: function (res) {
             if(res.code == 200){
+              reset()
               $modal({
                   type: 'message',
                   timeout: 2500,
