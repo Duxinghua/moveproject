@@ -54,9 +54,13 @@ const server = {
   orderHeadInsert(data){
     return httpv1({method:"Post",url:'/orderHead/insert',data})
   },
+  //支付宝支付http://106.52.164.64:8184/aliPay/wapPay?orderHeadSeqId=159750943536054272
+  aliPayWapPay(params){
+    return httpv1({method:"Get",url:'/aliPay/wapPay',params})
+  },
   //优惠券
-  couponManagefindPage(params){
-    return httpv2({method:"Get",url:'/couponManage/findPage', params})
+  orderFindUserCoupon(params){
+    return httpv2({method:"Get",url:'/couponUser/orderFindUserCoupon', params})
   }
 }
 

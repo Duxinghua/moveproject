@@ -300,7 +300,7 @@ export default {
             localStorage.setItem("locations", JSON.stringify(obj));
             that.serverHandler(that.serverIndex);
           } else {
-            that.city = "长沙市";
+            that.city = "武汉";
             that.selectCity()
           }
           localStorage.setItem("city", that.city);
@@ -308,7 +308,6 @@ export default {
       });
     }
     var list = localStorage.getItem("adList");
-    console.log(list,'list')
     if (list) {
       list = JSON.parse(list);
       this.adList = list;
@@ -357,12 +356,14 @@ export default {
       };
       this.$api.carStyleFindPage(data).then((result) => {
         this.carList = result.list;
-        console.log(result.list,'list',localStorage.getItem("sCar") == 1)
-        if (!localStorage.getItem("sCar")) {
+        console.log(result.list,'list',localStorage.getItem("sCar"))
+        if (localStorage.getItem("sCar") == 0) {
+          console.log(1)
           localStorage.setItem("sCar",1)
           this.cartObject = result.list[0];
           localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
         }else if (localStorage.getItem("sCar") == 1) {
+          console.log(2)
           var cartObject = JSON.parse(localStorage.getItem('cartObject'))
           this.carList.map((item,index)=>{
             if(item.seqId == cartObject.seqId){
@@ -379,16 +380,19 @@ export default {
     },
     //切换类型
     serverHandler(index) {
+      console.log(index,'indexser')
       this.carList = [];
       this.serverIndex = index;
       localStorage.setItem("orderType", this.serverIndex);
       if (index == 1) {
+        localStorage.setItem("sCar",0)
         this.cartPageSize = 4;
         this.getAllCart();
       } else if (index == 2) {
         this.cartPageSize = 100;
         this.getAllCart();
       } else if (index == 4) {
+        localStorage.setItem("sCar",0)
         this.getAllCart();
         // this.carList = this.carList2
       } else if (index == 3) {

@@ -15,7 +15,7 @@ const service = axios.create({
 service.interceptors.request.use(
 	config => {
         console.log(process);
-		config["baseURL"] ="/v2";// process.env.NODE_ENV === "development" ? "/v2" : process.env.BASE_API;
+		config["baseURL"] = process.env.NODE_ENV === "development" ? "/v2" : process.env.BASE_API2;
 		console.log(config["baseURL"]);
     config.headers['Content-Type'] = 'application/json;charset=utf-8'
 		config.headers['Authorization'] = localStorage.getItem('token')

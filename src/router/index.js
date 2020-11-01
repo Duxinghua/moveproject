@@ -191,6 +191,14 @@ const router = new Router({
       }
     },
     {
+      path: '/priceinfo',
+      name: 'Priceinfo',
+      component: () => import('@/pages/priceinfo'),
+      meta: {
+        title: '计费规则说明'
+      }
+    },
+    {
       path: '/test',
       name: 'Test',
       component: () => import('@/pages/test'),

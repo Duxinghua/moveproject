@@ -22,7 +22,7 @@
             {{item.name}}({{item.name2}})
           </div>
           <div class="pr">
-            {{item.propValue}}
+            ¥{{item.feeMoney}}
           </div>
         </div>
       </div>
@@ -35,7 +35,7 @@
            {{item.name}}({{item.name2}})
           </div>
           <div class="pr">
-            ¥{{item.propValue}}
+            ¥{{item.feeMoney}}
           </div>
         </div>
       </div>

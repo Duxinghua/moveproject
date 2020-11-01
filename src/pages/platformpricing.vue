@@ -1,19 +1,19 @@
 <template>
   <div class="platformpricing">
-      <TopNav :menu="menutext"/>
-      <div class="itemtitle">
-        工种选择
-      </div>
-      <van-cell-group>
-        <van-field
-          label="选择工种"
-          v-model="worktype"
-          input-align="right"
-          :clearable="true"
-          placeholder="请选择"
-          right-icon="arrow"
-          @click="itemHandler('worktype')"
-        />
+    <TopNav :menu="menutext" />
+    <div class="itemtitle">
+      工种选择
+    </div>
+    <van-cell-group>
+      <van-field
+        label="选择工种"
+        v-model="worktype"
+        input-align="right"
+        :clearable="true"
+        placeholder="请选择"
+        right-icon="arrow"
+        @click="itemHandler('worktype')"
+      />
       <van-field
         label="订单备注"
         v-model="remark"
@@ -23,37 +23,41 @@
         right-icon="arrow"
         @click="itemHandler('remark')"
       />
-      </van-cell-group>
-      <div class="itemtitle">
-        需求填写
-      </div>
-      <van-cell-group>
+    </van-cell-group>
+    <div class="itemtitle">
+      需求填写
+    </div>
+    <van-cell-group>
       <div class="vanpos">
-          <van-field
-            label="选择劳务工人数"
-            v-model="workerUserCnt"
-            input-align="right"
-            placeholder="请填写人数"
-            @click="itemHandler('workerUserCnt')"
-          />
-      </div>
-          <van-field
-            label="服务工期"
-            v-model="worktimetype"
-            input-align="right"
-            readonly
-            placeholder="请选择工期类型"
-            right-icon="arrow"
-            @click="itemHandler('worktimetype')"
-          />
         <van-field
-          label=""
-          v-if="worktimetype"
-          v-model="workerTimeQty"
-          input-align="left"
-          placeholder="请填写服务时间"
-          @click="itemHandler('workerTimeQty')"
+          label="请填写劳务工人数"
+          v-model="workerUserCnt"
+          type="number"
+          input-align="right"
+          placeholder="请填写人数"
+          @input='helpInputHandler("workerUserCnt")'
+          @click="itemHandler('workerUserCnt')"
         />
+      </div>
+      <van-field
+        label="服务工期"
+        v-model="worktimetype"
+        input-align="right"
+        readonly
+        placeholder="请选择工期类型"
+        right-icon="arrow"
+        @input='helpInputHandler("worktimetype")'
+        @click="itemHandler('worktimetype')"
+      />
+      <van-field
+        label=""
+        v-if="worktimetype"
+        v-model="workerTimeQty"
+        input-align="left"
+        placeholder="请填写服务时间"
+        @input='helpInputHandler("workerTimeQty")'
+        @click="itemHandler('workerTimeQty')"
+      />
       <van-field
         label="服务区域"
         v-model="areatext"
@@ -71,12 +75,13 @@
           clearable
           label="详情地址"
           type="textarea"
+          @input='helpInputHandler("address")'
           placeholder="请输入详情地址"
         />
       </div>
     </van-cell-group>
     <div class="itemtitle">
-        其他信息
+      其他信息
     </div>
     <van-cell-group>
       <div class="vanpes">
@@ -86,6 +91,7 @@
           input-align="right"
           clearable
           placeholder="请输入联系人"
+          @input='helpInputHandler("name")'
           @click="itemHandler('name')"
         />
         <van-field
@@ -94,41 +100,44 @@
           input-align="right"
           clearable
           placeholder="请输入联系电话"
+          @input='helpInputHandler("phone")'
           @click="itemHandler('phone')"
         />
-        </div>
-        <van-field
-          label="上门服务时间"
-          v-model="time"
-          input-align="right"
-          clearable
-          readonly
-          right-icon="arrow"
-          placeholder="请选择"
-          @click="itemHandler('time')"
+      </div>
+      <van-field
+        label="上门服务时间"
+        v-model="time"
+        input-align="right"
+        clearable
+        readonly
+        right-icon="arrow"
+        placeholder="请选择"
+        @click="itemHandler('time')"
+      />
+      <div class="itemdiy">
+        <span class="itemlabel lm">自定义价格</span>
+        <van-switch
+          v-model="diyprice"
+          active-color="#28ae3a"
+          size="14"
+          inactive-color="#999999"
+          @change="change"
         />
-        <div class="itemdiy">
-          <span class="itemlabel lm">自定义价格</span>
-          <van-switch
-            v-model="diyprice"
-            active-color="#28ae3a"
-            size="14"
-            inactive-color="#999999"
-            @change="change"
-          />
-        </div>
-        <div class="diyprice" v-if="diyprice">
-          <van-field
-            label="¥"
-            v-model="pricetext"
-            input-align="left"
-            clearable
-            placeholder="请输入自定义价格"
-            @click="itemHandler('diyprice')"
-            @change="change"
-
-          />
-        </div>
+      </div>
+      <div
+        class="diyprice"
+        v-if="diyprice"
+      >
+        <van-field
+          label="¥"
+          v-model="pricetext"
+          input-align="left"
+          clearable
+          placeholder="请输入自定义价格"
+          @click="itemHandler('diyprice')"
+          @change="change"
+        />
+      </div>
     </van-cell-group>
     <div class="couponwrap">
       <van-field
@@ -178,12 +187,34 @@
     </div>
 
     <!-- 选择工期 -->
-    <van-popup v-model="worktimeShow" round position="bottom" :style="{ 'min-height': '100px' }">
-      <van-picker show-toolbar title="请选择工期类型" :columns="columns"  @cancel="cancelHandler" @confirm="confirmHandler" />
+    <van-popup
+      v-model="worktimeShow"
+      round
+      position="bottom"
+      :style="{ 'min-height': '100px' }"
+    >
+      <van-picker
+        show-toolbar
+        title="请选择工期类型"
+        :columns="columns"
+        @cancel="cancelHandler"
+        @confirm="confirmHandler"
+      />
     </van-popup>
     <!-- 选择区域 -->
-    <van-popup v-model="areaShow" round position="bottom" :style="{ 'min-height': '100px' }">
-      <van-area title="选择区域" :area-list="areaList" :value="areavalue" @cancel="areacancelHandler" @confirm="areaconfirmHandler" />
+    <van-popup
+      v-model="areaShow"
+      round
+      position="bottom"
+      :style="{ 'min-height': '100px' }"
+    >
+      <van-area
+        title="选择区域"
+        :area-list="areaList"
+        :value="areavalue"
+        @cancel="areacancelHandler"
+        @confirm="areaconfirmHandler"
+      />
     </van-popup>
     <!-- 时间 -->
     <van-popup
@@ -203,101 +234,231 @@
         @confirm="timeConfirm"
       />
     </van-popup>
+
+    <!-- 优惠券 -->
+    <van-popup
+      v-model="couponshow"
+      closeable
+      position="bottom"
+      :style="{'min-height':'100px'}"
+    >
+      <div class="couponlist">
+        <div class="coupontitle">
+          优惠券
+        </div>
+        <div class="couponwrap">
+          <div
+            class="couponitem"
+            v-for="(item,index) in 6"
+            :key="index"
+          >
+            <div class="couponleft">
+              <div class="t1">
+                <span>¥</span>
+                <span>5000</span>
+              </div>
+              <div class="t2">
+                现金券
+              </div>
+            </div>
+            <div class="couponright">
+              <div class="c1">
+                测试测试测试
+              </div>
+              <div class="c2">
+                2012-10-10 05:05:05
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </van-popup>
+
+    <!-- 支付 -->
+    <van-popup
+      v-model="payshow"
+      closeable
+      round
+      position="bottom"
+      :style="{'min-height':'100px'}"
+    >
+      <div class="payClass">
+        <div class="paytprice">
+          <span>¥</span>
+          {{money_total}}
+        </div>
+        <div class="paytypes">
+          <div class="paytips">选择支付方式</div>
+          <van-radio-group
+            v-model="paytype"
+            checked-color="#28ae3a"
+          >
+            <van-radio name="1">
+              <div class="payitem">
+                <img
+                  src="../assets/images/alipay.png"
+                  class="payico"
+                />
+                <span class="payname">支付宝支付</span>
+              </div>
+            </van-radio>
+            <van-radio name="2">
+              <div class="payitem">
+                <img
+                  src="../assets/images/weixin.png"
+                  class="payico"
+                />
+                <span class="payname">微信支付</span>
+              </div>
+            </van-radio>
+            <van-radio name="3">
+              <div class="payitem">
+                <img
+                  src="../assets/images/bank.png"
+                  class="payico"
+                />
+                <span class="payname">银联支付</span>
+              </div>
+            </van-radio>
+          </van-radio-group>
+          <div
+            class="paymoney"
+            @click="alipay"
+          >
+            立即支付
+          </div>
+        </div>
+      </div>
+    </van-popup>
+
   </div>
 </template>
 
 <script>
-import TopNav from '@/components/topnav.vue'
-import areaList from '../utils/area.js'
+import TopNav from "@/components/topnav.vue";
+import areaList from "../utils/area.js";
 export default {
-  name:'platformpricing',
-  components:{
-    TopNav
+  name: "platformpricing",
+  components: {
+    TopNav,
   },
-  data(){
+  data() {
     return {
-      name:'',
-      time:'',
-      phone:'',
-      workerUserCnt:'',
-      remark:'',
-      worktype:'',
-      areaShow:false,
-      worktimetype:'',
-      worktimeShow:false,
-      timeshow:false,
-      diyprice:false,
-      rulechecked:false,
-      pricetext:'',
-      coupon:'',
+      name: "",
+      time: "",
+      phone: "",
+      workerUserCnt: "",
+      remark: "",
+      worktype: "",
+      areaShow: false,
+      worktimetype: "",
+      worktimeShow: false,
+      timeshow: false,
+      diyprice: false,
+      rulechecked: false,
+      pricetext: "",
+      coupon: "",
       currentDate: new Date(),
       minDate: new Date(2020, 0, 1),
       maxDate: new Date(2050, 10, 1),
-      address:'',
-      areatext:'',
-      areavalue:'',
-      workerRegion:'',
-      areaObj:[],
-      areaList:areaList,
-      money:0,
-      workerTimeQty:'',
+      address: "",
+      areatext: "",
+      areavalue: "",
+      workerRegion: "",
+      areaObj: [],
+      areaList: areaList,
+      money: 0,
+      workerTimeQty: "",
       columns: [
         {
-          diy:'时',
-          text: '按小时计算'
+          diy: "时",
+          text: "按小时计算",
         },
         {
-          diy:'天',
-          text: '按天计算'
-        }
+          diy: "天",
+          text: "按天计算",
+        },
       ],
-      menutext:'发布需求',
-      timetype:'',
-      detail:{}
+      menutext: "发布需求",
+      timetype: "",
+      detail: {},
+      couponshow: false,
+      payshow: false,
+      money_total:0,
+      paytype:1
+    };
+  },
+  mounted() {
+    var detail = localStorage.getItem("detail");
+    if (detail) {
+      detail = JSON.parse(detail);
+      this.name = detail.receiverName;
+      this.phone = detail.receiverMobileNo;
+      this.remark = detail.orderDescribe;
+      this.workerUserCnt = detail.workerUserCnt;
+      this.workerTimeQty = detail.workerTimeQty;
+      this.worktimetype = detail.workTypeUnit;
+      this.timetype = detail.workTypeUnit;
+      this.address = detail.workerAddress;
+      this.time = detail.orderDate;
+      this.areatext = detail.areatext;
+      this.workerRegion = detail.workerRegion;
+      this.worktype = detail.workTypeName + "-" + detail.workTypeName2;
+      this.getorderHeadCalcPrice();
     }
+    console.log(this.currentDate);
+
+    var worktype1 = localStorage.getItem("workTypeName");
+    var worktype2 = localStorage.getItem("workTypeName2");
+    var remarks = localStorage.getItem("remarks");
+
+    if (worktype1 && worktype2) {
+      this.worktype = worktype1 + "-" + worktype2;
+    } else {
+      this.worktype = "请选择";
+    }
+
+    this.remark = remarks;
   },
-  mounted(){
-    var worktype1 = localStorage.getItem('workTypeName')
-    var worktype2 = localStorage.getItem('workTypeName2')
-    var remarks = localStorage.getItem("remarks")
-    this.worktype = worktype1 + '-' +worktype2
-    this.remark = remarks
-  },
-  methods:{
-    change(){
-      this.getorderHeadCalcPrice()
+  methods: {
+    change() {
+      this.getorderHeadCalcPrice();
     },
-    getorderHeadCalcPrice(){
+    getorderHeadCalcPrice() {
       var data = {
-        "orderDate": this.DateFormat(this.currentDate, "yyyy-MM-dd hh:mm:ss"),
-        "orderType": "ACTUAL_TIME",
-        "serverType": "HIRE_WORKER",
-        "ownerCity": localStorage.getItem('city'),
-        "priceType": this.diyprice ? "DISCUSS" : "STANDARD",
-        "receiverName": this.name,
-        "receiverMobileNo": this.phone,
-        "mobileProtected": true,
-        "couponSeqId": null,
-        "couponName": null,
-        "couponMoney": 10,
-        "orderDescribe": this.remark,
-        "workTypeName": this.worktype.split("-")[0],
-        "workTypeName2": this.worktype.split("-")[1],
-        "workTypeUnit": this.timetype,
-        "workerUserCnt": 1,
-        "workerTimeQty": 1,
-        "workerRegion": this.workerRegion,
-        "workerAddress": this.address
+        orderDate: this.DateFormat(this.currentDate, "yyyy-MM-dd hh:mm:ss"),
+        orderType: "ACTUAL_TIME",
+        serverType: "HIRE_WORKER",
+        ownerCity: localStorage.getItem("city"),
+        priceType: this.diyprice ? "DISCUSS" : "STANDARD",
+        receiverName: this.name,
+        receiverMobileNo: this.phone,
+        mobileProtected: true,
+        couponSeqId: null,
+        couponName: null,
+        couponMoney: 0,
+        orderDescribe: this.remark,
+        workTypeName: this.worktype.split("-")[0],
+        workTypeName2: this.worktype.split("-")[1],
+        workTypeUnit: this.timetype,
+        workerUserCnt: this.workerUserCnt,
+        workerTimeQty: this.workerTimeQty,
+        workerRegion: this.workerRegion,
+        workerAddress: this.address,
+      };
+      if (data.priceType == "DISCUSS") {
+        data.totalMoney = this.pricetext;
       }
-      if(data.priceType == 'DISCUSS'){
-        data.totalMoney = this.pricetext
-      }
-      this.detail = data
+      this.detail = data;
+      this.detail.areavalue = this.areavalue;
+      this.detail.areatext = this.areatext;
+      localStorage.setItem("detail", JSON.stringify(data));
       this.$api.orderHeadCalcPrice(data).then((result) => {
-          if(result.code == 200){
-            this.money = result.data
-          }
-      })
+        if (result.code == 200) {
+          this.money = result.data;
+          this.money_total = result.data
+        }
+      });
     },
     formatter(type, val) {
       if (type === "year") {
@@ -319,66 +480,149 @@ export default {
     timeConfirm(e) {
       this.time = this.DateFormat(e, "yyyy-MM-dd hh:mm:ss");
       this.timeshow = false;
-      this.getorderHeadCalcPrice()
+      this.getorderHeadCalcPrice();
     },
-    itemHandler(tag){
-      if(tag == 'worktimetype'){
-        this.worktimeShow = true
-      }else if(tag == 'area'){
-        this.areaShow = true
-      }else if(tag == 'time'){
-        this.timeshow = true
-      }else if(tag == 'worktype'){
-         this.$router.push('/selectwork')
-      }else if(tag == 'remark'){
-        this.$router.push({path:'/ordernote'})
+    phoneFocusHandler(arg) {
+      if (arg == "phone") {
+        if (!/^1[0-9]{10}$/.test(this.phone)) {
+          this.phone = "";
+          return this.$toast("请输入正确的手机号");
+        }
       }
     },
-    areacancelHandler(){
-      this.areaShow = false
-    },
-    cancelHandler(){
-      this.worktimeShow = false
-    },
-    areaconfirmHandler(e){
-      this.workerRegion = e[2].name
-      console.log(this.workerRegion,'ss')
-      this.areavalue = e[0].code+'-'+e[1].code+'-'+e[2].code
-      this.areatext = e[0].name+'-'+e[1].name+'-'+e[2].name
-      this.areaObj = e
-      this.areaShow = false
-    },
-    confirmHandler(e){
-      this.timetype = e.diy
-      this.worktimetype = e.text
-      this.worktimeShow = false
-    },
-    linkHandler(index){
-      if(index == 2){
-        localStorage.setItem('detail',JSON.stringify(this.detail))
-        this.$router.push({ path: "/pricedetail",query:{index:3} });
+    helpInputHandler(tag) {
+      if (tag == "workerUserCnt") {
+        var worktype1 = localStorage.getItem("workTypeName");
+        var worktype2 = localStorage.getItem("workTypeName2");
+        if (!worktype1 || !worktype2) {
+          this.workerUserCnt = "";
+          return this.$toast("请选择工种");
+        } else {
+          this.workerUserCnt = this.workerUserCnt > 0 ? this.workerUserCnt : "";
+        }
+      } else if (tag == "address") {
+        if (!this.areatext) {
+          this.address = "";
+          return this.$toast("请选择省市区");
+        }
+        if (!this.workerTimeQty) {
+          this.address = "";
+          return this.$toast("请输入服务时间");
+        }
+      } else if (tag == "name") {
+        if (!this.address) {
+          this.name = "";
+          return this.$toast("请输入详情地址");
+        }
+      } else if (tag == "phone") {
+        if (!this.name) {
+          this.phone = "";
+          return this.$toast("请输入联系人");
+        }
       }
     },
-    payTodo(){
+    itemHandler(tag) {
+      if (tag == "worktimetype") {
+        if (this.workerUserCnt) {
+          this.worktimeShow = true;
+        } else {
+          return this.$toast("请输入劳工人数");
+        }
+      } else if (tag == "area") {
+        if (this.worktimetype) {
+          this.areaShow = true;
+        } else {
+          return this.$toast("请选择服务工期");
+        }
+      } else if (tag == "time") {
+        if (!this.phone) {
+          return this.$toast("请输入联系方式");
+        } else {
+          if (!/^1[0-9]{10}$/.test(this.phone)) {
+            this.phone = "";
+            return this.$toast("请输入正确的手机号");
+          } else {
+            this.timeshow = true;
+          }
+        }
+      } else if (tag == "worktype") {
+        this.$router.push("/selectwork");
+      } else if (tag == "remark") {
+        var worktype1 = localStorage.getItem("workTypeName");
+        var worktype2 = localStorage.getItem("workTypeName2");
+        if (worktype1 && worktype2) {
+          this.$router.push({ path: "/ordernote" });
+        } else {
+          return this.$toast("请先选择工种");
+        }
+      }
+    },
+    areacancelHandler() {
+      this.areaShow = false;
+    },
+    cancelHandler() {
+      this.worktimeShow = false;
+    },
+    areaconfirmHandler(e) {
+      this.workerRegion = e[2].name;
+      this.areavalue = e[0].code + "-" + e[1].code + "-" + e[2].code;
+      this.areatext = e[0].name + "-" + e[1].name + "-" + e[2].name;
+      this.areaObj = e;
+      this.areaShow = false;
+    },
+    confirmHandler(e) {
+      this.timetype = e.diy;
+      this.worktimetype = e.text;
+      this.worktimeShow = false;
+    },
+    linkHandler(index) {
+      if (index == 2) {
+        localStorage.setItem("detail", JSON.stringify(this.detail));
+        this.$router.push({ path: "/pricedetail", query: { index: 3 } });
+      }
+    },
+    payTodo() {
+      if (!this.rulechecked) {
+        return this.$toast("请勾选货搬搬用户协议");
+      } else {
+        var data = this.detail;
+        data.payMoney = this.money_total;
+        data.refundMoney = 0;
+        this.$api.orderHeadInsert(data).then((result) => {
+          if (result.code == 200) {
+            this.detail = result.data;
+            this.payshow = true;
+          }
+        });
+      }
+    },
+    alipay() {
+      //支付宝
+      if (this.paytype == 1) {
+        // this.$api.aliPayWapPay({orderHeadSeqId:this.detail.seqId}).then((result)=>{
 
+        // })
+        window.location.href =
+          "http://106.52.164.64:8184/aliPay/wapPay?orderHeadSeqId=" +
+          this.detail.seqId;
+      }
     }
-  }
-
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.platformpricing{
+.platformpricing {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background:#f5f6f7;
-  padding:0 30px 200px 30px;
+  background: #f5f6f7;
+  padding: 0 30px 200px 30px;
   box-sizing: border-box;
-  .itemtitle{
+  .itemtitle {
     font-size: 26px;
-    color:#666666;
-    margin-top:30px;
+    color: #666666;
+    margin-top: 30px;
     margin-bottom: 20px;
   }
   /deep/ .van-cell-group {
@@ -386,89 +630,89 @@ export default {
     overflow: hidden;
   }
   /deep/ .van-cell {
-   padding-right:15px;
-   display: flex;
-   align-items: center;
+    padding-right: 15px;
+    display: flex;
+    align-items: center;
   }
-  /deep/ .van-field__label{
-    width:3.5rem;
+  /deep/ .van-field__label {
+    width: 3.5rem;
   }
-  /deep/ .van-button--small{
-    width:100%;
-    height:80px;
+  /deep/ .van-button--small {
+    width: 100%;
+    height: 80px;
   }
-  /deep/ .van-picker__cancel{
-    color:#999999;
+  /deep/ .van-picker__cancel {
+    color: #999999;
   }
   /deep/ .van-picker__confirm {
-    color:#28ae3a;
+    color: #28ae3a;
   }
-  .vanpos{
+  .vanpos {
     /deep/ .van-cell {
-      padding-right:25px;
+      padding-right: 25px;
       display: flex;
       align-items: center;
     }
-    /deep/ .van-field__body{
-      position: relative
+    /deep/ .van-field__body {
+      position: relative;
     }
-    /deep/ .van-field__control{
-      padding-right:24px;
+    /deep/ .van-field__control {
+      padding-right: 24px;
     }
-    /deep/ .van-field__body::after{
+    /deep/ .van-field__body::after {
       position: absolute;
-      content:'人';
-      right:0;
-      top:50%;
+      content: "人";
+      right: 0;
+      top: 50%;
       transform: translateY(-50%);
       font-size: 28px;
     }
   }
-  .adarea{
-    /deep/ .van-field__control{
+  .adarea {
+    /deep/ .van-field__control {
       text-align: right;
-      padding-right:14px;
+      padding-right: 14px;
     }
   }
-  .vanpes{
-    /deep/ .van-cell{
-      padding-right:28px;
+  .vanpes {
+    /deep/ .van-cell {
+      padding-right: 28px;
     }
   }
   .itemdiy {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      height: 90px;
-      padding:0 30px;
-      box-sizing: border-box;
-      border-bottom: 1px solid #f5f6f7;
-      .itemlabel {
-        font-size: 26px;
-        color: #333333;
-      }
-      .lm {
-        margin-right: auto;
-      }
-      .itemvalue {
-        font-size: 26px;
-        color: #333333;
-        margin-left: auto;
-      }
-      /deep/ .van-icon {
-        font-size: 34px;
-      }
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 90px;
+    padding: 0 30px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #f5f6f7;
+    .itemlabel {
+      font-size: 26px;
+      color: #333333;
+    }
+    .lm {
+      margin-right: auto;
+    }
+    .itemvalue {
+      font-size: 26px;
+      color: #333333;
+      margin-left: auto;
+    }
+    /deep/ .van-icon {
+      font-size: 34px;
+    }
   }
-  .diyprice{
-    /deep/ .van-field__label{
-      width:fit-content;
+  .diyprice {
+    /deep/ .van-field__label {
+      width: fit-content;
       margin-right: 15px;
     }
   }
   .couponwrap {
     width: 690px;
     margin: 30px auto;
-    /deep/ .van-cell{
+    /deep/ .van-cell {
       border-radius: 20px;
       overflow: hidden;
     }
@@ -540,6 +784,154 @@ export default {
       margin-left: auto;
     }
   }
-}
+  .couponlist {
+    display: flex;
+    flex-direction: column;
+    .coupontitle {
+      height: 100px;
+      line-height: 100px;
+      padding-left: 40px;
+      width: 100%;
+      font-size: 40px;
+      color: #333333;
+    }
+    .couponwrap {
+      width: 100%;
+      height: 650px;
+      background: #f5f6f7;
+      padding: 30px;
+      box-sizing: border-box;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      .couponitem {
+        height: 200px;
+        display: flex;
+        flex-direction: row;
+        border-radius: 20px;
+        overflow: hidden;
+        background: white;
+        margin-bottom: 15px;
+        .couponleft {
+          width: 252px;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          border-right: 2px dashed #f5f6f7;
+          .t1 {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-end;
+            color: #ff561e;
+            span:first-child {
+              font-size: 35px;
+              margin-right: 5px;
+              margin-bottom: 5px;
+            }
+            span:last-child {
+              font-size: 60px;
+              font-weight: bold;
+            }
+          }
+          .t2 {
+            font-size: 35px;
+            color: #888888;
+          }
+        }
+        .couponright {
+          flex: 1;
+          height: 100%;
+          padding: 0 30px;
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          .c1 {
+            font-size: 40px;
+            color: #333333;
+          }
+          .c2 {
+            font-size: 20px;
+            color: #888888;
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+  }
+  .payClass {
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 100px;
+    .paytprice {
+      font-size: 50px;
+      color: #28ae3a;
+      margin-right: 20px;
+      text-align: center;
+      margin-bottom: 40px;
+      span {
+        font-size: 34px;
+      }
+    }
+    .paytypes {
+      display: flex;
+      flex-direction: column;
+      padding: 0 40px;
+      box-sizing: border-box;
+      .paytips {
+        font-size: 30px;
+        color: #999999;
+      }
+      .paymoney {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 90px;
+        color: white;
+        background: #28ae3a;
+        border-radius: 45px;
+        overflow: hidden;
+        line-height: 90px;
+        font-size: 40px;
+        margin-top: 30px;
+      }
+    }
+  }
 
+  /deep/ .van-radio {
+    display: flex;
+    flex-direction: row-reverse;
+    border-bottom: 1px solid #f5f6f7;
+  }
+  /deep/ .van-radio__label {
+    display: flex;
+    flex: 1;
+    margin-left: 0px;
+    .payitem {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex: 1;
+      height: 130px;
+      .payico {
+        width: 80px;
+        height: 80px;
+        margin-right: 20px;
+      }
+      .payname {
+        font-size: 20px;
+        color: #333333;
+      }
+    }
+  }
+  /deep/ .van-picker__confirm {
+    color: #28ae3a;
+  }
+  /deep/ .van-picker__cancel {
+    color: #999999;
+  }
+}
 </style>

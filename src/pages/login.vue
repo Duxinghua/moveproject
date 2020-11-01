@@ -58,9 +58,9 @@ export default {
     };
   },
   mounted() {
-          var token = localStorage.getItem('token')
-          var tokenresult = this.decodeToken(token)
-          console.log(tokenresult)
+    // var token = localStorage.getItem('token')
+    //     var tokenresult = this.decodeToken(token)
+    //        localStorage.setItem('payload',JSON.stringify(tokenresult.payload))
 
   },
   methods: {
@@ -101,7 +101,9 @@ export default {
           this.$toast(result.msg);
           localStorage.clear()
           localStorage.setItem("token", result.data);
-
+          var tokenresult = this.decodeToken(result.data)
+          localStorage.setItem('payload',JSON.stringify(tokenresult.payload))
+          localStorage.setItem("sCar",0)
           this.$router.push("/");
         }
       });

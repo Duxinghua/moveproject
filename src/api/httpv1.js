@@ -15,7 +15,7 @@ const service = axios.create({
 // request 拦截器
 service.interceptors.request.use(
 	config => {
-		config["baseURL"] = "/v1" ;//process.env.NODE_ENV === "development" ? "/v1" : process.env.BASE_API2;
+		config["baseURL"] = process.env.NODE_ENV === "development" ? "/v1" : process.env.BASE_API;
     console.log(config["baseURL"]);
     config.headers['Content-Type'] = 'application/json;charset=utf-8'
     config.headers['Authorization'] = localStorage.getItem('token')

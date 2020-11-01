@@ -54,7 +54,17 @@ export default {
       this.$api.custWorkTypeFindWorkLevel({}).then((result) => {
         if(result.code == 200){
           this.list = result.data
-          this.workName = this.list[0]
+          var workTypeName = localStorage.getItem('workTypeName')
+          if(workTypeName){
+            this.workName = workTypeName
+            this.list.map((item,index)=>{
+              if(item == workTypeName){
+                this.listIndex = index
+              }
+            })
+          }else{
+            this.workName = this.list[0]
+          }
           this.getcustWorkTypeFindMap()
         }
       })
@@ -66,7 +76,16 @@ export default {
       this.$api.custWorkTypeFindMap(data).then((result) =>{
         if(result.code == 200){
           this.cateList = result.data
-          localStorage.setItem('workTypeName2',this.cateList[0].workName2)
+          var workTypeName2 = localStorage.getItem('workTypeName2')
+          if(workTypeName2){
+            this.cateList.map((item,index) => {
+              if(item.workName2 == workTypeName2){
+                this.contentIndex = index
+              }
+            })
+          }else{
+            localStorage.setItem('workTypeName2',this.cateList[0].workName2)
+          }
         }
       })
     },

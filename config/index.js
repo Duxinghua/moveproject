@@ -14,14 +14,14 @@ module.exports = {
     //http://106.52.164.64:8183
     proxyTable: {
       '/v1': {
-        target: 'http://192.168.0.210:8084',
+        target: 'http://106.52.164.64:8184',
         changeOrigin: true,
         pathRewrite:{
           '^/v1':''
         }
       },
       '/v2': {
-        target: 'http://192.168.0.210:8083',
+        target: 'http://106.52.164.64:8183',
         changeOrigin: true,
         pathRewrite:{
           '^/v2':''
