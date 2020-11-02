@@ -1,0 +1,2 @@
+webpackJsonp([20],{"1mgG":function(e,t){},HKMT:function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var a={render:function(){var e=this.$createElement;return(this._self._c||e)("div",{staticClass:"accountingrules"})},staticRenderFns:[]};var r=n("VU/8")({name:"Accountingrules",data:function(){return{}},methods:{}},a,!1,function(e){n("1mgG")},"data-v-349a18ba",null);t.default=r.exports}});
+//# sourceMappingURL=20.979fef13a95e9df8c6c5.js.map?v=1604326429072

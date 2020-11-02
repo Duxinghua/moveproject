@@ -18,7 +18,7 @@ service.interceptors.request.use(
 		config["baseURL"] = process.env.NODE_ENV === "development" ? "/v1" : process.env.BASE_API;
     console.log(config["baseURL"]);
     config.headers['Content-Type'] = 'application/json;charset=utf-8'
-    config.headers['Authorization'] = localStorage.getItem('token')
+    config.headers['Authorization'] = localStorage.getItem('token') ? localStorage.getItem('token')  : ''
 		return config;
 	},
 	error => {
