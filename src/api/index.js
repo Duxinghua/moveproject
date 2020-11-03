@@ -65,6 +65,10 @@ const server = {
   //公众号授权 /custlogin/getOfficeOpenId
   getOfficeOpenId(params){
     return httpv1({method:"Get",url:'/custlogin/getOfficeOpenId',params})
+  },
+  //微信支付 GET /wxPay/webPay
+  wxWebpay(params){
+    return httpv1({method:"Get",url:'/wxPay/webPay',params})
   }
 }
 

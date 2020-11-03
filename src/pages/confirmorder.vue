@@ -1037,6 +1037,26 @@ export default {
         });
       }
     },
+    onBridgeReady(data){
+      WeixinJSBridge.invoke(
+          'getBrandWCPayRequest', {
+            "appId":data.appId,     //公众号名称，由商户传入
+            "timeStamp":data.timeStamp,         //时间戳，自1970年以来的秒数
+            "nonceStr":data.nonceStr, //随机串
+            "package":data.package,
+            "signType":data.signType,         //微信签名方式：
+            "paySign":data.paySign //微信签名
+          },
+          function(res){
+          if(res.err_msg == "get_brand_wcpay_request:ok" ){
+          // 使用以上方式判断前端返回,微信团队郑重提示：
+                //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+                console.log(1)
+          }else{
+             console.log(2)
+          }
+      });
+    },
     alipay() {
       //支付宝
       if (this.paytype == 1) {
@@ -1046,6 +1066,26 @@ export default {
         window.location.href =
           "http://106.52.164.64:8184/aliPay/wapPay?orderHeadSeqId=" +
           this.detail.seqId;
+      }else if(this.paytype == 2){
+        var data = {
+          orderHeadSeqId:this.detail.seqId,
+          openId:localStorage.getItem('openid')
+        }
+        this.$api.wxWebpay(data).then((result)=>{
+          if(result.code == 200){
+            var paywx = result.data
+            if (typeof WeixinJSBridge == "undefined"){
+              if( document.addEventListener ){
+                  document.addEventListener('WeixinJSBridgeReady', onBridgeReady(paywx), false);
+              }else if (document.attachEvent){
+                  document.attachEvent('WeixinJSBridgeReady', onBridgeReady(paywx));
+                  document.attachEvent('onWeixinJSBridgeReady', onBridgeReady(paywx));
+              }
+            }else{
+              onBridgeReady(paywx);
+            }
+          }
+        })
       }
     },
   },

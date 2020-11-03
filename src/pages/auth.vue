@@ -32,8 +32,16 @@ export default {
     var data = {
       code: code
     }
+    console.log(JSON.stringify(code))
     Api.getOfficeOpenId(data).then((result) => {
-      console.log(JOSN.stringify(result))
+      if(result.code == 200){
+        localStorage.setItem('openid',result.data)
+        if(localStorage.getItem('token')){
+          this.$router.push('/')
+        }else{
+          this.$router.push('/login')
+        }
+      }
     })
   },
   methods: {
