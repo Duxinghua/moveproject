@@ -210,9 +210,22 @@
     </div>
 
   </div>
+  <iframe style="display: none;" id="geoPage" width="100%" height="0" frameborder=0 scrolling="no"
+  src="https://apis.map.qq.com/tools/geolocation?key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp&effect=zoom" allow="geolocation"></iframe>
 
   <script type="text/javascript">
     $(function () {
+      window.addEventListener('message', function(event) {
+        // 接收位置信息
+        var loc = event.data;
+        console.log(loc,'loc')
+        if(loc){
+          var arg = loc.city ? loc.city : '武汉'
+          send(arg)
+        }else{
+          send('武汉')
+        }
+    }, false);
       var cityA = $(".city_a_le1 a"); //城市
 	    var pla = $("#place");  //出发地
 	    // 默认值
@@ -376,10 +389,11 @@
         }
       })
       //运营中心服务车型
-      var cityName = '111'
-      send(cityName)
-      localStorage.setItem('cityName',cityName)
+
+
+
       function send(arg){
+        localStorage.setItem('cityName',arg)
         $.ajax({
           type:'GET',
           url: $.host + '/carStyle/findCarList',

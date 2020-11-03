@@ -18,7 +18,7 @@ service.interceptors.request.use(
 		config["baseURL"] = process.env.NODE_ENV === "development" ? "/v2" : process.env.BASE_API2;
 		console.log(config["baseURL"]);
     config.headers['Content-Type'] = 'application/json;charset=utf-8'
-		config.headers['Authorization'] = localStorage.getItem('token')
+		config.headers['Authorization'] = localStorage.getItem('token') ? localStorage.getItem('token')  : ''
      // 让每个请求携带自定义token 请根据实际情况自行修改
 
 		return config;
