@@ -266,11 +266,19 @@ export default {
     if(orderType){
       orderType = orderType
       this.serverIndex = orderType
+      if(orderType == 3){
+        this.serverIndex = 1
+        localStorage.setItem("orderType", this.serverIndex);
+        localStorage.setItem("sCar", 0);
+      }
     }else{
        orderType = this.serverIndex
-       localStorage.setItem("orderType", this.serverIndex);
+
+      localStorage.setItem("orderType", this.serverIndex);
+
     }
     var that = this;
+
     var map = new AMap.Map("container", {
       resizeEnable: true,
     });
@@ -278,6 +286,11 @@ export default {
       this.city = this.$route.query.name
       this.selectCity()
     }else{
+      that.$toast.loading({
+          message: '定位中...',
+          forbidClick: true,
+          loadingType: 'spinner',
+      });
       AMap.plugin("AMap.Geolocation", function() {
         var geolocation = new AMap.Geolocation({
           enableHighAccuracy: true, //是否使用高精度定位，默认:true
@@ -291,6 +304,7 @@ export default {
           console.log(result, "result");
           console.log(status, "status");
           if (status == "complete") {
+            that.$toast.clear()
             var obj = {};
             obj.lng = result.position.lng;
             obj.lat = result.position.lat;
@@ -300,12 +314,14 @@ export default {
             localStorage.setItem("locations", JSON.stringify(obj));
             that.serverHandler(that.serverIndex);
           } else {
+            that.$toast.clear()
             that.city = "武汉";
             that.selectCity()
           }
           localStorage.setItem("city", that.city);
         });
       });
+
     }
     var list = localStorage.getItem("adList");
     if (list) {
@@ -326,6 +342,11 @@ export default {
     //选择城市调用
     selectCity(){
           var that = this
+        that.$toast.loading({
+          message: '定位中...',
+          forbidClick: true,
+          loadingType: 'spinner',
+        });
           AMap.plugin('AMap.Geocoder', function() {
               var geocoder = new AMap.Geocoder({
                 // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
@@ -333,6 +354,8 @@ export default {
               })
               geocoder.getLocation( that.city, function(status, result) {
                 if (status === 'complete' && result.info === 'OK') {
+                  console.log('ss')
+                  that.$toast.clear()
                   var s = result.geocodes[0]
                   var obj = {};
                     obj.lng = s.location.lng;
@@ -355,25 +378,32 @@ export default {
         pagesize: this.cartPageSize,
       };
       this.$api.carStyleFindPage(data).then((result) => {
-        this.carList = result.list;
-        console.log(result.list,'list',localStorage.getItem("sCar"))
-        if (localStorage.getItem("sCar") == 0) {
-          console.log(1)
-          localStorage.setItem("sCar",1)
-          this.cartObject = result.list[0];
-          localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
-        }else if (localStorage.getItem("sCar") == 1) {
-          console.log(2)
-          var cartObject = JSON.parse(localStorage.getItem('cartObject'))
-          this.carList.map((item,index)=>{
-            if(item.seqId == cartObject.seqId){
-                console.log(index)
-              this.cartIndex = index
-              this.cartObject = this.carList[index]
-               console.log( this.cartIndex,'index')
-              this.$forceUpdate()
+        if(result.code != 401){
+          this.carList = result.list;
+          console.log(result.list,'list',localStorage.getItem("sCar"))
+          if (localStorage.getItem("sCar") == 0) {
+            console.log(1)
+            localStorage.setItem("sCar",1)
+            this.cartObject = result.list[0];
+            localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
+          }else if (localStorage.getItem("sCar") == 1) {
+            console.log(2)
+            var cartObject = JSON.parse(localStorage.getItem('cartObject'))
+            if(cartObject){
+              this.carList.map((item,index)=>{
+                if(item.seqId == cartObject.seqId){
+                    console.log(index)
+                  this.cartIndex = index
+                  this.cartObject = this.carList[index]
+                  console.log( this.cartIndex,'index')
+                  this.$forceUpdate()
+                }
+              })
+            }else{
+              this.cartObject = result.list[0];
+              localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
             }
-          })
+          }
         }
       });
        console.log( this.cartIndex,'index')
@@ -383,16 +413,20 @@ export default {
       console.log(index,'indexser')
       this.carList = [];
       this.serverIndex = index;
+      var orderType = localStorage.getItem('orderType')
+      if(orderType != index){
+        localStorage.setItem("sCar",0)
+      }else{
+        localStorage.setItem("sCar",1)
+      }
       localStorage.setItem("orderType", this.serverIndex);
       if (index == 1) {
-        localStorage.setItem("sCar",0)
         this.cartPageSize = 4;
         this.getAllCart();
       } else if (index == 2) {
         this.cartPageSize = 100;
         this.getAllCart();
       } else if (index == 4) {
-        localStorage.setItem("sCar",0)
         this.getAllCart();
         // this.carList = this.carList2
       } else if (index == 3) {

@@ -210,9 +210,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if(!localStorage.getItem('sCar')){
-    localStorage.setItem('sCar',0)
-  }
   next()
   return;
   // console.log(to

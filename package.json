@@ -15,7 +15,6 @@
     "amfe-flexible": "^2.2.1",
     "axios": "^0.19.0",
     "bignumber.js": "^9.0.0",
-    "jquery": "^3.5.1",
     "jwt-js": "^0.5.0",
     "postcss-px2rem": "^0.3.0",
     "postcss-pxtorem": "^4.0.1",

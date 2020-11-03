@@ -7,7 +7,6 @@ import router from './router'
 import 'amfe-flexible/index.js'
 import  Bus from './utils/bus.js'
 import api from './api/index'
-import $ from 'jquery'
 import Vant from 'vant'
 import VueWechatTitle from 'vue-wechat-title'
 import 'vant/lib/index.css'
@@ -35,7 +34,6 @@ Vue.prototype.DateFormat = function(date,fmt)
 
 Vue.prototype.$api = api
 Vue.prototype.$Bus = Bus
-Vue.prototype.$ = $
 
 Vue.config.productionTip = false
 

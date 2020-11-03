@@ -852,6 +852,7 @@ export default {
         return this.$toast("请输入正确的手机号");
       } else {
         localStorage.setItem("refer", JSON.stringify(this.refer));
+        this.CalcSimplePrice();
       }
     },
     nameBlurHandler() {
@@ -1051,14 +1052,15 @@ export default {
           if(res.err_msg == "get_brand_wcpay_request:ok" ){
           // 使用以上方式判断前端返回,微信团队郑重提示：
                 //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-                console.log(1)
+                console.log(1,res)
           }else{
-             console.log(2)
+             console.log(res)
           }
       });
     },
     alipay() {
       //支付宝
+      var that = this
       if (this.paytype == 1) {
         // this.$api.aliPayWapPay({orderHeadSeqId:this.detail.seqId}).then((result)=>{
 
@@ -1074,15 +1076,16 @@ export default {
         this.$api.wxWebpay(data).then((result)=>{
           if(result.code == 200){
             var paywx = result.data
+            console.log(paywx)
             if (typeof WeixinJSBridge == "undefined"){
               if( document.addEventListener ){
-                  document.addEventListener('WeixinJSBridgeReady', onBridgeReady(paywx), false);
+                  document.addEventListener('WeixinJSBridgeReady', that.onBridgeReady(paywx), false);
               }else if (document.attachEvent){
-                  document.attachEvent('WeixinJSBridgeReady', onBridgeReady(paywx));
-                  document.attachEvent('onWeixinJSBridgeReady', onBridgeReady(paywx));
+                  document.attachEvent('WeixinJSBridgeReady', that.onBridgeReady(paywx));
+                  document.attachEvent('onWeixinJSBridgeReady', that.onBridgeReady(paywx));
               }
             }else{
-              onBridgeReady(paywx);
+              that.onBridgeReady(paywx);
             }
           }
         })

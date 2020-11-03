@@ -1,5 +1,6 @@
 import axios from 'axios';
 import router from '../router'
+import { Toast } from 'vant';
 
 function directLogin() {
   router.push({
@@ -15,6 +16,10 @@ const service = axios.create({
 // request 拦截器
 service.interceptors.request.use(
 	config => {
+    Toast.loading({
+      message: '加载中...',
+      forbidClick: true,
+    });
 		config["baseURL"] = process.env.NODE_ENV === "development" ? "/v1" : process.env.BASE_API;
     console.log(config["baseURL"]);
     config.headers['Content-Type'] = 'application/json;charset=utf-8'
@@ -29,13 +34,21 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
 	response => {
+
 		if (response.status === 200) {
+      Toast.clear()
       console.log(response)
 			if (response.data.code === 401) {
 				directLogin()
-			}
+			}else if(response.data.code === 500){
+        Toast(response.data.msg);
+      }
 			return response.data;
-		}
+		}else{
+      Toast.clear()
+
+      return response.data;
+    }
 	},
 	error => {
 		return Promise.reject(error);

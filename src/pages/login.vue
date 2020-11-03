@@ -27,7 +27,7 @@
         </div>
         <div
           class="codebtns"
-          @click="getCode"
+          @click.stop="getCode"
         >
           {{timerText}}
         </div>
@@ -68,11 +68,15 @@ export default {
       var data = {
         mobile: this.mobile,
       };
+            if (!/^1[0-9]{10}$/.test(this.mobile)) {
+            this.mobile = "";
+            return this.$toast("请输入正确的手机号");
+          }
       if (this.flag) {
+        this.flag = false;
         this.$api.shortmessagelogin(data).then((result) => {
           if (result.code == 200) {
             this.$toast(result.msg);
-            this.flag = false;
             clearInterval(this.timeFlag);
             this.timeFlag = setInterval(() => {
               if (this.timer != 0) {
@@ -80,6 +84,7 @@ export default {
                 this.timerText = this.timer + " S";
               } else {
                 this.timer = 60;
+                this.flag = true;
                 this.timerText = "获取验证码";
                 clearInterval(this.timeFlag);
                 this.timeFlag = null;
@@ -88,7 +93,9 @@ export default {
           } else {
             this.$toast(result.msg);
           }
-        });
+       });
+      }else{
+        this.$toast('一分钟之内只能发一次');
       }
     },
     loginHandler() {
@@ -114,6 +121,7 @@ export default {
     this.timerText = "获取验证码";
     clearInterval(this.timeFlag);
     this.timeFlag = null;
+    this.flag = true;
   },
 };
 </script>
