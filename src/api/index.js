@@ -69,6 +69,14 @@ const server = {
   //微信支付 GET /wxPay/webPay
   wxWebpay(params){
     return httpv1({method:"Get",url:'/wxPay/webPay',params})
+  },
+  //微信签名GET /workerApply/getOfficeSign
+  workerApply(params){
+    return httpv1({method:"Get",url:'/workerApply/getOfficeSign',params})
+  },
+  //腾讯地图,计算线路公里数 /map/getDistance
+  getDistance(data){
+    return httpv1({method:"Post",url:'/map/getDistance',data})
   }
 }
 

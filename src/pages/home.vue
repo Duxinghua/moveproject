@@ -461,26 +461,42 @@ export default {
       });
     },
     orderTodo(ordertype) {
+      console.log(ordertype,'s')
       //priceType (string, optional): 计价方式 = ['STANDARD', 'DISCUSS']
       localStorage.setItem("placeOrder", ordertype);
-      if (ordertype == 1) {
+
         var list = localStorage.getItem("adList");
         list = JSON.parse(list);
         var arr = [];
         list.map((item) => {
-          if (item.location) {
-            var il = item.location;
-            arr.push([il.lng, il.lat]);
+          var il = JSON.parse(item.center);
+          if (il.length) {
+            arr.push({
+              longitude:il[0],
+              latitude:il[1]
+            });
           }
         });
         if (arr.length < 2) {
           return this.$toast("请认真选择发货或收货地址");
         }
-        var dis = AMap.GeometryUtil.distanceOfLine(arr);
-        localStorage.setItem("routeKilometer", dis);
-      } else if (ordertype == 2) {
-      }
-      this.$router.push("/confirmorder");
+        // var dis = AMap.GeometryUtil.distanceOfLine(arr);
+
+        this.$api.getDistance(arr).then((result)=>{
+          if(result.code == 200){
+            console.log(result.data)
+              localStorage.setItem("routeKilometer", result.data);
+              setTimeout(()=>{
+                this.$router.push("/confirmorder");
+              },100)
+          }else{
+            return this.$toast(result.msg);
+          }
+
+        })
+
+
+
     },
     priceDetail() {
       this.$router.push("/pricedetail");

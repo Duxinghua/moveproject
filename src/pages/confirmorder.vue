@@ -460,6 +460,7 @@
 </template>
 
 <script>
+import config from "@/utils/config.js"
 import TopNav from "@/components/topnav.vue";
 export default {
   name: "Confirmorder",
@@ -540,6 +541,47 @@ export default {
       payload: {},
     };
   },
+  created(){
+    var data = {
+      url: location.href
+    }
+    const agent = navigator.userAgent
+    const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+    if (isiOS) {
+      data.url = config.shareurls
+    }
+    this.$api.workerApply(data).then((res) => {
+      if (res.code == 200) {
+        var wxpay = res.data
+        wx.config({
+          debug: true,
+          appId: config.appid,
+          timestamp: wxpay.timestamp,
+          nonceStr: wxpay.noncestr,
+          signature: wxpay.signature,
+          jsApiList: [
+            'checkJsApi',
+            'chooseWXPay'
+          ]
+        })
+        wx.error(function (res) {
+          console.log('出错了：' + res.errMsg)
+        })
+        // 在这里调用 API
+        wx.ready(function () {
+          wx.checkJsApi({
+            jsApiList: [
+              'checkJsApi',
+              'chooseWXPay'
+            ],
+            success: function (res) {
+
+            }
+          })
+        })
+      }
+    })
+  },
   mounted() {
     this.payload = JSON.parse(localStorage.getItem("payload"));
     if (localStorage.getItem("refer")) {
@@ -554,26 +596,26 @@ export default {
     if (this.$route.query.remarks) {
       this.refer.remarks = this.$route.query.remarks;
     }
-    //计算距离
-    var adList = localStorage.getItem("adList");
-    if (adList) {
-      adList = JSON.parse(adList);
-      this.adList = adList;
-      var arr = [];
-      adList.map((item) => {
-        if (item.center) {
-          var il = JSON.parse(item.center);
-          console.log(il);
-          arr.push(il);
-        }
-      });
-      console.log(arr);
-      if (arr.length > 1) {
-        // return this.$toast("请认真选择发货或收货地址");
-        var dis = AMap.GeometryUtil.distanceOfLine(arr);
-        localStorage.setItem("routeKilometer", dis);
-      }
-    }
+    //计算距离 不计算
+    // var adList = localStorage.getItem("adList");
+    // if (adList) {
+    //   adList = JSON.parse(adList);
+    //   this.adList = adList;
+    //   var arr = [];
+    //   adList.map((item) => {
+    //     if (item.center) {
+    //       var il = JSON.parse(item.center);
+    //       console.log(il);
+    //       arr.push(il);
+    //     }
+    //   });
+    //   console.log(arr);
+    //   if (arr.length > 1) {
+    //     // return this.$toast("请认真选择发货或收货地址");
+    //     var dis = AMap.GeometryUtil.distanceOfLine(arr);
+    //     localStorage.setItem("routeKilometer", dis);
+    //   }
+    // }
     this.orderType = localStorage.getItem("orderType");
     if (this.orderType == 1) {
       var need = localStorage.getItem("need");
@@ -607,8 +649,9 @@ export default {
       }
     }
     this.getOther(false, "OTHER");
-    this.CalcSimplePrice();
     this.getCoupon();
+    this.CalcSimplePrice();
+
   },
   methods: {
     getCoupon() {
@@ -654,8 +697,7 @@ export default {
       //开通地区
       var city = localStorage.getItem("city");
       //距离
-      var routeKilometer =
-        parseInt(localStorage.getItem("routeKilometer")) / 1000;
+      var routeKilometer = parseFloat(localStorage.getItem("routeKilometer"));
       //地址列表
       var adlist = JSON.parse(localStorage.getItem("adList"));
 
@@ -960,9 +1002,15 @@ export default {
       return val;
     },
     itemHandler(tag, index) {
+      var orderType = localStorage.getItem('orderType')
+      var platform = localStorage.getItem('platform')
       if (tag == "time") {
         this.timeshow = true;
       } else if (tag == "remarks") {
+        if(platform){
+          platform = JSON.parse(platform)
+        }
+        if(platform.)
         this.$router.push({ path: "/ordernote" });
       } else if (tag == "need") {
         this.$router.push({ path: "/need" });
@@ -988,6 +1036,10 @@ export default {
         this.$router.push({ path: "/" });
       } else if (tag == "chooseaddress") {
         this.$router.push({ path: "/chooseaddress", query: { index: index } });
+      } else if(tag == "coupon"){
+        if(orderType == 1){
+
+        }
       }
     },
     cancelHandler() {
@@ -1038,26 +1090,26 @@ export default {
         });
       }
     },
-    onBridgeReady(data){
-      WeixinJSBridge.invoke(
-          'getBrandWCPayRequest', {
-            "appId":data.appId,     //公众号名称，由商户传入
-            "timeStamp":data.timeStamp,         //时间戳，自1970年以来的秒数
-            "nonceStr":data.nonceStr, //随机串
-            "package":data.package,
-            "signType":data.signType,         //微信签名方式：
-            "paySign":data.paySign //微信签名
-          },
-          function(res){
-          if(res.err_msg == "get_brand_wcpay_request:ok" ){
-          // 使用以上方式判断前端返回,微信团队郑重提示：
-                //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-                console.log(1,res)
-          }else{
-             console.log(res)
-          }
-      });
-    },
+    // onBridgeReady(data){
+    //   WeixinJSBridge.invoke(
+    //       'getBrandWCPayRequest', {
+    //         "appId":data.appId,     //公众号名称，由商户传入
+    //         "timeStamp":data.timeStamp,         //时间戳，自1970年以来的秒数
+    //         "nonceStr":data.nonceStr, //随机串
+    //         "package":data.package,
+    //         "signType":data.signType,         //微信签名方式：
+    //         "paySign":data.paySign //微信签名
+    //       },
+    //       function(res){
+    //       if(res.err_msg == "get_brand_wcpay_request:ok" ){
+    //       // 使用以上方式判断前端返回,微信团队郑重提示：
+    //             //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+    //             console.log(1,res)
+    //       }else{
+    //          console.log(res)
+    //       }
+    //   });
+    // },
     alipay() {
       //支付宝
       var that = this
@@ -1076,17 +1128,21 @@ export default {
         this.$api.wxWebpay(data).then((result)=>{
           if(result.code == 200){
             var paywx = result.data
-            console.log(paywx)
-            if (typeof WeixinJSBridge == "undefined"){
-              if( document.addEventListener ){
-                  document.addEventListener('WeixinJSBridgeReady', that.onBridgeReady(paywx), false);
-              }else if (document.attachEvent){
-                  document.attachEvent('WeixinJSBridgeReady', that.onBridgeReady(paywx));
-                  document.attachEvent('onWeixinJSBridgeReady', that.onBridgeReady(paywx));
+            wx.chooseWXPay({
+              timestamp: paywx.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+              nonceStr: paywx.nonceStr, // 支付签名随机串，不长于 32 位
+              package: paywx.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+              signType: paywx.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+              paySign: paywx.paySign, // 支付签名
+              success: function (res) {
+                console.log(res)
+                // 支付成功后的回调函数
+              },
+              fail: function(res){
+                console.log(res)
               }
-            }else{
-              that.onBridgeReady(paywx);
-            }
+            });
+
           }
         })
       }
