@@ -85,7 +85,7 @@ export default {
              }
            })
         })
-        localStorage.setItem('serverArr',JSON.stringify(otherList))
+        localStorage.setItem('otherList',JSON.stringify(otherList))
       }
     },
     getPlatformHandler(){

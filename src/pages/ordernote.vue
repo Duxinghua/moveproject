@@ -35,12 +35,19 @@ export default {
     return {
       remarks:'',
       fileList:[],
+      uploadimg:[],
       orderType:2,
       menutext:'订单备注'
     }
   },
   mounted(){
     this.orderType = localStorage.getItem('orderType')
+    this.remarks = localStorage.getItem('remarks')
+    var fileList = localStorage.getItem('fileList')
+    if(fileList){
+      fileList = JSON.parse(fileList)
+      this.fileList = fileList
+    }
   },
   methods:{
     messageHandler(){
@@ -59,6 +66,7 @@ export default {
       this.$api.appealimgUpload(data).then((result) => {
         if(result.code == 200){
           this.fileList[detail.index].viewUrl = result.data.viewUrl
+          localStorage.setItem('fileList',JSON.stringify(this.fileList))
         }else{
           return this.$toast(result.msg)
         }

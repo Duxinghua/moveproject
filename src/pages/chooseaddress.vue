@@ -227,7 +227,7 @@ export default {
       if (orderType == 1) {
         this.$router.push({ path: "/", query: {} });
       } else if (orderType == 2) {
-        this.$router.push({ path: "/confirmorder", query: {} });
+        this.$router.push({ path: "/confirmorder", query: {index:this.index} });
       }
     },
     targetHandler() {

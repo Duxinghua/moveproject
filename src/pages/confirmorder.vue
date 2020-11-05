@@ -431,24 +431,25 @@
         <div class="couponwrap">
           <div
             class="couponitem"
-            v-for="(item,index) in 6"
+            v-for="(item,index) in couponlist"
             :key="index"
+            @click="couponHandler(item)"
           >
             <div class="couponleft">
               <div class="t1">
                 <span>¥</span>
-                <span>5000</span>
+                <span>{{item.couponValue}}</span>
               </div>
               <div class="t2">
-                现金券
+                满{{item.useCondition}}元减{{item.couponValue}}元
               </div>
             </div>
             <div class="couponright">
               <div class="c1">
-                测试测试测试
+               {{item.applicableName}}
               </div>
               <div class="c2">
-                2012-10-10 05:05:05
+                {{item.createDate}}
               </div>
             </div>
           </div>
@@ -510,6 +511,7 @@ export default {
         4: "RENT_CAR", //租车
       },
       money_total: 0,
+      money_total_s:0,
       adList: [
         {
           name: "",
@@ -539,6 +541,7 @@ export default {
       menutext: "确认订单",
       couponshow: false,
       payload: {},
+      couponlist:[]
     };
   },
   created(){
@@ -554,7 +557,7 @@ export default {
       if (res.code == 200) {
         var wxpay = res.data
         wx.config({
-          debug: true,
+          debug: false,
           appId: config.appid,
           timestamp: wxpay.timestamp,
           nonceStr: wxpay.noncestr,
@@ -636,8 +639,14 @@ export default {
         localStorage.setItem("refer", JSON.stringify(this.refer));
       }
     } else if (this.orderType == 2) {
-      this.getOther(true, "STAND1");
+      this.cartObject = localStorage.getItem("cartObject")
+        ? JSON.parse(localStorage.getItem("cartObject"))
+        : {};
 
+      this.refer.carType = this.cartObject ? this.cartObject.carName : "请选择";
+
+      this.getOther(true, "STAND1");
+      this.getjs()
       var large_goods = localStorage.getItem("large_goods");
       if (large_goods) {
         large_goods = JSON.parse(large_goods);
@@ -649,22 +658,56 @@ export default {
       }
     }
     this.getOther(false, "OTHER");
-    this.getCoupon();
     this.CalcSimplePrice();
 
   },
   methods: {
-    getCoupon() {
+    getjs(){
+      var list = localStorage.getItem("adList");
+      if (list) {
+        var indexs = 0;
+        var arr = [];
+        list = JSON.parse(list);
+        this.adList = list;
+        this.adList.map((item)=>{
+          if(item.obj){
+            item.name = item.obj.formattedAddress
+            item.address = item.obj.infos
+          }
+          var il = JSON.parse(item.center)
+          if(il.length){
+            indexs += 1
+            arr.push({
+              longitude:il[0],
+              latitude:il[1]
+            });
+          }
+        })
+        if(indexs == 2){
+          this.$api.getDistance(arr).then((result)=>{
+            if(result.code == 200){
+                localStorage.setItem("routeKilometer", result.data);
+            }else{
+               this.$toast(result.msg);
+            }
+
+          })
+        }
+      }
+    },
+    getCoupon(cb) {
       var orderType = localStorage.getItem("orderType");
       var data = {
         userId: this.payload.userId,
         applicableType: this.serverType[orderType],
-        useCondition: "100001",
+        useCondition: this.money_total_s,
         pageno: 1,
         pagesize: 100,
       };
       this.$api.orderFindUserCoupon(data).then((result) => {
-        console.log(result);
+        this.couponlist = result.list
+
+        cb(result.list)
       });
     },
     priceTypeChange(e) {},
@@ -886,6 +929,7 @@ export default {
       this.$api.orderHeadCalcPrice(data).then((result) => {
         if (result.code == 200) {
           this.money_total = result.data;
+          this.money_total_s = result.data
         }
       });
     },
@@ -1004,13 +1048,33 @@ export default {
     itemHandler(tag, index) {
       var orderType = localStorage.getItem('orderType')
       var platform = localStorage.getItem('platform')
+      var adList = localStorage.getItem('adList')
       if (tag == "time") {
+        if(orderType == 1){
+          if(this.priceType == 'STANDARD'){
+            if(platform){
+              platform = JSON.parse(platform)
+              if(!platform.goodwidth){
+                return this.$toast('请选择货物最长')
+              }
+              if(!platform.goodheight){
+                return this.$toast('请选择货物最高')
+              }
+              if(!platform.goodsend){
+                return this.$toast('请选择搬运楼层发货地')
+              }
+              if(!platform.goodreceive){
+                return this.$toast('请选择搬运楼层收货地')
+              }
+            }
+
+          }
+        }else if(orderType == 2){
+          
+          this.getjs()
+        }
         this.timeshow = true;
       } else if (tag == "remarks") {
-        if(platform){
-          platform = JSON.parse(platform)
-        }
-        if(platform.)
         this.$router.push({ path: "/ordernote" });
       } else if (tag == "need") {
         this.$router.push({ path: "/need" });
@@ -1037,10 +1101,20 @@ export default {
       } else if (tag == "chooseaddress") {
         this.$router.push({ path: "/chooseaddress", query: { index: index } });
       } else if(tag == "coupon"){
-        if(orderType == 1){
-
-        }
+        this.getCoupon((data)=>{
+          if(data.length){
+            this.couponshow = true
+          }else{
+            return this.$toast('暂无优惠券')
+          }
+        })
       }
+    },
+    couponHandler(item){
+      this.detail.couponSeqId = item.seqId
+      this.detail.couponName = item.applicableName
+      this.detail.couponMoney = item.couponValue
+      this.couponshow = false
     },
     cancelHandler() {
       this.unitshow = false;
@@ -1076,12 +1150,25 @@ export default {
       this.timeshow = false;
     },
     payTodo() {
+      var orderType = localStorage.getItem('orderType')
+      if(orderType == 1){
+        if(!this.detail.receiverName){
+          return this.$toast('请输入联系人姓名')
+        }
+        if(!this.detail.receiverMobileNo){
+          return this.$toast('请输入手机号')
+        }else{
+          if(!/^1[3456789]\d{9}$/.test(this.detail.receiverMobileNo)){
+             return this.$toast('请输入正确的手机号')
+          }
+        }
+
+      }
       if(!this.refer.rulechecked){
         return this.$toast('请勾选货搬搬用户协议')
       }else{
         var data = this.detail;
         data.payMoney = this.money_total;
-        data.refundMoney = 0;
         this.$api.orderHeadInsert(data).then((result) => {
           if (result.code == 200) {
             this.detail = result.data;
@@ -1118,7 +1205,7 @@ export default {
 
         // })
         window.location.href =
-          "http://106.52.164.64:8184/aliPay/wapPay?orderHeadSeqId=" +
+          config.apiurl+"/aliPay/wapPay?orderHeadSeqId=" +
           this.detail.seqId;
       }else if(this.paytype == 2){
         var data = {
@@ -1157,6 +1244,8 @@ export default {
   flex-direction: column;
   background: #f5f6f7;
   min-height: 100vh;
+  padding-bottom: 250px;
+  box-sizing: border-box;
   .need {
     display: flex;
     flex-direction: column;

@@ -224,7 +224,7 @@ export default {
         this.unitText = '选择楼层'
         this.columns = this.housefloorList
       }else if(tag == 'goodrule'){
-        this.$router.push({ path: "/accountingrules"});
+        this.$router.push({ path: "/priceinfo"});
       }else if(tag == 'goodwidth'){
         this.flag = 3
         this.unitText = '选择货物长度'
@@ -242,6 +242,18 @@ export default {
       this.$router.push('/bigitem')
     },
     needHandler(){
+      if(!this.platform.goodwidth){
+        return this.$toast('请选择货物最长')
+      }
+      if(!this.platform.goodheight){
+         return this.$toast('请选择货物最高')
+      }
+      if(!this.platform.goodsend){
+        return this.$toast('请选择搬运楼层发货地')
+      }
+      if(!this.platform.goodreceive){
+        return this.$toast('请选择搬运楼层收货地')
+      }
       localStorage.setItem('platform',JSON.stringify(this.platform))
       this.$router.push('/need')
     },
