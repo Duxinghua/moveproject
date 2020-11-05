@@ -1070,7 +1070,7 @@ export default {
 
           }
         }else if(orderType == 2){
-          
+
           this.getjs()
         }
         this.timeshow = true;

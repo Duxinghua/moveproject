@@ -2,9 +2,9 @@ import httpv2 from "./httpv2.js";
 import httpv1 from "./httpv1.js";
 
 const server = {
-  //登陆短信 /shortmessage/login
+  //登陆短信 /shortmessage/login //GET /shortmessage/bind
   shortmessagelogin(params){
-    return httpv1({method:"Get",url:"/shortmessage/login", params})
+    return httpv1({method:"Get",url:"/shortmessage/bind", params})
   },
   // 短信验证登陆 /custlogin/loginByMobileAndVlidateCode
   loginByMobileAndVlidateCode(params){
