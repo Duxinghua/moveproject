@@ -4,6 +4,7 @@ if (pro == 'dev') {
   url = 'https://youmengtest.qixiuu.com'
 }
 const config = {
+  aliPay:'https://www.yyooyi.com:8184',
   appid: 'wx4b4608ff44b127cb',
   baseurl: url + '/index.html#',
   shareurls: url + '/index.html#/',

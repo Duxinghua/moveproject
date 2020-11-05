@@ -1010,7 +1010,6 @@ export default {
         if(platform){
           platform = JSON.parse(platform)
         }
-        if(platform.)
         this.$router.push({ path: "/ordernote" });
       } else if (tag == "need") {
         this.$router.push({ path: "/need" });
@@ -1118,7 +1117,7 @@ export default {
 
         // })
         window.location.href =
-          "http://106.52.164.64:8184/aliPay/wapPay?orderHeadSeqId=" +
+          config.aliPay+"/aliPay/wapPay?orderHeadSeqId=" +
           this.detail.seqId;
       }else if(this.paytype == 2){
         var data = {
