@@ -124,7 +124,7 @@ export default {
       padding: 30px;
       box-sizing: border-box;
       background: white;
-      border-bottom: 1px solid #f5f6f7;
+      border-bottom: 2px solid #f5f6f7;
       .addresstop {
         display: flex;
         flex-direction: row;
@@ -169,7 +169,7 @@ export default {
       }
     }
     .addressitem:last-child {
-      border-bottom: 1px solid transparent;
+      border-bottom: 2px solid transparent;
     }
   }
 }

@@ -54,6 +54,7 @@
         v-if="worktimetype"
         v-model="workerTimeQty"
         input-align="left"
+        type="number"
         placeholder="请填写服务时间"
         @input='helpInputHandler("workerTimeQty")'
         @click="itemHandler('workerTimeQty')"
@@ -134,6 +135,7 @@
           input-align="left"
           clearable
           placeholder="请输入自定义价格"
+          @input='helpInputHandler("diyprice")'
           @click="itemHandler('diyprice')"
           @change="change"
         />
@@ -249,24 +251,25 @@
         <div class="couponwrap">
           <div
             class="couponitem"
-            v-for="(item,index) in 6"
+            v-for="(item,index) in couponlist"
             :key="index"
+            @click="couponHandler(item)"
           >
             <div class="couponleft">
               <div class="t1">
                 <span>¥</span>
-                <span>5000</span>
+                <span>{{item.couponValue}}</span>
               </div>
               <div class="t2">
-                现金券
+                满{{item.useCondition}}元减{{item.couponValue}}元
               </div>
             </div>
             <div class="couponright">
               <div class="c1">
-                测试测试测试
+               {{item.applicableName}}
               </div>
               <div class="c2">
-                2012-10-10 05:05:05
+                {{item.createDate}}
               </div>
             </div>
           </div>
@@ -293,7 +296,7 @@
             v-model="paytype"
             checked-color="#28ae3a"
           >
-            <van-radio name="1">
+            <van-radio name="1" v-if="isWx != 1">
               <div class="payitem">
                 <img
                   src="../assets/images/alipay.png"
@@ -302,7 +305,7 @@
                 <span class="payname">支付宝支付</span>
               </div>
             </van-radio>
-            <van-radio name="2">
+            <van-radio name="2" v-if="isWx == 1">
               <div class="payitem">
                 <img
                   src="../assets/images/weixin.png"
@@ -335,6 +338,7 @@
 </template>
 
 <script>
+import config from "@/utils/config.js"
 import TopNav from "@/components/topnav.vue";
 import areaList from "../utils/area.js";
 export default {
@@ -344,6 +348,7 @@ export default {
   },
   data() {
     return {
+      isWx:2,
       name: "",
       time: "",
       phone: "",
@@ -385,10 +390,15 @@ export default {
       couponshow: false,
       payshow: false,
       money_total:0,
-      paytype:1
+      paytype:1,
+      couponlist:[],
+      payload:{},
+      money_total_s:0,
+      couponObj:{}
     };
   },
   mounted() {
+    this.isWx = localStorage.getItem('isWeixin')
     var detail = localStorage.getItem("detail");
     if (detail) {
       detail = JSON.parse(detail);
@@ -406,7 +416,7 @@ export default {
       this.worktype = detail.workTypeName + "-" + detail.workTypeName2;
       this.getorderHeadCalcPrice();
     }
-    console.log(this.currentDate);
+    this.payload = JSON.parse(localStorage.getItem('payload'))
 
     var worktype1 = localStorage.getItem("workTypeName");
     var worktype2 = localStorage.getItem("workTypeName2");
@@ -421,8 +431,25 @@ export default {
     this.remark = remarks;
   },
   methods: {
+    getCoupon(cb) {
+      var orderType = localStorage.getItem("orderType");
+      var data = {
+        userId: this.payload.userId,
+        applicableType: 'HIRE_WORKER',
+        useCondition: this.money_total_s,
+        pageno: 1,
+        pagesize: 100,
+      };
+      this.$api.orderFindUserCoupon(data).then((result) => {
+        this.couponlist = result.list
+
+        cb(result.list)
+      });
+    },
     change() {
-      this.getorderHeadCalcPrice();
+      if(!fthis.diyprice){
+        this.getorderHeadCalcPrice();
+      }
     },
     getorderHeadCalcPrice() {
       var data = {
@@ -449,6 +476,11 @@ export default {
       if (data.priceType == "DISCUSS") {
         data.totalMoney = this.pricetext;
       }
+      if(this.couponObj.seqId){
+        data.couponSeqId = this.couponObj.seqId
+        data.couponName = this.couponObj.applicableName
+        data.couponMoney = this.couponObj.couponValue
+      }
       this.detail = data;
       this.detail.areavalue = this.areavalue;
       this.detail.areatext = this.areatext;
@@ -457,6 +489,7 @@ export default {
         if (result.code == 200) {
           this.money = result.data;
           this.money_total = result.data
+          this.money_total_s = result.data
         }
       });
     },
@@ -491,6 +524,7 @@ export default {
       }
     },
     helpInputHandler(tag) {
+
       if (tag == "workerUserCnt") {
         var worktype1 = localStorage.getItem("workTypeName");
         var worktype2 = localStorage.getItem("workTypeName2");
@@ -499,6 +533,7 @@ export default {
           return this.$toast("请选择工种");
         } else {
           this.workerUserCnt = this.workerUserCnt > 0 ? this.workerUserCnt : "";
+          this.getorderHeadCalcPrice()
         }
       } else if (tag == "address") {
         if (!this.areatext) {
@@ -519,6 +554,15 @@ export default {
           this.phone = "";
           return this.$toast("请输入联系人");
         }
+      }else if(tag == 'workerTimeQty'){
+        if(!this.worktimetype){
+          this.workerTimeQty = ''
+          return this.$toast("请选择服务工期类型");
+        }else{
+          this.getorderHeadCalcPrice()
+        }
+      }else if(tag == 'diyprice'){
+        this.getorderHeadCalcPrice()
       }
     },
     itemHandler(tag) {
@@ -555,7 +599,19 @@ export default {
         } else {
           return this.$toast("请先选择工种");
         }
+      }else if(tag == "coupon"){
+        this.getCoupon((data)=>{
+         if(data.length){
+           this.couponshow = true
+         }else{
+           return this.$toast("暂无优惠券");
+         }
+        })
       }
+    },
+    couponHandler(item){
+      this.couponshow = false
+      this.couponObj = item
     },
     areacancelHandler() {
       this.areaShow = false;
@@ -598,13 +654,39 @@ export default {
     },
     alipay() {
       //支付宝
+      localStorage.removeItem('detail')
+      localStorage.removeItem("workTypeName");
+      localStorage.removeItem("workTypeName2");
+      localStorage.removeItem("remarks")
       if (this.paytype == 1) {
-        // this.$api.aliPayWapPay({orderHeadSeqId:this.detail.seqId}).then((result)=>{
-
-        // })
         window.location.href =
-          "http://106.52.164.64:8184/aliPay/wapPay?orderHeadSeqId=" +
+          config.apiurl+"/aliPay/wapPay?orderHeadSeqId=" +
           this.detail.seqId;
+      }else if(this.paytype == 2){
+        var data = {
+          orderHeadSeqId:this.detail.seqId,
+          openId:localStorage.getItem('openid')
+        }
+        this.$api.wxWebpay(data).then((result)=>{
+          if(result.code == 200){
+            var paywx = result.data
+            wx.chooseWXPay({
+              timestamp: paywx.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+              nonceStr: paywx.nonceStr, // 支付签名随机串，不长于 32 位
+              package: paywx.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+              signType: paywx.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+              paySign: paywx.paySign, // 支付签名
+              success: function (res) {
+                console.log(res)
+                // 支付成功后的回调函数
+              },
+              fail: function(res){
+                console.log(res)
+              }
+            });
+
+          }
+        })
       }
     }
   },
@@ -686,7 +768,7 @@ export default {
     height: 90px;
     padding: 0 30px;
     box-sizing: border-box;
-    border-bottom: 1px solid #f5f6f7;
+    border-bottom: 2px solid #f5f6f7;
     .itemlabel {
       font-size: 26px;
       color: #333333;
@@ -769,7 +851,7 @@ export default {
       justify-content: center;
       padding: 5px 15px;
       border-radius: 25px;
-      border: 1px solid #999999;
+      border: 2px solid #999999;
     }
     .paychoosebtn {
       width: 250px;
@@ -904,7 +986,7 @@ export default {
   /deep/ .van-radio {
     display: flex;
     flex-direction: row-reverse;
-    border-bottom: 1px solid #f5f6f7;
+    border-bottom: 2px solid #f5f6f7;
   }
   /deep/ .van-radio__label {
     display: flex;

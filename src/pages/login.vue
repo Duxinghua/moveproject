@@ -58,10 +58,13 @@ export default {
     };
   },
   mounted() {
-    // var token = localStorage.getItem('token')
-    //     var tokenresult = this.decodeToken(token)
-    //        localStorage.setItem('payload',JSON.stringify(tokenresult.payload))
-
+    // 区分微信
+    if(window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == 'micromessenger'){
+      localStorage.setItem('isWeixin',1)
+      this.$router.push('/auth')
+    }else{
+      localStorage.setItem('isWeixin',2)
+    }
   },
   methods: {
     getCode() {
@@ -158,7 +161,7 @@ export default {
       width: 100%;
       height: 90px;
       border-radius: 10px;
-      border: 1px solid #28ae3a;
+      border: 2px solid #28ae3a;
       margin-bottom: 40px;
       padding: 15px;
       box-sizing: border-box;

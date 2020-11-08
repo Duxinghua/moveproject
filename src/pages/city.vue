@@ -8,11 +8,14 @@
       shape="round"
       placeholder="请输入搜索关键词"
       @search="onSearch"
+      @clear="clearHandler"
     >
       <template #action>
         <div @click="onSearch">搜索</div>
       </template>
     </van-search>
+    <view class="">
+    </view>
     <div class="adposwrap">
       <img
         src="../assets/images/adposs.png"
@@ -41,6 +44,7 @@
 <script>
 import TopNav from "@/components/topnav.vue";
 import Data from "../utils/cityData.js";
+import cityData from '../utils/cityData.js';
 export default {
   name: "City",
   components: {
@@ -59,7 +63,8 @@ export default {
         3: "HIRE_WORKER",
         4: "RENT_CAR",
       },
-      saveindex:2
+      saveindex:2,
+      searchFlag:true
     };
   },
   mounted() {
@@ -76,6 +81,9 @@ export default {
     }
   },
   methods: {
+    clearHandler(){
+      this.cityData = Data.cityData
+    },
     getAllCart(city) {
       if (this.urltype == 1) {
         var ordertype = localStorage.getItem('orderType')
@@ -97,10 +105,13 @@ export default {
             }
           } else {
             this.$toast("此运营中心暂时没有开通");
-            this.$router.push({
-              path: "/",
-              query: {},
-            });
+            setTimeout(()=>{
+              this.$router.push({
+                path: "/",
+                query: {},
+              });
+            },1000)
+
           }
         });
       } else if(this.urltype == 2){
@@ -114,7 +125,33 @@ export default {
         });
       }
     },
-    onSearch() {},
+    onSearch() {
+      if(!this.searchvalue){
+        this.searchFlag = true
+        return this.$toast('请输入关键字')
+      }else{
+        this.searchFlag = false
+      }
+      var list = []
+      Data.cityData.map((item)=>{
+        var arr = []
+        var obj = []
+        item.cities.map((sitem) => {
+          if(sitem.name.indexOf(this.searchvalue) > -1){
+            obj.push(sitem)
+          }
+        })
+        if(obj.length){
+          var s = {
+            name:item.name,
+            cities:obj
+          }
+          list.push(s)
+        }
+      })
+      this.cityData = list
+      this.$forceUpdate()
+    },
     targetHandler(item) {
       this.getAllCart(item.name)
     }

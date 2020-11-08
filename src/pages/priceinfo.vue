@@ -1,5 +1,6 @@
 <template>
   <div class="priceinfo">
+    <TopNav :menu="menutext" />
     <div class="itemlabel">
       拉货
     </div>
@@ -443,7 +444,17 @@
 </template>
 
 <script>
-export default {};
+import TopNav from '@/components/topnav.vue'
+export default {
+  components:{
+    TopNav
+  },
+  data(){
+    return{
+       menutext: "计费规则说明",
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>

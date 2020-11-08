@@ -177,10 +177,10 @@ export default {
             margin-right:20px;
             margin-bottom: 20px;
             color:#333333;
-            border:1px solid #efefef;
+            border:2px solid #efefef;
           }
           .active{
-            border:1px solid #28ae3a;
+            border:2px solid #28ae3a;
             color:#28ae3a;
           }
         }

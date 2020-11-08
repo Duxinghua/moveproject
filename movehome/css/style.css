@@ -479,7 +479,7 @@ overflow: hidden;
   float: left;
   width:400px;
   height:197px;
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  border-right: 2px solid rgba(255, 255, 255, 0.2);
 }
 .footeritem:nth-child(3n){
   border-right: none;
@@ -559,7 +559,7 @@ padding-left: 96px;
 .footerbottom{
   width:100%;
   background: #1E2532;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
 }
 .footerheight{
   display: block;
@@ -735,7 +735,7 @@ text-align: center;
   height:714px;
   overflow: hidden;
   padding-top:1px;
-  border-top:1px solid transparent;
+  border-top:2px solid transparent;
 }
 .emove .newdes{
   background: white;
@@ -815,9 +815,9 @@ background: #45C055;
   height:199px;
   line-height: 199px;
   text-align: center;
-  border-left:1px solid #cccccc;
-  border-right:1px solid #cccccc;
-  border-bottom: 1px solid #CCCCCC;
+  border-left:2px solid #cccccc;
+  border-right:2px solid #cccccc;
+  border-bottom: 2px solid #CCCCCC;
 font-size: 16px;
 font-family: Microsoft YaHei;
 font-weight: 400;
@@ -850,8 +850,8 @@ color: #FFFFFF;
   color: #343434;
   padding-top: 50px;
   box-sizing: border-box;
-  border-right:1px solid #cccccc;
-  border-bottom: 1px solid #CCCCCC;
+  border-right:2px solid #cccccc;
+  border-bottom: 2px solid #CCCCCC;
 }
 .centertypes p{
   text-align: center;
@@ -876,8 +876,8 @@ color: #FFFFFF;
   height:796px;
   line-height: 796px;
   text-align: center;
-  border-right:1px solid #cccccc;
-  border-bottom: 1px solid #CCCCCC;
+  border-right:2px solid #cccccc;
+  border-bottom: 2px solid #CCCCCC;
 font-size: 16px;
 font-family: Microsoft YaHei;
 font-weight: 400;
@@ -917,7 +917,7 @@ margin-right:20px;
   height: 40px;
   line-height: 40px;
   text-align: center;
-  border: 1px solid #222222;
+  border: 2px solid #222222;
   border-radius: 4px;
   font-size: 20px;
   font-family: Microsoft YaHei;
@@ -935,7 +935,7 @@ margin-right:20px;
   width: 380px;
   height: 440px;
   background: #FFFFFF;
-  border: 1px solid #CCCCCC;
+  border: 2px solid #CCCCCC;
   margin-right:30px;
   margin-bottom: 30px;
 }
@@ -1169,7 +1169,7 @@ color: #222222;
 .hehuobutton{
   width: 160px;
 height: 48px;
-border: 1px solid #222222;
+border: 2px solid #222222;
 border-radius: 4px;
 line-height: 48px;
 text-align: center;
@@ -1232,7 +1232,7 @@ left:50px;
 .inputfile{
   width: 100px;
 height: 100px;
-border: 1px solid #CCCCCC;
+border: 2px solid #CCCCCC;
 border-radius: 4px;
 position: relative;
 z-index: 1;
@@ -1288,7 +1288,7 @@ float: left;
 height: 50px;
 line-height: 50px;
 padding:0 20px;
-border: 1px solid #CCCCCC;
+border: 2px solid #CCCCCC;
 border-radius: 4px;
 float: left;
 }
@@ -1316,7 +1316,7 @@ cursor: pointer;
 .joincencel{
   width: 160px;
 height: 48px;
-border: 1px solid #222222;
+border: 2px solid #222222;
 border-radius: 4px;
 background: white;
 line-height: 48px;
@@ -1370,7 +1370,7 @@ float: left;
   width:100%;
   display: block;
   padding-top: 50px;
-  border-top: 1px solid transparent;
+  border-top: 2px solid transparent;
 }
 .newsitem{
   width: 100%;
@@ -1446,7 +1446,7 @@ background: #28AE3A;
   width:100%;
   display: block;
   padding-top: 50px;
-  border-top: 1px solid transparent;
+  border-top: 2px solid transparent;
 }
 .cartitem{
   width: 580px;
@@ -1622,7 +1622,7 @@ color: #222222;
 padding-top:20px;
 padding-bottom: 60px;
 box-sizing: border-box;
-border-top:1px solid #CCCCCC;
+border-top:2px solid #CCCCCC;
 }
 .detailnext{
   float:left;
@@ -1684,7 +1684,7 @@ margin-bottom: 24px;
 .meleftinput{
   width: 480px;
   height: 45px;
-  border: 1px solid #CCCCCC;
+  border: 2px solid #CCCCCC;
   border-radius: 4px;
   line-height: 45px;
   text-align: left;
@@ -1714,7 +1714,7 @@ width: 480px;
 height: 160px;
 border: none;
 resize: none;
-border: 1px solid #CCCCCC;
+border: 2px solid #CCCCCC;
 border-radius: 4px;
 padding:20px;
 box-sizing: border-box;
@@ -1745,7 +1745,7 @@ margin-bottom: 30px;
   height: 48px;
   line-height:48px;
   text-align: center;
-  border: 1px solid #222222;
+  border: 2px solid #222222;
   border-radius: 4px;
   font-size: 20px;
   font-family: Microsoft YaHei;

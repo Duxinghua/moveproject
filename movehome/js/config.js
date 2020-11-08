@@ -1,6 +1,6 @@
 
 $.extend({
-  host:'http://106.52.164.64:8183/',
+  host:'https://www.yyooyi.com:8183',
   cityName:''
 });
 

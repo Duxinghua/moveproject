@@ -103,7 +103,7 @@ var info_modal = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABz
     $('.' + idText + 'centerBox').css({ top: data.top + 40, })
     $('.' + idText + 'centerBox').animate({ 'top': data.top, 'opacity': '1', }, data.transition); $('.button_s_model').hover(function () { $(this).css({ 'opacity': '.8' }) }, function () { $(this).css({ 'opacity': '1' }) })
     $('.button_s_model').mousedown(function () { $(this).css({ 'opacity': '1' }) }).mouseup(function () { $(this).css({ 'opacity': '.8' }) })
-    $('.button_s_model.' + idText + '_cancel').css({ background: '#fff', borderBox: 'box-sizing', border: '1px solid #eee', }).click(function () { data.cancel(close) })
+    $('.button_s_model.' + idText + '_cancel').css({ background: '#fff', borderBox: 'box-sizing', border: '2px solid #eee', }).click(function () { data.cancel(close) })
     $('.button_s_model.' + idText + '_confirm').css({ background: '#2d8cf0', color: '#fff', }).click(function () { data.confirm(close) })
     $('.clearBoth').css({ clear: 'both' })
     function close() {

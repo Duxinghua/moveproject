@@ -41,7 +41,9 @@ service.interceptors.response.use(
 			if (response.data.code === 401) {
 				directLogin()
 			}else if(response.data.code === 500){
-        Toast(response.data.msg);
+        if(response.config.url != '/v1/orderHead/calcPrice'){
+          Toast(response.data.msg);
+        }
       }
 			return response.data;
 		}else{

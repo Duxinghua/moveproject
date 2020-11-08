@@ -86,8 +86,14 @@ export default {
       this.selectList = this.resObj[key];
     },
     getOther() {
+      var cartObject = localStorage.getItem("cartObject")
+      if(cartObject){
+        cartObject = JSON.parse(cartObject)
+      }else{
+        return
+      }
       var data = {
-        headSeqId: JSON.parse(localStorage.getItem("cartObject")).seqId,
+        headSeqId: cartObject.seqId,
         attachType: this.attachType,
       };
       this.$api.carStyleDetFindMap(data).then((result) => {

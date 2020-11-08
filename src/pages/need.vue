@@ -184,7 +184,7 @@ export default {
   /deep/ .van-radio{
     display: flex;
     flex-direction: row-reverse;
-    border-bottom: 1px solid #f5f6f7;
+    border-bottom: 2px solid #f5f6f7;
   }
   /deep/ .van-radio__label {
     display: flex;
@@ -236,13 +236,13 @@ export default {
         padding-left:20px;
         padding-right:20px;
         border-radius: 20px;
-        border:1px solid #ff561e;
+        border:2px solid #ff561e;
         color: #ff561e;
         background:#ffeee8;
         font-size: 24px;
       }
       .gray{
-        border:1px solid #888888;
+        border:2px solid #888888;
         background:white;
         color:#888888;
       }

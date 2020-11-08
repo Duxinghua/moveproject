@@ -75,7 +75,7 @@ export default {
     width:calc(33.1% - 2px);
     height:252px;
     background:white;
-    border:1px solid  #f5f6f7;
+    border:2px solid  #f5f6f7;
     display: flex;
     flex-direction: column;
     justify-content: center;

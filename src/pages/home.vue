@@ -461,23 +461,26 @@ export default {
       });
     },
     orderTodo(ordertype) {
-      console.log(ordertype,'s')
       //priceType (string, optional): 计价方式 = ['STANDARD', 'DISCUSS']
       localStorage.setItem("placeOrder", ordertype);
 
         var list = localStorage.getItem("adList");
-        list = JSON.parse(list);
-        var arr = [];
-        list.map((item) => {
-          var il = JSON.parse(item.center);
-          if (il.length) {
-            arr.push({
-              longitude:il[0],
-              latitude:il[1]
-            });
+        if(list){
+          list = JSON.parse(list);
+          var arr = [];
+          list.map((item) => {
+            var il = JSON.parse(item.center);
+            if (il.length) {
+              arr.push({
+                longitude:il[0],
+                latitude:il[1]
+              });
+            }
+          });
+          if (arr.length < 2) {
+            return this.$toast("请认真选择发货或收货地址");
           }
-        });
-        if (arr.length < 2) {
+        }else{
           return this.$toast("请认真选择发货或收货地址");
         }
         // var dis = AMap.GeometryUtil.distanceOfLine(arr);
@@ -505,8 +508,21 @@ export default {
       var obj = {
         name: "",
         address: "",
+        center:""
       };
-      this.adList.push(obj);
+      var len = this.adList.length
+      var r = 0
+      this.adList.map((item) => {
+        console.log(item.center)
+        if(item.center != 0 ){
+          r += 1
+        }
+      })
+      if(r == len){
+        this.adList.push(obj);
+      }else{
+        return this.$toast('请填写好现有的发货地址或收货地址')
+      }
     },
     setaddHandler(index) {
       localStorage.setItem("adList", JSON.stringify(this.adList));
@@ -514,6 +530,7 @@ export default {
     },
     deleAddHandler(index) {
       this.adList.splice(index, 1);
+      localStorage.setItem("adList", JSON.stringify(this.adList));
     },
   },
   components: {},
@@ -610,7 +627,7 @@ export default {
     background: white;
     padding: 30px;
     box-sizing: border-box;
-    border-top: 1px solid transparent;
+    border-top: 2px solid transparent;
     display: flex;
     flex-direction: column;
     .carwrap {
@@ -747,7 +764,7 @@ export default {
       justify-content: center;
       align-items: center;
       border-radius: 30px;
-      border: 1px solid #e8e8e8;
+      border: 2px solid #e8e8e8;
       font-size: 18px;
     }
   }
@@ -793,7 +810,7 @@ export default {
             height: 35px;
             line-height: 35px;
             border-radius: 15px;
-            border: 1px solid #ff561e;
+            border: 2px solid #ff561e;
             background: #ffeee8;
           }
         }
@@ -855,7 +872,7 @@ export default {
       align-items: center;
       padding: 0 30px;
       box-sizing: border-box;
-      border-bottom: 1px solid #f4f3f3;
+      border-bottom: 2px solid #f4f3f3;
       .pay1 {
         font-size: 50px;
         color: #28ae3a;

@@ -117,6 +117,20 @@ export default {
       addressplaceholder: "从哪儿发",
       index: 0,
       menutext: "",
+      adList: [
+        {
+          name: "",
+          address: "",
+          center:"",
+          obj:""
+        },
+        {
+          name: "",
+          address: "",
+          center:"",
+          obj:""
+        },
+      ]
     };
   },
   mounted() {
@@ -170,8 +184,27 @@ export default {
     //获取经度之后地址处理
     getLngaTodo(){
       var list = localStorage.getItem("adList");
-      list = JSON.parse(list);
-      if (list.length) {
+      if(list){
+        list = JSON.parse(list);
+        if (list.length) {
+          list.map((item, index) => {
+            if (index == this.index) {
+              if (item.location) {
+                var location = item.location;
+                this.center = [location.lng, location.lat];
+              }
+              if (item.obj) {
+                this.name = item.obj.name ? item.obj.name : "";
+                this.phone = item.obj.phone ? item.obj.phone : "";
+                this.unit = item.obj.unit ? item.obj.unit : "";
+              }
+            }
+          });
+        }
+      }else{
+        localStorage.setItem("adList", JSON.stringify(this.adList));
+        var list = localStorage.getItem("adList");
+        list = JSON.parse(list);
         list.map((item, index) => {
           if (index == this.index) {
             if (item.location) {
@@ -185,6 +218,8 @@ export default {
             }
           }
         });
+
+
       }
       this.adMap();
     },
@@ -214,7 +249,11 @@ export default {
       if (!this.phone) {
         return this.$toast("请输入联系号码");
       } else {
-        obj.phone = this.phone;
+        if(!/^1[3456789]\d{9}$/.test(this.phone)){
+          return this.$toast("请输入正确的联系号码");
+        }else{
+          obj.phone = this.phone;
+        }
       }
       console.log(obj)
       var list = localStorage.getItem("adList");
@@ -228,6 +267,8 @@ export default {
         this.$router.push({ path: "/", query: {} });
       } else if (orderType == 2) {
         this.$router.push({ path: "/confirmorder", query: {index:this.index} });
+      } else if(orderType == 4){
+         this.$router.push({ path: "/", query: {index:this.index} });
       }
     },
     targetHandler() {

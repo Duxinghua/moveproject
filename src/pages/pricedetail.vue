@@ -147,7 +147,7 @@ export default {
       margin-top:25px;
       text-align: center;
       padding-bottom: 40px;
-      border-bottom: 1px solid #e5e6e7;
+      border-bottom: 2px solid #e5e6e7;
     }
   }
   .pricebot{

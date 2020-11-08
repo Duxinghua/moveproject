@@ -51,7 +51,7 @@ export default {
     width:100%;
     display: flex;
     flex-direction: row;
-    border-bottom: 1px solid #cdcdcd;
+    border-bottom: 2px solid #cdcdcd;
     .carico{
       width:210px;
       height:160px;
@@ -140,7 +140,7 @@ export default {
     }
   }
   .comitem{
-    border-bottom: 1px solid transparent;
+    border-bottom: 2px solid transparent;
   }
 }
 </style>

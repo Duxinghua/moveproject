@@ -244,6 +244,46 @@
           </van-radio>
         </van-radio-group>
       </div>
+
+    <div
+      class="orderwrap" style="margin-top:0.6rem"
+    >
+      <div class="itemtitle" style="padding-left:0px!important">
+        订单联系人资料
+      </div>
+      <van-cell-group>
+        <van-field
+          label="预约服务时间"
+          v-model="refer.time"
+          input-align="right"
+          readonly
+          placeholder="请选择时间"
+          right-icon="arrow"
+          @click="itemHandler('time')"
+        />
+        <van-field
+          label="姓名"
+          v-model="refer.name"
+          input-align="right"
+          clearable
+          placeholder="请输入联系人姓名"
+          @click="itemHandler('name')"
+          @blur="nameBlurHandler"
+        />
+        <van-field
+          label="联系人电话"
+          v-model="refer.phone"
+          input-align="right"
+          clearable
+          placeholder="请输入联系人电话"
+          @click="itemHandler('phone')"
+          @blur="phoneHandler"
+        />
+      </van-cell-group>
+    </div>
+
+
+
       <div
         class="otherwrap"
         v-if="otherList.length"
@@ -299,6 +339,7 @@
         icon-size="14"
         checked-color="#28ae3a"
         shape="square"
+        @change="rulecheckHandler"
       >勾选即同意服从</van-checkbox>
       <span
         class="link"
@@ -346,7 +387,7 @@
             v-model="paytype"
             checked-color="#28ae3a"
           >
-            <van-radio name="1">
+            <van-radio name="1" v-if="isWx != 1">
               <div class="payitem">
                 <img
                   src="../assets/images/alipay.png"
@@ -355,7 +396,7 @@
                 <span class="payname">支付宝支付</span>
               </div>
             </van-radio>
-            <van-radio name="2">
+            <van-radio name="2" v-if="isWx == 1">
               <div class="payitem">
                 <img
                   src="../assets/images/weixin.png"
@@ -470,6 +511,7 @@ export default {
   },
   data() {
     return {
+      isWx:2,
       priceType: "DISCUSS",
       refer: {
         need: "",
@@ -541,7 +583,8 @@ export default {
       menutext: "确认订单",
       couponshow: false,
       payload: {},
-      couponlist:[]
+      couponlist:[],
+      couponObj:{}
     };
   },
   created(){
@@ -586,6 +629,7 @@ export default {
     })
   },
   mounted() {
+    this.isWx = localStorage.getItem('isWeixin')
     this.payload = JSON.parse(localStorage.getItem("payload"));
     if (localStorage.getItem("refer")) {
       this.refer = JSON.parse(localStorage.getItem("refer"));
@@ -598,6 +642,8 @@ export default {
     }
     if (this.$route.query.remarks) {
       this.refer.remarks = this.$route.query.remarks;
+    }else{
+      this.refer.remarks = localStorage.getItem('remarks')
     }
     //计算距离 不计算
     // var adList = localStorage.getItem("adList");
@@ -624,6 +670,8 @@ export default {
       var need = localStorage.getItem("need");
       if (need) {
         this.refer.need = "是";
+      }else{
+        this.refer.need = "否";
       }
     } else if (this.orderType == 1) {
       this.cartObject = localStorage.getItem("cartObject")
@@ -656,31 +704,50 @@ export default {
           this.refer.largeGoods = "";
         }
       }
+    }else if (this.orderType == 4){
+      this.priceType = 'DISCUSS'
     }
     this.getOther(false, "OTHER");
     this.CalcSimplePrice();
 
   },
   methods: {
+    clearLo(){
+      localStorage.removeItem('otherList')
+      localStorage.removeItem('platform')
+      localStorage.removeItem('serverArr')
+      localStorage.removeItem('need')
+      localStorage.removeItem('adList')
+      localStorage.removeItem('refer')
+      localStorage.removeItem('remarks')
+      localStorage.removeItem('routeKilometer')
+      localStorage.removeItem('cartObject')
+      localStorage.removeItem('sCar')
+      localStorage.removeItem('large_goods')
+      localStorage.removeItem('fileList')
+    },
     getjs(){
       var list = localStorage.getItem("adList");
       if (list) {
         var indexs = 0;
         var arr = [];
         list = JSON.parse(list);
+        console.log(list,'list')
         this.adList = list;
         this.adList.map((item)=>{
           if(item.obj){
             item.name = item.obj.formattedAddress
             item.address = item.obj.infos
           }
-          var il = JSON.parse(item.center)
-          if(il.length){
-            indexs += 1
-            arr.push({
-              longitude:il[0],
-              latitude:il[1]
-            });
+          if(item.center.length > 2){
+            var il = JSON.parse(item.center)
+            if(il.length){
+              indexs += 1
+              arr.push({
+                longitude:il[0],
+                latitude:il[1]
+              });
+            }
           }
         })
         if(indexs == 2){
@@ -712,7 +779,22 @@ export default {
     },
     priceTypeChange(e) {},
     serverArrHandler(e) {
-      console.log(e,'see')
+      if(!this.refer.time){
+        return this.$toast('请选择预约服务时间')
+      }
+      if(!this.refer.name){
+        return this.$toast('请输入联系人姓名')
+      }
+      if(!this.refer.phone){
+        return this.$toast('请输入联系人电话')
+      }else{
+        if (!/^1[0-9]{10}$/.test(this.refer.phone)) {
+          this.refer.phone = "";
+          return this.$toast("请输入正确的手机号");
+        }
+      }
+
+
       localStorage.setItem("serverArr", JSON.stringify(e));
       var otherList = localStorage.getItem("otherList");
       if (otherList) {
@@ -731,6 +813,9 @@ export default {
       }
       // this.CalcSimplePrice();
     },
+    rulecheckHandler(){
+      this.CalcSimplePrice()
+    },
     //获取优惠券
     CalcSimplePrice() {
       //订单类型
@@ -742,22 +827,32 @@ export default {
       //距离
       var routeKilometer = parseFloat(localStorage.getItem("routeKilometer"));
       //地址列表
-      var adlist = JSON.parse(localStorage.getItem("adList"));
-
-      var orderRouteList = [];
-      adlist.map((item, index) => {
-        var locations = JSON.parse(item.center);
-        if (locations) {
-          var obj = {
-            address1: item.name,
-            address2: item.address,
-            longitude: locations[0],
-            latitude: locations[1],
-            sort: index + 1,
-          };
-          orderRouteList.push(obj);
+      var adlist = localStorage.getItem("adList");
+      if(adlist){
+        adlist = JSON.parse(adlist)
+        var orderRouteList = [];
+        if(adlist.length){
+          adlist.map((item, index) => {
+            if(item.center.length > 2){
+              var locations = JSON.parse(item.center);
+              if (locations) {
+                var obj = {
+                  address1: item.name,
+                  address2: item.address,
+                  longitude: locations[0],
+                  latitude: locations[1],
+                  sort: index + 1,
+                };
+                orderRouteList.push(obj);
+              }
+            }else{
+              return
+            }
+          });
+        }else{
+          return
         }
-      });
+      }
       //大物件
       var largeGoodsCnt = 0;
       var attachPrice = 0;
@@ -776,6 +871,14 @@ export default {
           priceType = need.priceType;
         }
       }
+      if(localStorage.getItem('orderType') == 4){
+        priceType = 'DISCUSS'
+      }
+
+      if(localStorage.getItem('orderType') == 2){
+        priceType = 'STANDARD'
+      }
+
       if (otherListServer) {
         otherListServer = JSON.parse(otherListServer);
         otherListServer.map((item) => {
@@ -840,6 +943,15 @@ export default {
         }
         //标准选车 大小 platformstandard
         attachType = platform.attachType;
+      }else{
+        if(localStorage.getItem('orderType') == 1){
+            priceType = 'DISCUSS'
+            if(this.serverArr.length){
+              this.refer.need = "是";
+            }else{
+               this.refer.need = "否";
+            }
+        }
       }
 
       //根据时间分订单类型
@@ -934,15 +1046,47 @@ export default {
       });
     },
     phoneHandler() {
+      var orderType = localStorage.getItem('orderType')
+      if(orderType == 2){
+        if(!this.refer.name){
+          this.refer.phone = ''
+          return this.$toast("请输入联系人姓名");
+        }
+        if(!this.refer.time){
+          this.refer.phone = ''
+          return this.$toast("请选择预约时间");
+        }
+      }
       if (!/^1[3456789]\d{9}$/.test(this.refer.phone)) {
         return this.$toast("请输入正确的手机号");
       } else {
         localStorage.setItem("refer", JSON.stringify(this.refer));
         this.CalcSimplePrice();
       }
+
     },
     nameBlurHandler() {
+      var orderType = localStorage.getItem('orderType')
+      var adList = localStorage.getItem('adList')
+      if(orderType == 2){
+        if(adList){
+          adList = JSON.parse(adList)
+          var flag = false
+          adList.map((item) => {
+            if(item.center.length == 0){
+              flag = true
+            }
+          })
+          if(flag){
+            return this.$toast('请选择搬家信息中的地址')
+          }
+        }
+        if(!this.refer.time){
+          return this.$toast('请输入预约时间')
+        }
+      }
       localStorage.setItem("refer", JSON.stringify(this.refer));
+      this.CalcSimplePrice();
     },
     safeChangeHandler() {
       localStorage.setItem("refer", JSON.stringify(this.refer));
@@ -1111,9 +1255,7 @@ export default {
       }
     },
     couponHandler(item){
-      this.detail.couponSeqId = item.seqId
-      this.detail.couponName = item.applicableName
-      this.detail.couponMoney = item.couponValue
+      this.couponObj = item
       this.couponshow = false
     },
     cancelHandler() {
@@ -1148,10 +1290,12 @@ export default {
       this.refer.time = this.DateFormat(e, "yyyy-MM-dd hh:mm:ss");
       localStorage.setItem("refer", JSON.stringify(this.refer));
       this.timeshow = false;
+      this.CalcSimplePrice();
     },
     payTodo() {
+
       var orderType = localStorage.getItem('orderType')
-      if(orderType == 1){
+      if(orderType == 1 || orderType == 4 || orderType == 2){
         if(!this.detail.receiverName){
           return this.$toast('请输入联系人姓名')
         }
@@ -1159,10 +1303,35 @@ export default {
           return this.$toast('请输入手机号')
         }else{
           if(!/^1[3456789]\d{9}$/.test(this.detail.receiverMobileNo)){
+            this.refer.phone = ''
+            this.detail.receiverMobileNo = ''
              return this.$toast('请输入正确的手机号')
           }
         }
 
+      }
+      if(orderType == 2){
+        var adList = localStorage.getItem('adList')
+        if(adList){
+          adList = JSON.parse(adList)
+          var flag = false
+          adList.map((item) => {
+            if(item.center.length == 0){
+              flag = true
+            }
+          })
+          if(flag){
+            return this.$toast('请选择搬家信息中的地址')
+          }
+        }
+        if(!this.refer.time){
+          return this.$toast('请输入预约时间')
+        }
+      }
+      if(orderType == 4){
+        if(!this.detail.orderDate){
+          return this.$toast('请选择预约服务时间')
+        }
       }
       if(!this.refer.rulechecked){
         return this.$toast('请勾选货搬搬用户协议')
@@ -1198,6 +1367,7 @@ export default {
     //   });
     // },
     alipay() {
+      this.clearLo()
       //支付宝
       var that = this
       if (this.paytype == 1) {
@@ -1277,7 +1447,7 @@ export default {
     /deep/ .van-radio {
       display: flex;
       flex-direction: row-reverse;
-      border-bottom: 1px solid #f5f6f7;
+      border-bottom: 2px solid #f5f6f7;
     }
     /deep/ .van-radio__label {
       display: flex;
@@ -1329,13 +1499,13 @@ export default {
           padding-left: 20px;
           padding-right: 20px;
           border-radius: 20px;
-          border: 1px solid #ff561e;
+          border: 2px solid #ff561e;
           color: #ff561e;
           background: #ffeee8;
           font-size: 24px;
         }
         .gray {
-          border: 1px solid #888888;
+          border: 2px solid #888888;
           background: white;
           color: #888888;
         }
@@ -1398,7 +1568,7 @@ export default {
       flex-direction: row;
       align-items: center;
       height: 90px;
-      border-bottom: 1px solid #f5f6f7;
+      border-bottom: 2px solid #f5f6f7;
       .itemlabel {
         font-size: 18px;
         color: #333333;
@@ -1416,7 +1586,7 @@ export default {
       }
     }
     .itemdiy:last-child {
-      border-bottom: 1px solid transparent;
+      border-bottom: 2px solid transparent;
     }
     .ld {
       padding-right: 12px;
@@ -1596,7 +1766,7 @@ export default {
       justify-content: center;
       padding: 5px 15px;
       border-radius: 25px;
-      border: 1px solid #999999;
+      border: 2px solid #999999;
     }
     .paychoosebtn {
       width: 250px;
@@ -1654,7 +1824,7 @@ export default {
   /deep/ .van-radio {
     display: flex;
     flex-direction: row-reverse;
-    border-bottom: 1px solid #f5f6f7;
+    border-bottom: 2px solid #f5f6f7;
   }
   /deep/ .van-radio__label {
     display: flex;

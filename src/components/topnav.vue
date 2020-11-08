@@ -19,7 +19,9 @@ export default {
   },
   methods:{
     goback(){
-       this.$router.go(-1);
+      //  this.$router.go(-1);
+     localStorage.setItem("sCar",0)
+     this.$router.push('/')
     }
   }
 }
