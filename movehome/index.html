@@ -44,7 +44,7 @@
       <div class="content menuwrap">
         <img src="images/logo.png" class="logo" />
         <ul class="menuul">
-          <li><a class="active" href="/index.html">首页</a></li>
+          <li><a class="active" href="./index.html">首页</a></li>
           <li><a href="./lahuo.html">拉货</a></li>
           <li><a href="./banjia.html">搬家</a></li>
           <li><a href="./laowu.html">劳务工</a></li>
@@ -261,12 +261,13 @@
       // 首页轮播图
       $.ajax({
         type: "GET",
-        url: $.host + 'SysCarouselChart/findList',
+        url: $.host + '/SysCarouselChart/findList',
         data: {
           type: 'HOME_PAGE'
         },
         dataType: "json",
         success: function (res) {
+          console.log(res,'res')
          if(res.code == 200){
            var s = res.data
            var html = ''
@@ -446,6 +447,17 @@
             $('.rightbtn').click(function () {
               mySwiperCar.swipeNext();
             })
+            setTimeout(function(){
+              var ls = s.length * 60
+              var left = parseFloat(ls) / 2
+              $(".server-banner .pagination").css({
+                  "position":"absolute",
+                  "z-index":"20",
+                  "left":"50%",
+                  "margin-left": '-'+left+'px',
+                  "bottom": "-36px"
+              })
+           },1)
 
            }
           }

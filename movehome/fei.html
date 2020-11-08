@@ -141,7 +141,7 @@
   </div>
   <script type="text/javascript">
     $(function () {
-      var feitype = { 
+      var feitype = {
         MINI_JEEP:'小面包车',
         MIDDLE_JEEP:'中面包车',
         SMALL_CAR:'小货车',
@@ -150,7 +150,7 @@
       // 轮播图
       $.ajax({
         type: "GET",
-        url: $.host + 'SysCarouselChart/findList',
+        url: $.host + '/SysCarouselChart/findList',
         data: {
           type: 'MOVE_HOUSE'
         },

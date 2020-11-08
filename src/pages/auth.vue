@@ -10,7 +10,9 @@ import getSitem from '@/utils/storage'
 import Config from '@/utils/config'
 export default {
   data () {
+    return {
 
+    }
   },
   mounted () {
     const agent = navigator.userAgent
@@ -36,11 +38,9 @@ export default {
     Api.getOfficeOpenId(data).then((result) => {
       if(result.code == 200){
         localStorage.setItem('openid',result.data)
-        if(localStorage.getItem('token')){
-          this.$router.push('/')
-        }else{
+        setTimeout(()=>{
           this.$router.push('/login')
-        }
+        },300)
       }
     })
   },

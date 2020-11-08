@@ -187,7 +187,7 @@
       // 拉货轮播图
       $.ajax({
         type: "GET",
-        url: $.host + 'SysCarouselChart/findList',
+        url: $.host + '/SysCarouselChart/findList',
         data: {
           type: 'PULL_GOODS'
         },
@@ -231,11 +231,11 @@
               html += '<div class="diy-slide-left">'
               html += '<div class="line1">'
               html += '<span class="li1">￥</span>'
-              html += '<span class="li2">320</span>'
-              html += '<span class="li3">/24公里</span>'
+              html += '<span class="li2">'+v.minPrice+'</span>'
+              html += '<span class="li3">/'+v.minConditon+'公里</span>'
               html += '</div>'
               html += '<div class="line2">'
-              html += '超里程：￥8元/公里'
+              html += '超里程：￥'+v.addPrice+'元/公里'
               html += '</div>'
               html += '<div class="line3">'
               html += '<span class="li1">载重</span>'
@@ -267,6 +267,17 @@
             $('.rightbtn').click(function () {
               mySwiperCar.swipeNext();
             })
+            setTimeout(function(){
+              var ls = s.length * 60
+              var left = parseFloat(ls) / 2
+              $(".server-banner .pagination").css({
+                  "position":"absolute",
+                  "z-index":"20",
+                  "left":"50%",
+                  "margin-left": '-'+left+'px',
+                  "bottom": "-36px"
+              })
+           },1)
 
            }
           }

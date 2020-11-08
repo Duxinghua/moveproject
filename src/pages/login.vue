@@ -43,8 +43,6 @@
 </template>
 
 <script>
-import config from "@/utils/config";
-import getSitem from "@/utils/storage";
 export default {
   name: "Login",
   data() {
@@ -59,11 +57,16 @@ export default {
   },
   mounted() {
     // 区分微信
-    if(window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) == 'micromessenger'){
-      localStorage.setItem('isWeixin',1)
-      this.$router.push('/auth')
-    }else{
-      localStorage.setItem('isWeixin',2)
+    if (
+      window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
+      "micromessenger"
+    ) {
+      localStorage.setItem("isWeixin", 1);
+      if(!localStorage.getItem('openid')){
+        this.$router.push("/auth");
+      }
+    } else {
+      localStorage.setItem("isWeixin", 2);
     }
   },
   methods: {
@@ -71,10 +74,10 @@ export default {
       var data = {
         mobile: this.mobile,
       };
-            if (!/^1[0-9]{10}$/.test(this.mobile)) {
-            this.mobile = "";
-            return this.$toast("请输入正确的手机号");
-          }
+      if (!/^1[0-9]{10}$/.test(this.mobile)) {
+        this.mobile = "";
+        return this.$toast("请输入正确的手机号");
+      }
       if (this.flag) {
         this.flag = false;
         this.$api.shortmessagelogin(data).then((result) => {
@@ -94,11 +97,11 @@ export default {
               }
             }, 1000);
           } else {
-            this.$toast(result.msg);
+           return  this.$toast(result.msg);
           }
-       });
-      }else{
-        this.$toast('一分钟之内只能发一次');
+        });
+      } else {
+        return  this.$toast("一分钟之内只能发一次");
       }
     },
     loginHandler() {
@@ -109,23 +112,22 @@ export default {
       this.$api.loginByMobileAndVlidateCode(data).then((result) => {
         if (result.code == 200) {
           this.$toast(result.msg);
-          localStorage.clear()
+          localStorage.clear();
           localStorage.setItem("token", result.data);
-          var tokenresult = this.decodeToken(result.data)
-          localStorage.setItem('payload',JSON.stringify(tokenresult.payload))
-          localStorage.setItem("sCar",0)
-          this.$router.push("/");
+          var tokenresult = this.decodeToken(result.data);
+          localStorage.setItem("payload", JSON.stringify(tokenresult.payload));
+          localStorage.setItem("sCar", 0);
+          this.timer = 60;
+          this.timerText = "获取验证码";
+          clearInterval(this.timeFlag);
+          this.flag = true;
+          setTimeout(()=>{
+            this.$router.push("/");
+          },500)
         }
       });
-    },
-  },
-  destroyed() {
-    this.timer = 60;
-    this.timerText = "获取验证码";
-    clearInterval(this.timeFlag);
-    this.timeFlag = null;
-    this.flag = true;
-  },
+    }
+  }
 };
 </script>
 
@@ -139,8 +141,8 @@ export default {
   background: url("../assets/images/bg.png") no-repeat;
   background-size: 100% 100%;
   z-index: 100;
-  /deep/ .van-cell{
-    background:transparent;
+  /deep/ .van-cell {
+    background: transparent;
   }
   .loginwrap {
     display: flex;
@@ -165,8 +167,8 @@ export default {
       margin-bottom: 40px;
       padding: 15px;
       box-sizing: border-box;
-      /deep/ .van-cell{
-        line-height: 1!important;
+      /deep/ .van-cell {
+        line-height: 1 !important;
       }
       .loginico {
         width: 40px;
