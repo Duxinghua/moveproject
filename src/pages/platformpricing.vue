@@ -74,10 +74,10 @@
           rows="1"
           autosize
           clearable
-          label="详情地址"
+          label="详细地址"
           type="textarea"
           @input='helpInputHandler("address")'
-          placeholder="请输入详情地址"
+          placeholder="请输入详细地址"
         />
       </div>
     </van-cell-group>
@@ -152,6 +152,10 @@
         @click="itemHandler('coupon')"
       />
     </div>
+    <div class="number numberfix"   @click="itemHandler('goodrule')">
+        <span>计费规则说明</span>
+        <van-icon name="arrow" size="16" color="#999999" />
+      </div>
     <div class="notice">具体上门时间以线下沟通为主</div>
     <div class="rulewrap">
       <van-checkbox
@@ -447,9 +451,11 @@ export default {
       });
     },
     change() {
-      if(!fthis.diyprice){
+      if(!this.diyprice){
+        this.pricetext = ''
         this.getorderHeadCalcPrice();
       }
+
     },
     getorderHeadCalcPrice() {
       var data = {
@@ -607,6 +613,8 @@ export default {
            return this.$toast("暂无优惠券");
          }
         })
+      }else if(tag == 'goodrule'){
+        this.$router.push({ path: "/priceinfo" });
       }
     },
     couponHandler(item){
@@ -748,6 +756,7 @@ export default {
       top: 50%;
       transform: translateY(-50%);
       font-size: 28px;
+      color:#333333;
     }
   }
   .adarea {
@@ -770,14 +779,14 @@ export default {
     box-sizing: border-box;
     border-bottom: 2px solid #f5f6f7;
     .itemlabel {
-      font-size: 26px;
+      font-size: 28px;
       color: #333333;
     }
     .lm {
       margin-right: auto;
     }
     .itemvalue {
-      font-size: 26px;
+      font-size: 28px;
       color: #333333;
       margin-left: auto;
     }
@@ -1015,5 +1024,32 @@ export default {
   /deep/ .van-picker__cancel {
     color: #999999;
   }
+      .number{
+      width:100%;
+      height:90px;
+      padding:0 30px;
+      box-sizing: border-box;
+      border-radius: 20px;
+      overflow: hidden;
+      background: white;
+      margin-top:15px;
+      font-size: 28px;
+      color:#333333;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      .labelwrap{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        span{
+          margin-right: 10px;
+        }
+      }
+    }
+    .numberfix{
+      padding-right:10px;
+    }
 }
 </style>

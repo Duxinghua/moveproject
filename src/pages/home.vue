@@ -14,7 +14,7 @@
       <div class="brana">货搬搬</div>
     </div>
     <div class="servermenu">
-      <div class="submenus">
+      <div class="submenus" @click="logout">
         <img
           src="../assets/images/homeico.png"
           class="homeico"
@@ -146,6 +146,7 @@
         class="moveitem"
         v-for="(item,index) in carList"
         :key="index"
+        @click="carInfo(item)"
       >
         <img
           :src="item.picUrl"
@@ -175,6 +176,35 @@
             >
               立即下单
             </div>
+          </div>
+        </div>
+        <van-icon
+          name="arrow"
+          color="#999999"
+          size="16"
+        />
+      </div>
+
+      <div
+        class="moveitem"
+        @click="comHandler"
+      >
+        <img
+          src="../assets/images/enpng.png"
+          class="carico"
+        />
+        <div class="carinfo">
+          <div class="carnamewrap">
+            <div class="carname">企业搬家</div>
+            <div
+              class="cartag"
+            >企业搬家</div>
+          </div>
+          <div class="cardes">
+            有大型办公家具人群
+          </div>
+          <div class="cardes">
+             各种车型应有尽有
           </div>
         </div>
         <van-icon
@@ -223,6 +253,25 @@
       </div>
     </div>
     <div id='container'></div>
+    <!-- 退出处理 -->
+    <van-popup v-model="logoutshow" position="center" :round="true">
+      <div class="logoutwrap">
+        <div class="title">
+          退出确认
+        </div>
+        <div class="des">
+          确定要退出货搬搬吗？
+        </div>
+        <div class="btns">
+          <div class="cancel" @click.stop="logoutshow = false">
+            取消
+          </div>
+          <div class="confrim" @click.stop="confirmhandler">
+            确认
+          </div>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -259,6 +308,7 @@ export default {
         },
       ],
       city: "武汉",
+      logoutshow:false
     };
   },
   mounted() {
@@ -339,6 +389,19 @@ export default {
   },
   computed: {},
   methods: {
+    //退出处理
+    logout(){
+      this.logoutshow = true
+    },
+    confirmhandler(){
+      localStorage.clear()
+      setTimeout(()=>{
+        this.$router.push({
+          path: "/login",
+          query: {}
+        });
+      },500)
+    },
     //选择城市调用
     selectCity(){
           var that = this
@@ -387,7 +450,6 @@ export default {
             this.cartObject = result.list[0];
             localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
           }else if (localStorage.getItem("sCar") == 1) {
-            console.log(2)
             var cartObject = JSON.parse(localStorage.getItem('cartObject'))
             if(cartObject){
               this.carList.map((item,index)=>{
@@ -460,6 +522,12 @@ export default {
         query: { seqId: item.seqId },
       });
     },
+    comHandler(){
+      this.$router.push({
+        path: "/company",
+        query: { },
+      });
+    },
     orderTodo(ordertype) {
       //priceType (string, optional): 计价方式 = ['STANDARD', 'DISCUSS']
       localStorage.setItem("placeOrder", ordertype);
@@ -469,12 +537,14 @@ export default {
           list = JSON.parse(list);
           var arr = [];
           list.map((item) => {
-            var il = JSON.parse(item.center);
-            if (il.length) {
-              arr.push({
-                longitude:il[0],
-                latitude:il[1]
-              });
+            if(item.center.length > 2){
+              var il = JSON.parse(item.center);
+              if (il.length) {
+                arr.push({
+                  longitude:il[0],
+                  latitude:il[1]
+                });
+              }
             }
           });
           if (arr.length < 2) {
@@ -597,7 +667,7 @@ export default {
     .submenu {
       display: flex;
       width: 22%;
-      font-size: 30px;
+      font-size: 34px;
       .homeico {
         width: 40px;
         height: 40px;
@@ -635,7 +705,7 @@ export default {
       flex-direction: row;
       position: relative;
       .caritem {
-        font-size: 18px;
+        font-size: 28px;
         width: 25%;
         text-align: left;
         position: relative;
@@ -678,7 +748,7 @@ export default {
       .carinfowrap {
         display: flex;
         flex-direction: column;
-        font-size: 16px;
+        font-size: 28px;
         line-height: 42px;
         color: #333333;
         flex: 1 1 auto;
@@ -784,6 +854,7 @@ export default {
       box-sizing: border-box;
       border-radius: 20px;
       overflow: hidden;
+      margin-bottom: 20px;
       .carico {
         width: 240px;
         height: 120px;
@@ -859,7 +930,7 @@ export default {
     position: fixed;
     left: 0;
     bottom: 0;
-    z-index: 30000;
+    z-index: 800;
     -moz-box-shadow: -1px 0px 5px -2px #b9b8b8;
     -webkit-box-shadow: -1px 0px 5px -2px #b9b8b8;
     box-shadow: -1px 0px 5px -2px#b9b8b8;
@@ -919,6 +990,54 @@ export default {
         font-size: 30px;
         background: #28ae3a;
         border-radius: 40px;
+      }
+    }
+  }
+  .logoutwrap{
+    width:520px;
+    height:300px;
+    padding:40px 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .title{
+      font-size: 36px;
+      font-weight: bold;
+      color:#333333;
+    }
+    .des{
+      font-size: 30px;
+      color:#333333;
+      margin-top:30px;
+    }
+    .btns{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-top:30px;
+      .cancel{
+        width:180px;
+        height:68px;
+        line-height: 68px;
+        text-align: center;
+        border-radius: 35px;
+        font-size: 28px;
+        background: #28ae3a;
+        border:2px solid  #28ae3a;
+        color:white;
+        margin-right:30px;
+
+      }
+      .confrim{
+        width:180px;
+        height:68px;
+        line-height: 68px;
+        border-radius: 35px;
+        font-size: 28px;
+        text-align: center;
+        border:2px solid  #28ae3a;
+        color:#28ae3a;
       }
     }
   }

@@ -49,7 +49,7 @@ export default {
       localStorage.setItem('sCar',1)
       localStorage.setItem('cartObject',JSON.stringify(item))
       var orderType = localStorage.getItem('orderType')
-      if(orderType == 1){
+      if(orderType == 1 || orderType == 4){
         this.$router.push('/')
       }else if(orderType == 2){
         this.$router.push('/confirmorder')
@@ -72,7 +72,7 @@ export default {
   min-height: 100vh;
   background: #f5f6f7;
   .cartitem{
-    width:calc(33.1% - 2px);
+    width:calc(33.1% - 4px);
     height:252px;
     background:white;
     border:2px solid  #f5f6f7;

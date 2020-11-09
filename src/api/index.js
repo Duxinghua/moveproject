@@ -77,7 +77,12 @@ const server = {
   //腾讯地图,计算线路公里数 /map/getDistance
   getDistance(data){
     return httpv1({method:"Post",url:'/map/getDistance',data})
+  },
+  //企业加盟  /custEnterpriseApply/findPage
+  custEnterpriseApplyFindPage(params){
+    return httpv1({method:"GET",url:'/custEnterpriseApply/findPage',params})
   }
+
 }
 
 export default server

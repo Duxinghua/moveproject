@@ -1047,7 +1047,7 @@ export default {
     },
     phoneHandler() {
       var orderType = localStorage.getItem('orderType')
-      if(orderType == 2){
+      if(orderType == 2 || orderType == 1){
         if(!this.refer.name){
           this.refer.phone = ''
           return this.$toast("请输入联系人姓名");
@@ -1093,6 +1093,9 @@ export default {
       this.CalcSimplePrice();
     },
     getOther(flag, attachType) {
+      if(!localStorage.getItem("cartObject")){
+        return
+      }
       var data = {
         headSeqId: JSON.parse(localStorage.getItem("cartObject")).seqId,
         attachType: attachType,
@@ -1460,7 +1463,7 @@ export default {
         flex: 1;
         height: 100px;
         .payname {
-          font-size: 20px;
+          font-size: 28px;
           color: #333333;
           margin-right: 20px;
         }
@@ -1570,14 +1573,14 @@ export default {
       height: 90px;
       border-bottom: 2px solid #f5f6f7;
       .itemlabel {
-        font-size: 18px;
+        font-size: 28px;
         color: #333333;
       }
       .lm {
         margin-right: auto;
       }
       .itemvalue {
-        font-size: 18px;
+        font-size: 28px;
         color: #333333;
         margin-left: auto;
       }
@@ -1701,7 +1704,7 @@ export default {
     box-sizing: border-box;
     margin-top: 30px;
     .safetitle {
-      font-size: 18px;
+      font-size: 28px;
       color: #333333;
     }
   }
@@ -1929,5 +1932,6 @@ export default {
       }
     }
   }
+
 }
 </style>

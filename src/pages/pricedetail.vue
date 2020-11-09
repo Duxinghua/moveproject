@@ -80,7 +80,7 @@ export default {
     getworkDetail(data){
       this.$api.orderHeadCalcHireWorkerDet(data).then((result) => {
         if(result.code == 200){
-                    var c = result.data
+          var c = result.data
           var list1 = []
           var  list2 = []
           Object.keys(c.map).forEach((value) => {

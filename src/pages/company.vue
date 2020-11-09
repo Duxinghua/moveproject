@@ -1,5 +1,6 @@
 <template>
   <div class="company">
+    <TopNav :menu="menutext" />
     <div class="comitem">
       <img src="../assets/images/car.png" class="carico" />
       <div class="comdes">
@@ -25,15 +26,35 @@
 </template>
 
 <script>
+import TopNav from "@/components/topnav.vue";
 export default {
   name:'Company',
+  components:{
+    TopNav
+  },
   data(){
     return {
-      value:5
+      value:5,
+      menutext:'企业展示',
+      pageno:1,
+      pagesize:100,
+      city:localStorage.getItem('city')
     }
   },
+  mounted(){
+    this.custEnterpriseApplyFindPage()
+  },
   methods:{
-
+    custEnterpriseApplyFindPage(ismore){
+      var data = {
+        pagesize:this.pagesize,
+        pageno:this.pageno,
+        ownerCity:this.city
+      }
+      this.$api.custEnterpriseApplyFindPage(data).then((result)=>{
+        console.log(result)
+      })
+    }
   }
 }
 </script>
