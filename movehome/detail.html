@@ -136,7 +136,7 @@
       var seqId = $.getUrlParam('seqId')
       $.ajax({
         type: "GET",
-        url: $.host + 'sysExhibitManage/getBySeqIdAndLN',
+        url: $.host + '/sysExhibitManage/getBySeqIdAndLN',
         data: {
           seqId: seqId
         },
@@ -168,7 +168,7 @@
       })
       $.ajax({
         type: "GET",
-        url: $.host + 'sysExhibitManage/read',
+        url: $.host + '/sysExhibitManage/read',
         data: {
           seqId: seqId
         },

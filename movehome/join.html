@@ -292,7 +292,7 @@
               })
               return;
             },
-            url: $.host + 'sys/appeal/imgUploadPC',
+            url: $.host + '/sys/appeal/imgUploadPC',
             /*设置post提交到的页面*/
             type: "post",
             /*设置表单以post方法提交*/
@@ -353,7 +353,7 @@
               })
               return;
             },
-            url: $.host + 'sys/appeal/imgUploadPC',
+            url: $.host + '/sys/appeal/imgUploadPC',
             /*设置post提交到的页面*/
             type: "post",
             /*设置表单以post方法提交*/
@@ -532,7 +532,7 @@
         console.log(JSON.stringify(submitData))
         $.ajax({
           type: "POST",
-          url: $.host + 'custEnterpriseApply/insert',
+          url: $.host + '/custEnterpriseApply/insert',
           data: JSON.stringify(submitData),
           contentType: 'application/json',
           success: function (res) {
@@ -595,7 +595,7 @@
       function send(mobile) {
         $.ajax({
           type: "GET",
-          url: $.host + 'shortmessage/joinMsg',
+          url: $.host + '/shortmessage/joinMsg',
           data: {
             mobile: mobile
           },

@@ -258,6 +258,22 @@
         $('.verificationCode').val('')
         $('.wxId').val('')
       }
+      $(document).on("input",".messageContent",function(){
+        if($(this).val().length > 200){
+          var str = $(this).val()
+          $(".messageContent").val(str.substring(0,199))
+          $modal({
+                  type: 'message',
+                  timeout: 2500,
+                  content: '内容限制在200字',
+                  center: true,
+                  top:100,
+                  transition: 300,
+                  closable: false,
+          })
+          return
+        }
+      })
       $(document).on('click','.mebtnc',function(){
         reset()
       })
