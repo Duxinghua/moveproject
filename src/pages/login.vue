@@ -112,7 +112,6 @@ export default {
       this.$api.loginByMobileAndVlidateCode(data).then((result) => {
         if (result.code == 200) {
           this.$toast(result.msg);
-          localStorage.clear();
           localStorage.setItem("token", result.data);
           var tokenresult = this.decodeToken(result.data);
           localStorage.setItem("payload", JSON.stringify(tokenresult.payload));

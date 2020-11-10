@@ -1,14 +1,19 @@
 <template>
   <div class="accountingrules">
+      <TopNav :menu="menutext"/>
   </div>
 </template>
 
 <script>
+import TopNav from '@/components/topnav.vue'
 export default {
   name:'Accountingrules',
+  components:{
+  TopNav
+  },
   data(){
     return {
-
+      menutext:'货搬搬用户协议'
     }
   },
   methods:{

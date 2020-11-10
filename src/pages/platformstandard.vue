@@ -5,10 +5,10 @@
       <div :class="['tabitem',tabIndex == 1 ? 'active' : '']" @click="tabHandler(1,'STAND1')">
         整车
       </div>
-      <div :class="['tabitem',tabIndex == 2 ? 'active' : '']" @click="tabHandler(2,'STAND2')">
+      <div :class="['tabitem',tabIndex == 2 ? 'active' : '']" @click="tabHandler(2,'STAND1')">
         半车
       </div>
-      <div :class="['tabitem',tabIndex == 3 ? 'active' : '']" @click="tabHandler(3,'STAND3')">
+      <div :class="['tabitem',tabIndex == 3 ? 'active' : '']" @click="tabHandler(3,'STAND1')">
         小件
       </div>
     </div>

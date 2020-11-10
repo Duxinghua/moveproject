@@ -360,7 +360,8 @@ export default {
             obj.lat = result.position.lat;
             obj.addressComponent = result.addressComponent;
             obj.formattedAddress = result.formattedAddress;
-            that.city = obj.addressComponent.city;
+            // that.city = obj.addressComponent.city;
+            that.city = "武汉"
             localStorage.setItem("locations", JSON.stringify(obj));
             that.serverHandler(that.serverIndex);
           } else {
@@ -632,7 +633,7 @@ export default {
         font-size: 32px;
       }
       .city {
-        font-size: 18px;
+        font-size: 28px;
         margin-right: 10px;
       }
     }

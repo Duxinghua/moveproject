@@ -91,6 +91,7 @@ export default {
       });
     },
     adItemHandler(item,index) {
+      console.log(item)
       var list = localStorage.getItem("adList");
       if (list) {
         list = JSON.parse(list);
@@ -98,6 +99,7 @@ export default {
         list = []
       }
       list[this.index] = item
+      list[this.index]['center'] = JSON.stringify([item.location.lng,item.location.lat])
       localStorage.setItem("adList", JSON.stringify(list));
       this.$router.push({
         path: "/chooseaddress",

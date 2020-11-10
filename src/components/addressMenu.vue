@@ -76,7 +76,7 @@ export default {
       align-items: center;
       position: relative;
       .addr {
-        font-size: 18px;
+        font-size: 28px;
       }
       /deep/ .van-icon {
         font-size: 28px;

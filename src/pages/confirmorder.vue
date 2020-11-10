@@ -600,7 +600,7 @@ export default {
       if (res.code == 200) {
         var wxpay = res.data
         wx.config({
-          debug: false,
+          debug: true,
           appId: config.appid,
           timestamp: wxpay.timestamp,
           nonceStr: wxpay.noncestr,
@@ -1404,13 +1404,17 @@ export default {
               paySign: paywx.paySign, // 支付签名
               success: function (res) {
                 console.log(res)
+                alert(JSON.stringify(res))
                 // 支付成功后的回调函数
               },
               fail: function(res){
                 console.log(res)
+                          alert(JSON.stringify(res))
               }
             });
 
+          }else{
+                    alert(JSON.stringify(result))
           }
         })
       }

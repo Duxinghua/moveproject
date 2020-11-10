@@ -5,7 +5,7 @@
       <img :src="item.log" class="carico" />
       <div class="comdes">
         <div class="comnamewrap">
-          <span class="comico">直营</span>
+          <span class="comico" v-if="item.operSelf">直营</span>
           <span class="comname">{{item.enterpriseName}}</span>
         </div>
         <div class="ratewrap">
@@ -84,6 +84,7 @@ export default {
     .comdes{
         display: flex;
         flex-direction: column;
+        justify-content: center;
         flex:1;
         .comnamewrap{
           display: flex;

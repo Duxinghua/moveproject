@@ -432,6 +432,7 @@ export default {
 
     var worktype1 = localStorage.getItem("workTypeName");
     var worktype2 = localStorage.getItem("workTypeName2");
+    console.log(worktype2,'works2')
     var remarks = localStorage.getItem("remarks");
 
     if (worktype1 && worktype2) {
@@ -466,6 +467,7 @@ export default {
 
     },
     getorderHeadCalcPrice() {
+      console.log(this.worktype)
       var data = {
         orderDate: this.DateFormat(this.currentDate, "yyyy-MM-dd hh:mm:ss"),
         orderType: "ACTUAL_TIME",
@@ -479,8 +481,8 @@ export default {
         couponName: null,
         couponMoney: 0,
         orderDescribe: this.remark,
-        workTypeName: this.worktype.split("-")[0],
-        workTypeName2: this.worktype.split("-")[1],
+        workTypeName: localStorage.getItem("workTypeName"),
+        workTypeName2: localStorage.getItem("workTypeName2"),
         workTypeUnit: this.timetype,
         workerUserCnt: this.workerUserCnt,
         workerTimeQty: this.workerTimeQty,
