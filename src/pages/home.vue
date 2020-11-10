@@ -103,7 +103,7 @@
         >
           <div
             class="addressdiy"
-            @click="setaddHandler(index)"
+            @click.stop="setaddHandler(index)"
           >
             <div
               class="a1"
@@ -146,7 +146,7 @@
         class="moveitem"
         v-for="(item,index) in carList"
         :key="index"
-        @click="carInfo(item)"
+        @click.stop="carInfo(item)"
       >
         <img
           :src="item.picUrl"
@@ -172,7 +172,7 @@
             </div>
             <div
               class="btnw"
-              @click="mevohome(item)"
+              @click.stop="mevohome(item)"
             >
               立即下单
             </div>

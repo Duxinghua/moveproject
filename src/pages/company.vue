@@ -1,24 +1,24 @@
 <template>
   <div class="company">
     <TopNav :menu="menutext" />
-    <div class="comitem">
-      <img src="../assets/images/car.png" class="carico" />
+    <div class="comitem" v-for="(item,index) in list" :key="index" :index="index">
+      <img :src="item.log" class="carico" />
       <div class="comdes">
         <div class="comnamewrap">
           <span class="comico">直营</span>
-          <span class="comname">贡贡搬家(汉口分部)</span>
+          <span class="comname">{{item.enterpriseName}}</span>
         </div>
         <div class="ratewrap">
-          <van-rate v-model="value" readonly :count="5" color="#ff561e" size="10" />
-          <span>5分</span>
+          <van-rate v-model="value" readonly :count="item.score ? item.score : 5" color="#ff561e" size="10" />
+          <span>{{item.score ? item.score : 5}}分</span>
         </div>
         <div class="phonewrap">
           <img src="../assets/images/phone.png" class="phoneico" />
-          <span>18771821655</span>
+          <span>{{item.urgeLinkMobile}}</span>
         </div>
         <div class="adresswrap">
           <img src="../assets/images/ceadicoa.png" class="ceadico" />
-          <span>湖北省武汉市武昌区洪山路2号</span>
+          <span>{{item.ownerCity+item.region+item.address}}</span>
         </div>
       </div>
     </div>
@@ -38,7 +38,8 @@ export default {
       menutext:'企业展示',
       pageno:1,
       pagesize:100,
-      city:localStorage.getItem('city')
+      city:localStorage.getItem('city'),
+      list:[]
     }
   },
   mounted(){
@@ -49,10 +50,10 @@ export default {
       var data = {
         pagesize:this.pagesize,
         pageno:this.pageno,
-        ownerCity:this.city
+        ownerCity:new String(this.city).replace('市','')
       }
       this.$api.custEnterpriseApplyFindPage(data).then((result)=>{
-        console.log(result)
+        this.list = result.list
       })
     }
   }
@@ -64,7 +65,7 @@ export default {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: #e5e6e7;
+  background: #f5f6f7;
   .comitem{
     padding:30px;
     box-sizing: border-box;
@@ -72,7 +73,7 @@ export default {
     width:100%;
     display: flex;
     flex-direction: row;
-    border-bottom: 2px solid #cdcdcd;
+    border-bottom:2px solid #f5f6f7;;
     .carico{
       width:210px;
       height:160px;
