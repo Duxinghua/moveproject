@@ -629,6 +629,14 @@ export default {
     })
   },
   mounted() {
+    if (
+      window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
+      "micromessenger"
+    ) {
+      localStorage.setItem("isWeixin", 1);
+    } else {
+      localStorage.setItem("isWeixin", 2);
+    }
     this.isWx = localStorage.getItem('isWeixin')
     this.payload = JSON.parse(localStorage.getItem("payload"));
     if (localStorage.getItem("refer")) {
