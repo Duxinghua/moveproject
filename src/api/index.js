@@ -60,7 +60,7 @@ const server = {
   },
   //优惠券
   orderFindUserCoupon(params){
-    return httpv2({method:"Get",url:'/couponUser/orderFindUserCoupon', params})
+    return httpv1({method:"Get",url:'/couponUser/orderFindUserCoupon', params})
   },
   //公众号授权 /custlogin/getOfficeOpenId
   getOfficeOpenId(params){
@@ -81,6 +81,10 @@ const server = {
   //企业加盟  /custEnterpriseApply/findPage
   custEnterpriseApplyFindPage(params){
     return httpv1({method:"GET",url:'/custEnterpriseApply/findPage',params})
+  },
+  //GET /custWorkType/findPage 工种单位
+  custWorkTypeFindPage(params){
+    return httpv1({method:"GET",url:'/custWorkType/findPage',params})
   }
 
 }

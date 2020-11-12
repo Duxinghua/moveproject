@@ -21,7 +21,7 @@ module.exports = {
         }
       },
       '/v2': {
-        target: 'https://www.yyooyi.com:8183',
+        target: 'https://www.yyooyi.com:8184',
         changeOrigin: true,
         pathRewrite:{
           '^/v2':''
