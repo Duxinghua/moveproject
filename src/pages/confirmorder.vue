@@ -950,7 +950,7 @@ export default {
           attachPrice = platform.attachPriceObj.price;
         }
         //标准选车 大小 platformstandard
-        attachType = platform.attachType;
+        attachType = platform.attachTypes;
       }else{
         if(localStorage.getItem('orderType') == 1){
             priceType = 'DISCUSS'
@@ -1117,7 +1117,8 @@ export default {
           var list3 = [];
           var list4 = {};
           var list5 = [];
-          if (attachType != "OTHER") {
+          // attachType != "OTHER"
+          if (flag) {
             Object.keys(obj).forEach((value) => {
               if (value == "货物最长") {
                 var o = obj[value][0];
@@ -1183,6 +1184,7 @@ export default {
           } else {
             that.housefloorList = list3;
           }
+
         }
       });
     },
@@ -1236,6 +1238,7 @@ export default {
       } else if (tag == "goodsend") {
         this.flag = 1;
         this.unitshow = true;
+        console.log(this.housefloorList,'sss')
         this.columns = this.housefloorList;
       } else if (tag == "goodreceive") {
         this.columns = this.housefloorList;
@@ -1288,10 +1291,12 @@ export default {
       if (index == 1) {
         this.$router.push({ path: "/agreement" });
       } else if (index == 2) {
-        localStorage.setItem("detail", JSON.stringify(this.detail));
-        this.$router.push({
-          path: "/pricedetail"
-        });
+        if(this.money_total != 0){
+          localStorage.setItem("detail", JSON.stringify(this.detail));
+          this.$router.push({
+            path: "/pricedetail"
+          });
+        }
       }
     },
     timeCancel() {

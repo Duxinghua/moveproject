@@ -5,10 +5,10 @@
       <div :class="['tabitem',tabIndex == 1 ? 'active' : '']" @click="tabHandler(1,'STAND1')">
         整车
       </div>
-      <div :class="['tabitem',tabIndex == 2 ? 'active' : '']" @click="tabHandler(2,'STAND1')">
+      <div :class="['tabitem',tabIndex == 2 ? 'active' : '']" @click="tabHandler(2,'STAND2')">
         半车
       </div>
-      <div :class="['tabitem',tabIndex == 3 ? 'active' : '']" @click="tabHandler(3,'STAND1')">
+      <div :class="['tabitem',tabIndex == 3 ? 'active' : '']" @click="tabHandler(3,'STAND3')">
         小件
       </div>
     </div>
@@ -192,9 +192,10 @@ export default {
     },
     tabHandler(index,text){
       this.tabIndex = index
-      this.platform.attachType = text
+      this.platform.attachType = 'STAND1'
       this.platform = {
-        attachType:text,
+        attachTypes:text,
+        attachType:'STAND1',
         goodwidth:'',
         goodwidthobj:{},
         goodheight:'',

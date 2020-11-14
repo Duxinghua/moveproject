@@ -14,14 +14,14 @@ module.exports = {
     //http://106.52.164.64:8183
     proxyTable: {
       '/v1': {
-        target: 'https://www.yyooyi.com:8184',
+        target: 'https://mini.huobanban.com.cn:8184',
         changeOrigin: true,
         pathRewrite:{
           '^/v1':''
         }
       },
       '/v2': {
-        target: 'https://www.yyooyi.com:8184',
+        target: 'https://mini.huobanban.com.cn:8184',
         changeOrigin: true,
         pathRewrite:{
           '^/v2':''

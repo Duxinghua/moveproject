@@ -152,6 +152,16 @@
         @click="itemHandler('coupon')"
       />
     </div>
+        <div class="safewrap">
+      <div class="safetitle">号码保护</div>
+      <van-switch
+        v-model="safe"
+        active-color="#28ae3a"
+        size="14"
+        inactive-color="#999999"
+        @change="safeChangeHandler"
+      />
+    </div>
     <div class="number numberfix"   @click="itemHandler('goodrule')">
         <span>计费规则说明</span>
         <van-icon name="arrow" size="16" color="#999999" />
@@ -379,14 +389,6 @@ export default {
       money: 0,
       workerTimeQty: "",
       columns: [
-        {
-          diy: "时",
-          text: "按小时计算",
-        },
-        {
-          diy: "天",
-          text: "按天计算",
-        },
       ],
       menutext: "发布需求",
       timetype: "",
@@ -398,8 +400,50 @@ export default {
       couponlist:[],
       payload:{},
       money_total_s:0,
-      couponObj:{}
+      couponObj:{},
+      safe:false
     };
+  },
+  created(){
+    var data = {
+      url: location.href
+    }
+    const agent = navigator.userAgent
+    const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+    if (isiOS) {
+      data.url = config.shareurls
+    }
+    this.$api.workerApply(data).then((res) => {
+      if (res.code == 200) {
+        var wxpay = res.data
+        wx.config({
+          debug: true,
+          appId: config.appid,
+          timestamp: wxpay.timestamp,
+          nonceStr: wxpay.noncestr,
+          signature: wxpay.signature,
+          jsApiList: [
+            'checkJsApi',
+            'chooseWXPay'
+          ]
+        })
+        wx.error(function (res) {
+          console.log('出错了：' + res.errMsg)
+        })
+        // 在这里调用 API
+        wx.ready(function () {
+          wx.checkJsApi({
+            jsApiList: [
+              'checkJsApi',
+              'chooseWXPay'
+            ],
+            success: function (res) {
+
+            }
+          })
+        })
+      }
+    })
   },
   mounted() {
     if (
@@ -423,6 +467,7 @@ export default {
       this.timetype = detail.workTypeUnit;
       this.address = detail.workerAddress;
       this.time = detail.orderDate;
+      this.safe = detail.mobileProtected
       this.areatext = detail.areatext;
       this.workerRegion = detail.workerRegion;
       this.worktype = detail.workTypeName + "-" + detail.workTypeName2;
@@ -437,6 +482,7 @@ export default {
 
     if (worktype1 && worktype2) {
       this.worktype = worktype1 + "-" + worktype2;
+      this.getwork()
     } else {
       this.worktype = "请选择";
     }
@@ -444,6 +490,22 @@ export default {
     this.remark = remarks;
   },
   methods: {
+    getwork(){
+      var data = {
+        workName:localStorage.getItem("workTypeName"),
+        workName2:localStorage.getItem("workTypeName2")
+      }
+      this.$api.custWorkTypeFindPage(data).then((result) => {
+        var s = result.list
+        if(s.length){
+          s.map((item) => {
+            item.diy = item.workUnit
+            item.text = item.workUnitDesc
+          })
+          this.columns = s
+        }
+      })
+    },
     getCoupon(cb) {
       var orderType = localStorage.getItem("orderType");
       var data = {
@@ -476,7 +538,7 @@ export default {
         priceType: this.diyprice ? "DISCUSS" : "STANDARD",
         receiverName: this.name,
         receiverMobileNo: this.phone,
-        mobileProtected: true,
+        mobileProtected: this.safe,
         couponSeqId: null,
         couponName: null,
         couponMoney: 0,
@@ -648,6 +710,7 @@ export default {
       this.timetype = e.diy;
       this.worktimetype = e.text;
       this.worktimeShow = false;
+      this.getorderHeadCalcPrice()
     },
     linkHandler(index) {
       if (index == 2) {
@@ -706,7 +769,10 @@ export default {
           }
         })
       }
-    }
+    },
+    safeChangeHandler() {
+      this.getorderHeadCalcPrice();
+    },
   },
 };
 </script>
@@ -719,6 +785,25 @@ export default {
   background: #f5f6f7;
   padding: 0 30px 200px 30px;
   box-sizing: border-box;
+    .safewrap {
+    width: 690px;
+    height: 90px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 0 30px;
+    box-sizing: border-box;
+    // margin-top: 30px;
+    .safetitle {
+      font-size: 28px;
+      color: #333333;
+    }
+  }
   .itemtitle {
     font-size: 26px;
     color: #666666;
@@ -1060,6 +1145,7 @@ export default {
     }
     .numberfix{
       padding-right:10px;
+      margin-top:30px;
     }
 }
 </style>

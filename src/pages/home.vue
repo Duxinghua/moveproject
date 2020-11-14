@@ -453,6 +453,7 @@ export default {
           }else if (localStorage.getItem("sCar") == 1) {
             var cartObject = JSON.parse(localStorage.getItem('cartObject'))
             if(cartObject){
+              console.log( this.carList)
               this.carList.map((item,index)=>{
                 if(item.seqId == cartObject.seqId){
                     console.log(index)

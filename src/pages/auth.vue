@@ -24,7 +24,7 @@ export default {
     var localurl = window.location.href
     var goback = encodeURIComponent(localurl)
     console.log(window.location.href)
-    var appid = 'wx4b4608ff44b127cb'
+    var appid = Config.appid
     var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appid + '&redirect_uri=' + goback + '&response_type=code&scope=snsapi_userinfo&state=state#wechat_redirect'
     console.log('当前url', url)
     console.log('获取code码')
