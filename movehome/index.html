@@ -229,9 +229,11 @@
         if(loc){
           var arg = loc.city ? loc.city : '武汉'
           send(arg)
+          $('#place').val(arg)
 
         }else{
           send('武汉')
+          $('#place').val('武汉')
 
         }
     }, false);
