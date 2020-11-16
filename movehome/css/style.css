@@ -1807,6 +1807,34 @@ margin-bottom: 30px;
   margin-left:-25%;
   z-index: 22;
 }
+.qqwrap{
+  position: absolute;
+  display: none;
+  right:60px;
+  top:0;
+  width:200px;
+  height:200px;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 1px 3px 10px -4px #CCCCCC;
+}
+.qqwrap .qqicos{
+  width:100px;
+  height:100px;
+  margin-top:40px;
+  margin-left:50px;
+}
+.qqwrap .qqwraptext{
+  display: block;
+  margin:10px auto 0 auto;
+  font-size: 16px;
+  color:#28AE3A;
+  text-align: center;
+  margin-top:10px;
+}
+.floatitems:last-child:hover .qqwrap{
+display: block;
+}
 .floatimg1{
   margin-left:-13px;
   margin-top:-8px;
