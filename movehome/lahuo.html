@@ -124,7 +124,7 @@
       </div>
     </div>
   </div>
-  <div class="footer">
+  <!-- <div class="footer">
     <div class="content">
       <div class="footertop clearfix">
         <div class="footeritem">
@@ -181,9 +181,12 @@
         </div>
       </div>
 
-  </div>
+  </div> -->
   <script type="text/javascript">
     $(function () {
+      $.get('footer.html',function(result){
+        $('body').append(result)
+      })
       // 拉货轮播图
       $.ajax({
         type: "GET",
@@ -211,8 +214,8 @@
          }
         }
       });
-
-      send('111')
+      var cityName = localStorage.getItem('cityName')
+      send(cityName)
       function send(arg){
         $.ajax({
           type:'GET',

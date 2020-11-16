@@ -130,40 +130,40 @@
     <div class="content">
       <div class="laowuitemwrap clearfix">
         <div class="laowuitems">
-          <img src="images/idcardico.png" class="idcardico" />
+          <img src="images/1.png" class="idcardico" />
           <p class="idcardtext">
-            身份认证
+            快速响应
           </p>
           <p class="idcarddes">
-            货搬搬劳务工均经过严格的身份认证
+            专业服务团队覆盖全国 快速下单 快速响应
           </p>
         </div>
         <div class="laowuitems">
-          <img src="images/idcardico.png" class="idcardico" />
+          <img src="images/3.png" class="idcardico" />
           <p class="idcardtext">
-            身份认证
+            专业团队
           </p>
           <p class="idcarddes">
-            货搬搬劳务工均经过严格的身份认证
+           货搬搬精品搬家团队，均为有着 10年以上丰富搬家经验的专业搬家师傅
           </p>
         </div>
 
         <div class="laowuitems">
-          <img src="images/idcardico.png" class="idcardico" />
+          <img src="images/2.png" class="idcardico" />
           <p class="idcardtext">
-            身份认证
+            专业服务
           </p>
           <p class="idcarddes">
-            货搬搬劳务工均经过严格的身份认证
+            全国统一线上报价收费公开透明 按里程 车型 计费
           </p>
         </div>
         <div class="laowuitems">
-          <img src="images/idcardico.png" class="idcardico" />
+          <img src="images/4.png" class="idcardico" />
           <p class="idcardtext">
-            身份认证
+            专业服务
           </p>
           <p class="idcarddes">
-            货搬搬劳务工均经过严格的身份认证
+            从客服沟通到司机再到搬运工我们均培训上岗
           </p>
         </div>
 
@@ -179,7 +179,7 @@
       </div>
     </div>
   </div>
-  <div class="footer">
+  <!-- <div class="footer">
     <div class="content">
       <div class="footertop clearfix">
         <div class="footeritem">
@@ -236,9 +236,12 @@
         </div>
       </div>
 
-  </div>
+  </div> -->
   <script type="text/javascript">
     $(function () {
+      $.get('footer.html',function(result){
+        $('body').append(result)
+      })
 
       // 轮播图
       $.ajax({

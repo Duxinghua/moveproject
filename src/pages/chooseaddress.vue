@@ -174,6 +174,7 @@ export default {
       if (cityobj) {
         cityobj = JSON.parse(cityobj);
         this.center = [cityobj.lng, cityobj.lat];
+        localStorage.setItem("center", JSON.stringify(this.center));
       }
       this.getLngaTodo()
 
@@ -347,7 +348,7 @@ export default {
               addressComponent.township +
               addressComponent.street +
               addressComponent.streetNumber;
-            console.log(result);
+            console.log(result,'sss');
           }
         });
       });

@@ -687,7 +687,7 @@ export default {
         : {};
       this.refer.carType = this.cartObject ? this.cartObject.carName : "请选择";
       localStorage.setItem("refer", JSON.stringify(this.refer));
-      this.getOther(false, "HOUSE_FLOOR");
+      this.getOther(true, "HOUSE_FLOOR");
       var large_goods = localStorage.getItem("large_goods");
       if (large_goods) {
         large_goods = JSON.parse(large_goods);
@@ -1181,8 +1181,7 @@ export default {
             that.goodWidthList = list1;
             that.goodHeightList = list2;
             that.housefloorList = list3;
-          } else {
-            that.housefloorList = list3;
+            console.log(list3,'s')
           }
 
         }
@@ -1238,7 +1237,7 @@ export default {
       } else if (tag == "goodsend") {
         this.flag = 1;
         this.unitshow = true;
-        console.log(this.housefloorList,'sss')
+        console.log(this.housefloorList,'sss11')
         this.columns = this.housefloorList;
       } else if (tag == "goodreceive") {
         this.columns = this.housefloorList;
@@ -1286,6 +1285,7 @@ export default {
         localStorage.setItem("refer", JSON.stringify(this.refer));
       }
       this.unitshow = false;
+      this.CalcSimplePrice()
     },
     linkHandler(index) {
       if (index == 1) {

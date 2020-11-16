@@ -496,12 +496,12 @@ overflow: hidden;
 }
 .footerlink li{
   float:left;
-  width:80px;
-  margin-right:38px;
-  margin-bottom: 10px;
+  width:33.33%;
+  /* margin-right:38px; */
+  margin-bottom: 5px;
 }
 .footerlink li a{
-  font-size: 16px;
+  font-size: 14px;
   font-family: Microsoft YaHei;
   font-weight: 400;
   color: #FFFFFF;
@@ -1051,8 +1051,8 @@ float:left;
 }
 .idcardico{
   display: block;
-  width: 238px;
-height: 160px;
+  width: 150px;
+height: 150px;
 border-radius: 16px;
 margin:0px auto 20px auto;
 }
@@ -1806,6 +1806,10 @@ margin-bottom: 30px;
   margin-top:-25%;
   margin-left:-25%;
   z-index: 22;
+}
+.floatimg1{
+  margin-left:-13px;
+  margin-top:-8px;
 }
 .menuul li:last-child{
   position: relative;

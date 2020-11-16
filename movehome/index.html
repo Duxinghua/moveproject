@@ -152,27 +152,31 @@
       </div>
     </div>
   </div>
-  <div class="footer">
+  <!-- <div class="footer">
     <div class="content">
       <div class="footertop clearfix">
         <div class="footeritem">
           <h2 class="footertitle">友情链接</h2>
           <ul class="footerlink">
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
-            <li><a href="#" target="_blank">武汉市搬家</a></li>
+            <li><a href="https://auto.china.com/" target="_blank">
+              中华网汽车</a></li>
+            <li><a href="http://www.shushi100.com/" target="_blank">中央空调</a></li>
+            <li><a href="http://www.86huoche.com/" target="_blank">86货车网</a></li>
+            <li><a href="http://www.jmw.com.cn/" target="_blank">中国加盟网</a></li>
+            <li><a href="https://www.tyncar.com/" target="_blank">
+              电动汽车</a></li>
+            <li><a href="https://www.chezhanri.com/" target="_blank">车展日车展网</a></li>
+            <li><a href="http://www.hc39.com/" target="_blank">汽车家园</a></li>
+            <li><a href="http://qiche.cncn.com/" target="_blank">欣欣汽车时刻表</a></li>
+            <li><a href="https://sz.lianjia.com" target="_blank">深圳二手房</a></li>
+            <li><a href="https://www.d1ev.com/" target="_blank">新能源汽车</a></li>
+            <li><a href="http://www.jia.com/shenzhen/" target="_blank">深圳装修</a></li>
+            <li><a href="http://www.qc188.com/" target="_blank">平行进口车</a></li>
+            <li><a href="http://www.jiakaobaodian.com" target="_blank">科目一</a></li>
+            <li><a href="http://www.maiche.com/" target="_blank">汽车报价大全</a></li>
+            <li><a href="http://b2b.huangye88.com/" target="_blank">企业名录</a></li>
+            <li><a href="http://www.99inf.com/" target="_blank">久久信息网</a></li>
+            <li><a href="https://www.wanchezhijia.com/" target="_blank">汽车改装</a></li>
           </ul>
         </div>
         <div class="footeritem">
@@ -209,12 +213,15 @@
       </div>
     </div>
 
-  </div>
+  </div> -->
   <iframe style="display: none;" id="geoPage" width="100%" height="0" frameborder=0 scrolling="no"
   src="https://apis.map.qq.com/tools/geolocation?key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp&effect=zoom" allow="geolocation"></iframe>
 
   <script type="text/javascript">
     $(function () {
+      $.get('footer.html',function(result){
+        $('body').append(result)
+      })
       window.addEventListener('message', function(event) {
         // 接收位置信息
         var loc = event.data;
@@ -222,8 +229,10 @@
         if(loc){
           var arg = loc.city ? loc.city : '武汉'
           send(arg)
+
         }else{
           send('武汉')
+
         }
     }, false);
       var cityA = $(".city_a_le1 a"); //城市

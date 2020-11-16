@@ -150,7 +150,7 @@
       </div>
     </div>
   </div>
-  <div class="footer">
+  <!-- <div class="footer">
     <div class="content">
       <div class="footertop clearfix">
         <div class="footeritem">
@@ -207,9 +207,12 @@
       </div>
     </div>
 
-  </div>
+  </div> -->
   <script type="text/javascript">
     $(function () {
+      $.get('footer.html',function(result){
+        $('body').append(result)
+      })
       var submitData = {}
       var s = 60
       var timer = null
@@ -398,7 +401,8 @@
       $(document).on('click', '.submit', function () {
         submitData.enterpriseName = $('.enterpriseName').val()
         submitData.region = $('#ownerCity').val()
-        submitData.address = $('.addressvalue').val()
+        submitData.address = $('.ownerCity').val()
+        submitData.address2 = $('.addressvalue').val()
         submitData.legalName = $('.legalName').val()
         submitData.proxyName = $('.proxyName').val()
         submitData.linkMobile = $('.linkMobile').val()
@@ -457,7 +461,7 @@
           submitData.ownerCity = $.trim(addressinfo[1])
           submitData.region = $.trim(addressinfo[2])
         }
-        if (!submitData.address) {
+        if (!submitData.address2) {
           $modal({
             type: 'message',
             timeout: 2000,

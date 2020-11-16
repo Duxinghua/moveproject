@@ -72,7 +72,7 @@
       </div>
     </div>
   </div>
-  <div class="footer">
+  <!-- <div class="footer">
     <div class="content">
       <div class="footertop clearfix">
         <div class="footeritem">
@@ -129,10 +129,13 @@
       </div>
     </div>
 
-  </div>
+  </div> -->
   <div id="iCenter"></div>
   <script type="text/javascript">
     $(function () {
+      $.get('footer.html',function(result){
+        $('body').append(result)
+      })
       var seqId = $.getUrlParam('seqId')
       $.ajax({
         type: "GET",

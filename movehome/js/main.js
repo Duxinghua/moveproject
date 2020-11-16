@@ -5,7 +5,7 @@ $(function () {
   htmlstr += '<img src="images/phones.png" class="floatimg" />'
   htmlstr += '</div>'
   htmlstr += '<div class="floatitems sctops">'
-  htmlstr += '<img src="images/upico.png" class="floatimg" />'
+  htmlstr += '<img src="images/upico.png" class="floatimg floatimg1" />'
   htmlstr += '</div>'
   htmlstr += '</div>'
   $('body').append(htmlstr)

@@ -64,6 +64,7 @@ export default {
             })
           }else{
             this.workName = this.list[0]
+            localStorage.setItem('workTypeName',this.workName)
           }
           this.getcustWorkTypeFindMap()
         }
