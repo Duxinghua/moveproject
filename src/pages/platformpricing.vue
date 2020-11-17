@@ -692,6 +692,8 @@ export default {
     couponHandler(item){
       this.couponshow = false
       this.couponObj = item
+      this.coupon = '已选优惠券'
+      this.getorderHeadCalcPrice()
     },
     areacancelHandler() {
       this.areaShow = false;
@@ -978,7 +980,7 @@ export default {
       line-height: 100px;
       padding-left: 40px;
       width: 100%;
-      font-size: 40px;
+      font-size: 30px;
       color: #333333;
     }
     .couponwrap {
@@ -1011,17 +1013,17 @@ export default {
             align-items: flex-end;
             color: #ff561e;
             span:first-child {
-              font-size: 35px;
+              font-size: 25px;
               margin-right: 5px;
               margin-bottom: 5px;
             }
             span:last-child {
-              font-size: 60px;
+              font-size: 30px;
               font-weight: bold;
             }
           }
           .t2 {
-            font-size: 35px;
+            font-size: 25px;
             color: #888888;
           }
         }
@@ -1034,11 +1036,11 @@ export default {
           flex-direction: column;
           justify-content: center;
           .c1 {
-            font-size: 40px;
+            font-size: 30px;
             color: #333333;
           }
           .c2 {
-            font-size: 20px;
+            font-size: 25px;
             color: #888888;
             margin-top: 10px;
           }

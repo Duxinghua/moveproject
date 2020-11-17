@@ -239,7 +239,7 @@
           </van-radio>
           <van-radio name="DISCUSS">
             <div class="payitem">
-              <span class="payname">与司机协商计划</span>
+              <span class="payname">与司机协商计价</span>
             </div>
           </van-radio>
         </van-radio-group>
@@ -405,7 +405,7 @@
                 <span class="payname">微信支付</span>
               </div>
             </van-radio>
-            <van-radio name="3">
+            <van-radio name="3" style="display:none">
               <div class="payitem">
                 <img
                   src="../assets/images/bank.png"
@@ -529,6 +529,7 @@ export default {
         goodreceive: "",
         goodreceiveobj: {},
         moveHelp: false,
+        couponObj:{}
       },
       cartObject: {},
       orderType: 1,
@@ -583,8 +584,7 @@ export default {
       menutext: "确认订单",
       couponshow: false,
       payload: {},
-      couponlist:[],
-      couponObj:{}
+      couponlist:[]
     };
   },
   created(){
@@ -986,6 +986,10 @@ export default {
         receiverMobileNo: this.refer.phone,
         orderDate: this.refer.time,
       };
+      if(this.refer.couponObj){
+        data.couponSeqId = this.refer.couponObj.seqId
+        data.couponMoney = this.refer.couponObj.couponValue
+      }
       if (data.serverType == "PULL_CARGO") {
         data.needTransfer = false;
       }
@@ -1069,7 +1073,7 @@ export default {
         return this.$toast("请输入正确的手机号");
       } else {
         localStorage.setItem("refer", JSON.stringify(this.refer));
-        this.CalcSimplePrice();
+       // this.CalcSimplePrice();
       }
 
     },
@@ -1094,11 +1098,11 @@ export default {
         }
       }
       localStorage.setItem("refer", JSON.stringify(this.refer));
-      this.CalcSimplePrice();
+      //this.CalcSimplePrice();
     },
     safeChangeHandler() {
       localStorage.setItem("refer", JSON.stringify(this.refer));
-      this.CalcSimplePrice();
+      //this.CalcSimplePrice();
     },
     getOther(flag, attachType) {
       if(!localStorage.getItem("cartObject")){
@@ -1268,8 +1272,10 @@ export default {
       }
     },
     couponHandler(item){
-      this.couponObj = item
+      this.refer.couponObj = item
       this.couponshow = false
+      this.refer.coupon = '已选优惠券'
+      this.CalcSimplePrice()
     },
     cancelHandler() {
       this.unitshow = false;
@@ -1306,7 +1312,7 @@ export default {
       this.refer.time = this.DateFormat(e, "yyyy-MM-dd hh:mm:ss");
       localStorage.setItem("refer", JSON.stringify(this.refer));
       this.timeshow = false;
-      this.CalcSimplePrice();
+      //this.CalcSimplePrice();
     },
     payTodo() {
 
@@ -1356,6 +1362,7 @@ export default {
         data.payMoney = this.money_total;
         this.$api.orderHeadInsert(data).then((result) => {
           if (result.code == 200) {
+            this.clearLo()
             this.detail = result.data;
             this.payshow = true;
           }
@@ -1383,7 +1390,7 @@ export default {
     //   });
     // },
     alipay() {
-      this.clearLo()
+
       //支付宝
       var that = this
       if (this.paytype == 1) {
@@ -1802,10 +1809,11 @@ export default {
     }
   }
   .payClass {
-    height: 700px;
+    min-height: 300px;
     display: flex;
     flex-direction: column;
     padding-top: 100px;
+    padding-bottom: 50px;
     .paytprice {
       font-size: 50px;
       color: #28ae3a;
@@ -1881,7 +1889,7 @@ export default {
       line-height: 100px;
       padding-left: 40px;
       width: 100%;
-      font-size: 40px;
+      font-size: 30px;
       color: #333333;
     }
     .couponwrap {
@@ -1914,17 +1922,17 @@ export default {
             align-items: flex-end;
             color: #ff561e;
             span:first-child {
-              font-size: 35px;
+              font-size: 25px;
               margin-right: 5px;
               margin-bottom: 5px;
             }
             span:last-child {
-              font-size: 60px;
+              font-size: 30px;
               font-weight: bold;
             }
           }
           .t2 {
-            font-size: 35px;
+            font-size: 25px;
             color: #888888;
           }
         }
@@ -1937,11 +1945,11 @@ export default {
           flex-direction: column;
           justify-content: center;
           .c1 {
-            font-size: 40px;
+            font-size: 30px;
             color: #333333;
           }
           .c2 {
-            font-size: 20px;
+            font-size: 25px;
             color: #888888;
             margin-top: 10px;
           }

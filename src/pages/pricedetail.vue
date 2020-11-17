@@ -166,7 +166,7 @@ export default {
         margin-bottom: 20px;
       }
       .pricew{
-        font-size: 30px;
+        font-size: 35px;
         line-height: 52px;
         color:#333333;
         display: flex;

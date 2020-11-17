@@ -1,5 +1,5 @@
 $.extend({
-  host:'https://mini.huobanban.com.cn:8183',
+  host:'https://mini.huobanban.com.cn:8183/',
   cityName:''
 });
 

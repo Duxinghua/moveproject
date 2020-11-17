@@ -18,7 +18,7 @@
         </van-radio>
         <van-radio name="DISCUSS">
           <div class="payitem">
-            <span class="payname">与司机协商计划</span>
+            <span class="payname">与司机协商计价</span>
           </div>
         </van-radio>
       </van-radio-group>

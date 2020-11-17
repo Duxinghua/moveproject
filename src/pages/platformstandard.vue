@@ -19,6 +19,9 @@
           <div class="dd">
             载重：{{cartObject.carCapacity}}公斤
           </div>
+            <div class="dd">
+            长宽高：{{cartObject.carLwh}}
+          </div>
           <div class="dd">
             载贷体积：{{cartObject.carVolume}}方
           </div>
@@ -192,10 +195,9 @@ export default {
     },
     tabHandler(index,text){
       this.tabIndex = index
-      this.platform.attachType = 'STAND1'
       this.platform = {
         attachTypes:text,
-        attachType:'STAND1',
+        attachType:text,
         goodwidth:'',
         goodwidthobj:{},
         goodheight:'',

@@ -367,7 +367,7 @@
       })
       //清除图片
       $('.imgcloseu').on('click', function () {
-        var target = this.attr('data')
+        var target = $(this).attr('data')
         if (target == 'picUrl') {
           submitData.picUrl = ''
         } else if (target == 'log') {

@@ -3,7 +3,7 @@
     <TopNav :menu="menutext" />
     <div class="comitem" v-for="(item,index) in list" :key="index" :index="index">
       <img :src="item.log" class="carico" />
-      <div class="comdes">
+      <a class="comdes"  :href="'tel:'+item.urgeLinkMobile">
         <div class="comnamewrap">
           <span class="comico" v-if="item.operSelf">直营</span>
           <span class="comname">{{item.enterpriseName}}</span>
@@ -20,7 +20,7 @@
           <img src="../assets/images/ceadicoa.png" class="ceadico" />
           <span>{{item.ownerCity+item.region+item.address}}</span>
         </div>
-      </div>
+      </a>
     </div>
   </div>
 </template>
