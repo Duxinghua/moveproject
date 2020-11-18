@@ -216,6 +216,7 @@
       var submitData = {}
       var s = 60
       var timer = null
+      var sflag = true
       $.ajax({
         type: "GET",
         url: $.host + '/SysCarouselChart/findList',
@@ -581,7 +582,10 @@
           return false;
         }
         if (s == 60) {
-          send(mobile)
+          if(sflag){
+            sflag = false
+            send(mobile)
+          }
         } else {
           $modal({
             type: 'message',
@@ -614,6 +618,7 @@
                 } else if (s == 0) {
                   clearInterval(timer)
                   $('.getcode').text('获取验证码')
+                  sflag = true
                   s = 60
                 }
 

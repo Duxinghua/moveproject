@@ -201,7 +201,7 @@
                   html += '<div class="newsinfo">'
                   html += '<p class="h2newtitle">'+v.title+'</p>'
                   html += '<p class="h2newtime">'+v.releaseDate+'</p>'
-                  html += '<p class="h2newdes">'+v.content+'</p>'
+                  html += '<p class="h2newdes">'+(v.content.length > 108 ? (new String(v.content).toString().substring(0,105)+'...') : v.content)  +'</p>'
                   html += '</div>'
                   html += '</div>'
               })

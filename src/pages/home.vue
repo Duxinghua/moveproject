@@ -157,8 +157,8 @@
             <div class="carname">{{item.carName}}</div>
             <div
               class="cartag"
-              v-if="item.spec"
-            >{{item.spec}}</div>
+              v-if="item.label"
+            >{{item.label}}</div>
           </div>
           <div class="cardes">
             {{item.remarks}}
@@ -859,7 +859,7 @@ export default {
       margin-bottom: 20px;
       .carico {
         width: 240px;
-        height: 120px;
+        height: 220px;
         margin-right: 20px;
       }
       .carinfo {

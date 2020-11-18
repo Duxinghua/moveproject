@@ -267,6 +267,17 @@
               pagination: '.home-banner .pagination',
               paginationClickable: true
            })
+           setTimeout(function(){
+              var ls = s.length * 60
+              var left = parseFloat(ls) / 2
+              $(".home-banner .pagination").css({
+                  "position":"absolute",
+                  "z-index":"20",
+                  "left":"50%",
+                  "margin-left": '-'+left+'px',
+                  "bottom": "61px"
+              })
+           },12)
          }
         }
       });

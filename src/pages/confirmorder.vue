@@ -98,22 +98,13 @@
       </div>
       <van-cell-group>
         <van-field
-          label="发货地"
+          label="楼层"
           v-model="refer.goodsend"
           input-align="right"
           readonly
           placeholder="请选择"
           right-icon="arrow"
           @click="itemHandler('goodsend')"
-        />
-        <van-field
-          label="收货地"
-          v-model="refer.goodreceive"
-          input-align="right"
-          readonly
-          placeholder="请选择"
-          right-icon="arrow"
-          @click="itemHandler('goodreceive')"
         />
       </van-cell-group>
     </div>
@@ -173,6 +164,7 @@
       v-if="orderType == 2"
     >
       <van-field
+        v-if="refer.moveHelp"
         label="大件物品"
         v-model="refer.largeGoods"
         input-align="right"
@@ -1022,32 +1014,33 @@ export default {
             };
             data.orderPriceList.push(obj);
           }
-          var r = this.refer.goodreceiveobj;
-          var r1 = Object.keys(r);
-          if (r1.length) {
-            var obj = {
-              refSeqId: r.seqId,
-              propName: r.catType,
-            };
-            data.orderPriceList.push(obj);
+          // var r = this.refer.goodreceiveobj;
+          // var r1 = Object.keys(r);
+          // if (r1.length) {
+          //   var obj = {
+          //     refSeqId: r.seqId,
+          //     propName: r.catType,
+          //   };
+          //   data.orderPriceList.push(obj);
+          // }
+          var large_goods = localStorage.getItem("large_goods");
+          if (large_goods) {
+            large_goods = JSON.parse(large_goods).resObj;
+            Object.keys(large_goods).map((item) => {
+              large_goods[item].map((sitem) => {
+                if (sitem.number) {
+                  var obj = {
+                    refSeqId: sitem.seqId,
+                    propName: sitem.catType,
+                    qty: sitem.number,
+                  };
+                  data.orderPriceList.push(obj);
+                }
+              });
+            });
           }
         }
-        var large_goods = localStorage.getItem("large_goods");
-        if (large_goods) {
-          large_goods = JSON.parse(large_goods).resObj;
-          Object.keys(large_goods).map((item) => {
-            large_goods[item].map((sitem) => {
-              if (sitem.number) {
-                var obj = {
-                  refSeqId: sitem.seqId,
-                  propName: sitem.catType,
-                  qty: sitem.number,
-                };
-                data.orderPriceList.push(obj);
-              }
-            });
-          });
-        }
+
       }
       this.detail = data;
       this.$api.orderHeadCalcPrice(data).then((result) => {
@@ -1102,7 +1095,7 @@ export default {
     },
     safeChangeHandler() {
       localStorage.setItem("refer", JSON.stringify(this.refer));
-      //this.CalcSimplePrice();
+      this.CalcSimplePrice();
     },
     getOther(flag, attachType) {
       if(!localStorage.getItem("cartObject")){
@@ -1416,6 +1409,7 @@ export default {
               paySign: paywx.paySign, // 支付签名
               success: function (res) {
                 console.log(res)
+                that.$router.push({ path: "/paysuccess" });
                 alert(JSON.stringify(res))
                 // 支付成功后的回调函数
               },
@@ -1578,6 +1572,7 @@ export default {
     display: flex;
     flex-direction: column;
     width: 100%;
+    margin-top:20px;
   }
   .itemwraps {
     display: flex;

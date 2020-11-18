@@ -2,15 +2,10 @@
   <div class="platformstandard">
     <TopNav :menu="menutext"/>
     <div class="tabnav">
-      <div :class="['tabitem',tabIndex == 1 ? 'active' : '']" @click="tabHandler(1,'STAND1')">
-        整车
+      <div :class="['tabitem',tabIndex == index+1 ? 'active' : '']" @click="tabHandler(index+1,item)" v-for="(item,index) in  cartTypeList" :key="index" :index="index">
+       {{cartTypeObj[item]}}
       </div>
-      <div :class="['tabitem',tabIndex == 2 ? 'active' : '']" @click="tabHandler(2,'STAND2')">
-        半车
-      </div>
-      <div :class="['tabitem',tabIndex == 3 ? 'active' : '']" @click="tabHandler(3,'STAND3')">
-        小件
-      </div>
+
     </div>
     <div class="wrapp">
       <div class="carinfo">
@@ -128,7 +123,13 @@ export default {
       goodWidthList:[],
       goodHeightList:[],
       housefloorList:[],
-      cartObject:{}
+      cartObject:{},
+      cartTypeList:[],
+      cartTypeObj:{
+        STAND1:'整车',
+        STAND2:'半车',
+        STAND3:'小件'
+      }
     }
   },
   mounted(){
@@ -146,9 +147,18 @@ export default {
     var cartObject = localStorage.getItem('cartObject')
     if(cartObject){
       this.cartObject = JSON.parse(cartObject)
+      this.getType()
     }
+
   },
   methods:{
+    getType(){
+      this.$api.getCarStyleAttachType({carType:this.cartObject.carType}).then((result)=>{
+        if(result.code == 200){
+          this.cartTypeList = result.data
+        }
+      })
+    },
     getOther(flag,attachType){
       var data = {
         headSeqId:JSON.parse(localStorage.getItem('cartObject')).seqId,
@@ -308,6 +318,7 @@ export default {
     margin:0 auto;
     display: flex;
     flex-direction: row;
+    justify-content: center;
     .tabitem{
       width:33.33%;
       height:100px;
