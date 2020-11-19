@@ -1068,6 +1068,7 @@ border-radius: 16px;
 .idcarddes{
 padding:0 20px;
 box-sizing: border-box;
+text-align: center;
 font-size: 16px;
 line-height: 20px;
 font-family: Microsoft YaHei;
@@ -1389,7 +1390,8 @@ cursor: pointer;
   float:left;
 }
 .newsinfo{
-  width:696px;
+  /* width:696px; */
+  width:861px;
   height:100%;
   padding:30px 0;
   box-sizing: border-box;
@@ -1415,6 +1417,11 @@ line-height:24px;
 font-family: Microsoft YaHei;
 font-weight: 400;
 color: #222222;
+overflow: hidden;
+text-overflow: ellipsis;
+display:-webkit-box;
+-webkit-box-orient:vertical;
+-webkit-line-clamp:2;
 }
 .newsactive{
   background: #FBFFFC;
@@ -1503,7 +1510,7 @@ display: block;
 }
 .aboutwrap p{
 margin-top:20px;
-font-size: 18px;
+font-size: 20px;
 line-height: 32px;
 font-family: Microsoft YaHei;
 font-weight: 400;
@@ -1552,8 +1559,10 @@ float: left;
   width:62px;
   height:74px;
   position: absolute;
-  left:29px;
-  top:13px;
+  left:50%;
+  top:50%;
+  margin-top:-37px;
+  margin-left:-31px;
 }
 .cimgwraptext{
   display: block;
@@ -1561,13 +1570,13 @@ float: left;
   width:176px;
 }
 .cimgp{
-  font-size: 24px;
+  font-size: 24px!important;
   font-family: Microsoft YaHei;
   font-weight: 400;
   color: #222222;
 }
 .cimgd{
-font-size: 16px;
+font-size: 16px!important;
 font-family: Microsoft YaHei;
 font-weight: 400;
 color: #222222;
@@ -1832,7 +1841,7 @@ margin-bottom: 30px;
   text-align: center;
   margin-top:10px;
 }
-.floatitems:last-child:hover .qqwrap{
+.floatitems:first-child:hover .qqwrap{
 display: block;
 }
 .floatimg1{
