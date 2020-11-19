@@ -85,8 +85,11 @@ const server = {
   //GET /custWorkType/findPage 工种单位
   custWorkTypeFindPage(params){
     return httpv1({method:"GET",url:'/custWorkType/findPage',params})
+  },
+  ///carStyle/getCarStyleAttachType
+  getCarStyleAttachType(params){
+    return httpv1({method:"GET",url:'/carStyle/getCarStyleAttachType',params})
   }
-
 }
 
 export default server

@@ -162,6 +162,7 @@
       $('.messageContent').val('')
       var s = 60
       var timer = null
+      var sflag = true
       // 轮播图
       $.ajax({
         type: "GET",
@@ -202,7 +203,10 @@
           return false;
         }
         if(s == 60){
-          send(mobile)
+          if(sflag){
+            sflag = false
+            send(mobile)
+          }
         }else{
           $modal({
             type: 'message',
@@ -235,6 +239,7 @@
                       clearInterval(timer)
                       $('.getcode').text('获取验证码')
                       s = 60
+                      sflag = true
                     }
 
 

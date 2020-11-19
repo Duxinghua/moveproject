@@ -1422,6 +1422,9 @@ text-overflow: ellipsis;
 display:-webkit-box;
 -webkit-box-orient:vertical;
 -webkit-line-clamp:2;
+word-wrap: break-word;
+word-break: break-all;
+overflow: hidden;
 }
 .newsactive{
   background: #FBFFFC;
@@ -1620,6 +1623,9 @@ font-weight: 400;
 color: #222222;
 margin-top:60px;
 margin-bottom: 70px;
+word-wrap: break-word;
+word-break: break-all;
+overflow: hidden;
 }
 .detailcontent p{
   text-indent: 2em;

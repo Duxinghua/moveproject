@@ -26,7 +26,7 @@
           </div>
         </div>
       </div>
-      <div class="priceitem">
+      <div class="priceitem" v-if="orderType != 3">
         <div class="pricetitle">
           额外费用
         </div>
@@ -54,7 +54,8 @@ export default {
     return {
       detail:{},
       content:{},
-      menutext:'价格明细'
+      menutext:'价格明细',
+      orderType:localStorage.getItem('orderType')
     }
   },
   methods:{

@@ -199,6 +199,14 @@ const router = new Router({
       }
     },
     {
+      path: '/paysuccess',
+      name: 'Paysuccess',
+      component: () => import('@/pages/paysuccess'),
+      meta: {
+        title: '支付成功'
+      }
+    },
+    {
       path: '/test',
       name: 'Test',
       component: () => import('@/pages/test'),

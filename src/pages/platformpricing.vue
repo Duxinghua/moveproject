@@ -49,16 +49,19 @@
         @input='helpInputHandler("worktimetype")'
         @click="itemHandler('worktimetype')"
       />
+      <div class="vanposs">
       <van-field
-        label=""
+        label="服务时间"
         v-if="worktimetype"
         v-model="workerTimeQty"
-        input-align="left"
+        input-align="right"
         type="number"
         placeholder="请填写服务时间"
         @input='helpInputHandler("workerTimeQty")'
         @click="itemHandler('workerTimeQty')"
       />
+      <div class="vasss">{{worktimeobj.workUnit}}</div>
+      </div>
       <van-field
         label="服务区域"
         v-model="areatext"
@@ -328,7 +331,7 @@
                 <span class="payname">微信支付</span>
               </div>
             </van-radio>
-            <van-radio name="3">
+            <van-radio name="3" style="display:none">
               <div class="payitem">
                 <img
                   src="../assets/images/bank.png"
@@ -401,7 +404,8 @@ export default {
       payload:{},
       money_total_s:0,
       couponObj:{},
-      safe:false
+      safe:false,
+      worktimeobj:{}
     };
   },
   created(){
@@ -712,6 +716,7 @@ export default {
       this.timetype = e.diy;
       this.worktimetype = e.text;
       this.worktimeShow = false;
+      this.worktimeobj = e
       this.getorderHeadCalcPrice()
     },
     linkHandler(index) {
@@ -737,6 +742,7 @@ export default {
     },
     alipay() {
       //支付宝
+      var that = this
       localStorage.removeItem('detail')
       localStorage.removeItem("workTypeName");
       localStorage.removeItem("workTypeName2");
@@ -760,6 +766,7 @@ export default {
               signType: paywx.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
               paySign: paywx.paySign, // 支付签名
               success: function (res) {
+                  that.$router.push({ path: "/paysuccess" });
                 console.log(res)
                 // 支付成功后的回调函数
               },
@@ -856,6 +863,24 @@ export default {
       color:#333333;
     }
   }
+  .vanposs{
+    position: relative;
+    display: flex;
+    /deep/ .van-cell {
+      padding-right: 90px;
+      display: flex;
+      align-items: center;
+    }
+    .vasss{
+      position: absolute;
+      right:28px;
+      top:50%;
+      transform: translateY(-50%);
+       font-size: 28px;
+      color:#333333;
+    }
+  }
+
   .adarea {
     /deep/ .van-field__control {
       text-align: right;
@@ -1049,7 +1074,7 @@ export default {
     }
   }
   .payClass {
-    height: 700px;
+    min-height: 500px;
     display: flex;
     flex-direction: column;
     padding-top: 100px;
