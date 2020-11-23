@@ -443,6 +443,9 @@ color: #222222;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+  word-wrap: break-word;
+word-break: break-all;
+overflow: hidden;
 }
 .newsub{
 margin-top:4px;
@@ -455,6 +458,9 @@ opacity: 0.8;
 display: -webkit-box;
 -webkit-box-orient: vertical;
 -webkit-line-clamp: 2;
+overflow: hidden;
+word-wrap: break-word;
+word-break: break-all;
 overflow: hidden;
 }
 .newdiy:hover .newdes{

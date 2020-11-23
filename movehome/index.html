@@ -227,7 +227,7 @@
         var loc = event.data;
         console.log(loc,'loc')
         if(loc){
-          var arg = loc.city ? loc.city : '武汉'
+          var arg = loc.city ? new String(loc.city).toString().replace('市','') : '武汉'
           send(arg)
           $('#place').val(arg)
 
@@ -258,7 +258,8 @@
 
 	    inCity.place(pla); //出发地
       inCity.cityClick(cityA,function(data){
-       send(data)
+       var s = new String(data).toString().replace('市','')
+       send(s)
       }); //显示赋值城市
 
 
