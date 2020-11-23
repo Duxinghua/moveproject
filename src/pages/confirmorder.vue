@@ -1253,7 +1253,7 @@ export default {
       } else if (tag == "gohomecar") {
         this.$router.push({ path: "/" });
       } else if (tag == "chooseaddress") {
-        this.$router.push({ path: "/chooseaddress", query: { index: index } });
+        this.$router.push({ path: "/chooseaddress", query: { index: index ,path:"chooseaddress"} });
       } else if(tag == "coupon"){
         this.getCoupon((data)=>{
           if(data.length){

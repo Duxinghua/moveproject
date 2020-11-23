@@ -14,14 +14,21 @@ export default {
     menu:{
       type:String,
       default:'默认菜单'
+    },
+    path:{
+      type:String,
+      default:''
     }
 
   },
   methods:{
     goback(){
       //  this.$router.go(-1);
+      console.log(this.path,'path')
+      // return
      localStorage.setItem("sCar",0)
-     this.$router.push('/')
+    //  this.$router.push("/"+this.path)
+      this.$router.go(-1)
     }
   }
 }
