@@ -115,6 +115,12 @@
             <div class="swiper-wrapper" id="server-banner-type">
 
             </div>
+            <div class="scanbtn">
+              扫码下单
+              <div class="scanimg">
+
+              </div>
+            </div>
           </div>
           <div class="pagination"></div>
           <img src="images/left.png" class="leftbtn">
@@ -304,7 +310,7 @@
             var html = ''
             $.map(s,function(v){
               html += '<div class="swiper-slide red-slide diy-slide clearfix">'
-              html += '<div class="diy-slide-left">'
+              html += '<div class="diy-slide-left diy-slide-left-fix">'
               html += '<div class="line1">'
               html += '<span class="li1">￥</span>'
               html += '<span class="li2">'+v.minPrice+'</span>'

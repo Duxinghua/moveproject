@@ -370,6 +370,9 @@ export default {
       line-height: 100px;
       height: 100px;
     }
+    /deep/ .van-field__label{
+      font-size: 28px;
+    }
     .number{
       width:100%;
       height:90px;
@@ -379,7 +382,7 @@ export default {
       overflow: hidden;
       background: white;
       margin-top:20px;
-      font-size: 18px;
+      font-size: 28px;
       color:#333333;
       display: flex;
       flex-direction: row;
@@ -390,6 +393,7 @@ export default {
         flex-direction: row;
         align-items: center;
         span{
+          font-size: 28px;
           margin-right: 10px;
         }
       }
