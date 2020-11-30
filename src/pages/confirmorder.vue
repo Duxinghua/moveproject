@@ -419,6 +419,7 @@
     <!-- 时间 -->
     <van-popup
       v-model="timeshow"
+
       round
       position="bottom"
       :style="{'min-height':'100px'}"
@@ -505,6 +506,7 @@ export default {
     return {
       isWx:2,
       priceType: "DISCUSS",
+      types:'datetime',
       refer: {
         need: "请选择计价方式和服务",
         remarks: "",
@@ -590,6 +592,16 @@ export default {
     //处理时间
     var placeOrder = localStorage.getItem('placeOrder')
     var orderType = localStorage.getItem('orderType')
+    if(orderType == 1 || orderType == 4){
+      if(placeOrder == 'APPOINTMENT'){
+         var Dates = new Date()
+         var year = Dates.getFullYear()
+         var month = Dates.getMonth()
+         var day = Dates.getDate()
+         this.minDate = new Date(year, month, day)
+         this.maxDate = new Date(year, month, day,23,59,59)
+      }
+    }
     if (
       window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
       "micromessenger"
