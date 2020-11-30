@@ -724,7 +724,7 @@ export default {
       localStorage.removeItem('platform')
       localStorage.removeItem('serverArr')
       localStorage.removeItem('need')
-      localStorage.setItem('adList',JOSN.stringify(this.adList))
+      localStorage.removeItem('adList')
       localStorage.removeItem('refer')
       localStorage.removeItem('remarks')
       localStorage.removeItem('routeKilometer')
