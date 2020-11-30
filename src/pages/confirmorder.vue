@@ -551,10 +551,14 @@ export default {
         {
           name: "",
           address: "",
+          center:"",
+          obj:""
         },
         {
           name: "",
           address: "",
+          center:"",
+          obj:""
         },
       ],
       platform: {
@@ -709,7 +713,9 @@ export default {
       this.priceType = 'DISCUSS'
     }
     this.getOther(false, "OTHER");
-    this.CalcSimplePrice();
+    if(this.orderType != 2 || this.orderType != 3){
+      this.CalcSimplePrice();
+    }
 
   },
   methods: {
@@ -718,7 +724,7 @@ export default {
       localStorage.removeItem('platform')
       localStorage.removeItem('serverArr')
       localStorage.removeItem('need')
-      localStorage.removeItem('adList')
+      localStorage.setItem('adList',JOSN.stringify(this.adList))
       localStorage.removeItem('refer')
       localStorage.removeItem('remarks')
       localStorage.removeItem('routeKilometer')
@@ -755,6 +761,7 @@ export default {
           this.$api.getDistance(arr).then((result)=>{
             if(result.code == 200){
                 localStorage.setItem("routeKilometer", result.data);
+                this.CalcSimplePrice()
             }else{
                this.$toast(result.msg);
             }
@@ -943,7 +950,7 @@ export default {
           attachPrice = platform.attachPriceObj.price;
         }
         //标准选车 大小 platformstandard
-        attachType = platform.attachTypes;
+        attachType = platform.attachType;
       }else{
         if(localStorage.getItem('orderType') == 1){
             priceType = 'DISCUSS'

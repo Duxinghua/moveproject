@@ -302,8 +302,8 @@ export default {
 .platformstandard{
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   background: #f5f6f7;
+  min-height: 120vh;
   padding:0 30px;
   box-sizing: border-box;
   /deep/ .van-stepper__plus,
@@ -311,6 +311,9 @@ export default {
     border:1px solid#999999;
     background: white;
     color:#999999;
+  }
+  /deep/ .van-stepper__input{
+    height:50px!important;
   }
   .tabnav{
     width:70%;
@@ -325,7 +328,7 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 18px;
+      font-size: 28px;
       color:#999999;
     }
     .active{

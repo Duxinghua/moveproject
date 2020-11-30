@@ -478,6 +478,8 @@ export default {
       this.carList = [];
       localStorage.removeItem('refer')
       localStorage.removeItem('platform')
+      // localStorage.setItem('adList',JSON.stringify(this.adList))
+      localStorage.removeItem('cartObject')
       this.serverIndex = index;
       var orderType = localStorage.getItem('orderType')
       if(orderType != index){
