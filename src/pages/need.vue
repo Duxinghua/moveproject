@@ -197,7 +197,7 @@ export default {
       flex:1;
       height: 100px;
       .payname {
-        font-size: 20px;
+        font-size: 28px;
         color: #333333;
         margin-right:20px;
       }
@@ -224,7 +224,7 @@ export default {
       flex-direction: row;
       height:100px;
       align-items: center;
-      font-size: 18px;
+      font-size: 26px;
       color:#333333;
       span{
         margin-right:20px;
@@ -239,7 +239,7 @@ export default {
         border:2px solid #ff561e;
         color: #ff561e;
         background:#ffeee8;
-        font-size: 24px;
+        font-size: 20px;
       }
       .gray{
         border:2px solid #888888;

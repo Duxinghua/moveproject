@@ -180,6 +180,10 @@ export default {
 
 
     }
+    //返回处理
+     if (this.$route.query.path) {
+       this.routerPath = this.$route.query.path
+     }
   },
   methods: {
     //获取经度之后地址处理
@@ -238,23 +242,24 @@ export default {
     confirmHandler() {
       var obj = this.regeocode;
       if (!this.unit) {
-        return this.$toast("请输入楼层及门牌号");
+       // return this.$toast("请输入楼层及门牌号");
       } else {
         obj.unit = this.unit;
       }
       if (!this.name) {
-        return this.$toast("请输入联系人姓名");
+        //return this.$toast("请输入联系人姓名");
       } else {
         obj.name = this.name;
       }
       if (!this.phone) {
-        return this.$toast("请输入联系号码");
+      //  return this.$toast("请输入联系号码");
       } else {
         if(!/^1[3456789]\d{9}$/.test(this.phone)){
-          return this.$toast("请输入正确的联系号码");
+         // return this.$toast("请输入正确的联系号码");
         }else{
-          obj.phone = this.phone;
+         // obj.phone = this.phone;
         }
+          obj.phone = this.phone;
       }
       console.log(obj)
       var list = localStorage.getItem("adList");

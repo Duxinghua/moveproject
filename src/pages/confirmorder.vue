@@ -84,7 +84,7 @@
             active-color="#28ae3a"
             size="14"
             inactive-color="#999999"
-            @change="safeChangeHandler"
+            @change="moveChangeHandler"
           />
         </div>
       </div>
@@ -1094,6 +1094,11 @@ export default {
       localStorage.setItem("refer", JSON.stringify(this.refer));
       //this.CalcSimplePrice();
     },
+    moveChangeHandler(){
+      if(this.moveHelp){
+        this.flag = 1
+      }
+    },
     safeChangeHandler() {
       localStorage.setItem("refer", JSON.stringify(this.refer));
       this.CalcSimplePrice();
@@ -1254,7 +1259,7 @@ export default {
       } else if (tag == "gohomecar") {
         this.$router.push({ path: "/" });
       } else if (tag == "chooseaddress") {
-        this.$router.push({ path: "/chooseaddress", query: { index: index } });
+        this.$router.push({ path: "/chooseaddress", query: { index: index ,path:"chooseaddress"} });
       } else if(tag == "coupon"){
         this.getCoupon((data)=>{
           if(data.length){
@@ -1866,7 +1871,7 @@ export default {
         margin-right: 20px;
       }
       .payname {
-        font-size: 20px;
+        font-size: 28px;
         color: #333333;
       }
     }

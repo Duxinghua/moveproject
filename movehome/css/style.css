@@ -101,6 +101,36 @@ line-height: 30px;
   height: 447px;
   color: #fff;
   text-align: center;
+  position: relative;
+}
+.server-banner .swiper-container .scanbtn{
+  width: 180px;
+  height: 48px;
+  background: #28AE3A;
+  border-radius: 24px;
+  text-align: center;
+  line-height: 48px;
+  font-size: 24px;
+  font-family: Microsoft YaHei;
+  font-weight: 400;
+  color: #FFFFFF;
+  position: absolute;
+  left:84px;
+  bottom: 45px;
+  cursor: pointer;
+}
+.server-banner .swiper-container .scanbtn .scanimg{
+  width: 241px;
+  height: 270px;
+  background: #DDDDDD;
+  border-radius: 8px;
+  position: absolute;
+  display: none;
+  top:-300px;
+  left:-30px;
+}
+.server-banner .swiper-container .scanbtn:hover  .scanimg{
+  display: block;
 }
 .home-banner .swiper-container {
   width: 100%;
@@ -124,6 +154,9 @@ line-height: 30px;
   width:50%;
   padding-top:90px;
   color:#888888;
+}
+.diy-slide-left-fix{
+  padding-top:64px;
 }
 .diy-slide-left .line1{
   display: inline-block;

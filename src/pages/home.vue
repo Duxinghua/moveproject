@@ -476,6 +476,8 @@ export default {
     serverHandler(index) {
       console.log(index,'indexser')
       this.carList = [];
+      localStorage.removeItem('refer')
+      localStorage.removeItem('platform')
       this.serverIndex = index;
       var orderType = localStorage.getItem('orderType')
       if(orderType != index){
