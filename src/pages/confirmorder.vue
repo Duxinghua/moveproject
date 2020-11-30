@@ -580,45 +580,7 @@ export default {
     };
   },
   created(){
-    var data = {
-      url: location.href
-    }
-    const agent = navigator.userAgent
-    const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
-    if (isiOS) {
-      data.url = config.shareurls
-    }
-    this.$api.workerApply(data).then((res) => {
-      if (res.code == 200) {
-        var wxpay = res.data
-        wx.config({
-          debug: true,
-          appId: config.appid,
-          timestamp: wxpay.timestamp,
-          nonceStr: wxpay.noncestr,
-          signature: wxpay.signature,
-          jsApiList: [
-            'checkJsApi',
-            'chooseWXPay'
-          ]
-        })
-        wx.error(function (res) {
-          console.log('出错了：' + res.errMsg)
-        })
-        // 在这里调用 API
-        wx.ready(function () {
-          wx.checkJsApi({
-            jsApiList: [
-              'checkJsApi',
-              'chooseWXPay'
-            ],
-            success: function (res) {
 
-            }
-          })
-        })
-      }
-    })
   },
   mounted() {
     if (
@@ -626,6 +588,45 @@ export default {
       "micromessenger"
     ) {
       localStorage.setItem("isWeixin", 1);
+      var data = {
+        url: location.href
+      }
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      if (isiOS) {
+        data.url = config.shareurls
+      }
+      this.$api.workerApply(data).then((res) => {
+        if (res.code == 200) {
+          var wxpay = res.data
+          wx.config({
+            debug: true,
+            appId: config.appid,
+            timestamp: wxpay.timestamp,
+            nonceStr: wxpay.noncestr,
+            signature: wxpay.signature,
+            jsApiList: [
+              'checkJsApi',
+              'chooseWXPay'
+            ]
+          })
+          wx.error(function (res) {
+            console.log('出错了：' + res.errMsg)
+          })
+          // 在这里调用 API
+          wx.ready(function () {
+            wx.checkJsApi({
+              jsApiList: [
+                'checkJsApi',
+                'chooseWXPay'
+              ],
+              success: function (res) {
+
+              }
+            })
+          })
+        }
+      })
     } else {
       localStorage.setItem("isWeixin", 2);
     }

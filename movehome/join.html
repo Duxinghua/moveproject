@@ -459,7 +459,7 @@
           return;
         }else{
           var addressinfo = new String(submitData.region).toString().split("/")
-          submitData.ownerCity = $.trim(addressinfo[1])
+          submitData.ownerCity = new String($.trim(addressinfo[1])).replace('市','')
           submitData.region = $.trim(addressinfo[2])
         }
         if (!submitData.address2) {
