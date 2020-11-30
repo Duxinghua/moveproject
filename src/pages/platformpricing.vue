@@ -60,7 +60,7 @@
         @input='helpInputHandler("workerTimeQty")'
         @click="itemHandler('workerTimeQty')"
       />
-      <div class="vasss">{{worktimeobj.workUnit}}</div>
+      <!-- <div class="vasss">{{worktimeobj.workUnit}}</div> -->
       </div>
       <van-field
         label="服务区域"
@@ -867,7 +867,7 @@ export default {
     position: relative;
     display: flex;
     /deep/ .van-cell {
-      padding-right: 90px;
+      padding-right: 30px;
       display: flex;
       align-items: center;
     }

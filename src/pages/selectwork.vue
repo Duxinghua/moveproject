@@ -38,7 +38,7 @@ export default {
       listIndex:0,
       workName:'',
       menutext:'选择工种',
-      contentIndex:0,
+      contentIndex:-1,
       list:[],
       cateList:[]
     }
@@ -48,24 +48,30 @@ export default {
   },
   methods:{
     needHandler(){
-      this.$router.push('/platformpricing')
+      if(this.contentIndex == -1){
+        return this.$toast('请选择工种')
+      }else{
+        this.$router.push('/platformpricing')
+      }
     },
     getcustWorkTypeFindWorkLevel(){
       this.$api.custWorkTypeFindWorkLevel({}).then((result) => {
         if(result.code == 200){
           this.list = result.data
-          var workTypeName = localStorage.getItem('workTypeName')
-          if(workTypeName){
-            this.workName = workTypeName
-            this.list.map((item,index)=>{
-              if(item == workTypeName){
-                this.listIndex = index
-              }
-            })
-          }else{
-            this.workName = this.list[0]
-            localStorage.setItem('workTypeName',this.workName)
-          }
+          // var workTypeName = localStorage.getItem('workTypeName')
+          // if(workTypeName){
+          //   this.workName = workTypeName
+          //   this.list.map((item,index)=>{
+          //     if(item == workTypeName){
+          //       this.listIndex = index
+          //     }
+          //   })
+          // }else{
+          //   this.workName = this.list[0]
+          //   localStorage.setItem('workTypeName',this.workName)
+          // }
+          // this.getcustWorkTypeFindMap()
+          this.workName = this.list[0]
           this.getcustWorkTypeFindMap()
         }
       })
@@ -77,6 +83,7 @@ export default {
       this.$api.custWorkTypeFindMap(data).then((result) =>{
         if(result.code == 200){
           this.cateList = result.data
+          /*
           var workTypeName2 = localStorage.getItem('workTypeName2')
           if(workTypeName2){
             this.cateList.map((item,index) => {
@@ -85,8 +92,9 @@ export default {
               }
             })
           }else{
-            localStorage.setItem('workTypeName2',this.cateList[0].workName2)
+           // localStorage.setItem('workTypeName2',this.cateList[0].workName2)
           }
+          */
         }
       })
     },

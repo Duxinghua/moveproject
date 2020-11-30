@@ -78,7 +78,7 @@
           />
         </div>
         <div class="itemdiy ld">
-          <span class="itemlabel lm">需要搬运服务</span>
+          <span class="itemlabel lm">需要大件搬运服务</span>
           <van-switch
             v-model="refer.moveHelp"
             active-color="#28ae3a"
@@ -506,7 +506,7 @@ export default {
       isWx:2,
       priceType: "DISCUSS",
       refer: {
-        need: "",
+        need: "请选择计价方式和服务",
         remarks: "",
         time: "",
         name: "",
@@ -587,6 +587,9 @@ export default {
 
   },
   mounted() {
+    //处理时间
+    var placeOrder = localStorage.getItem('placeOrder')
+    var orderType = localStorage.getItem('orderType')
     if (
       window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
       "micromessenger"
@@ -674,9 +677,9 @@ export default {
     if (this.orderType == 1) {
       var need = localStorage.getItem("need");
       if (need) {
-        this.refer.need = "是";
+        this.refer.need = "已选择";
       }else{
-        this.refer.need = "否";
+        this.refer.need = "请选择计价方式和服务";
       }
     } else if (this.orderType == 1) {
       this.cartObject = localStorage.getItem("cartObject")
@@ -955,9 +958,9 @@ export default {
         if(localStorage.getItem('orderType') == 1){
             priceType = 'DISCUSS'
             if(this.serverArr.length){
-              this.refer.need = "是";
+              this.refer.need = "已选择";
             }else{
-               this.refer.need = "否";
+               this.refer.need = "请选择计价方式和服务";
             }
         }
       }
