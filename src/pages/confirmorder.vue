@@ -98,13 +98,22 @@
       </div>
       <van-cell-group>
         <van-field
-          label="楼层"
+          label="搬出楼层"
           v-model="refer.goodsend"
           input-align="right"
           readonly
           placeholder="请选择"
           right-icon="arrow"
           @click="itemHandler('goodsend')"
+        />
+        <van-field
+          label="搬入楼层"
+          v-model="refer.goodreceive"
+          input-align="right"
+          readonly
+          placeholder="请选择"
+          right-icon="arrow"
+          @click="itemHandler('goodreceive')"
         />
       </van-cell-group>
     </div>
@@ -1037,15 +1046,15 @@ export default {
             };
             data.orderPriceList.push(obj);
           }
-          // var r = this.refer.goodreceiveobj;
-          // var r1 = Object.keys(r);
-          // if (r1.length) {
-          //   var obj = {
-          //     refSeqId: r.seqId,
-          //     propName: r.catType,
-          //   };
-          //   data.orderPriceList.push(obj);
-          // }
+          var r = this.refer.goodreceiveobj;
+          var r1 = Object.keys(r);
+          if (r1.length) {
+            var obj = {
+              refSeqId: r.seqId,
+              propName: r.catType,
+            };
+            data.orderPriceList.push(obj);
+          }
           var large_goods = localStorage.getItem("large_goods");
           if (large_goods) {
             large_goods = JSON.parse(large_goods).resObj;
