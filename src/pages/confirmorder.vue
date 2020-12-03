@@ -4,10 +4,10 @@
     <van-cell-group v-if="orderType == 1">
       <van-field
         label="额外需求"
-        v-model="refer.need"
+        v-model="refer.needtext"
         input-align="right"
         readonly
-        placeholder="是否需要搬运服务"
+        :placeholder="refer.need"
         right-icon="arrow"
         @click="itemHandler('need')"
       />
@@ -699,6 +699,7 @@ export default {
       var need = localStorage.getItem("need");
       if (need) {
         this.refer.need = "已选择";
+        this.refer.needtext = "已选择"
       }else{
         this.refer.need = "请选择计价方式和服务";
       }
@@ -980,6 +981,7 @@ export default {
             priceType = 'DISCUSS'
             if(this.serverArr.length){
               this.refer.need = "已选择";
+               this.refer.needtext = "已选择"
             }else{
                this.refer.need = "请选择计价方式和服务";
             }
