@@ -1404,7 +1404,7 @@ float: left;
   background: #28AE3A;
 }
 .fei-banner .swiper-container{
-  height:500px!important;
+  height:500px;
 }
 .newslist{
   width:100%;

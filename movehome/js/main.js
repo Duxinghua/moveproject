@@ -15,8 +15,6 @@ $(function () {
   htmlstr += '</div>'
   htmlstr += '</div>'
   $('body').append(htmlstr)
-
-
   var four;
   function Topfun() {
     four = setInterval(FourscrollBy, 10);
@@ -46,4 +44,57 @@ $(function () {
   submitHTML += '<a href="./message.html">在线留言</a>'
   submitHTML += '</div>'
   $('.menuul li:last-child').append(submitHTML)
+
+
+        var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+                var s = width / 1920
+                if(width > 1200){
+                  if ($('#home-banner').hasClass('home-banner')){
+                    $(".home-banner").css({'width':width,'height':s*700})
+                    $(".home-banner .swiper-container").css({'width':width,'height':s*700})
+                  }
+                  if ($('#home-banner').hasClass('fei-banner')){
+                      $(".home-banner").css({'width':width,'height':s*500})
+                      $(".home-banner .swiper-container").css({'width':width,'height':s*500})
+                  }
+                }else{
+                   if ($('#home-banner').hasClass('home-banner')){
+                     $(".home-banner").css({'width':1200,'height':s*700})
+                     $(".home-banner .swiper-container").css({'width':1200,'height':s*700})
+                   }
+                    if ($('#home-banner').hasClass('fei-banner')){
+                      $(".home-banner").css({'width':1200,'height':s*500})
+                      $(".home-banner .swiper-container").css({'width':1200,'height':s*500})
+                  }
+                }
+                window.onresize = function(){
+                    var falseFlag = false
+                    if(!falseFlag){
+                        falseFlag = true
+                        setTimeout(function(){
+                            var width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+                            var s = width / 1920
+                               if(width > 1200){
+                                  if ($('#home-banner').hasClass('home-banner')){
+                                      $(".home-banner").css({'width':width,'height':s*700})
+                                      $(".home-banner .swiper-container").css({'width':width,'height':s*700})
+                                  }
+                                  if ($('#home-banner').hasClass('fei-banner')){
+                                      $(".home-banner").css({'width':width,'height':s*500})
+                                      $(".home-banner .swiper-container").css({'width':width,'height':s*500})
+                                  }
+                               }else{
+                                 if ($('#home-banner').hasClass('home-banner')){
+                                    $(".home-banner").css({'width':1200,'height':s*700})
+                                    $(".home-banner .swiper-container").css({'width':1200,'height':s*700})
+                                 }
+                                 if ($('#home-banner').hasClass('fei-banner')){
+                                      $(".home-banner").css({'width':1200,'height':s*500})
+                                      $(".home-banner .swiper-container").css({'width':1200,'height':s*500})
+                                  }
+                               }
+                            falseFlag = false
+                        }, 300)
+                    }
+                }
 })
