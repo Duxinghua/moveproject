@@ -24,12 +24,12 @@
   height:100%;
 }
 .logo{
-  width:104px;
-  height:26px;
+  width:173px;
+  height:40px;
   position: absolute;
   left:0;
   top:50%;
-  margin-top:-13px;
+  margin-top:-20px;
 }
 .menuwrap{
   position: relative;;
