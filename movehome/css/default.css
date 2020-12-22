@@ -21,4 +21,7 @@ a:focus {outline: none;}
 .text-left {text-align: left;}
 .text-right {text-align: right;}
 .text-center {text-align: center;}
-html,body {background: white;font-size: 14px;}
+html,body {background: white;font-size: 14px;overflow-x: hidden;}
+body{
+  overflow: hidden!important;
+}
