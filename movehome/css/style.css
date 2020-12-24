@@ -665,9 +665,10 @@ margin-top:10px;
 }
 .serverlahuo .p2,
 .serverlahuo .p1{
+text-indent: 2em;
 font-size: 18px;
 line-height: 26px;
-text-align: center;
+text-align: left;
 font-family: Microsoft YaHei;
 font-weight: 400;
 color: #999999;
@@ -1929,4 +1930,13 @@ display: block;
 }
 .newdetailwrap .content{
   width:850px;
+}
+.banjiacontent .content{
+  width:980px;
+}
+.banjiacontent .serverinfobg{
+  width:800px!important;
+  height:auto!important;
+  display: block!important;
+  margin:0 auto!important;
 }
