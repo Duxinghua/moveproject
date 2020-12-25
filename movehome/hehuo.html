@@ -60,7 +60,7 @@
   </div>
   <div class="serverlahuo serverlaowu">
     <div class="content">
-      <div class="hehuoitem clearfix">
+      <!-- <div class="hehuoitem clearfix">
         <div class="hehuoitemleft">
           <h2 class="hehuotitle">劳务工加盟</h2>
           <p class="hehuodes">
@@ -106,7 +106,7 @@
           </a>
         </div>
         <img src="images/hh3.png" class="hehuoico" />
-      </div>
+      </div> -->
     </div>
   </div>
   <!-- <div class="footer">
@@ -210,6 +210,84 @@
          }
         }
       });
+
+
+      getConfig('PARTNER','SERVICE_INTRODUCE')
+      function getConfig(position,classify){
+        $.ajax({
+          type: "GET",
+          url: $.host + '/sysWebsiteConfig/findList',
+          headers:{
+            Authorization:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaGFyZUNvZGUiOiIiLCJ1bmlvbklkIjoiIiwidXNlclN0YXR1cyI6IjEiLCJhdmF0YXJVcmwiOiIiLCJvcGVuSWQiOiIiLCJuaWNrTmFtZSI6IiIsIm1vYmlsZSI6IiIsInVzZXJUeXBlIjoiQkFDS0dST1VORCIsInVzZXJOYW1lIjoiYWRtaW4iLCJleHAiOjE2MDg5NzQzOTQsInVzZXJJZCI6IjEifQ.EZkN7XJjj6gl3rPBITszJZZjxo-uABk7CdYFYElJvak'
+          },
+          data: {
+            position:position,
+            classify: classify
+          },
+          dataType: "json",
+          success: function (res) {
+              if(classify == 'SERVICE_ADVANTAGE'){
+              }else if(classify == 'SERVICE_INTRODUCE'){
+                var html = ''
+                $.map(res,function(v,i){
+                  if(i == 0){
+                    html += '<div class="hehuoitem clearfix">'
+                    html += '<div class="hehuoitemleft">'
+                    html += '<h2 class="hehuotitle">'+v.title+'</h2>'
+                    html += '<div>'
+                    html += v.content
+                    html += '</div>'
+                    html += '<div class="hehuobutton">'
+                    html += '立即加盟'
+                    html += '<div class="hehuoshowqrcode">'
+                    html += '<img src="" class="hehuoshowico" />'
+                    html += '<span class="hehuoshowicotext">货搬搬司机小程序</span>'
+                    html += '</div>'
+                    html += '</div>'
+                    html += '</div>'
+                    html += '<img src="'+v.picUrl+'" class="hehuoico" />'
+                    html += '</div>'
+                  }else if(i == 1){
+                    html += '<div class="hehuoitem clearfix">'
+                    html += '<img src="'+v.picUrl+'" class="hehuoico" />'
+                    html += '<div class="hehuoitemleft">'
+                    html += '<h2 class="hehuotitle">司机加盟</h2>'
+                    html += '<div>'
+                    html += v.content
+                    html += '</div>'
+                    html += '<div class="hehuobutton">'
+                    html += '立即加盟'
+                    html += '<div class="hehuoshowqrcode">'
+                    html += '<img src="images/qrcode.png" class="hehuoshowico" />'
+                    html += '<span class="hehuoshowicotext">扫码小程序下单</span>'
+                    html += '</div>'
+                    html += '</div>'
+                    html += '</div>'
+                    html += '</div>'
+                  }else if(i == 2 ){
+                    html += '<div class="hehuoitem clearfix">'
+                    html += '<div class="hehuoitemleft">'
+                    html += '<h2 class="hehuotitle">企业加盟</h2>'
+                    html += '<div>'
+                    html += v.content
+                    html += '</div>'
+                    html += '<a class="hehuobutton" href="./join.html">'
+                    html += '立即加盟'
+                    html += '</a>'
+                    html += '</div>'
+                    html += '<img src="'+v.picUrl+'" class="hehuoico" />'
+                    html += '</div>'
+                 }
+
+                })
+                $('.serverlaowu .content').html(html)
+              }
+
+            }
+        });
+      }
+
+
 
     })
   </script>

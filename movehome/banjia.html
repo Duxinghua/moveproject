@@ -61,12 +61,13 @@
   <div class="serverlahuo banjiacontent">
     <div class="content">
       <img src="images/serverinfo.png" class="serverinfo" />
-      <p class="p1">
+      <!-- <p class="p1">
         以定制化服务驱动，贴心解决客户实际需求；以软件产品为依托，覆盖多行业信息化业务，先后推出多个信息化建设整体解决方案！
       </p>
       <p class="p2">
         网上下单后，货搬搬可以通过评估，根据您的需要及具体情况安排车辆，通过平台来收费核算，您确认订单后，后台客服会与您电话沟通，为您介绍具体搬家事宜。服务结束后客服专员会进行客户回访，更加贴心周到。
-      </p>
+      </p> -->
+      <div class="serverinfosc"></div>
       <img src="images/movehome.jpg" class="serverinfobg" />
     </div>
   </div>
@@ -74,7 +75,7 @@
     <img src="images/advantage.png" class="serverinfo" />
     <div class="content">
       <div class="aditemwrap clearfix">
-        <div class="aditem">
+        <!-- <div class="aditem">
           <img src="images/l1.png" class="aditemico" />
           <span class="adtitle">方便快捷</span>
           <p class="addes">
@@ -101,7 +102,7 @@
           <p class="addes">
             以“受到客户好评的优秀货车司机”为考核等级标准优先接单，搬家前准确核实客户具体情况，准备工作要充分，让您省时省力，享受超值体验
           </p>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -216,9 +217,9 @@
   </div> -->
   <script type="text/javascript">
     $(function () {
-      $.get('footer.html',function(result){
-        $('body').append(result)
-      })
+      // $.get('footer.html',function(result){
+      //   $('body').append(result)
+      // })
       //搬家公司列表
       var enterData = {
         ownerCity:'',
@@ -295,6 +296,49 @@
          }
         }
       });
+
+      //服务
+      getConfig('MOVE_HOUSE','SERVICE_ADVANTAGE')
+      //介绍
+      getConfig('MOVE_HOUSE','SERVICE_INTRODUCE')
+
+      function getConfig(position,classify){
+        $.ajax({
+          type: "GET",
+          url: $.host + '/sysWebsiteConfig/findList',
+          headers:{
+            Authorization:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaGFyZUNvZGUiOiIiLCJ1bmlvbklkIjoiIiwidXNlclN0YXR1cyI6IjEiLCJhdmF0YXJVcmwiOiIiLCJvcGVuSWQiOiIiLCJuaWNrTmFtZSI6IiIsIm1vYmlsZSI6IiIsInVzZXJUeXBlIjoiQkFDS0dST1VORCIsInVzZXJOYW1lIjoiYWRtaW4iLCJleHAiOjE2MDg5NzQzOTQsInVzZXJJZCI6IjEifQ.EZkN7XJjj6gl3rPBITszJZZjxo-uABk7CdYFYElJvak'
+          },
+          data: {
+            position:position,
+            classify: classify
+          },
+          dataType: "json",
+          success: function (res) {
+              if(classify == 'SERVICE_ADVANTAGE'){
+                  var html = ""
+                  $.map(res,function(v){
+                    html += '<div class="aditem">'
+                    html += '<img src="'+v.picUrl+'" class="aditemico" />'
+                    html += '<span class="adtitle">'+v.title+'</span>'
+                    html += '<div class="addes">'
+                    html += v.content
+                    html += '</div>'
+                    html += '</div>'
+                  })
+                $('.aditemwrap').html(html)
+              }else if(classify == 'SERVICE_INTRODUCE'){
+                  var data = res[0]
+                  $('.serverinfosc').html(data.content)
+                  $('.serverinfobg').attr('src',data.picUrl)
+              }
+
+            }
+        });
+      }
+
+
+
       var cityName = localStorage.getItem('cityName')
       send(cityName)
       function send(arg){

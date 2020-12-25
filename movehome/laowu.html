@@ -129,7 +129,7 @@
     <img src="images/advantage.png" class="serverinfo" />
     <div class="content">
       <div class="laowuitemwrap clearfix">
-        <div class="laowuitems">
+        <!-- <div class="laowuitems">
           <img src="images/1.png" class="idcardico" />
           <p class="idcardtext">
             快速响应
@@ -166,7 +166,7 @@
             保证有限的就业机会优先分配给最有效率的群体，劳务人员以个人能力实现自身价值，
             利于激发劳务人员的工作积极性、创造性
           </p>
-        </div>
+        </div> -->
 
       </div>
       <div class="laowuibtn">
@@ -282,6 +282,45 @@
          }
         }
       });
+
+      getConfig('LABORER','SERVICE_ADVANTAGE')
+      function getConfig(position,classify){
+        $.ajax({
+          type: "GET",
+          url: $.host + '/sysWebsiteConfig/findList',
+          headers:{
+            Authorization:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaGFyZUNvZGUiOiIiLCJ1bmlvbklkIjoiIiwidXNlclN0YXR1cyI6IjEiLCJhdmF0YXJVcmwiOiIiLCJvcGVuSWQiOiIiLCJuaWNrTmFtZSI6IiIsIm1vYmlsZSI6IiIsInVzZXJUeXBlIjoiQkFDS0dST1VORCIsInVzZXJOYW1lIjoiYWRtaW4iLCJleHAiOjE2MDg5NzQzOTQsInVzZXJJZCI6IjEifQ.EZkN7XJjj6gl3rPBITszJZZjxo-uABk7CdYFYElJvak'
+          },
+          data: {
+            position:position,
+            classify: classify
+          },
+          dataType: "json",
+          success: function (res) {
+              if(classify == 'SERVICE_ADVANTAGE'){
+                  var html = ""
+                  $.map(res,function(v){
+                    html += '<div class="laowuitems">'
+                    html += '<img src="'+v.picUrl+'" class="idcardico" />'
+                    html += '<p class="idcardtext">'
+                    html += v.title
+                    html += '</p>'
+                    html += '<div class="laowuitemsc">'
+                    html += v.content
+                    html += '</div>'
+                    html += '</div>'
+                  })
+                $('.laowuitemwrap').html(html)
+              }else if(classify == 'SERVICE_INTRODUCE'){
+                  var data = res[0]
+                  $('.serverinfosc').html(data.content)
+                  $('.serverinfobg').attr('src',data.picUrl)
+              }
+
+            }
+        });
+      }
+
 
     })
   </script>

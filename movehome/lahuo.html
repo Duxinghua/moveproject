@@ -58,23 +58,26 @@
     </div>
     <div class="pagination"></div>
   </div>
-  <div class="serverlahuo">
+  <div class="serverlahuo banjiacontent">
     <div class="content">
       <img src="images/serverinfo.png" class="serverinfo" />
-      <p class="p1">
+      <!-- <p class="p1">
         公司始终秉承“智慧科技、砥砺前行”的理念，深入挖掘用户需求，以技术创新为核心，不断提升产品质量和服务水平。
       </p>
       <p class="p2">
         只要您输入运载路线，货搬搬会即时发送给平台上所有的专业货车司机，成功抢单的司机，会马上联络您，前来为您服务。
-      </p>
-      <img src="images/serverinfobg.png" class="serverinfobg" />
+      </p> -->
+      <div class="serverinfosc">
+
+      </div>
+      <img src="images/lahuo.jpg" class="serverinfobg" />
     </div>
   </div>
   <div class="serveradvantage">
     <img src="images/advantage.png" class="serverinfo" />
     <div class="content">
       <div class="aditemwrap clearfix">
-        <div class="aditem">
+        <!-- <div class="aditem">
           <img src="images/l1.png" class="aditemico" />
           <span class="adtitle">更高效</span>
           <p class="addes">
@@ -101,7 +104,7 @@
           <p class="addes">
             系统响应后司机及时到位，准时将货物送达目的地
           </p>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -190,9 +193,9 @@
   </div> -->
   <script type="text/javascript">
     $(function () {
-      $.get('footer.html',function(result){
-        $('body').append(result)
-      })
+      // $.get('footer.html',function(result){
+      //   $('body').append(result)
+      // })
       // 拉货轮播图
       $.ajax({
         type: "GET",
@@ -231,6 +234,49 @@
          }
         }
       });
+
+
+      //服务
+      getConfig('PULL_GOODS','SERVICE_ADVANTAGE')
+      //介绍
+      getConfig('PULL_GOODS','SERVICE_INTRODUCE')
+      function getConfig(position,classify){
+        $.ajax({
+          type: "GET",
+          url: $.host + '/sysWebsiteConfig/findList',
+          headers:{
+            Authorization:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaGFyZUNvZGUiOiIiLCJ1bmlvbklkIjoiIiwidXNlclN0YXR1cyI6IjEiLCJhdmF0YXJVcmwiOiIiLCJvcGVuSWQiOiIiLCJuaWNrTmFtZSI6IiIsIm1vYmlsZSI6IiIsInVzZXJUeXBlIjoiQkFDS0dST1VORCIsInVzZXJOYW1lIjoiYWRtaW4iLCJleHAiOjE2MDg5NzQzOTQsInVzZXJJZCI6IjEifQ.EZkN7XJjj6gl3rPBITszJZZjxo-uABk7CdYFYElJvak'
+          },
+          data: {
+            position:position,
+            classify: classify
+          },
+          dataType: "json",
+          success: function (res) {
+              if(classify == 'SERVICE_ADVANTAGE'){
+                  var html = ""
+                  $.map(res,function(v){
+                    html += '<div class="aditem">'
+                    html += '<img src="'+v.picUrl+'" class="aditemico" />'
+                    html += '<span class="adtitle">'+v.title+'</span>'
+                    html += '<div class="addes">'
+                    html += v.content
+                    html += '</div>'
+                    html += '</div>'
+                  })
+                $('.aditemwrap').html(html)
+              }else if(classify == 'SERVICE_INTRODUCE'){
+                  var data = res[0]
+                  $('.serverinfosc').html(data.content)
+                  $('.serverinfobg').attr('src',data.picUrl)
+              }
+
+            }
+        });
+      }
+
+
+
       var cityName = localStorage.getItem('cityName')
       send(cityName)
       function send(arg){
