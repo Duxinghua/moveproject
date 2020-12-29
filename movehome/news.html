@@ -142,6 +142,12 @@
   </div> -->
   <script type="text/javascript">
     $(function () {
+      var filterHTMLTag = function (msg) {
+          var msg = msg.replace(/<\/?[^>]*>/g, ''); //去除HTML Tag
+          msg = msg.replace(/[|]*\n/, '') //去除行尾空格
+          msg = msg.replace(/&nbsp;/ig, ''); //去掉npsp
+          return msg;
+      }
       $.get('footer.html',function(result){
         $('body').append(result)
       })
@@ -201,7 +207,8 @@
                   html += '<div class="newsinfo">'
                   html += '<p class="h2newtitle">'+v.title+'</p>'
                   html += '<p class="h2newtime">'+v.releaseDate+'</p>'
-                  html += '<p class="h2newdes">'+(v.content.length > 108 ? (new String(v.content).toString().substring(0,105)+'...') : v.content)  +'</p>'
+                  var vc = filterHTMLTag(v.content)
+                  html += '<p class="h2newdes">'+(vc.length > 108 ? (new String(vc).toString().substring(0,105)+'...') : vc)  +'</p>'
                   html += '</div>'
                   html += '</div>'
               })
