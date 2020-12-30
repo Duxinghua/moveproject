@@ -651,6 +651,20 @@ color: #FFFFFF;
 opacity: 0.6;
 margin-top:10px;
 }
+.beian a:link,
+.beian a:visited,
+.beian a:hover,
+.beian a:active
+{
+text-align: center;
+cursor: pointer;
+font-size: 16px;
+font-family: Microsoft YaHei;
+font-weight: 400;
+color: #FFFFFF;
+margin-top:10px;
+text-decoration: none;
+}
 /* 拉货 */
 .serverlahuo{
   width:100%;
