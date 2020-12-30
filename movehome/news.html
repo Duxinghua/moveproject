@@ -194,7 +194,7 @@
           dataType: "json",
           success: function (res) {
             var html = ''
-            total = res.lastPage
+            total = res.pages
             if(total > 1){
               $('#paginationlist').show()
             }else{

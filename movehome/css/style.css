@@ -1410,6 +1410,7 @@ float: left;
 margin-right:47px;
 position: relative;
 float: left;
+cursor: pointer;
 }
 .navactive{
   color: #28AE3A;
