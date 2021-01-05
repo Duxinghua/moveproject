@@ -152,11 +152,11 @@ line-height: 30px;
 .diy-slide-left{
   float:left;
   width:50%;
-  padding-top:90px;
+  padding-top:147px;
   color:#888888;
 }
 .diy-slide-left-fix{
-  padding-top:64px;
+  /* padding-top:64px; */
 }
 .diy-slide-left .line1{
   display: inline-block;
