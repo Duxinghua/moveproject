@@ -367,7 +367,11 @@
               // html += '</div>'
               html += '<div class="line3">'
               html += '<span class="li1">载重</span>'
-              html += '<span class="li2">'+v.carCapacity+'公斤</span>'
+              if(v.carCapacity < 1000){
+                html += '<span class="li2">'+v.carCapacity+'公斤</span>'
+              }else{
+                html += '<span class="li2">'+v.carCapacity/1000+'吨</span>'
+              }
               html += '</div>'
               html += '<div class="line3">'
               html += '<span class="li1">长宽高</span>'

@@ -192,6 +192,20 @@
             })
           $(".qitemwrap").html(html)
           total = res.pages
+          $(".pagination").html('')
+          new pagination({
+          pagination:$('.pagination'),
+          maxPage: 7, //最大页码数,支持奇数，左右对称
+          startPage: 1,    //默认第一页
+          currentPage: pageno,          //当前页码
+          totalItemCount: 10,    //项目总数,大于0，显示页码总数
+          totalPageCount: total,        //总页数
+                callback:function(pageNum){
+                  pageno = pageNum
+                  getdata()
+                }
+          });
+
 
         }
       })
@@ -200,18 +214,6 @@
 
 
 
-      new pagination({
-          pagination:$('.pagination'),
-          maxPage: 7, //最大页码数,支持奇数，左右对称
-          startPage: 1,    //默认第一页
-          currentPage: 2,          //当前页码
-          totalItemCount: 10,    //项目总数,大于0，显示页码总数
-          totalPageCount: total,        //总页数
-                callback:function(pageNum){
-                  pageno = pageNum
-                  getdata()
-                }
-          });
 
     })
   </script>

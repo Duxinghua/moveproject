@@ -142,6 +142,10 @@
   </div> -->
   <script type="text/javascript">
     $(function () {
+
+
+
+
       var filterHTMLTag = function (msg) {
           var msg = msg.replace(/<\/?[^>]*>/g, ''); //去除HTML Tag
           msg = msg.replace(/[|]*\n/, '') //去除行尾空格
@@ -161,16 +165,21 @@
          }
       })
 
+      var defaults = {
+        exhibitType:exhibitType,
+        pageno:1,
+        pagesize:10
+      }
+
+
+
       $(".navitem").on("click",function(){
         $(this).addClass('navactive').siblings().removeClass('navactive')
         var target = $(this).attr('data')
         exhibitType = target
         total = 0
-        var data = {
-          exhibitType:target,
-          pageno:1,
-          pagesize:10
-        }
+        defaults.exhibitType = target
+        defaults.pageno = 1
         if(target != 'HONOR_QUALIFICATION'){
           $('#newslist').show()
           $('#cartlist').hide()
@@ -178,13 +187,9 @@
           $('#newslist').hide()
           $('#cartlist').show()
         }
-        getList(data)
+        getList(defaults)
       })
-      var defaults = {
-        exhibitType:exhibitType,
-        pageno:1,
-        pagesize:10
-      }
+
       getList(defaults)
       function getList(data){
         $.ajax({
@@ -227,26 +232,29 @@
               })
               $('#cartlist').html(html)
             }
+
+
+            $("#paginationlist").html('')
+        new pagination({
+                  pagination:$('.newscwrap .pagination'),
+                  maxPage: 7, //最大页码数,支持奇数，左右对称
+                  startPage: 1,    //默认第一页
+                  currentPage: defaults.pageno,          //当前页码
+                  totalItemCount: 10,    //项目总数,大于0，显示页码总数
+                  totalPageCount: total,        //总页数
+                        callback:function(pageNum){
+                          defaults.exhibitType = exhibitType
+                          defaults.pageno = pageNum
+                          getList(defaults)
+                        }
+              });
+
           }
         })
 
+
       }
-      new pagination({
-          pagination:$('.newscwrap .pagination'),
-          maxPage: 7, //最大页码数,支持奇数，左右对称
-          startPage: 1,    //默认第一页
-          currentPage: 1,          //当前页码
-          totalItemCount: 10,    //项目总数,大于0，显示页码总数
-          totalPageCount: total,        //总页数
-                callback:function(pageNum){
-                  var a = {
-                    exhibitType:exhibitType,
-                    pageno:pageNum,
-                    pagesize:10
-                  }
-                  getList(a)
-                }
-      });
+
       $(document).on('click','.newsdetails',function() {
         var target = $(this).attr('data')
         location.href = './detail.html?seqId='+target
