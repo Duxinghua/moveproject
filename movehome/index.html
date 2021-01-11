@@ -399,7 +399,7 @@
               for(var i=0,l=content.length;i<l;i++){
                 html += '<div class="swiper-slide cert-slide">'
                 html += '<img src="'+content[i].pic+'" class="newimg" />'
-                html += '<p class="cert-title">'+(content[i].content ? (content[i].title.length > 39 ? new String(content[i].title).substring(0,39)+'...' : content[i].title) : '')+'</p>'
+                html += '<p class="cert-title">'+(content[i].title ? (content[i].title.length > 39 ? new String(content[i].title).substring(0,39)+'...' : content[i].title) : '')+'</p>'
                 html += '</div>'
               }
               $('#honor_qualification').html(html)

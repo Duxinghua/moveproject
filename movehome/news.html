@@ -206,6 +206,7 @@
               $('#paginationlist').hide()
             }
             if(exhibitType != 'HONOR_QUALIFICATION'){
+
               $.map(res.list,function(v,i){
                   html += '<div class="newsitem clearfix newsdetails" data='+v.seqId+'>'
                   html += '<img src="'+v.pic+'" class="newsico" />'
@@ -218,6 +219,8 @@
                   html += '</div>'
               })
               $('#newslist').html(html)
+              $('#newslist').show()
+              $('#cartlist').hide()
             }else{
               $.map(res.list,function(v,i){
                  html += '<div class="cartitem">'
@@ -231,6 +234,8 @@
                  html += '</div>'
               })
               $('#cartlist').html(html)
+              $('#newslist').hide()
+              $('#cartlist').show()
             }
 
 
