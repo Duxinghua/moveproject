@@ -393,7 +393,8 @@
         dataType: "json",
         success: function (res) {
           if(res.code == 200){
-            var content = res.data ? res.data.slice(0,2) :[]
+            var content = res.data ? res.data.slice(0,5) :[]
+            var s = content
             if(content.length){
               var html = ''
               for(var i=0,l=content.length;i<l;i++){
@@ -409,6 +410,18 @@
                 pagination: '.cert-banner .pagination',
                 paginationClickable: true
               })
+
+              setTimeout(function(){
+              var ls = s.length * 60
+              var left = parseFloat(ls) / 2
+              $(".cert-banner .pagination").css({
+                  "position":"absolute",
+                  "z-index":"20",
+                  "left":"50%",
+                  "margin-left": '-'+left+'px',
+                  "bottom": "61px"
+              })
+           },12)
             }else{
               $('#cert-banner').hide()
             }
