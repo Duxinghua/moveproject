@@ -45,6 +45,7 @@
           clearable
           placeholder="请输入联系人姓名"
           @click="itemHandler('name')"
+          maxlength="10"
           @blur="nameBlurHandler"
         />
         <van-field
@@ -52,6 +53,7 @@
           v-model="refer.phone"
           input-align="right"
           clearable
+          maxlength="11"
           placeholder="请输入联系人电话"
           @click="itemHandler('phone')"
           @blur="phoneHandler"
@@ -198,6 +200,7 @@
         clearable
         placeholder="请输入联系人姓名"
         @click="itemHandler('name')"
+        maxlength="10"
         @blur="nameBlurHandler"
       />
       <van-field
@@ -205,6 +208,7 @@
         v-model="refer.phone"
         input-align="right"
         clearable
+        maxlength="11"
         placeholder="请输入联系人电话"
         @click="itemHandler('phone')"
         @blur="phoneHandler"
@@ -270,10 +274,12 @@
           placeholder="请输入联系人姓名"
           @click="itemHandler('name')"
           @blur="nameBlurHandler"
+          maxlength="10"
         />
         <van-field
           label="联系人电话"
           v-model="refer.phone"
+          maxlength="11"
           input-align="right"
           clearable
           placeholder="请输入联系人电话"
@@ -327,6 +333,7 @@
       <div class="safetitle">号码保护</div>
       <van-switch
         v-model="refer.safe"
+        disabled
         active-color="#28ae3a"
         size="14"
         inactive-color="#999999"
@@ -525,7 +532,7 @@ export default {
         coupon: "",
         largeGoods: "请选择",
         carType: "请选择",
-        safe: false,
+        safe: true,
         rulechecked: false,
         goodsend: "",
         goodsendobj: {},
@@ -1347,7 +1354,13 @@ export default {
       //this.CalcSimplePrice();
     },
     payTodo() {
-
+      var ot =  localStorage.getItem('time')
+      if(ot){
+        var diff = new Date().getTime() - 60*1000 > ot
+        if(!diff){
+            return this.$toast('一分钟之内只能下一单')
+        }
+      }
       var orderType = localStorage.getItem('orderType')
       if(orderType == 1 || orderType == 4 || orderType == 2){
         if(!this.detail.receiverName){
@@ -1394,6 +1407,7 @@ export default {
         data.payMoney = this.money_total;
         this.$api.orderHeadInsert(data).then((result) => {
           if (result.code == 200) {
+            localStorage.setItem('time',new Date().gettime())
             this.clearLo()
             this.detail = result.data;
             this.payshow = true;

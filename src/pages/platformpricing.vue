@@ -35,6 +35,7 @@
           type="number"
           input-align="right"
           placeholder="请填写人数"
+          maxlength="4"
           @input='helpInputHandler("workerUserCnt")'
           @click="itemHandler('workerUserCnt')"
         />
@@ -51,12 +52,13 @@
       />
       <div class="vanposs">
       <van-field
-        label="服务时间"
+        label="服务周期天数"
         v-if="worktimetype"
         v-model="workerTimeQty"
         input-align="right"
         type="number"
         placeholder="请填写服务时间"
+        maxlength="3"
         @input='helpInputHandler("workerTimeQty")'
         @click="itemHandler('workerTimeQty')"
       />
@@ -79,6 +81,7 @@
           clearable
           label="详细地址"
           type="textarea"
+          maxlength="100"
           @input='helpInputHandler("address")'
           placeholder="请输入详细地址"
         />
@@ -95,6 +98,7 @@
           input-align="right"
           clearable
           placeholder="请输入联系人"
+          maxlength="10"
           @input='helpInputHandler("name")'
           @click="itemHandler('name')"
         />
@@ -103,6 +107,7 @@
           v-model="phone"
           input-align="right"
           clearable
+           maxlength="11"
           placeholder="请输入联系电话"
           @input='helpInputHandler("phone")'
           @click="itemHandler('phone')"
@@ -137,6 +142,7 @@
           v-model="pricetext"
           input-align="left"
           clearable
+          maxlength="8"
           placeholder="请输入自定义价格"
           @input='helpInputHandler("diyprice")'
           @click="itemHandler('diyprice')"
@@ -159,6 +165,7 @@
       <div class="safetitle">号码保护</div>
       <van-switch
         v-model="safe"
+        disabled
         active-color="#28ae3a"
         size="14"
         inactive-color="#999999"
@@ -404,7 +411,7 @@ export default {
       payload:{},
       money_total_s:0,
       couponObj:{},
-      safe:false,
+      safe:true,
       worktimeobj:{}
     };
   },
@@ -720,12 +727,21 @@ export default {
       this.getorderHeadCalcPrice()
     },
     linkHandler(index) {
-      if (index == 2) {
+      if(index == 1){
+        this.$router.push({ path: "/agreement" });
+      }else if (index == 2) {
         localStorage.setItem("detail", JSON.stringify(this.detail));
         this.$router.push({ path: "/pricedetail", query: { index: 3 } });
       }
     },
     payTodo() {
+      var ot =  localStorage.getItem('time')
+      if(ot){
+        var diff = new Date().getTime() - 60*1000 > ot
+        if(!diff){
+            return this.$toast('一分钟之内只能下一单')
+        }
+      }
       if (!this.rulechecked) {
         return this.$toast("请勾选货搬搬用户协议");
       } else {
@@ -734,6 +750,7 @@ export default {
         data.refundMoney = 0;
         this.$api.orderHeadInsert(data).then((result) => {
           if (result.code == 200) {
+            localStorage.setItem('time',new Date().gettime())
             this.detail = result.data;
             this.payshow = true;
           }

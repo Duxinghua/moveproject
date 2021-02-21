@@ -876,13 +876,14 @@ export default {
           align-items: center;
           margin-bottom: 10px;
           .carname {
-            font-size: 35px;
+            font-size: 30px;
             color: #333333;
-            margin-right: 15px;
+            margin-right: 5px;
           }
           .cartag {
-            padding: 0 10px;
-            font-size: 20px;
+            padding: 0 4px;
+            font-size: 16px;
+            white-space: nowrap;
             color: #ff561e;
             height: 35px;
             line-height: 35px;
