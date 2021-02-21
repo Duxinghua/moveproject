@@ -15,11 +15,11 @@
   <meta name="applicable-device" content="pc,mobile" />
   <meta name="screen-orientation" content="portrait" />
   <meta name="x5-orientation" content="portrait" />
-  <meta name="keywords" content="货搬搬" />
-  <meta name="description" content="货搬搬" />
-  <title>货搬搬</title>
+  <meta name="keywords" content="搬家、拉货、搬家公司、搬家价格、搬家公司哪家比较靠谱、公司搬迁、搬家拉货、拉货公司、武汉搬家公司、附近搬家公司" />
+  <meta name="description" content="货搬搬是一家互联网货运+人工装卸物流服务平台，以搬家货运服务为核心，提供各种车辆+搬运工，用户一键下单，快速响应，实现线上线下无缝对接，真正意义上解决客户“运与搬”的需求。" />
+  <title>货搬搬-搬家、拉货、装卸，只找货搬搬！</title>
   <link rel="canonical" href="" />
-  <link rel="shortcut icon" href="" type="image/x-icon" />
+  <link rel="shortcut icon"  href="images/favicon.png" type="image/x-icon" />
   <link rel="stylesheet" href="css/idangerous.swiper.css">
   <link rel="stylesheet" href="css/idangerous.swiper.scrollbar.css">
   <link rel="stylesheet" href="css/default.css">
@@ -137,12 +137,12 @@
 
         </div>
         <div class="newitem" id="cert-banner">
-          <div class="newsheader clearfix">
+          <a class="newsheader clearfix" href="./news.html?exhibitType=HONOR_QUALIFICATION" target="_blank">
             <span class="h1">荣誉资质</span>
             <span class="more">
               了解更多
             </span>
-          </div>
+          </a>
           <div class="cert-banner" >
             <div class="swiper-container">
               <div class="swiper-wrapper" id="honor_qualification">
@@ -306,7 +306,7 @@
                   "z-index":"20",
                   "left":"50%",
                   "margin-left": '-'+left+'px',
-                  "bottom": "61px"
+                  "bottom": "18px"
               })
            },12)
          }
@@ -393,13 +393,14 @@
         dataType: "json",
         success: function (res) {
           if(res.code == 200){
-            var content = res.data ? res.data.slice(0,2) :[]
+            var content = res.data ? res.data.slice(0,5) :[]
+            var s = content
             if(content.length){
               var html = ''
               for(var i=0,l=content.length;i<l;i++){
                 html += '<div class="swiper-slide cert-slide">'
                 html += '<img src="'+content[i].pic+'" class="newimg" />'
-                html += '<p class="cert-title">'+(content[i].content ? (content[i].title.length > 39 ? new String(content[i].title).substring(0,39)+'...' : content[i].title) : '')+'</p>'
+                html += '<p class="cert-title">'+(content[i].title ? (content[i].title.length > 39 ? new String(content[i].title).substring(0,39)+'...' : content[i].title) : '')+'</p>'
                 html += '</div>'
               }
               $('#honor_qualification').html(html)
@@ -409,6 +410,18 @@
                 pagination: '.cert-banner .pagination',
                 paginationClickable: true
               })
+
+              setTimeout(function(){
+              var ls = s.length * 60
+              var left = parseFloat(ls) / 2
+              $(".cert-banner .pagination").css({
+                  "position":"absolute",
+                  "z-index":"20",
+                  "left":"50%",
+                  "margin-left": '-'+left+'px',
+                  "bottom": "61px"
+              })
+           },12)
             }else{
               $('#cert-banner').hide()
             }
