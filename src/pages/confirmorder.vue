@@ -1407,7 +1407,7 @@ export default {
         data.payMoney = this.money_total;
         this.$api.orderHeadInsert(data).then((result) => {
           if (result.code == 200) {
-            localStorage.setItem('time',new Date().gettime())
+            localStorage.setItem('time',new Date().getTime())
             this.clearLo()
             this.detail = result.data;
             this.payshow = true;
