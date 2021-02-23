@@ -224,7 +224,7 @@
 				})
 			},
 			del(id){
-				order_delete({
+				this.$api.order_delete({
 					seqId:id
 				}).then(res => {
 					if(res.code==200){
@@ -311,7 +311,7 @@
 				}
 			},
 			contact() {
-				orderPayOffLine({
+				this.$api.orderPayOffLine({
 					seqId: this.current_id,
 					payType: 'OFF_LINE'
 				}).then(res => {

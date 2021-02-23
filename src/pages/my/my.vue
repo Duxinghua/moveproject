@@ -37,7 +37,6 @@
 </template>
 
 <script>
-	import { getUserDataBySeqId } from '@/api'
 	export default {
 		data() {
 			return {
@@ -47,7 +46,7 @@
 		},
 		async onShow() {
 			let userId = await uni.getStorageSync('userId')
-			let data = await getUserDataBySeqId({ customerSeqId: userId });
+			let data = await this.$api.getUserDataBySeqId({ customerSeqId: userId });
 			this.userInfo = data.data;
 			console.log(data)
 		},

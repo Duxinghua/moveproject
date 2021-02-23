@@ -65,7 +65,7 @@
 				this.mescroll.resetUpScroll();
 			},
 			upCallback(page) {
-				orderList({
+				this.$api.orderList({
 					orderStatusList: this.navList[this.tabCurrentIndex].orderStaus,
 					pageno: page.num,
 					pagesize: page.size,
@@ -80,7 +80,7 @@
 				})
 			},
 			getOrderList(){
-				orderList({
+				this.$api.orderList({
 					orderStatusList: this.navList[this.tabCurrentIndex].orderStaus,
 					pagesize: 99
 				}).then(res=>{

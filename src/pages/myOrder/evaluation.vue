@@ -98,7 +98,7 @@
 				this.values = index
 			},
 			getOrderDetail(id){
-				orderSheet({
+				this.$api.orderSheet({
 					seqId:id
 				}).then(res => {
 					if(res.code==200){
@@ -122,7 +122,7 @@
 					return false
 				}
 				let userId = uni.getStorageSync('userId')
-				orderEvaluate({
+				this.$api.orderEvaluate({
 					userId: userId,
 					evaluateType : 'P',
 					remarks: this.notedata,

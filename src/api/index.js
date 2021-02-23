@@ -89,7 +89,42 @@ const server = {
   ///carStyle/getCarStyleAttachType
   getCarStyleAttachType(params){
     return httpv1({method:"GET",url:'/carStyle/getCarStyleAttachType',params})
-  }
+  },
+  //订单取消
+  cancelStatusUser(params){
+    return httpv1({method:"GET",url:'/orderSheet/cancelStatusUser',params})
+  },
+  //订单删除
+// export const order_delete = params => { return get(`/orderHead/delete`, params).then(res => res.data) };
+  order_delete(params){
+    return httpv1({method:"GET",url:'/orderHead/delete'},params)
+  },
+//立即评价
+// export const orderEvaluate = params => { return post(`/orderEvaluate/save`, params).then(res => res.data) };
+  orderEvaluate(params){
+    return httpv1({method:"POST",url:'/orderEvaluate/save'},params)
+  },
+  //线下支付
+  //export const orderPayOffLine = params => { return get(`/orderHead/orderPayOffLine`, params).then(res => res.data) };
+  orderPayOffLine(params){
+    return httpv1({method:"GET",url:'/orderEvaluate/save'},params)
+  },
+  //微信登录绑定手机获取验证码
+  //export const getUserDataBySeqId = params => { return get(`/custlogin/getUserDataBySeqId`, params).then(res => res.data) };
+  getUserDataBySeqId(params){
+    return httpv1({method:"GET",url:'/custlogin/getUserDataBySeqId'},params)
+  },
+  ////订单列表
+  orderList(params){
+    return httpv1({method:"GET",url:'/orderSheet/findPage'},params)
+  },
+  //订单详情
+  orderSheet(params){
+    return httpv1({method:"GET",url:'/orderSheet/getSheet'},params)
+  },
+
+
+
 }
 
 export default server
