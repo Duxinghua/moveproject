@@ -207,6 +207,30 @@ const router = new Router({
       }
     },
     {
+      path: '/my',
+      name: 'My',
+      component: () => import('@/pages/my/my'),
+      meta: {
+        title: '我的'
+      }
+    },
+    {
+      path: '/my',
+      name: 'My',
+      component: () => import('@/pages/my/my'),
+      meta: {
+        title: '我的'
+      }
+    },
+    {
+      path: '/myorder',
+      name: 'myOrder',
+      component: () => import('@/pages/myOrder/index'),
+      meta: {
+        title: '我的订单'
+      }
+    },
+    {
       path: '/test',
       name: 'Test',
       component: () => import('@/pages/test'),
