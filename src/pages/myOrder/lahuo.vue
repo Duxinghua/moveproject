@@ -130,7 +130,6 @@
 <script>
 	import OrderDetail from '@/mixins/OrderDetail'
 	import wybPopup from '@/components/wyb-popup/wyb-popup.vue'
-	import {order_delete,wx_pay,orderSheet_price,orderPayOffLine} from '@/api';
 	export default {
 		data() {
 			return {
@@ -210,7 +209,7 @@
 			submit() {
 				if (this.bianhao == 1) {
 					//微信支付
-					wx_pay({
+					this.$api.wx_pay({
 						orderHeadSeqId: this.orderDetail.seqId
 					}).then(res => {
 						if (res.code == 200) {

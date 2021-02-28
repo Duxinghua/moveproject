@@ -37,7 +37,6 @@
 </template>
 
 <script>
-	import { orderSheet ,orderEvaluate} from '@/api'
 	export default {
 		data() {
 			return {

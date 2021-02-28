@@ -97,32 +97,41 @@ const server = {
   //订单删除
 // export const order_delete = params => { return get(`/orderHead/delete`, params).then(res => res.data) };
   order_delete(params){
-    return httpv1({method:"GET",url:'/orderHead/delete'},params)
+    return httpv1({method:"GET",url:'/orderHead/delete',params})
   },
 //立即评价
 // export const orderEvaluate = params => { return post(`/orderEvaluate/save`, params).then(res => res.data) };
   orderEvaluate(params){
-    return httpv1({method:"POST",url:'/orderEvaluate/save'},params)
+    return httpv1({method:"POST",url:'/orderEvaluate/save',params})
   },
-  //线下支付
+  //线下支付wx_pay
   //export const orderPayOffLine = params => { return get(`/orderHead/orderPayOffLine`, params).then(res => res.data) };
   orderPayOffLine(params){
-    return httpv1({method:"GET",url:'/orderEvaluate/save'},params)
+    return httpv1({method:"Get",url:'/orderEvaluate/save',params})
   },
   //微信登录绑定手机获取验证码
   //export const getUserDataBySeqId = params => { return get(`/custlogin/getUserDataBySeqId`, params).then(res => res.data) };
   getUserDataBySeqId(params){
-    return httpv1({method:"GET",url:'/custlogin/getUserDataBySeqId'},params)
+    return httpv1({method:"Get",url:'/custlogin/getUserDataBySeqId',params})
   },
   ////订单列表
   orderList(params){
-    return httpv1({method:"GET",url:'/orderSheet/findPage'},params)
+    return httpv1({method:"GET",url:'/orderSheet/findPage',params})
   },
   //订单详情
   orderSheet(params){
-    return httpv1({method:"GET",url:'/orderSheet/getSheet'},params)
+    return httpv1({method:"GET",url:'/orderSheet/getSheet',params})
   },
-
+  ////微信支付
+  // export const wx_pay = params => { return get(`/wxPay/miniAppPay`, params).then(res => res.data) };
+  wx_pay(params){
+    return httpv1({method:"GET",url:'/wxPay/miniAppPay',params})
+  },
+  ////查询客服电话
+  //export const findCustomerServiceNumber = params => { return get(`/sysUser/findCustomerServiceNumber`, params).then(res => res.data) };
+  findCustomerServiceNumber(params){
+    return httpv1({method:"GET",url:'/sysUser/findCustomerServiceNumber',params})
+  }
 
 
 }

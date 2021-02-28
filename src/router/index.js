@@ -215,11 +215,11 @@ const router = new Router({
       }
     },
     {
-      path: '/my',
-      name: 'My',
-      component: () => import('@/pages/my/my'),
+      path: '/callcenter',
+      name: 'CallCenter',
+      component: () => import('@/pages/personalCenter/callCenter'),
       meta: {
-        title: '我的'
+        title: '客服中心'
       }
     },
     {

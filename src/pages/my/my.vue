@@ -1,12 +1,12 @@
 <template>
 	<div class="main" v-if="Object.keys(userInfo).length>0">
 		<header @tap="link('/personalCenter/setting',userInfo)">
-			<image :src="userInfo.avatarUrl"></image>
+			<img :src="userInfo.avatarUrl"></img>
 			<div>
 				<p>
 					{{userInfo.nickName}}
-					<image src='../../assets/img/male.png' v-if="userInfo.gender == 1"></image>
-					<image src='../../assets/img/female.png' v-if="userInfo.gender == 2"></image>
+					<img src='../../assets/img/male.png' v-if="userInfo.gender == 1"></img>
+					<img src='../../assets/img/female.png' v-if="userInfo.gender == 2"></img>
 				</p>
 				<p>{{userInfo.mobileNo}}</p>
 			</div>
@@ -14,20 +14,20 @@
 		<div class='content'>
 			<div class="link">
 				<div class="bottoms">
-					<image src="../../assets/img/order.png" style='height:31px'></image>
-					<div class="right_wrap" @click="link('/myOrder/index')">
-						<text>我的订单</text>
-						<image src="../../assets/img/right_gray.png"></image>
+					<img src="../../assets/img/order.png" ></img>
+					<div class="right_wrap" @click="link('/myorder')">
+						<span>我的订单</span>
+						<img src="../../assets/img/right_gray.png"></img>
 					</div>
 				</div>
 			</div>
 			<div class='block'></div>
 			<div class='link'>
 				<div class="top">
-					<image src="../../assets/img/erji.png" style='height: 28px;'></image>
+					<img src="../../assets/img/erji.png"></img>
 					<div class="right_wrap" @click="link('/personalCenter/callCenter')">
-						<text>客服中心</text>
-						<image src="../../assets/img/right_gray.png"></image>
+						<span>客服中心</span>
+						<img src="../../assets/img/right_gray.png"></img>
 					</div>
 
 				</div>
@@ -44,18 +44,16 @@
 				token: ''
 			}
 		},
-		async onShow() {
-			let userId = await uni.getStorageSync('userId')
+		async mounted() {
+			let userId = await JSON.parse(localStorage.getItem('payload')).userId
+      console.log(userId)
 			let data = await this.$api.getUserDataBySeqId({ customerSeqId: userId });
 			this.userInfo = data.data;
 			console.log(data)
 		},
 		methods: {
-			link(path,query){
-				let params = query ? '?userInfo='+JSON.stringify(query) : '';
-				uni.navigateTo({
-					url: path + params
-				})
+			link(path){
+         this.$router.push(path)
 			},
 		}
 	}
@@ -72,11 +70,13 @@
 
 		header {
 			display: flex;
+      flex-direction: row;
+      align-items: center;
 			height: 130px;
 			background-color: #fff;
 			padding: 60px 24px 0 24px;
 
-			&>image {
+			&>img {
 				width: 92px;
 				height: 92px;
 				border-radius: 50%;
@@ -93,7 +93,7 @@
 					display: flex;
 					align-items: center;
 
-					&>image {
+					&>img {
 						width: 35px;
 						height: 30px;
 						margin-left: 12px;
@@ -131,7 +131,7 @@
 				align-items: center;
 			}
 
-			image {
+			img {
 				width: 36px;
 				height: 36px;
 			}
@@ -145,14 +145,14 @@
 				border-bottom: 1px solid rgba(240, 240, 240, .5);
 				margin-left: 24px;
 
-				text {
+				span {
 					font-size: 28px;
 					font-family: PingFang SC;
 					// font-weight:500;
 					color: rgba(49, 49, 49, 1);
 				}
 
-				&>image {
+				&>img {
 					width: 23px;
 					height: 24px;
 				}

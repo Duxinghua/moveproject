@@ -17,7 +17,6 @@
 </template>
 
 <script>
-	import { orderList } from "@/api"
 	import listCard from "./components/list.vue"
 	import MescrollMixin from "@/components/mescroll-uni/mescroll-mixins.js";
 	export default {

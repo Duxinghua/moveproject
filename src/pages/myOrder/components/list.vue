@@ -83,7 +83,6 @@
 </template>
 
 <script>
-	import {order_delete,wx_pay,orderPayOffLine} from '@/api';
 	import wybPopup from '@/components/wyb-popup/wyb-popup.vue'
 	export default {
 		data() {
@@ -273,7 +272,7 @@
 			submit() {
 				if (this.bianhao == 1) {
 					//微信支付
-					wx_pay({
+					this.$api.wx_pay({
 						orderHeadSeqId: this.current_id
 					}).then(res => {
 						if (res.code == 200) {

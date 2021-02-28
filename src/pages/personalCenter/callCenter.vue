@@ -1,12 +1,12 @@
 <template>
 	<div class='callCenter'>
 		<div class='top'>
-			<button class="onCall" open-type="contact" session-from="message">
-				<image src='../static/tishi.png'></image>
+			<!-- <button class="onCall" open-type="contact" session-from="message">
+				<img src='../static/tishi.png'></img>
 				<span>在线客服</span>
-			</button>
+			</button> -->
 			<div class='offCall' @click='call'>
-				<image src='../static/call.png'></image>
+				<img src='../../assets/img/call.png'></img>
 				<span>客服热线</span>
 			</div>
 		</div>
@@ -14,112 +14,109 @@
 		<div class='used'>
 			<p @click='go_question(1)'>
 				<span>选择车型下单?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(2)'>
 				<span>预约用车?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(3)'>
 				<span>如何取消订单?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(4)'>
 				<span>查询订单?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(5)'>
 				<span>预估与实际价格不符?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(6)'>
 				<span>发出订单后无司机接单?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(7)'>
 				<span>查询订单支付情况?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(8)'>
 				<span>订单支付方式?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(9)'>
 				<span>司机要求线下支付?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 
 			<p @click='go_question(10)'>
 				<span>订单在线支付被重复扣款?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(11)'>
 				<span>优惠券类型?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(12)'>
 				<span>领取优惠券?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(13)'>
 				<span>使用优惠券?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(14)'>
 				<span>优惠券无法使用?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(15)'>
 				<span>里程费收费标准?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(16)'>
 				<span>什么是超里程费？如何计算?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(17)'>
 				<span>什么是等候费，如何计算?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(18)'>
 				<span>订单取消后退款什么时候到账?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(19)'>
 				<span>计算搬运费?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(20)'>
 				<span>额外费用?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(21)'>
 				<span>成为企业客户?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(22)'>
 				<span>申请发票?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(23)'>
 				<span>修改订单评价?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 			<p @click='go_question(24)'>
 				<span>投诉评价意见?</span>
-				<image src='../../assets/img/right_gray.png'></image>
+				<img src='../../assets/img/right_gray.png'></img>
 			</p>
 		</div>
-		<div class='comment'>
+		<!-- <div class='comment'>
 			<span @click='back'>意见反馈</span>
-		</div>
+		</div> -->
 	</div>
 </template>
 
 <script>
-	import {
-		findCustomerServiceNumber
-	} from '@/api'
 	export default {
 		data() {
 			return {
@@ -130,13 +127,8 @@
 			this.getPhone()
 		},
 		methods: {
-			back() {
-				uni.navigateTo({
-					url: '/personalCenter/feedBack'
-				})
-			},
 			getPhone() {
-				findCustomerServiceNumber().then(res => {
+				this.$api.findCustomerServiceNumber().then(res => {
 					if (res.code == 200) {
 						this.phone = res.data;
 					}
@@ -175,7 +167,7 @@
 			margin: 0 24px;
 
 			.onCall {
-				background-image: linear-gradient(#70adfb, #6790fc);
+				background-img: linear-gradient(#70adfb, #6790fc);
 				border-radius: 13px;
 				width: 50%;
 				margin-right: 26px;
@@ -184,7 +176,7 @@
 				align-items: center;
 				justify-content: center;
 
-				image {
+				img {
 					width: 86px;
 					height: 80px;
 					margin-right: 20px;
@@ -201,11 +193,11 @@
 				align-items: center;
 				justify-content: center;
 				width: 50%;
-				background-image: linear-gradient(#fca73c, #fe8a35);
+				background-img: linear-gradient(#fca73c, #fe8a35);
 				border-radius: 20px;
 				height: 130px;
 
-				image {
+				img {
 					width: 86px;
 					height: 80px;
 					margin-right: 20px;
@@ -240,7 +232,7 @@
 					color: #555555;
 				}
 
-				image {
+				img {
 					width: 20px;
 					height: 20px;
 				}

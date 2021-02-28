@@ -135,7 +135,6 @@
 <script>
 	import OrderDetail from '@/mixins/OrderDetail'
 	import wybPopup from '@/components/wyb-popup/wyb-popup.vue'
-	import {order_delete,wx_pay,calcHireWorkerDet,orderPayOffLine} from '@/api';
 	export default {
 		props: {
 			state: {

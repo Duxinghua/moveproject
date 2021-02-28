@@ -49,7 +49,7 @@
 			<p style='color: #888888;margin-top:16px;font-size: 13px;'>{{orderDetail.orderDescribe ? orderDetail.orderDescribe : '无'}}</p>
 			<div class='pic_list' v-if='orderDetail.orderPicList && orderDetail.orderPicList.length>0'>
 				<image v-for='(item,index) in orderDetail.orderPicList' :src='item.picUrl' style='width:25%;margin-right:2%;margin-top:20px;height:140px'
-				 @tap='prediv(index,orderDetail.orderPicList)'></image>
+				 @click='prediv(index,orderDetail.orderPicList)'></image>
 			</div>
 		</div>
 		<div class="name">
@@ -129,12 +129,6 @@
 <script>
 	import OrderDetail from '@/mixins/OrderDetail'
 	import wybPopup from '@/components/wyb-popup/wyb-popup.vue'
-	import {
-		order_delete,
-		wx_pay,
-		orderSheet_price,
-		orderPayOffLine
-	} from '@/api';
 	export default {
 		data() {
 			return {
