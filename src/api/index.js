@@ -131,6 +131,12 @@ const server = {
   //export const findCustomerServiceNumber = params => { return get(`/sysUser/findCustomerServiceNumber`, params).then(res => res.data) };
   findCustomerServiceNumber(params){
     return httpv1({method:"GET",url:'/sysUser/findCustomerServiceNumber',params})
+  },
+  //取消订单
+  //export const cancelStatusUser = params => { return post(`/orderSheet/cancelStatusUser`, params).then(res => res.data) };
+  cancelStatusUser(params){
+    return httpv1({method:"GET",url:'/orderSheet/cancelStatusUser',params})
+
   }
 
 

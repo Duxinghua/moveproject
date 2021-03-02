@@ -231,6 +231,14 @@ const router = new Router({
       }
     },
     {
+      path: '/cancelOrder',
+      name: 'cancelOrder',
+      component: () => import('@/pages/order/cancelOrder'),
+      meta: {
+        title: '取消订单'
+      }
+    },
+    {
       path: '/test',
       name: 'Test',
       component: () => import('@/pages/test'),

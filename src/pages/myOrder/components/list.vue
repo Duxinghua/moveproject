@@ -43,7 +43,7 @@
 			</div>
 		</template>
 		<!-- 支付方式 -->
-		<wyb-popup ref="popup_1" type="bottom" height="400" width="500" radius="6" :showCloseIcon="true">
+		<van-popup ref="popup_1" position="bottom" height="400" width="500" radius="6" :showCloseIcon="true">
 			<div class="popup-content_1">
 				<h6>￥{{payMoney}}</h6>
 				<p>选择支付方式</p>
@@ -65,31 +65,32 @@
 					<span>立即叫车</span>
 				</div>
 			</div>
-		</wyb-popup>
+		</van-popup>
 		<!-- 弹框 -->
-		<uni-popup type='center' ref="popup3">
+		<van-popup position='center'  v-model="unline" >
 			<div class="uni-tip">
 				<div class="uni-top">
 					<p class='uni-text'>温馨提示</p>
 					<p class='uni-content'>选择线下付款，平台不承担任何责任</p>
 				</div>
 				<div class='uni-btn'>
-					<span class="btns_cancel" @tap='cal'>取消</span>
-					<span class="btns" @tap='contact'>确定</span>
+					<span class="btns_cancel" @click='unline = false'>取消</span>
+					<span class="btns" @click='contact'>确定</span>
 				</div>
 			</div>
-		</uni-popup>
+		</van-popup>
+    <van-popup v-model="show" round position="bottom" :style="{ height: '30%' }" />
 	</div>
 </template>
 
 <script>
-	import wybPopup from '@/components/wyb-popup/wyb-popup.vue'
 	export default {
 		data() {
 			return {
+        show:true,
 				bianhao: '1',
 				current_id:'',
-				payMoney:''
+				payMoney:'',
 			};
 		},
 		props:{
@@ -99,7 +100,7 @@
 			}
 		},
 		components: {
-			wybPopup
+
 		},
 		filters: {
 			serverType(value) {
@@ -305,7 +306,7 @@
 					})
 				} else {
 					// 线下支付
-					this.$refs.popup3.open()
+					this.contact = true
 					this.$refs.popup_1.close()
 				}
 			},
