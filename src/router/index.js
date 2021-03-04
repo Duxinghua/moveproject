@@ -239,6 +239,22 @@ const router = new Router({
       }
     },
     {
+      path: '/evaluation',
+      name: 'evaluation',
+      component: () => import('@/pages/myOrder/evaluation'),
+      meta: {
+        title: '立即评价'
+      }
+    },
+    {
+      path: '/myOrder/lahuo',
+      name: 'lahuo',
+      component: () => import('@/pages/myOrder/lahuo'),
+      meta: {
+        title: '订单详情'
+      }
+    },
+    {
       path: '/test',
       name: 'Test',
       component: () => import('@/pages/test'),

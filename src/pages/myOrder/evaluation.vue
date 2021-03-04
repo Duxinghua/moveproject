@@ -2,7 +2,7 @@
 	<div class='evaluation'>
 		<div class='card'>
 			<div class='top_wrap'>
-				<image :src="detail.custDriverInfoSimpleVo.avatarUrl"></image>
+				<img :src="detail.custDriverInfoSimpleVo.avatarUrl"></img>
 				<div class='carType' v-if="!detail.serverType=='HIRE_WORKER'">
 					<text>{{detail.custDriverInfoSimpleVo.plateNumber}}</text>
 					<text>{{detail.carType | carType}}</text>
@@ -43,7 +43,11 @@
 				num: 5,
 				seqId:'',
 				sheetId:'',
-				detail:{},
+				detail:{
+          custDriverInfoSimpleVo:{
+            avatarUrl:''
+          }
+        },
 				values:-1,
 				notedata:''
 			}
@@ -107,17 +111,11 @@
 			},
 			goEvaluate(){
 				if(!this.notedata){
-					uni.showToast({
-						title: '请输入评价内容',
-						icon: 'none'
-						})
+          this.$toast('请输入评价内容')
 					return false
 				}
 				if(this.values<0){
-					uni.showToast({
-						title: '请进行评分',
-						icon: 'none'
-						})
+          this.$toast('请进行评分')
 					return false
 				}
 				let userId = uni.getStorageSync('userId')
@@ -131,9 +129,7 @@
 					sheetId:this.sheetId
 				}).then(res => {
 					if(res.code==200){
-						uni.redirectTo({
-							url:'/myOrder/index'
-						})
+            this.$router.push({path:'myorder'})
 					}
 				})
 			}
@@ -156,7 +152,7 @@
 				text-align: center;
 				padding-bottom: 50px;
 
-				&>image {
+				&>img {
 					width: 80px;
 					height: 80px;
 					border-radius: 50%;
@@ -280,6 +276,7 @@
 				background-color: #28ae3a;
 				height: 76px;
 				border-radius: 40px;
+        font-size: 38px;
 				line-height: 76px;
 				text-align: center;
 				color:#fff;

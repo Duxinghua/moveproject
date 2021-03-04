@@ -1,29 +1,29 @@
 <template>
-	<div class='lahuo' v-if="Object.keys(orderDetail).length>0">
-		<h4>{{orderDetail.orderStatus | orderStatus}}</h4>
-		<div class='calling' v-if="orderDetail.orderStatus!='WAIT_REC' && orderDetail.orderStatus!='NOPAY' && orderDetail.orderStatus!='NOPAY2' && orderDetail.orderStatus!='CANCEL_APPLY'">
+	<div class='lahuo'>
+		<h4>{{orderDetail.orderStatus | orderStatus }}</h4>
+    		<!-- <div class='calling' v-if="orderDetail.orderStatus!='WAIT_REC' && orderDetail.orderStatus!='NOPAY' && orderDetail.orderStatus!='NOPAY2' && orderDetail.orderStatus!='CANCEL_APPLY'">
 			<div>
 				<image :src="orderDetail.custDriverInfoSimpleVo.avatarUrl"></image>
 				<div class='rates'>
 					<p ><span v-if='orderDetail.custDriverInfoSimpleVo'>{{formatName(orderDetail.custDriverInfoSimpleVo.plateNumber || "")}}</span><span>{{orderDetail.carType | carType}}</span></p>
 					<div>
 						<span>{{orderDetail.driverName}}</span>
-						<div class="rate">
-							<div v-for="(item,index) in num" :key="index" :class="{'selected' :index <=orderDetail.custDriverInfoSimpleVo.score-1}" class='li'></div>
-						</div>
-						<span style='margin-left:10px'>{{orderDetail.custDriverInfoSimpleVo.score || 0}}分</span>
+						<view class="rate">
+							<view v-for="(item,index) in num" :key="index" :class="{'selected' :index <=orderDetail.custDriverInfoSimpleVo.score-1}" class='li'></view>
+						</view>
+						<span style='margin-left:10rpx'>{{orderDetail.custDriverInfoSimpleVo.score || 0}}分</span>
 					</div>
 				</div>
 			</div>
 			<image src='../../assets/img/calling.png' @tap='call(orderDetail.driverMobilno)'></image>
-		</div>
-		<div class='modelCar'>
+		</div> -->
+    <div class='modelCar'>
 			<div class='date'>
 				<p><span class='minute'>{{orderDetail.orderDateStr}}</span></p>
 				<p>{{orderDetail.carType | carType}}</p>
 			</div>
 		</div>
-		<div class="address">
+    		<div class="address">
 			<div class="left_wrap">
 				<div class="start" v-for='(item,i) in orderDetail.orderRouteList' :key='i' :class="i==orderDetail.orderRouteList.length-1?'end':''">
 					<div class="lt-icon-box"></div>
@@ -32,263 +32,208 @@
 				</div>
 			</div>
 		</div>
-		<h5 v-if="Object.keys(orderDetail.orderPriceMap).length>0 || orderDetail.orderOtherList.length>0">额外需求</h5>
+    		<h5 v-if="Object.keys(orderDetail.orderPriceMap).length>0 || orderDetail.orderOtherList.length>0">额外需求</h5>
 		<div class='demand' v-if="Object.keys(orderDetail.orderPriceMap).length>0 || orderDetail.orderOtherList.length>0">
-			<div class="other" v-if="Object.keys(orderDetail.orderPriceMap).length>0">
+			<view class="other" v-if="Object.keys(orderDetail.orderPriceMap).length>0">
 				<p class='way'><span>计价方式</span><span>平台标准计价</span></p>
-				<div class='ul'>
-					<div class='li' v-for="(val,key,i) in orderDetail.orderPriceMap" :key="i"><span>{{key}}</span><span>{{val.catItem}}</span></div>
-					<div class='li' v-if="orderDetail.largeGoodsCnt>0"><span>大件物品数量</span><span>{{orderDetail.largeGoodsCnt}}</span></div>
-				</div>
-			</div>
-			<div v-if="orderDetail.orderOtherList.length>0">
+				<view class='ul'>
+					<view class='li' v-for="(val,key,i) in orderDetail.orderPriceMap" :key="i"><span>{{key}}</span><span>{{val.catItem}}</span></view>
+					<view class='li' v-if="orderDetail.largeGoodsCnt>0"><span>大件物品数量</span><span>{{orderDetail.largeGoodsCnt}}</span></view>
+				</view>
+			</view>
+			<view v-if="orderDetail.orderOtherList.length>0">
 				<p class='way'><span>其它服务</span></p>
-				<div class='ul'>
-					<div class='li' v-for="(item,index) in orderDetail.orderOtherList" :key="index">
+				<view class='ul'>
+					<view class='li' v-for="(item,index) in orderDetail.orderOtherList" :key="index">
 						<span v-if="item.checked">{{item.catItem}}</span><span v-if="item.checked">{{item.remarks}}</span>
-					</div>
-				</div>
-			</div>
+					</view>
+				</view>
+			</view>
 		</div>
-		<div class='remark'>
-			<p>订单备注</p>
-			<p>{{orderDetail.orderDescribe ? orderDetail.orderDescribe : '无'}}</p>
-		</div>
-		<div class="name">
-			<span>姓名</span><span>{{orderDetail.receiverName}}</span>
-		</div>
-		<div class='contact'>
-			<span>联系电话</span><span>{{orderDetail.receiverMobileNo}}<text v-if='orderDetail.mobileProtected' class='protect'>号码保护中</text></span>
-		</div>
-		<div class='particulars' @tap='gocost'>
-			<span>费用明细</span><span>
-				<image src='../../assets/img/right_gray.png' class='pic'></image>
-			</span>
-		</div>
-		<div class='paid'>
-			<p><span>已支付</span><span>￥{{orderDetail.payMoney}}</span></p>
-			<p><span>订单金额</span><span>￥{{orderDetail.payMoney}}</span></p>
-			<p><span>已优惠</span><span>-￥{{orderDetail.couponMoney}}</span></p>
-			<p><span>订单总额</span><span>￥{{orderDetail.totalMoney}}</span></p>
-		</div>
-		<div class='orderNember'>
-			<p><span>订单编号</span><span>{{orderDetail.sheetId}}</span></p>
-			<p><span>下单时间</span><span>{{orderDetail.createDate}}</span></p>
-			<p><span>支付时间</span><span>{{orderDetail.payDate || ''}}</span></p>
-		</div>
-		<div class='block'>
-
-		</div>
-		<div class='foot'>
-			<span class="back_order" v-if="orderDetail.orderStatus == 'WAIT_REC' && isFromConfirm" @click="goOrder()">确定</span>
-			<span class='cancel_order' v-if='orderDetail.orderStatus=="NOPAY"||orderDetail.orderStatus=="WAIT_REC" || orderDetail.orderStatus=="DRIVER_REC"  || orderDetail.orderStatus=="DRIVER_COME"|| orderDetail.orderStatus=="DRIVER_WORKING"|| orderDetail.orderStatus=="DRIVER_FINISH" || orderDetail.orderStatus=="NOPAY2"'  @tap='cancel(orderDetail.seqId,orderDetail.sheetId)'>取消订单</span>
-			<span class='pay' v-if='orderDetail.orderStatus=="NOPAY"||orderDetail.orderStatus=="NOPAY2"' @tap='pay(orderDetail.seqId)'>立即支付</span>
-			<span class='cancel_order' v-if='orderDetail.orderStatus=="FINISH"' @tap='remark(orderDetail.seqId,orderDetail.sheetId)'>立即评价</span>
-		<!-- 	<span class='cancel_order' v-if='orderDetail.orderStatus=="CANCEL"' @tap='del(orderDetail.seqId)'>删除订单</span> -->
-		</div>
-
-		<!-- 支付方式 -->
-		<wyb-popup ref="popup_1" type="bottom" height="400" width="500" radius="6" :showCloseIcon="true">
-			<div class="popup-content_1">
-				<h6>￥{{orderDetail.payMoney}}</h6>
-				<p>选择支付方式</p>
-				<div class='payType'>
-					<div>
-						<div>
-							<image src='../../assets/img/wx.png'></image>微信支付
-						</div>
-						<radio value='1' :checked="bianhao==1" @click='radio("1")' style="transform:scale(0.7)"></radio>
-					</div>
-					<div>
-						<div>
-							<image src='../../assets/img/xx.png'>线下支付</image>
-						</div>
-						<radio value='2' :checked="bianhao==2" @click='radio("2")' style="transform:scale(0.7)"></radio>
-					</div>
-				</div>
-				<div class='btn' @tap='submit'>
-					<span>立即叫车</span>
-				</div>
-			</div>
-		</wyb-popup>
-		<!-- 弹框 -->
-		<uni-popup type='center' ref="popup3">
-			<div class="uni-tip">
-				<div class="uni-top">
-					<p class='uni-text'>温馨提示</p>
-					<p class='uni-content'>选择线下付款，平台不承担任何责任</p>
-				</div>
-				<div class='uni-btn'>
-					<span class="btns_cancel" @tap='cal'>取消</span>
-					<span class="btns" @tap='contact'>确定</span>
-				</div>
-			</div>
-		</uni-popup>
 	</div>
 </template>
 
 <script>
-	import OrderDetail from '@/mixins/OrderDetail'
-	import wybPopup from '@/components/wyb-popup/wyb-popup.vue'
 	export default {
 		data() {
 			return {
 				list: [1, 2, 3],
 				num: 5,
-				bianhao: '1'
+				bianhao: '1',
+        orderDetail:{
+          custDriverInfoSimpleVo:{
+            avatarUrl:''
+          }
+        }
 			}
 		},
 		components: {
-			wybPopup
+
 		},
+    mounted() {
+      console.log(this.$route)
+      this.getOrderDetail()
+    },
+    filters: {
+    carType(value) {
+      switch (value) {
+        case 'MINI_JEEP':
+          return '小面包车';
+          break;
+        case 'MIDDLE_JEEP':
+          return '中面包车';
+          break;
+        case 'KYW_JEEP':
+          return '依维科';
+          break;
+        case 'SMALL_CAR':
+          return '小货车';
+          break;
+        case 'MIDDLE_CAR':
+          return '中货车';
+          break;
+        case 'FIVE_METER_CAR':
+          return '5米2';
+          break;
+        case 'SIX_METER_CAR':
+          return '6米8';
+          break;
+        case 'SEVEN_METER_CAR':
+          return '7米6';
+          break;
+        case 'NINE_METER_CAR':
+          return '9米6';
+          break;
+        case 'THIRTEEN_METER_CAR':
+          return '13米';
+          break;
+        case 'SEVENTEEN_METER_CAR':
+          return '17米5';
+          break;
+      }
+    },
+    orderStatus(value) {
+      switch (value) {
+        case 'NOPAY':
+          return '待支付';
+          break;
+        case 'DRIVER_REC':
+          return '司机已接单';
+          break;
+        case 'WAIT_REC':
+          return '等待接单';
+          break;
+        case 'DRIVER_COME':
+          return '司机到达';
+        case 'DRIVER_WORKING':
+          return '司机工作中';
+          break;
+        case 'DRIVER_FINISH':
+          return '司机完成工作';
+          break;
+        case 'NOPAY2':
+          return '付尾款';
+          break;
+        case 'FINISH':
+          return '已完成';
+        case 'EVALUATE':
+          return '已评价';
+          break;
+        case 'CANCEL_APPLY':
+          return '取消申请';
+          break;
+        case 'CANCEL':
+          return '已取消';
+          break;
+        case 'RETURN':
+          return '退款';
+          break;
+      }
+	},
+	orderStatus_worker(value) {
+	  switch (value) {
+	    case 'NOPAY':
+	      return '待支付';
+	      break;
+	    case 'DRIVER_REC':
+	      return '劳务工已接单';
+	      break;
+	    case 'WAIT_REC':
+	      return '等待接单';
+	      break;
+	    case 'DRIVER_COME':
+	      return '劳务工到达';
+	    case 'DRIVER_WORKING':
+	      return '劳务工工作中';
+	      break;
+	    case 'DRIVER_FINISH':
+	      return '劳务工完成工作';
+	      break;
+	    case 'NOPAY2':
+	      return '付尾款';
+	      break;
+	    case 'FINISH':
+	      return '已完成';
+	    case 'EVALUATE':
+	      return '已评价';
+	      break;
+	    case 'CANCEL_APPLY':
+	      return '取消申请';
+	      break;
+	    case 'CANCEL':
+	      return '已取消';
+	      break;
+	    case 'RETURN':
+	      return '退款';
+	      break;
+	  }
+  }
+	},
 		methods: {
+    async getOrderDetail(){
+      let data = await this.$api.orderSheet({seqId: this.$route.query.id});
+      if(data.code == 200){
+        console.log(data.data)
+        this.orderDetail = data.data;
+      }
+    },
 			gocost() {
-				let obj={}
-				obj = {
-					headSeqId:this.orderDetail.seqId
-				}
-				orderSheet_price(obj).then(res => {
-					if(res.code==200){
-						uni.navigateTo({
-							url: '/order/cost?detail='+JSON.stringify(res.data)
-						})
-					}
-				})
+
 			},
 
 			cancel(id, sheetId) {
-				uni.navigateTo({
-					url: '/order/cancelOrder?seqId=' + id + "&sheetId=" + sheetId
-				})
+
 			},
 			del(id){
-				order_delete({
-					seqId:id
-				}).then(res => {
-					if(res.code==200){
-						uni.redirectTo({
-							url:'/myOrder/index'
-						})
-					}
-				})
+
 			},
 			pay(id){
-				this.$refs.popup_1.show()
-				// wx_pay({
-				// 	orderHeadSeqId: id
-				// }).then(res => {
-				// 	if (res.code == 200) {
-				// 		let paymentData = res.data;
-				// 		uni.requestPayment({
-				// 			timeStamp: paymentData.timeStamp,
-				// 			nonceStr: paymentData.nonceStr,
-				// 			package: paymentData.package,
-				// 			signType: paymentData.signType,
-				// 			paySign: paymentData.paySign,
-				// 			success: (res) => {
-				// 				uni.showToast({
-				// 					title: "支付成功"
-				// 				})
-				// 			},
-				// 			fail: (res) => {
-				// 				uni.showModal({
-				// 					content: "支付失败",
-				// 					showCancel: false
-				// 				})
-				// 			},
-				// 			complete: (res) => {
-				// 				uni.redirectTo({
-				// 					url: '/myOrder/index'
-				// 				})
-				// 			}
-				// 		})
-				// 	}
 
-				// })
 			},
 			submit() {
-				if (this.bianhao == 1) {
-					//微信支付
-					this.$api.wx_pay({
-						orderHeadSeqId: this.orderDetail.seqId
-					}).then(res => {
-						if (res.code == 200) {
-							let paymentData = res.data;
-							uni.requestPayment({
-								timeStamp: paymentData.timeStamp,
-								nonceStr: paymentData.nonceStr,
-								package: paymentData.package,
-								signType: paymentData.signType,
-								paySign: paymentData.paySign,
-								success: (res) => {
-									uni.showToast({
-										title: "支付成功"
-									})
-								},
-								fail: (res) => {
-									uni.showModal({
-										content: "支付失败",
-										showCancel: false
-									})
-								},
-								complete: (res) => {
-									uni.redirectTo({
-										url: '/myOrder/index'
-									})
-								}
-							})
-						}
 
-					})
-				} else {
-					// 线下支付
-					this.$refs.popup3.open()
-					this.$refs.popup_1.close()
-				}
+
 			},
 			contact() {
-				orderPayOffLine({
-					seqId: this.orderDetail.seqId,
-					payType: 'OFF_LINE'
-				}).then(res => {
-					if (res.code == 200) {
-						uni.redirectTo({
-							url:'/myOrder/index'
-						})
-					}
-				})
+
 			},
 			cal() {
-				this.$refs.popup3.close()
+
 			},
 			radio(e) {
 				this.bianhao = e
 			},
 			remark(id, sheetId){
-				uni.navigateTo({
-					url: '/myOrder/evaluation?seqId=' + id + "&sheetId=" + sheetId
-				})
+
 			},
 			call(phone){
-				uni.makePhoneCall({
-					phoneNumber: phone, //手机号
-					// 成功回调
-					success: (res) => {
-						console.log('调用成功!')
-					},
-					// 失败回调
-					fail: (res) => {
-						console.log(res);
-					}
-				});
+
 			},
 			formatName(name) {
-				let newStr;
-				newStr=name.substr(0,2)+'***'+name.substr(5,name.split('').length)
-				return newStr;
+
 			}
 		},
-		mixins: [OrderDetail],
+
 	}
 </script>
 
@@ -395,7 +340,7 @@
 						align-items: center;
 						font-size: 15px;
 
-						image {
+						img {
 							width: 90px;
 							height: 80px;
 							margin-right: 10px;
@@ -424,7 +369,7 @@
 				display: flex;
 				align-items: center;
 				flex: 1;
-				&>image {
+				&>img {
 					width: 60px;
 					height: 60px;
 					border-radius: 50%;
@@ -469,7 +414,7 @@
 							}
 
 							.selected {
-								background-image: url('https://editspring.oss-cn-hangzhou.aliyuncs.com/images/20201102/app_1604295577891vxth.png');
+								background-img: url('https://editspring.oss-cn-hangzhou.aliyuncs.com/images/20201102/app_1604295577891vxth.png');
 							}
 						}
 					}
@@ -478,7 +423,7 @@
 				}
 			}
 
-			&>image {
+			&>img {
 				width: 70px;
 				height: 70px;
 				border-radius: 50%;
@@ -649,7 +594,7 @@
 				text-align: right;
 			}
 
-			image {
+			img {
 				width: 20px;
 				height: 20px;
 			}

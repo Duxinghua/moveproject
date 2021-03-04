@@ -1,4 +1,4 @@
-import { orderSheet } from '@/api'
+import server from '@/api'
 export default {
   data() {
     return {
@@ -7,8 +7,9 @@ export default {
       isFromConfirm: false
     }
   },
-  onLoad(option){
-    this.orderId = option.id;
+  mounted(){
+    console.log(server)
+    this.orderId = this.$query.id;
     this.getOrderDetail();
     if(option.from == 'confirm'){ //如果来自下单页面，显示确认按钮
       this.isFromConfirm = true;
@@ -17,7 +18,7 @@ export default {
   methods: {
     //获取订单详情
     async getOrderDetail(){
-      let data = await orderSheet({seqId: this.orderId});
+      let data = await this.$api.orderSheet({seqId: this.orderId});
       if(data.code == 200){
         console.log(data.data)
         this.orderDetail = data.data;

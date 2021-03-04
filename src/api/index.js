@@ -136,9 +136,12 @@ const server = {
   //export const cancelStatusUser = params => { return post(`/orderSheet/cancelStatusUser`, params).then(res => res.data) };
   cancelStatusUser(params){
     return httpv1({method:"GET",url:'/orderSheet/cancelStatusUser',params})
-
+  },
+  ////订单生成后价格计算
+  //export const orderSheet_price = params => { return get(`/orderSheet/calcPrice`, params).then(res => res.data) };
+  orderSheet_price(params){
+    return httpv1({method:"GET",url:'/orderSheet/calcPrice',params})
   }
-
 
 }
 

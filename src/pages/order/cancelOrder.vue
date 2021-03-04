@@ -26,7 +26,7 @@
 		        </div>
 		        <div class="weui-uploader__input-box">
 		          <div class="weui-uploader__input" @click="chooseImage">
-				  <img src='../../assets/img/camrea.png'></img>
+				         <img src='../../assets/img/camrea.png'></img>
 		          </div>
 		        </div>
 		      </div>
@@ -38,8 +38,7 @@
 	</div>
 </template>
 <script>
-// appealimgUpload
-import { UPLOAD_API, cancelStatusUser } from "@/api";
+// appealimgUpload UPLOAD_API, cancelStatusUser
 export default {
   data() {
     return {
@@ -65,85 +64,29 @@ export default {
     },
     testSubmit(e) {
       if (!this.notedata) {
-        uni.showToast({
-          title: "请输入取消原因",
-          icon: "none",
-        });
+        this.$toast("请输入取消原因")
         return false;
       }
       if (this.fileList.length == 0) {
-        uni.showToast({
-          title: "请上传图片",
-          icon: "none",
-        });
+        this.$toast("请上传图片")
         return false;
       }
       let _this = this;
       let imgList = _this.fileList;
       let picture = [];
-      new Promise((resolve) => {
-        uni.showModal({
-          title: "你正在取消订单",
-          content: "取消后，将不可修改",
-          success: function(res) {
-            if (res.confirm) {
-              resolve(true);
-            } else if (res.cancel) {
-              return false;
-            }
-          },
-        });
-      }).then((res) => {
-        if (imgList.length > 0) {
-          let i = 0;
-          let picture = [];
-          upLoadImg();
-          function upLoadImg() {
-            if (i < imgList.length) {
-              uni.uploadFile({
-                url: UPLOAD_API,
-                filePath: imgList[i].path,
-                name: "file",
-                success(res) {
-                  let obj = JSON.parse(res.data);
-                  let { data } = obj;
-                  if (data) {
-                    let imgUrl = {
-                      picUrl: data.viewUrl,
-                      sort: i,
-                      picType: 2,
-                      sheetId: _this.sheetId,
-                    };
-                    picture.push(imgUrl);
-                  }
-                },
-                complete() {
-                  if (imgList.length == picture.length) {
-                    this.$api
-                      .cancelStatusUser({
-                        headSeqId: _this.seqId,
-                        orderPicList: picture,
-                        remarks: _this.notedata,
-                        evaluateType: "P",
-                      })
-                      .then((res) => {
-                        if (res.code == 200) {
-                          uni.redirectTo({
-                            url: "/myOrder/index",
-                          });
-                        }
-                      });
-                  } else {
-                    i++;
-                    upLoadImg();
-                  }
-                },
-              });
-            }
-          }
-        }
+          new Promise((resolve) => {
+            this.$dialog.confirm({
+            title: '你正在取消订单',
+            message: '取消后，将不可修改',
+          })
+      .then(() => {
+        // on confirm
+      })
+      .catch(() => {
+        // on cancel
       });
-    },
+          })
+    }
   },
 };
 </script>

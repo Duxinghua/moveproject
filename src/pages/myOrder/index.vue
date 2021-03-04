@@ -375,9 +375,7 @@ export default {
 						type = 'rentCar'
 						break;
 				}
-				uni.navigateTo({
-					url: `/myOrder/${type}?id=${id}`
-				})
+        this.$router.push({path:`/myOrder/${type}?id=${id}`})
 			},
 			cancel(id, sheetId) {
         this.$router.push({path:'/order/cancelOrder?seqId=' + id + "&sheetId=" + sheetId})
@@ -387,9 +385,8 @@ export default {
 					seqId:id
 				}).then(res => {
 					if(res.code==200){
-						uni.redirectTo({
-							url:'/myOrder/index'
-						})
+            this.$toast('删除成功')
+            this.upCallback()
 					}
 				})
 			},
@@ -437,27 +434,20 @@ export default {
 					}).then(res => {
 						if (res.code == 200) {
 							let paymentData = res.data;
-							uni.requestPayment({
+							wx.chooseWXPay({
 								timeStamp: paymentData.timeStamp,
 								nonceStr: paymentData.nonceStr,
 								package: paymentData.package,
 								signType: paymentData.signType,
 								paySign: paymentData.paySign,
 								success: (res) => {
-									uni.showToast({
-										title: "支付成功"
-									})
+                  this.$toast('支付成功')
 								},
 								fail: (res) => {
-									uni.showModal({
-										content: "支付失败",
-										showCancel: false
-									})
+                   this.$toast('支付成功')
 								},
 								complete: (res) => {
-									uni.redirectTo({
-										url: '/myOrder/index'
-									})
+                   this.$router.push({path:'/myorder'})
 								}
 							})
 						}
@@ -475,9 +465,7 @@ export default {
 					payType: 'OFF_LINE'
 				}).then(res => {
 					if (res.code == 200) {
-						uni.redirectTo({
-							url:'/myOrder/index'
-						})
+            this.$router.push({path:'/myorder'})
 					}
 				})
 			},
@@ -489,9 +477,7 @@ export default {
 				this.bianhao = e
 			},
 			remark(id, sheetId){
-				uni.navigateTo({
-					url: '/myOrder/evaluation?seqId=' + id + "&sheetId=" + sheetId
-				})
+        this.$router.push({path:'/myOrder/evaluation?seqId=' + id + "&sheetId=" + sheetId})
 			}
   },
 };

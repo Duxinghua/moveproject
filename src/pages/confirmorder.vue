@@ -870,6 +870,7 @@ export default {
       var adlist = localStorage.getItem("adList");
       if(adlist){
         adlist = JSON.parse(adlist)
+        console.log(adlist,'adlist')
         var orderRouteList = [];
         if(adlist.length){
           adlist.map((item, index) => {
@@ -877,8 +878,8 @@ export default {
               var locations = JSON.parse(item.center);
               if (locations) {
                 var obj = {
-                  address1: item.name,
-                  address2: item.address,
+                  address1: item.obj.formattedAddress,
+                  address2: item.obj.infos,
                   longitude: locations[0],
                   latitude: locations[1],
                   sort: index + 1,

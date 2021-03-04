@@ -1,31 +1,31 @@
 <template>
-	<view class='enterprise'>
-		<view class="scroll-wrap">
+	<div class='enterprise'>
+		<div class="scroll-wrap">
 			<scroll-uni ref="mescrollRef" @init="mescrollInit" @down="downCallback" @up="upCallback" :down="downOption" :up="upOption" :fixed='false'>
-		<view class='box' v-for='(item,index) in array' :key="index">
-			<image :src='item.log'></image>
-			<view class='message'>
-				<view class='address'>
+		<div class='box' v-for='(item,index) in array' :key="index">
+			<img :src='item.log'></img>
+			<div class='message'>
+				<div class='address'>
 					<text>{{item.operSelf?'自营':'非自营'}}</text>
 					<text>{{item.enterpriseName}} ({{item.region||''}})</text>
-				</view>
-				<view class="rate">
-					<view v-for="(citem,index) in num" :key="index" :class="index <= (item.starLevel-1) ?'selected':''" class='li' ></view>
+				</div>
+				<div class="rate">
+					<div v-for="(citem,index) in num" :key="index" :class="index <= (item.starLevel-1) ?'selected':''" class='li' ></div>
 					<text>{{item.score || 0}}分</text>
-				</view>
-				<view class='phone' @tap='call(item.linkMobile)'>
-					<image src='../static/phone.png'></image>
+				</div>
+				<div class='phone' @tap='call(item.linkMobile)'>
+					<img src='../static/phone.png'></img>
 					<text>{{item.linkMobile }}</text>
-				</view>
-				<view class='location'>
-					<image src='../static/wz.png'></image>
+				</div>
+				<div class='location'>
+					<img src='../static/wz.png'></img>
 					<text>{{item.ownerCity }}市{{item.region||''}}</text>
-				</view>
-			</view>
-		</view>
+				</div>
+			</div>
+		</div>
 		</scroll-uni>
-		</view>
-	</view>
+		</div>
+	</div>
 </template>
 <script>
 	import {custEnterpriseApply } from '@/api';
@@ -71,7 +71,7 @@
 				}).catch(e => {
 					this.mescroll.endErr()
 				})
-			
+
 			},
 			call(phone){
 				uni.makePhoneCall({
@@ -104,7 +104,7 @@
 			background: #fff;
 			border-bottom: 1px solid #eee;
 
-			&>image {
+			&>img {
 				width: 240rpx;
 				height: 175rpx;
 				border-radius: 15rpx;
@@ -146,7 +146,7 @@
 						background-size: cover;
 						margin-right:16rpx;
 					}
-				
+
 					.selected {
 						background: url('https://editspring.oss-cn-hangzhou.aliyuncs.com/images/20201102/app_1604295577891vxth.png');
 						background-size: cover;
@@ -160,7 +160,7 @@
 					}
 				}
 				.phone {
-					image {
+					img {
 						width: 22rpx;
 						height: 22rpx;
 					}
@@ -178,7 +178,7 @@
 					display: flex;
 					align-items: center;
 					margin-top:12rpx;
-					image {
+					img {
 						width: 28rpx;
 						height: 32rpx;
 					}
