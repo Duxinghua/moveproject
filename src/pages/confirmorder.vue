@@ -1463,18 +1463,20 @@ export default {
               paySign: paywx.paySign, // 支付签名
               success: function (res) {
                 console.log(res)
-                that.$router.push({ path: "/paysuccess" });
+                that.$router.push({ path: "/myOrder/index" });
                 alert(JSON.stringify(res))
                 // 支付成功后的回调函数
               },
               fail: function(res){
                 console.log(res)
                           alert(JSON.stringify(res))
+                            that.$router.push({ path: "/myOrder/index" });
               }
             });
 
           }else{
                     alert(JSON.stringify(result))
+                      that.$router.push({ path: "/myOrder/index" });
           }
         })
       }

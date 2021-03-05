@@ -1,5 +1,7 @@
 <template>
-	<div class="main" v-if="Object.keys(userInfo).length>0">
+	<div class="main">
+    <!-- // v-if="Object.keys(userInfo).length>0" -->
+        <TopNav :menu="menutext" />
 		<header @tap="link('/personalCenter/setting',userInfo)">
 			<img :src="userInfo.avatarUrl"></img>
 			<div>
@@ -37,13 +39,18 @@
 </template>
 
 <script>
+import TopNav from "@/components/topnav.vue";
 	export default {
 		data() {
 			return {
 				userInfo: {},
-				token: ''
+				token: '',
+        menutext:'我的'
 			}
 		},
+    components:{
+      TopNav
+    },
 		async mounted() {
 			let userId = await JSON.parse(localStorage.getItem('payload')).userId
       console.log(userId)

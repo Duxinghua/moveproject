@@ -323,6 +323,8 @@ export default {
       if (this.orderList.length < this.total) {
         this.page.num++;
         this.upCallback(true);
+      }else{
+        this.finished = true
       }
     },
     tabClick(index) {

@@ -1,14 +1,15 @@
 <template>
   <div
     class='move'
-    v-if="Object.keys(orderDetail).length>0"
+
   >
+       <TopNav :menu="menutext" />
     <h4>{{orderDetail.orderStatus | orderStatus}}</h4>
     <div
       class='calling'
-      v-if="orderDetail.orderStatus!='WAIT_REC' && orderDetail.orderStatus!='NOPAY' && orderDetail.orderStatus!='NOPAY2' && orderDetail.orderStatus!='CANCEL_APPLY'"
+      v-if=" orderDetail.custDriverInfoSimpleVo && orderDetail.orderStatus!='WAIT_REC' && orderDetail.orderStatus!='NOPAY' && orderDetail.orderStatus!='NOPAY2' && orderDetail.orderStatus!='CANCEL_APPLY'"
     >
-      <div>
+      <div v-if="orderDetail.custDriverInfoSimpleVo">
         <img :src="orderDetail.custDriverInfoSimpleVo.avatarUrl"></img>
         <div class='rates'>
           <p><span v-if='orderDetail.custDriverInfoSimpleVo'>{{formatName(orderDetail.custDriverInfoSimpleVo.plateNumber || "")}}</span><span>{{orderDetail.carType | carType}}</span></p>
@@ -27,9 +28,7 @@
         </div>
       </div>
       <a :href="'tel:'+orderDetail.driverMobilno">
-      <img
-        src='../../assets/img/calling.png'
-      ></img>
+        <img src='../../assets/img/calling.png'></img>
       </a>
     </div>
     <div class='modelCar'>
@@ -218,19 +217,21 @@
 </template>
 
 <script>
+import TopNav from "@/components/topnav.vue";
 export default {
   data() {
     return {
       list: [1, 2, 3],
       num: 5,
       bianhao: "1",
-      orderDetail:{
-        custDriverInfoSimpleVo:{
-          avatarUrl:''
+      orderDetail: {
+        custDriverInfoSimpleVo: {
+          avatarUrl: "",
         },
-        orderPicList:[],
-        orderRouteList:[]
-      }
+        orderPicList: [],
+        orderRouteList: [],
+      },
+      menutext:'搬家订单详情'
     };
   },
   filters: {
@@ -349,7 +350,11 @@ export default {
     },
   },
   components: {
-
+    TopNav
+  },
+  mounted() {
+    this.getOrderDetail();
+    console.log(this)
   },
   methods: {
     async getOrderDetail() {
@@ -365,37 +370,24 @@ export default {
       for (let i = 0; i < array.length; i++) {
         imgsArray.push(array[i].picUrl);
       }
-      uni.predivImage({
-        current: index,
-        urls: imgsArray,
+      this.ImagePreview({
+        images: imgsArray,
+        closeable: true,
       });
     },
     gocost() {
-      let obj = {};
-      obj = {
-        headSeqId: this.orderDetail.seqId,
-      };
-      orderSheet_price(obj).then((res) => {
-        if (res.code == 200) {
-          uni.navigateTo({
-            url: "/order/cost?detail=" + JSON.stringify(res.data),
-          });
-        }
-      });
+        var that = this
+        that.$router.push({path: '/order/cost?seqId='+this.orderDetail.seqId})
     },
     cancel(id, sheetId) {
-      uni.navigateTo({
-        url: "/order/cancelOrder?seqId=" + id + "&sheetId=" + sheetId,
-      });
+       this.$router.push({path: "/order/cancelOrder?seqId=" + id + "&sheetId=" + sheetId})
     },
     del(id) {
-      order_delete({
+      this.$api.order_delete({
         seqId: id,
       }).then((res) => {
         if (res.code == 200) {
-          uni.redirectTo({
-            url: "/myOrder/index",
-          });
+          this.$router.push({path:'/myOrder/index'})
         }
       });
     },
@@ -436,7 +428,7 @@ export default {
     submit() {
       if (this.bianhao == 1) {
         //微信支付
-        var that = this
+        var that = this;
         wx_pay({
           orderHeadSeqId: this.orderDetail.seqId,
         }).then((res) => {
@@ -449,14 +441,13 @@ export default {
               signType: paymentData.signType,
               paySign: paymentData.paySign,
               success: (res) => {
-
-                that.$toast("支付成功")
+                that.$toast("支付成功");
               },
               fail: (res) => {
-                that.$toast("支付失败")
+                that.$toast("支付失败");
               },
               complete: (res) => {
-                 that.$route.push({path:"/myOrder"})
+                that.$route.push({ path: "/myOrder" });
               },
             });
           }
@@ -468,14 +459,16 @@ export default {
       }
     },
     contact() {
-      this.$api.orderPayOffLine({
-        seqId: this.orderDetail.seqId,
-        payType: "OFF_LINE",
-      }).then((res) => {
-        if (res.code == 200) {
-          this.$route.push({path:"/myOrder"})
-        }
-      });
+      this.$api
+        .orderPayOffLine({
+          seqId: this.orderDetail.seqId,
+          payType: "OFF_LINE",
+        })
+        .then((res) => {
+          if (res.code == 200) {
+            this.$route.push({ path: "/myOrder" });
+          }
+        });
     },
     cal() {
       this.$refs.popup3.close();
@@ -484,7 +477,9 @@ export default {
       this.bianhao = e;
     },
     remark(id, sheetId) {
-      this.$route.push({path:"/myOrder/evaluation?seqId=" + id + "&sheetId=" + sheetId})
+      this.$router.push({
+        path: "/myOrder/evaluation?seqId=" + id + "&sheetId=" + sheetId,
+      });
     },
     formatName(name) {
       let newStr;
@@ -716,8 +711,10 @@ export default {
       flex: 1;
 
       p:first-child {
+              margin:10px 0;
         .minute {
           position: relative;
+          font-size: 15px;
         }
       }
 
@@ -838,58 +835,7 @@ export default {
     }
   }
 
-  .remark {
-    background: #fff;
-    padding: 20px 30px;
-    border-radius: 17px;
-    margin: 20px 24px;
 
-    p:last-child {
-      font-size: 12px;
-      color: #888888;
-      margin-top: 20px;
-      word-break: break-all;
-    }
-  }
-
-  .name,
-  .contact,
-  .particulars {
-    background: #fff;
-    padding: 20px 30px;
-    border-radius: 17px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0 24px 20px 24px;
-
-    span:first-child {
-      width: 30%;
-    }
-
-    span:last-child {
-      font-size: 14px;
-      color: #363636;
-      flex: 1;
-      text-align: right;
-      display: flex;
-      justify-content: flex-end;
-    }
-
-    img {
-      width: 20px;
-      height: 20px;
-    }
-
-    .protect {
-      padding: 1px 15px;
-      border: 1px solid #88d292;
-      color: #88d292;
-      border-radius: 30px;
-      font-size: 11px;
-      margin-left: 10px;
-    }
-  }
 
   .paid {
     background: #fff;
@@ -979,6 +925,58 @@ export default {
       font-size: 13px;
       left: 24px;
       position: absolute;
+    }
+  }
+    .remark {
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 17px;
+    margin: 20px 24px;
+    font-size: 15px;
+    p:last-child {
+      font-size: 12px;
+      color: #888888;
+      margin-top: 20px;
+      word-break: break-all;
+    }
+  }
+
+  .name,
+  .contact,
+  .particulars {
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 17px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 24px 20px 24px;
+    font-size: 15px;
+    span:first-child {
+      width: 30%;
+    }
+
+    span:last-child {
+      font-size: 14px;
+      color: #363636;
+      flex: 1;
+      text-align: right;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .protect {
+      padding: 1px 15px;
+      border: 1px solid #88d292;
+      color: #88d292;
+      border-radius: 30px;
+      font-size: 11px;
+      margin-left: 10px;
     }
   }
 }

@@ -1,5 +1,6 @@
 <template>
   <div class='lahuo'>
+        <TopNav :menu="menutext" />
     <h4>{{orderDetail.orderStatus | orderStatus }}</h4>
     <div
       class='calling'
@@ -149,12 +150,14 @@
 </template>
 
 <script>
+import TopNav from "@/components/topnav.vue";
 export default {
   data() {
     return {
       list: [1, 2, 3],
       num: 5,
       bianhao: "1",
+      menutext:'拉货订单详情',
       orderDetail: {
         custDriverInfoSimpleVo: {
           avatarUrl: "",
@@ -164,7 +167,9 @@ export default {
       },
     };
   },
-  components: {},
+  components: {
+    TopNav
+  },
   mounted() {
     this.getOrderDetail();
   },
@@ -611,8 +616,10 @@ export default {
       flex: 1;
 
       p:first-child {
+              margin:10px 0;
         .minute {
           position: relative;
+          font-size: 15px;
         }
       }
 

@@ -271,11 +271,27 @@ const router = new Router({
       }
     },
     {
+      path: '/myOrder/rentCar',
+      name: 'rentCar',
+      component: () => import('@/pages/myOrder/rentCar'),
+      meta: {
+        title: '租车订单详情'
+      }
+    },
+    {
       path: '/myOrder/move',
       name: 'move',
       component: () => import('@/pages/myOrder/move'),
       meta: {
         title: '搬家订单详情'
+      }
+    },
+    {
+      path: '/myOrder/worker',
+      name: 'move',
+      component: () => import('@/pages/myOrder/worker'),
+      meta: {
+        title: '劳务工订单详情'
       }
     },
     {

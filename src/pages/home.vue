@@ -18,6 +18,12 @@
         <img
           src="../assets/images/homeico.png"
           class="homeico"
+          v-if="!userInfo.avatarUrl"
+        />
+                <img
+          :src="userInfo.avatarUrl"
+          class="homeico"
+          v-if="userInfo.avatarUrl"
         />
       </div>
       <div
@@ -308,7 +314,8 @@ export default {
         },
       ],
       city: "武汉",
-      logoutshow:false
+      logoutshow:false,
+      userInfo:{}
     };
   },
   mounted() {
@@ -387,12 +394,27 @@ export default {
       this.active = this.adList.length;
     }
     console.log(this.cartIndex,'cartindex')
+    this.getinfo()
   },
   computed: {},
   methods: {
+    //处理头像
+    async getinfo(){
+          //处理头像
+          if(localStorage.getItem('payload')){
+                let userId = await JSON.parse(localStorage.getItem('payload')).userId
+                console.log(userId)
+                let data = await this.$api.getUserDataBySeqId({ customerSeqId: userId });
+                this.userInfo = data.data;
+          }
+    },
     //退出处理
     logout(){
-      this.logoutshow = true
+      // this.logoutshow = true
+       this.$router.push({
+          path: "/my",
+          query: {}
+        });
     },
     confirmhandler(){
       localStorage.clear()
@@ -667,6 +689,7 @@ export default {
       .homeico {
         width: 40px;
         height: 40px;
+        border-radius: 50%;
         margin-right: auto;
       }
     }

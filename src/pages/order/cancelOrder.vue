@@ -1,5 +1,6 @@
 <template>
   <div class="submit">
+             <TopNav :menu="menutext" />
     <div
       scroll-y
       class="class-list-wrap"
@@ -17,7 +18,7 @@
 				上传照片 <span>*每张图片大小不超过2M</span>
 			</div>
 		    <div class="weui-uploader__bd th-backwhite">
-          <van-uploader v-model="fileList" :after-read="afterRead" />
+           <van-uploader v-model="fileList" multiple  :max-count="4" :after-read="afterRead" :before-delete="beforedelete"  />
 		    </div>
 			</div>
 			<div class="btn-wrap">
@@ -26,7 +27,7 @@
 	</div>
 </template>
 <script>
-// appealimgUpload UPLOAD_API, cancelStatusUser
+import TopNav from "@/components/topnav.vue";
 export default {
   data() {
     return {
@@ -34,15 +35,33 @@ export default {
       fileList: [],
       seqId: "",
       sheetId: "",
+      menutext:'取消订单'
     };
+  },
+  components:{
+    TopNav
   },
   mounted() {
     this.seqId = this.$route.query.seqId;
     this.sheetId = this.$route.query.sheetId;
   },
   methods: {
-    afterRead(){
-
+    afterRead(e,detail){
+      console.log(detail)
+      var data = new FormData();
+      data.append('file', e.file)
+      this.$api.appealimgUpload(data).then((result) => {
+        if(result.code == 200){
+          this.fileList[detail.index].viewUrl = result.data.viewUrl
+          // localStorage.setItem('fileList',JSON.stringify(this.fileList))
+        }else{
+          return this.$toast(result.msg)
+        }
+      })
+    },
+    beforedelete(e,detail){
+      var index = detail.index
+      this.fileList.splice(index,1)
     },
     chooseImage(e) {
 
@@ -72,6 +91,7 @@ export default {
           })
       .then(() => {
         // on confirm
+
       })
       .catch(() => {
         // on cancel

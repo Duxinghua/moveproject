@@ -1,5 +1,6 @@
 <template>
 	<div class='cost'>
+        <TopNav :menu="menutext" />
 		<div>
 			<p class='price'>￥<span>{{payMoney}}</span></p>
 			<span v-if="serverType != 'HIRE_WORKER'">总里程{{routeKilometer}}公里</span>
@@ -24,6 +25,7 @@
 	</div>
 </template>
 <script>
+import TopNav from "@/components/topnav.vue";
 	export default{
 		data(){
 			return{
@@ -34,13 +36,17 @@
 				extra:[],
 				index: 0,
 				serverType: '',
-        seqId:''
+        seqId:'',
+        menutext:'费用明细'
 			}
 		},
 		mounted(){
       this.seqId = this.$route.query.seqId
       this.getDetail()
 		},
+    components:{
+      TopNav
+    },
     methods:{
 			getDetail(){
         let obj={}

@@ -750,7 +750,7 @@ export default {
         data.refundMoney = 0;
         this.$api.orderHeadInsert(data).then((result) => {
           if (result.code == 200) {
-            localStorage.setItem('time',new Date().gettime())
+            localStorage.setItem('time',new Date().getTime())
             this.detail = result.data;
             this.payshow = true;
           }
