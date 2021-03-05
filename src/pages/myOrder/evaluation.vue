@@ -250,9 +250,15 @@
 			background:rgba(255,255,255,1);
 			border-radius:18px;
 			position: relative;
+      height: 130px;
 			textarea {
-				padding:10px 10px 0 12px;
-				width: 90%;
+				padding:10px 10px 10px 10px;
+        box-sizing: border-box;
+				width: 100%;
+        position: absolute;
+        left:0;
+        top:0;
+        border:none
 			}
 				.textarea{
 					font-size: 28px;
@@ -260,6 +266,7 @@
 					color: rgba(102, 102, 102, 1);
 					line-height: 40px;
 					height: 130px;
+          border:none;
 				}
 		}
 		.btn{

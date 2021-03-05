@@ -17,24 +17,12 @@
 				上传照片 <span>*每张图片大小不超过2M</span>
 			</div>
 		    <div class="weui-uploader__bd th-backwhite">
-		      <div class="weui-uploader__files" id="uploaderFiles">
-		        <div v-for="(item,index) in fileList" :key="index" class="picture">
-		          <div class="weui-uploader__file posi-rela"  :id="item.path">
-					   <img class="th-icon-cancel" src="../../assets/img/del.png" @click="deletImg(index)"></img>
-		            <img class="weui-uploader__img" :src="item.path"  mode="aspectFill" @click="predivImage" />
-		          </div>
-		        </div>
-		        <div class="weui-uploader__input-box">
-		          <div class="weui-uploader__input" @click="chooseImage">
-				         <img src='../../assets/img/camrea.png'></img>
-		          </div>
-		        </div>
-		      </div>
+          <van-uploader v-model="fileList" :after-read="afterRead" />
 		    </div>
 			</div>
-			<view class="btn-wrap">
-				<button type="primary" :loading="loading"  @click="testSubmit">确认取消</button>
-			</view>
+			<div class="btn-wrap">
+				<button type="primary"   @click="testSubmit">确认取消</button>
+			</div>
 	</div>
 </template>
 <script>
@@ -49,10 +37,13 @@ export default {
     };
   },
   mounted() {
-    this.seqId = this.$router.query.seqId;
-    this.sheetId = this.$router.query.sheetId;
+    this.seqId = this.$route.query.seqId;
+    this.sheetId = this.$route.query.sheetId;
   },
   methods: {
+    afterRead(){
+
+    },
     chooseImage(e) {
 
     },
@@ -97,38 +88,41 @@ export default {
   height: 100vh;
   background-color: #f3f3f3;
   .job {
-    margin: 20upx 28upx 28upx 28upx;
+    margin: 20px;
     padding-bottom: 20px;
     background: rgba(255, 255, 255, 1);
     border-radius: 8px;
     position: relative;
+    height: 200px;
     textarea {
-      padding: 16px 10px 0 10px;
-      width: 90%;
+      padding: 28px;
+      box-sizing: border-box;
+      border: none;
+      width: 100%;
     }
     .textarea {
-      font-size: 28upx;
+      font-size: 28px;
       font-family: PingFang SC;
       color: rgba(102, 102, 102, 1);
-      line-height: 40upx;
-      margin-left: 22upx;
+      line-height: 40px;
     }
     & > img {
-      width: 30rpx;
-      height: 32rpx;
+      width: 30px;
+      height: 32px;
       position: absolute;
-      top: 30rpx;
-      margin-right: 20rpx;
+      top: 30px;
+      margin-right: 20px;
     }
   }
   .tip {
-    margin-top: 20rpx;
-    margin-bottom: 20rpx;
-    padding: 0 28rpx;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 0 28px;
+    font-size: 18px;
     span {
       color: #fe6535;
       font-size: 13px;
-      margin-left: 10rpx;
+      margin-left: 10px;
     }
   }
   .class-list-wrap {
@@ -144,8 +138,8 @@ export default {
     height: 20px;
   }
   .weui-uploader__input-box {
-    width: 216upx;
-    height: 216upx;
+    width: 216px;
+    height: 216px;
     margin-left: 10px;
     margin-bottom: 10px;
     float: left;
@@ -154,21 +148,21 @@ export default {
     margin-left: 0px;
   }
   .picture {
-    width: 216upx;
-    height: 216upx;
+    width: 216px;
+    height: 216px;
     border-radius: 8px;
-    margin-left: 20upx;
-    margin-bottom: 20upx;
+    margin-left: 20px;
+    margin-bottom: 20px;
     float: left;
     .weui-uploader__file {
-      width: 216upx;
-      height: 216upx;
+      width: 216px;
+      height: 216px;
       border-radius: 8px;
       // overflow: hidden;
       .weui-uploader__img {
         width: 100%;
         height: 100%;
-        border-radius: 12rpx;
+        border-radius: 12px;
       }
     }
   }
@@ -176,22 +170,22 @@ export default {
     margin-left: 0px;
   }
   .weui-uploader__input {
-    width: 216upx;
-    height: 216upx;
+    width: 216px;
+    height: 216px;
     background: #fcfcfc;
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    border-radius: 12rpx;
+    border-radius: 12px;
     font-size: 14px;
     & > img {
-      width: 90rpx;
-      height: 65rpx;
+      width: 90px;
+      height: 65px;
     }
   }
   .weui-uploader__bd {
-    margin: 0 28upx;
+    margin: 0 28px;
   }
   .posi-rela {
     position: relative;
@@ -201,25 +195,27 @@ export default {
     margin-right: 0;
   }
   .btn-wrap {
-    padding: 0 28upx;
-    height: 130upx;
+    padding: 0 28px;
+    height: 130px;
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
     box-sizing: border-box;
     align-items: flex-end;
-    margin-bottom: 20upx;
+    margin-bottom: 20px;
   }
   button {
     width: 100%;
-    height: 90rpx;
-    line-height: 90rpx;
-    font-size: 32upx;
+    height: 90px;
+    line-height: 90px;
+    font-size: 32px;
   }
   button[type="primary"] {
-    // background: #acacac;
-    border-radius: 45upx;
+    background: #acacac;
+    border-radius: 45px;
+    border: none;
+    color:#333333;
   }
 
   button:after {

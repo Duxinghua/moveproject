@@ -223,6 +223,14 @@ const router = new Router({
       }
     },
     {
+      path: '/question',
+      name: 'question',
+      component: () => import('@/pages/personalCenter/question'),
+      meta: {
+        title: '客服中心'
+      }
+    },
+    {
       path: '/myorder',
       name: 'myOrder',
       component: () => import('@/pages/myOrder/index'),
@@ -231,7 +239,15 @@ const router = new Router({
       }
     },
     {
-      path: '/cancelOrder',
+      path: '/order/cost',
+      name: 'cost',
+      component: () => import('@/pages/order/cost'),
+      meta: {
+        title: '价格详情'
+      }
+    },
+    {
+      path: '/order/cancelOrder',
       name: 'cancelOrder',
       component: () => import('@/pages/order/cancelOrder'),
       meta: {
@@ -239,7 +255,7 @@ const router = new Router({
       }
     },
     {
-      path: '/evaluation',
+      path: '/myOrder/evaluation',
       name: 'evaluation',
       component: () => import('@/pages/myOrder/evaluation'),
       meta: {
@@ -251,7 +267,15 @@ const router = new Router({
       name: 'lahuo',
       component: () => import('@/pages/myOrder/lahuo'),
       meta: {
-        title: '订单详情'
+        title: '拉货订单详情'
+      }
+    },
+    {
+      path: '/myOrder/move',
+      name: 'move',
+      component: () => import('@/pages/myOrder/move'),
+      meta: {
+        title: '搬家订单详情'
       }
     },
     {

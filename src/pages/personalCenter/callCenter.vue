@@ -5,10 +5,10 @@
 				<img src='../static/tishi.png'></img>
 				<span>在线客服</span>
 			</button> -->
-			<div class='offCall' @click='call'>
+			<a class='offCall' :href="'tel:'+phone">
 				<img src='../../assets/img/call.png'></img>
 				<span>客服热线</span>
-			</div>
+			</a>
 		</div>
 		<h4>常见问题</h4>
 		<div class='used'>
@@ -134,23 +134,8 @@
 					}
 				})
 			},
-			call() {
-				uni.makePhoneCall({
-					phoneNumber: this.phone, //手机号
-					// 成功回调
-					success: (res) => {
-						console.log('调用成功!')
-					},
-					// 失败回调
-					fail: (res) => {
-						console.log(res);
-					}
-				});
-			},
 			go_question(state) {
-				uni.navigateTo({
-					url: '/personalCenter/question?state='+state
-				})
+        this.$router.push({path:'/question?state='+state})
 			}
 		}
 	}
@@ -165,7 +150,8 @@
 			display: flex;
 			align-items: center;
 			margin: 0 24px;
-
+      background: linear-gradient(#fca73c, #fe8a35);
+      border-radius: 13px;
 			.onCall {
 				background-img: linear-gradient(#70adfb, #6790fc);
 				border-radius: 13px;
@@ -212,6 +198,7 @@
 
 		h4 {
 			font-weight: 600;
+      font-size: 30px;
 			margin: 50px 0 25px 24px;
 		}
 
@@ -219,14 +206,16 @@
 			background-color: #fff;
 			border-radius: 20px;
 			padding: 20px;
+      box-sizing: border-box;
 			margin: 0 24px;
 
 			p {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				height: 80px;
-
+				height: 40px;
+        padding:10px 0;
+        margin:10px;
 				span {
 					font-size: 14px;
 					color: #555555;

@@ -220,9 +220,11 @@
 <style lang='scss'>
 	.question{
 		padding: 30px;
+    box-sizing: border-box;
 
 		.title {
 			font-weight: 600;
+      font-size: 36px;
 			margin-bottom: 20px;
 		}
 

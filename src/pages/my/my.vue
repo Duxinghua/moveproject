@@ -25,7 +25,7 @@
 			<div class='link'>
 				<div class="top">
 					<img src="../../assets/img/erji.png"></img>
-					<div class="right_wrap" @click="link('/personalCenter/callCenter')">
+					<div class="right_wrap" @click="link('/callCenter')">
 						<span>客服中心</span>
 						<img src="../../assets/img/right_gray.png"></img>
 					</div>
