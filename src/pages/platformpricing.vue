@@ -463,7 +463,7 @@ export default {
         if (res.code == 200) {
           var wxpay = res.data
           wx.config({
-            debug: true,
+            debug: false,
             appId: config.appid,
             timestamp: wxpay.timestamp,
             nonceStr: wxpay.noncestr,
