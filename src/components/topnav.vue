@@ -18,6 +18,10 @@ export default {
     path:{
       type:String,
       default:''
+    },
+    page:{
+      type:String,
+      default:''
     }
 
   },
@@ -28,7 +32,15 @@ export default {
       // return
      localStorage.setItem("sCar",0)
     //  this.$router.push("/"+this.path)
-      this.$router.go(-1)
+      if(this.page){
+        if(this.page == 'home'){
+          return this.$router.push("/")
+        }else{
+          return this.$router.push("/"+this.page)
+        }
+      }else{
+        this.$router.go(-1)
+      }
     }
   }
 }

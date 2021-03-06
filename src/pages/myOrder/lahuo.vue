@@ -137,7 +137,7 @@
       <span
         class='pay'
         v-if='orderDetail.orderStatus=="NOPAY"||orderDetail.orderStatus=="NOPAY2"'
-        @click='pay(orderDetail.seqId)'
+        @click='pay(orderDetail)'
       >立即支付</span>
       <span
         class='cancel_order'
@@ -146,11 +146,14 @@
       >立即评价</span>
       <!-- 	<span class='cancel_order' v-if='orderDetail.orderStatus=="CANCEL"' @click='del(orderDetail.seqId)'>删除订单</span> -->
     </div>
+    <PayItem ref="pays"  @update="update"/>
   </div>
 </template>
 
 <script>
+import config from "@/utils/config.js"
 import TopNav from "@/components/topnav.vue";
+import PayItem from '@/components/payitem.vue'
 export default {
   data() {
     return {
@@ -165,12 +168,64 @@ export default {
         orderPriceMap:[],
         orderOtherList:[]
       },
+      isFromConfirm:false,
+      paytype: 1,
+       isWx:2
     };
   },
   components: {
-    TopNav
+    TopNav,
+    PayItem
   },
   mounted() {
+        if (
+      window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
+      "micromessenger"
+    ) {
+      localStorage.setItem("isWeixin", 1);
+      var data = {
+        url: location.href
+      }
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      if (isiOS) {
+        data.url = config.shareurls
+      }
+      this.$api.workerApply(data).then((res) => {
+        if (res.code == 200) {
+          var wxpay = res.data
+          wx.config({
+            debug: true,
+            appId: config.appid,
+            timestamp: wxpay.timestamp,
+            nonceStr: wxpay.noncestr,
+            signature: wxpay.signature,
+            jsApiList: [
+              'checkJsApi',
+              'chooseWXPay'
+            ]
+          })
+          wx.error(function (res) {
+            console.log('出错了：' + res.errMsg)
+          })
+          // 在这里调用 API
+          wx.ready(function () {
+            wx.checkJsApi({
+              jsApiList: [
+                'checkJsApi',
+                'chooseWXPay'
+              ],
+              success: function (res) {
+
+              }
+            })
+          })
+        }
+      })
+    } else {
+      localStorage.setItem("isWeixin", 2);
+    }
+    this.isWx = localStorage.getItem('isWeixin')
     this.getOrderDetail();
   },
   filters: {
@@ -311,45 +366,26 @@ export default {
 					seqId:id
 				}).then(res => {
 					if(res.code==200){
-            that.$router.push({path: '/myOrder/index'})
+            that.$router.push({path: '/myorder'})
 
 					}
 				})
 			},
-			pay(id){
-				this.$refs.popup_1.show()
-				// wx_pay({
-				// 	orderHeadSeqId: id
-				// }).then(res => {
-				// 	if (res.code == 200) {
-				// 		let paymentData = res.data;
-				// 		uni.requestPayment({
-				// 			timeStamp: paymentData.timeStamp,
-				// 			nonceStr: paymentData.nonceStr,
-				// 			package: paymentData.package,
-				// 			signType: paymentData.signType,
-				// 			paySign: paymentData.paySign,
-				// 			success: (res) => {
-				// 				uni.showToast({
-				// 					title: "支付成功"
-				// 				})
-				// 			},
-				// 			fail: (res) => {
-				// 				uni.showModal({
-				// 					content: "支付失败",
-				// 					showCancel: false
-				// 				})
-				// 			},
-				// 			complete: (res) => {
-				// 				uni.redirectTo({
-				// 					url: '/myOrder/index'
-				// 				})
-				// 			}
-				// 		})
-				// 	}
-
-				// })
+    goOrder(){
+     this.$router.push({path: '/myorder'})
+    },
+    update(e){
+      this.getOrderDetail()
+      this.$refs.pays.payshow = false
+    },
+			pay(item){
+        this.$refs.pays.paytype = this.paytype
+        this.$refs.pays.isWx = this.isWx
+        this.$refs.pays.payMoney = item.payMoney
+        this.$refs.pays.current_id = item.seqId
+        this.$refs.pays.payshow = true
 			},
+
 			submit() {
 				if (this.bianhao == 1) {
           var that = this
@@ -415,7 +451,7 @@ export default {
 <style lang='scss'>
 .lahuo {
   background: #f8f8f8;
-  padding: 24px 0px 30px 0px;
+  padding: 0px 0px 30px 0px;
 
   .uni-tip {
     background-color: #fff;

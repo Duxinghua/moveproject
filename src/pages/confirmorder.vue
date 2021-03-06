@@ -414,13 +414,13 @@
                 <span class="payname">微信支付</span>
               </div>
             </van-radio>
-            <van-radio name="3" style="display:none">
+            <van-radio name="3" >
               <div class="payitem">
                 <img
-                  src="../assets/images/bank.png"
+                  src="../assets/img/xx.png"
                   class="payico"
                 />
-                <span class="payname">银联支付</span>
+                <span class="payname">线下支付</span>
               </div>
             </van-radio>
           </van-radio-group>
@@ -1006,7 +1006,7 @@ export default {
       var data = {
         orderType: placeOrder,
         serverType: this.serverType[orderType],
-        carTypeSeqId: cartObject.seqId,
+        carTypeSeqId: cartObject.seqId || '',
         carType: cartObject.carType,
         priceType: priceType,
         ownerCity: city,
@@ -1467,22 +1467,33 @@ export default {
               paySign: paywx.paySign, // 支付签名
               success: function (res) {
                 console.log(res)
-                that.$router.push({ path: "/myOrder/index" });
+                that.$router.push({ path: "/myorder" });
                 alert(JSON.stringify(res))
                 // 支付成功后的回调函数
               },
               fail: function(res){
                 console.log(res)
                           alert(JSON.stringify(res))
-                            that.$router.push({ path: "/myOrder/index" });
+                            that.$router.push({ path: "/myorder" });
               }
             });
 
           }else{
                     alert(JSON.stringify(result))
-                      that.$router.push({ path: "/myOrder/index" });
+                      that.$router.push({ path: "/myorder" });
           }
         })
+      }else if(this.paytype == 3){
+          this.$api
+            .orderPayOffLine({
+              seqId: this.detail.seqId,
+              payType: "OFF_LINE",
+            })
+            .then((res) => {
+              if (res.code == 200) {
+                this.$router.push({ path: "/myorder" });
+              }
+            });
       }
     },
   },

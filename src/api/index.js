@@ -107,7 +107,7 @@ const server = {
   //线下支付wx_pay
   //export const orderPayOffLine = params => { return get(`/orderHead/orderPayOffLine`, params).then(res => res.data) };
   orderPayOffLine(params){
-    return httpv1({method:"Get",url:'/orderEvaluate/save',params})
+    return httpv1({method:"Get",url:'/orderHead/orderPayOffLine',params})
   },
   //微信登录绑定手机获取验证码
   //export const getUserDataBySeqId = params => { return get(`/custlogin/getUserDataBySeqId`, params).then(res => res.data) };

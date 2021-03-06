@@ -121,7 +121,7 @@
       <span
         class='pay'
         v-if='orderDetail.orderStatus=="NOPAY"||orderDetail.orderStatus=="NOPAY2"'
-        @click='pay(orderDetail.seqId)'
+        @click='pay(orderDetail)'
       >立即支付</span>
       <span
         class='cancel_order'
@@ -131,50 +131,6 @@
       <!-- <span class='cancel_order' v-if='orderDetail.orderStatus=="CANCEL"' @click='del(orderDetail.seqId)'>删除订单</span> -->
     </div>
 
-    <!-- 支付方式 -->
-    <van-popup
-      ref="popup_1"
-      type="bottom"
-      height="400"
-      width="500"
-      radius="6"
-      :showCloseIcon="true"
-    >
-      <div class="popup-content_1">
-        <h6>￥{{orderDetail.payMoney}}</h6>
-        <p>选择支付方式</p>
-        <div class='payType'>
-          <div>
-            <div>
-              <img src='../../assets/img/wx.png'></img>微信支付
-            </div>
-            <radio
-              value='1'
-              :checked="bianhao==1"
-              @click='radio("1")'
-              style="transform:scale(0.7)"
-            ></radio>
-          </div>
-          <div>
-            <div>
-              <img src='../../assets/img/xx.png'>线下支付</img>
-            </div>
-            <radio
-              value='2'
-              :checked="bianhao==2"
-              @click='radio("2")'
-              style="transform:scale(0.7)"
-            ></radio>
-          </div>
-        </div>
-        <div
-          class='btn'
-          @click='submit'
-        >
-          <span>立即叫车</span>
-        </div>
-      </div>
-    </van-popup>
     <!-- 弹框 -->
     <van-popup
       type='center'
@@ -197,10 +153,13 @@
         </div>
       </div>
     </van-popup>
+        <PayItem ref="pays"  @update="update"/>
   </div>
 </template>
 
 <script>
+import config from "@/utils/config.js";
+import PayItem from '@/components/payitem.vue';
 import TopNav from "@/components/topnav.vue";
 export default {
   props: {
@@ -225,7 +184,10 @@ export default {
         orderRouteList: [],
         orderOtherList:[]
       },
-      menutext:'租车订单详情'
+      menutext:'租车订单详情',
+      isFromConfirm:false,
+      paytype: 1,
+      isWx:2
     };
   },
     filters: {
@@ -344,6 +306,54 @@ export default {
     },
   },
   mounted(){
+    if (
+      window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
+      "micromessenger"
+    ) {
+      localStorage.setItem("isWeixin", 1);
+      var data = {
+        url: location.href
+      }
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      if (isiOS) {
+        data.url = config.shareurls
+      }
+      this.$api.workerApply(data).then((res) => {
+        if (res.code == 200) {
+          var wxpay = res.data
+          wx.config({
+            debug: true,
+            appId: config.appid,
+            timestamp: wxpay.timestamp,
+            nonceStr: wxpay.noncestr,
+            signature: wxpay.signature,
+            jsApiList: [
+              'checkJsApi',
+              'chooseWXPay'
+            ]
+          })
+          wx.error(function (res) {
+            console.log('出错了：' + res.errMsg)
+          })
+          // 在这里调用 API
+          wx.ready(function () {
+            wx.checkJsApi({
+              jsApiList: [
+                'checkJsApi',
+                'chooseWXPay'
+              ],
+              success: function (res) {
+
+              }
+            })
+          })
+        }
+      })
+    } else {
+      localStorage.setItem("isWeixin", 2);
+    }
+    this.isWx = localStorage.getItem('isWeixin')
     this.getOrderDetail()
   },
   methods: {
@@ -380,74 +390,24 @@ export default {
           }
         });
     },
-    pay(id) {
-      this.$refs.popup_1.show();
-      // wx_pay({
-      // 	orderHeadSeqId: id
-      // }).then(res => {
-      // 	if (res.code == 200) {
-      // 		let paymentData = res.data;
-      // 		uni.requestPayment({
-      // 			timeStamp: paymentData.timeStamp,
-      // 			nonceStr: paymentData.nonceStr,
-      // 			package: paymentData.package,
-      // 			signType: paymentData.signType,
-      // 			paySign: paymentData.paySign,
-      // 			success: (res) => {
-      // 				uni.showToast({
-      // 					title: "支付成功"
-      // 				})
-      // 			},
-      // 			fail: (res) => {
-      // 				uni.showModal({
-      // 					content: "支付失败",
-      // 					showCancel: false
-      // 				})
-      // 			},
-      // 			complete: (res) => {
-      // 				uni.redirectTo({
-      // 					url: '/myOrder/index'
-      // 				})
-      // 			}
-      // 		})
-      // 	}
 
-      // })
+          goOrder(){
+     this.$router.push({path: '/myorder'})
     },
+      update(e){
+
+        this.$refs.pays.payshow = false
+        this.getOrderDetail()
+      },
+			pay(item){
+        this.$refs.pays.paytype = this.paytype
+        this.$refs.pays.isWx = this.isWx
+        this.$refs.pays.payMoney = item.payMoney
+        this.$refs.pays.current_id = item.seqId
+        this.$refs.pays.payshow = true
+			},
     submit() {
-      var that = this;
-      if (this.bianhao == 1) {
-        //微信支付
-        wx_pay({
-          orderHeadSeqId: this.orderDetail.seqId,
-        }).then((res) => {
-          if (res.code == 200) {
-            let paymentData = res.data;
-            uni.requestPayment({
-              timeStamp: paymentData.timeStamp,
-              nonceStr: paymentData.nonceStr,
-              package: paymentData.package,
-              signType: paymentData.signType,
-              paySign: paymentData.paySign,
-              success: (res) => {
-                that.toast("支付成功");
-              },
-              fail: (res) => {
-                that.toast("支付失败");
-              },
-              complete: (res) => {
-                that.$router.push({
-                  path: "/myOrder/index",
-                });
-              },
-            });
-          }
-        });
-      } else {
-        // 线下支付
-        this.$refs.popup3.open();
-        this.$refs.popup_1.close();
-      }
+
     },
     contact() {
       this.$api
@@ -458,7 +418,7 @@ export default {
         .then((res) => {
           if (res.code == 200) {
             this.$router.push({
-              path: "/myOrder/index",
+              path: "/myorder",
             });
           }
         });
@@ -490,7 +450,7 @@ export default {
 <style lang='scss'>
 .rent {
   background: #f8f8f8;
-  padding: 24px 0px 30px 0px;
+  padding: 0px 0px 30px 0px;
 
   .uni-tip {
     background-color: #fff;

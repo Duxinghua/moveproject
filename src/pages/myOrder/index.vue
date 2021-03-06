@@ -1,6 +1,6 @@
 <template>
   <div class='index_wrap'>
-    <TopNav :menu="menutext" />
+    <TopNav :menu="menutext" page="my" />
     <div class="navbar">
       <div
         v-for="(item, index) in navList"
@@ -126,55 +126,69 @@
             </div>
           </van-popup>
 
-                    <!-- 支付方式 -->
-          <van-popup
-            ref="popup_1"
-            position="bottom"
-            height="400"
-            width="500"
-            radius="6"
-            :showCloseIcon="true"
+              <!-- 支付 -->
+    <van-popup
+      v-model="payshow"
+      closeable
+      round
+      position="bottom"
+      :style="{'min-height':'100px'}"
+      @close="changeHandler"
+    >
+      <div class="payClass">
+        <div class="paytprice">
+          <span>¥</span>
+          {{payMoney}}
+        </div>
+        <div class="paytypes">
+          <div class="paytips">选择支付方式</div>
+          <van-radio-group
+            v-model="paytype"
+            checked-color="#28ae3a"
           >
-            <div class="popup-content_1">
-              <h6>￥{{payMoney}}</h6>
-              <p>选择支付方式</p>
-              <div class='payType'>
-                <div>
-                  <div>
-                    <image src='../../static/wx.png'></image>微信支付
-                  </div>
-                  <radio
-                    value='1'
-                    :checked="bianhao==1"
-                    @click='radio("1")'
-                    style="transform:scale(0.7)"
-                  ></radio>
-                </div>
-                <div>
-                  <div>
-                    <image src='../../static/xx.png'>线下支付</image>
-                  </div>
-                  <radio
-                    value='2'
-                    :checked="bianhao==2"
-                    @click='radio("2")'
-                    style="transform:scale(0.7)"
-                  ></radio>
-                </div>
+            <van-radio name="1" v-if="isWx != 1">
+              <div class="payitem">
+                <img
+                  src="../../assets/images/alipay.png"
+                  class="payico"
+                />
+                <span class="payname">支付宝支付</span>
               </div>
-              <div
-                class='btn'
-                @tap='submit'
-              >
-                <span>立即叫车</span>
+            </van-radio>
+            <van-radio name="2" v-if="isWx == 1">
+              <div class="payitem">
+                <img
+                  src="../../assets/images/weixin.png"
+                  class="payico"
+                />
+                <span class="payname">微信支付</span>
               </div>
-            </div>
-          </van-popup>
+            </van-radio>
+            <van-radio name="3" >
+              <div class="payitem">
+                <img
+                  src="../../assets/img/xx.png"
+                  class="payico"
+                />
+                <span class="payname">线下支付</span>
+              </div>
+            </van-radio>
+          </van-radio-group>
+          <div
+            class="paymoney"
+            @click="alipay"
+          >
+            立即支付
+          </div>
+        </div>
+      </div>
+    </van-popup>
 
   </div>
 </template>
 
 <script>
+import config from "@/utils/config.js"
 import TopNav from "@/components/topnav.vue";
 import Nodata from "@/components/nodata.vue";
 import listCard from "./components/list.vue";
@@ -186,6 +200,7 @@ export default {
   },
   data() {
     return {
+      payshow:false,
       unline: false,
       bianhao: "1",
       current_id: "",
@@ -218,9 +233,59 @@ export default {
         size: 10,
       },
       total: 0,
+      paytype: 1,
+       isWx:2
     };
   },
   mounted() {
+    if (
+      window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
+      "micromessenger"
+    ) {
+      localStorage.setItem("isWeixin", 1);
+      var data = {
+        url: location.href
+      }
+      const agent = navigator.userAgent
+      const isiOS = !!agent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
+      if (isiOS) {
+        data.url = config.shareurls
+      }
+      this.$api.workerApply(data).then((res) => {
+        if (res.code == 200) {
+          var wxpay = res.data
+          wx.config({
+            debug: true,
+            appId: config.appid,
+            timestamp: wxpay.timestamp,
+            nonceStr: wxpay.noncestr,
+            signature: wxpay.signature,
+            jsApiList: [
+              'checkJsApi',
+              'chooseWXPay'
+            ]
+          })
+          wx.error(function (res) {
+            console.log('出错了：' + res.errMsg)
+          })
+          // 在这里调用 API
+          wx.ready(function () {
+            wx.checkJsApi({
+              jsApiList: [
+                'checkJsApi',
+                'chooseWXPay'
+              ],
+              success: function (res) {
+
+              }
+            })
+          })
+        }
+      })
+    } else {
+      localStorage.setItem("isWeixin", 2);
+    }
+    this.isWx = localStorage.getItem('isWeixin')
     this.upCallback();
   },
   filters: {
@@ -319,6 +384,75 @@ export default {
     },
   },
   methods: {
+    alipay() {
+
+      //支付宝
+      var that = this
+      if (this.paytype == 1) {
+        // this.$api.aliPayWapPay({orderHeadSeqId:this.detail.seqId}).then((result)=>{
+
+        // })
+        window.location.href =
+          config.apiurl+"/aliPay/wapPay?orderHeadSeqId=" +
+          this.current_id;
+      }else if(this.paytype == 2){
+        var data = {
+          orderHeadSeqId:this.current_id,
+          openId:localStorage.getItem('openid')
+        }
+        this.$api.wxWebpay(data).then((result)=>{
+          if(result.code == 200){
+            var paywx = result.data
+            wx.chooseWXPay({
+              timestamp: paywx.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+              nonceStr: paywx.nonceStr, // 支付签名随机串，不长于 32 位
+              package: paywx.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=\*\*\*）
+              signType: paywx.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
+              paySign: paywx.paySign, // 支付签名
+              success: function (res) {
+                console.log(res)
+                that.page.num = 1;
+                that.orderList = [];
+                that.upCallback();
+                that.payshow = false
+                alert(JSON.stringify(res))
+                // 支付成功后的回调函数
+              },
+              fail: function(res){
+                console.log(res)
+                that.page.num = 1;
+                that.orderList = [];
+                that.upCallback();
+                 that.payshow = false
+              }
+            });
+
+          }else{
+                that.page.num = 1;
+                that.orderList = [];
+                that.upCallback();
+                 that.payshow = false
+          }
+        })
+      }else if(this.paytype == 3){
+          this.$api
+            .orderPayOffLine({
+              seqId: this.current_id,
+              payType: "OFF_LINE",
+            })
+            .then((res) => {
+              if (res.code == 200) {
+                that.page.num = 1;
+                that.orderList = [];
+                that.upCallback();
+                 that.payshow = false
+              }
+            });
+      }
+    },
+    changeHandler(){
+
+    },
     onLoad() {
       if (this.orderList.length < this.total) {
         this.page.num++;
@@ -395,38 +529,7 @@ export default {
 			pay(id,money){
 				this.current_id=id
 				this.payMoney=money
-				this.$refs.popup_1.show()
-				// wx_pay({
-				// 	orderHeadSeqId: id
-				// }).then(res => {
-				// 	if (res.code == 200) {
-				// 		let paymentData = res.data;
-				// 		uni.requestPayment({
-				// 			timeStamp: paymentData.timeStamp,
-				// 			nonceStr: paymentData.nonceStr,
-				// 			package: paymentData.package,
-				// 			signType: paymentData.signType,
-				// 			paySign: paymentData.paySign,
-				// 			success: (res) => {
-				// 				uni.showToast({
-				// 					title: "支付成功"
-				// 				})
-				// 			},
-				// 			fail: (res) => {
-				// 				uni.showModal({
-				// 					content: "支付失败",
-				// 					showCancel: false
-				// 				})
-				// 			},
-				// 			complete: (res) => {
-				// 				uni.redirectTo({
-				// 					url: '/myOrder/index'
-				// 				})
-				// 			}
-				// 		})
-				// 	}
-
-				// })
+        this.payshow = true
 			},
 			submit() {
 				if (this.bianhao == 1) {
@@ -485,10 +588,83 @@ export default {
 };
 </script>
 
-<style lang="scss">
-page {
+<style lang="scss" scoped>
+.index_wrap {
   background: #f3f3f3;
 }
+  .payClass {
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 100px;
+    padding-bottom: 50px;
+    .paytprice {
+      font-size: 50px;
+      color: #28ae3a;
+      margin-right: 20px;
+      text-align: center;
+      margin-bottom: 40px;
+      span {
+        font-size: 34px;
+      }
+    }
+    .paytypes {
+      display: flex;
+      flex-direction: column;
+      padding: 0 40px;
+      box-sizing: border-box;
+      .paytips {
+        font-size: 30px;
+        color: #999999;
+      }
+      .paymoney {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 90px;
+        color: white;
+        background: #28ae3a;
+        border-radius: 45px;
+        overflow: hidden;
+        line-height: 90px;
+        font-size: 40px;
+        margin-top: 30px;
+      }
+    }
+  }
+  /deep/ .van-radio {
+    display: flex;
+    flex-direction: row-reverse;
+    border-bottom: 2px solid #f5f6f7;
+  }
+  /deep/ .van-radio__label {
+    display: flex;
+    flex: 1;
+    margin-left: 0px;
+    .payitem {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex: 1;
+      height: 130px;
+      .payico {
+        width: 80px;
+        height: 80px;
+        margin-right: 20px;
+      }
+      .payname {
+        font-size: 28px;
+        color: #333333;
+      }
+    }
+  }
+  /deep/ .van-picker__confirm {
+    color: #28ae3a;
+  }
+  /deep/ .van-picker__cancel {
+    color: #999999;
+  }
 .index_wrap {
   // padding-bottom: 30px;
   background-color: #f3f3f3;
@@ -604,7 +780,7 @@ page {
     }
 
     & > p {
-      font-size: 14px;
+      font-size: 30px;
       color: #888;
       margin-left: 40px;
       margin-bottom: 20px;
@@ -621,7 +797,7 @@ page {
         & > div {
           display: flex;
           align-items: center;
-          font-size: 15px;
+          font-size: 28px;
 
           image {
             width: 90px;
@@ -649,18 +825,18 @@ page {
           background: #2b2e3c;
           color: #d3d4d6;
           border-radius: 0 30px 30px 0;
-          font-size: 14px;
+          font-size: 28px;
         }
 
         .date {
           background: #f5f6f7;
           padding: 5px 15px;
-          font-size: 13px;
+          font-size: 28px;
           border-radius: 0 27px 27px 0;
         }
       }
       .state {
-        font-size: 13px;
+        font-size: 28px;
         color: #7b7b7b;
       }
     }
@@ -679,12 +855,12 @@ page {
           padding-bottom: 36px;
 
           .addressName {
-            font-size: 16px;
+            font-size: 32px;
             font-family: PingFang SC;
           }
 
           .detailAddress {
-            font-size: 12px;
+            font-size: 24px;
             color: #c3c3c3;
             margin-top: 6px;
             text-overflow: -o-ellipsis-lastline;

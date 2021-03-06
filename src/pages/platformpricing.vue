@@ -305,6 +305,7 @@
     <van-popup
       v-model="payshow"
       closeable
+      @close="changeHandler"
       round
       position="bottom"
       :style="{'min-height':'100px'}"
@@ -338,13 +339,13 @@
                 <span class="payname">微信支付</span>
               </div>
             </van-radio>
-            <van-radio name="3" style="display:none">
+            <van-radio name="3">
               <div class="payitem">
                 <img
-                  src="../assets/images/bank.png"
+                  src="../assets/img/xx.png"
                   class="payico"
                 />
-                <span class="payname">银联支付</span>
+                <span class="payname">线下支付</span>
               </div>
             </van-radio>
           </van-radio-group>
@@ -501,6 +502,10 @@ export default {
     this.remark = remarks;
   },
   methods: {
+
+    changeHandler(){
+      this.$router.push({ path: "/myorder" });
+    },
     getwork(){
       var data = {
         workName:localStorage.getItem("workTypeName"),
@@ -794,6 +799,17 @@ export default {
 
           }
         })
+      }else if(this.paytype == 3){
+          this.$api
+            .orderPayOffLine({
+              seqId: this.detail.seqId,
+              payType: "OFF_LINE",
+            })
+            .then((res) => {
+              if (res.code == 200) {
+                this.$router.push({ path: "/myorder" });
+              }
+            });
       }
     },
     safeChangeHandler() {

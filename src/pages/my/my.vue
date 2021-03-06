@@ -1,7 +1,7 @@
 <template>
 	<div class="main">
     <!-- // v-if="Object.keys(userInfo).length>0" -->
-        <TopNav :menu="menutext" />
+        <TopNav :menu="menutext" page="home" />
 		<header @tap="link('/personalCenter/setting',userInfo)">
 			<img :src="userInfo.avatarUrl"></img>
 			<div>
