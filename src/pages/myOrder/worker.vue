@@ -525,7 +525,7 @@ TopNav
     background-color: #fff;
     width: 82%;
     margin: 0 auto;
-    border-radius: 16px;
+    border-radius: 26px;
 
     .uni-top {
       padding: 20px 30px 50px 30px;
@@ -600,7 +600,7 @@ TopNav
     }
 
     & > p {
-      font-size: 14px;
+      font-size: 24px;
       color: #888;
       margin-left: 40px;
       margin-bottom: 20px;
@@ -617,7 +617,7 @@ TopNav
         & > div {
           display: flex;
           align-items: center;
-          font-size: 15px;
+          font-size: 25px;
 
           img {
             width: 90px;
@@ -663,12 +663,12 @@ TopNav
         & > p {
           span:first-child {
             font-weight: 600;
-            font-size: 15px;
+            font-size: 25px;
           }
 
           span:last-child {
             background-color: #e9eaeb;
-            padding: 2px 16px;
+            padding: 2px 26px;
             border-radius: 30px;
             color: #7d7e7e;
             margin-left: 10px;
@@ -695,12 +695,12 @@ TopNav
               background: url("https://editspring.oss-cn-hangzhou.aliyuncs.com/images/20201102/app_1604296122378bc6n.png")
                 no-repeat;
               background-size: cover;
-              margin-right: 16px;
+              margin-right: 26px;
             }
 
             .selected {
               background: url("https://editspring.oss-cn-hangzhou.aliyuncs.com/images/20201102/app_1604295577891vxth.png");
-              margin-right: 16px;
+              margin-right: 26px;
               width: 23px;
               height: 22px;
               background-size: cover;
@@ -733,12 +733,12 @@ TopNav
         margin:10px 0;
         .minute {
           position: relative;
-          font-size: 15px;
+          font-size: 25px;
         }
       }
 
       p:last-child {
-        margin-top: 16px;
+        margin-top: 26px;
         font-size: 13px;
         color: #888888;
       }
@@ -757,7 +757,7 @@ TopNav
       .start {
         position: relative;
         /* padding-left: 60px; */
-        padding-bottom: 16px;
+        padding-bottom: 26px;
 
         .dingwei {
           position: absolute;
@@ -770,12 +770,12 @@ TopNav
         .people {
           display: flex;
           justify-content: space-between;
-          font-size: 14px;
+          font-size: 24px;
           margin-bottom: 12px;
         }
 
         .addressName {
-          font-size: 16px;
+          font-size: 26px;
           font-family: PingFang SC;
         }
 
@@ -812,7 +812,7 @@ TopNav
 
   h5 {
     color: rgba(124, 122, 122, 1);
-    font-size: 16px;
+    font-size: 26px;
     font-family: PingFang SC;
     margin-bottom: 20px;
     margin-left: 24px;
@@ -847,7 +847,7 @@ TopNav
     padding: 20px 30px;
     border-radius: 17px;
     margin: 20px 24px;
-    font-size: 15px;
+    font-size: 25px;
     p:last-child {
       font-size: 12px;
       color: #888888;
@@ -866,13 +866,13 @@ TopNav
     justify-content: space-between;
     align-items: center;
     margin: 0 24px 20px 24px;
-    font-size: 15px;
+    font-size: 25px;
     span:first-child {
       width: 30%;
     }
 
     span:last-child {
-      font-size: 14px;
+      font-size: 24px;
       color: #363636;
       flex: 1;
       text-align: right;
@@ -884,7 +884,7 @@ TopNav
     }
 
     .protect {
-      padding: 1px 15px;
+      padding: 1px 25px;
       border: 1px solid #88d292;
       color: #88d292 !important;
       border-radius: 30px;
@@ -900,7 +900,7 @@ TopNav
     margin: 0 24px 20px 24px;
 
     p:first-child {
-      font-size: 16px;
+      font-size: 26px;
       color: #333;
     }
 
@@ -910,7 +910,7 @@ TopNav
       align-items: center;
       font-size: 12px;
       color: #888;
-      margin-bottom: 14px;
+      margin-bottom: 24px;
     }
   }
 
@@ -926,7 +926,7 @@ TopNav
       align-items: center;
       font-size: 12px;
       color: #888;
-      margin-bottom: 14px;
+      margin-bottom: 24px;
     }
   }
 

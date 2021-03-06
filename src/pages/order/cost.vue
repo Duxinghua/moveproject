@@ -82,7 +82,7 @@ import TopNav from "@/components/topnav.vue";
 			.price{
         font-size:18px;
 				span{
-					font-size:16px;
+					font-size:26px;
 				}
 			}
 			&>span{
@@ -106,7 +106,7 @@ import TopNav from "@/components/topnav.vue";
 					margin-top:18px;
 					display: flex;
 					justify-content: space-between;
-					font-size:14px;
+					font-size:24px;
 					align-items: flex-start;
 				}
 			}

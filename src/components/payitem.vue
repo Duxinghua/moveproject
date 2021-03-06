@@ -55,6 +55,30 @@
           </div>
         </div>
       </div>
+          <!-- 弹框 -->
+    <van-popup
+      type='center'
+      round
+      v-model="popshow"
+      style="width:73%"
+    >
+      <div class="uni-tip">
+        <div class="uni-top">
+          <p class='uni-text'>温馨提示</p>
+          <p class='uni-content'>选择线下付款，平台不承担任何责任</p>
+        </div>
+        <div class='uni-btn' >
+          <span
+            class="btns_cancel"
+            @click='cal'
+          >取消</span>
+          <span
+            class="btns"
+            @click='contact'
+          >确定</span>
+        </div>
+      </div>
+    </van-popup>
     </van-popup>
 </template>
 
@@ -66,7 +90,8 @@ export default {
       payMoney:'',
       isWx:2,
       paytype:1,
-      current_id:''
+      current_id:'',
+      popshow:false
     }
   },
   methods:{
@@ -114,6 +139,18 @@ export default {
           }
         })
       }else if(this.paytype == 3){
+        that.popshow = true
+
+      }
+
+    },
+    cal(){
+      this.popshow = false
+        this.$toast('取消支付')
+               that.$emit("update",1)
+    },
+    contact(){
+      var that = this
           this.$api
             .orderPayOffLine({
               seqId: this.current_id,
@@ -121,14 +158,13 @@ export default {
             })
             .then((res) => {
               if (res.code == 200) {
+                  that.popshow = false
                  that.$toast('支付成功')
                   that.$emit("update",1)
               }else{
                  that.$toast('支付失败')
               }
             });
-      }
-
     },
     changeHandler(){
       this.payshow = false

@@ -150,11 +150,13 @@
 			display: flex;
 			align-items: center;
 			margin: 0 24px;
+      padding:0 28px;
+      box-sizing: border-box;
       background: linear-gradient(#fca73c, #fe8a35);
-      border-radius: 13px;
+      border-radius: 26px;
 			.onCall {
 				background-img: linear-gradient(#70adfb, #6790fc);
-				border-radius: 13px;
+				border-radius: 26px;
 				width: 50%;
 				margin-right: 26px;
 				height: 130px;
@@ -170,7 +172,7 @@
 
 				span {
 					color: rgba(255, 255, 255, .8);
-					font-size: 14px;
+					font-size: 24px;
 				}
 			}
 
@@ -178,7 +180,7 @@
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				width: 50%;
+				// width: 50%;
 				background-img: linear-gradient(#fca73c, #fe8a35);
 				border-radius: 20px;
 				height: 130px;
@@ -191,7 +193,7 @@
 
 				span {
 					color: rgba(255, 255, 255, .8);
-					font-size: 14px;
+					font-size: 24px;
 				}
 			}
 		}
@@ -217,7 +219,7 @@
         padding:10px 0;
         margin:10px;
 				span {
-					font-size: 14px;
+					font-size: 24px;
 					color: #555555;
 				}
 
@@ -240,7 +242,7 @@
 				padding: 6px 36px;
 				border: 1px solid #888;
 				color: #888;
-				font-size: 13px;
+				font-size: 26px;
 				border-radius: 30px;
 			}
 		}

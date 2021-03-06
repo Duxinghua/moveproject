@@ -72,7 +72,7 @@ import TopNav from "@/components/topnav.vue";
 
 		.block {
 			background-color: #f5f6f7;
-			height: 16px;
+			height: 26px;
 		}
 
 		header {
@@ -94,7 +94,7 @@ import TopNav from "@/components/topnav.vue";
 				margin-left: 28px;
 
 				p:first-child {
-					font-size: 16px;
+					font-size: 30px;
 					color: #333;
 					font-weight: 600;
 					display: flex;
@@ -109,7 +109,7 @@ import TopNav from "@/components/topnav.vue";
 
 				p:last-child {
 					margin-top: 10px;
-					font-size: 12px;
+					font-size: 30px;
 					color: #888;
 				}
 			}
@@ -118,7 +118,7 @@ import TopNav from "@/components/topnav.vue";
 		.content {
 			background-color: #fff;
 			padding-top: 10px;
-			margin-top: 16px;
+			margin-top: 26px;
 		}
 
 		.link {

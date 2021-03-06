@@ -230,7 +230,7 @@
 
 		.content {
 			color: #4f4f4f;
-			font-size: 28px;
+			font-size: 30px;
 			line-height: 47px;
 		}
 		.red{

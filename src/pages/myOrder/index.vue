@@ -183,6 +183,30 @@
         </div>
       </div>
     </van-popup>
+    <!-- 弹框 -->
+    <van-popup
+      type='center'
+      round
+      v-model="popshow"
+      style="width:73%"
+    >
+      <div class="uni-tip">
+        <div class="uni-top">
+          <p class='uni-text'>温馨提示</p>
+          <p class='uni-content'>选择线下付款，平台不承担任何责任</p>
+        </div>
+        <div class='uni-btn' >
+          <span
+            class="btns_cancel"
+            @click='cal'
+          >取消</span>
+          <span
+            class="btns"
+            @click='contact'
+          >确定</span>
+        </div>
+      </div>
+    </van-popup>
 
   </div>
 </template>
@@ -200,6 +224,7 @@ export default {
   },
   data() {
     return {
+      popshow:false,
       payshow:false,
       unline: false,
       bianhao: "1",
@@ -384,6 +409,33 @@ export default {
     },
   },
   methods: {
+    cal(){
+      this.popshow = false
+        this.$toast('取消支付')
+                this.page.num = 1;
+                this.orderList = [];
+                this.upCallback();
+    },
+    contact(){
+      var that = this
+          this.$api
+            .orderPayOffLine({
+              seqId: this.current_id,
+              payType: "OFF_LINE",
+            })
+            .then((res) => {
+              if (res.code == 200) {
+                  that.popshow = false
+                 that.$toast('支付成功')
+                     that.page.num = 1;
+                that.orderList = [];
+                that.upCallback();
+                that.payshow = false
+              }else{
+                 that.$toast('支付失败')
+              }
+            });
+    },
     alipay() {
 
       //支付宝
@@ -435,19 +487,7 @@ export default {
           }
         })
       }else if(this.paytype == 3){
-          this.$api
-            .orderPayOffLine({
-              seqId: this.current_id,
-              payType: "OFF_LINE",
-            })
-            .then((res) => {
-              if (res.code == 200) {
-                that.page.num = 1;
-                that.orderList = [];
-                that.upCallback();
-                 that.payshow = false
-              }
-            });
+         that.popshow = true
       }
     },
     changeHandler(){
@@ -564,20 +604,6 @@ export default {
 					this.$refs.popup_1.close()
 				}
 			},
-			contact() {
-				this.$api.orderPayOffLine({
-					seqId: this.current_id,
-					payType: 'OFF_LINE'
-				}).then(res => {
-					if (res.code == 200) {
-            this.$router.push({path:'/myorder'})
-					}
-				})
-			},
-			cal() {
-        this.unline = false
-				// this.$refs.popup3.close()
-			},
 			radio(e) {
 				this.bianhao = e
 			},
@@ -682,7 +708,7 @@ export default {
       justify-content: center;
       align-items: center;
       height: 100%;
-      font-size: 28px;
+      font-size: 32px;
       font-family: PingFang SC;
       font-weight: 500;
       color: #919192;
@@ -701,7 +727,7 @@ export default {
     background-color: #fff;
     width: 100%;
     margin: 0 auto;
-    border-radius: 16px;
+    border-radius: 26px;
 
     .uni-top {
       padding: 20px 30px 50px 30px;
@@ -830,7 +856,7 @@ export default {
 
         .date {
           background: #f5f6f7;
-          padding: 5px 15px;
+          padding: 5px 25px;
           font-size: 28px;
           border-radius: 0 27px 27px 0;
         }
@@ -910,7 +936,7 @@ export default {
           }
 
           .addressName {
-            font-size: 16px;
+            font-size: 26px;
             font-family: PingFang SC;
           }
 
@@ -946,7 +972,7 @@ export default {
           }
 
           .addressName {
-            font-size: 16px;
+            font-size: 26px;
             font-family: PingFang SC;
           }
 

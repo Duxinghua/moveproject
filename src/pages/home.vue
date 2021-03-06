@@ -771,7 +771,7 @@ export default {
       }
       .carsico {
         width: 282px;
-        height: 128px;
+        // height: 128px;
         margin-right: 30px;
       }
       .carinfowrap {

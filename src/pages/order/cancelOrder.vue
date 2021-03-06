@@ -1,6 +1,6 @@
 <template>
   <div class="submit">
-             <TopNav :menu="menutext" />
+    <TopNav :menu="menutext" />
     <div
       scroll-y
       class="class-list-wrap"
@@ -10,7 +10,7 @@
           maxlength="200"
           v-model="notedata"
           placeholder="取消订单原因"
-          placeholder-style="color:#999;font-size:14px"
+          placeholder-style="color:#999;font-size:24px"
           class="textarea"
         />
         </div>
@@ -219,7 +219,7 @@ export default {
     flex-direction: column;
     align-items: center;
     border-radius: 12px;
-    font-size: 14px;
+    font-size: 24px;
     & > img {
       width: 90px;
       height: 65px;

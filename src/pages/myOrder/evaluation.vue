@@ -27,7 +27,7 @@
 			</div>
 		</div>
 		<div class='text'>
-			<textarea maxlength="200" v-model="notedata" placeholder="夸夸司机吧" placeholder-style="color:#999;font-size:14px" class="textarea" />
+			<textarea maxlength="200" v-model="notedata" placeholder="夸夸司机吧" placeholder-style="color:#999;font-size:24px" class="textarea" />
 
 			</div>
 			<div class='btn' @click='goEvaluate'>

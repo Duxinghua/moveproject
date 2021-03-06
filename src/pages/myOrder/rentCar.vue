@@ -456,7 +456,7 @@ export default {
     background-color: #fff;
     width: 82%;
     margin: 0 auto;
-    border-radius: 16px;
+    border-radius: 26px;
 
     .uni-top {
       padding: 20px 30px 50px 30px;
@@ -531,7 +531,7 @@ export default {
     }
 
     & > p {
-      font-size: 14px;
+      font-size: 24px;
       color: #888;
       margin-left: 40px;
       margin-bottom: 20px;
@@ -548,7 +548,7 @@ export default {
         & > div {
           display: flex;
           align-items: center;
-          font-size: 15px;
+          font-size: 25px;
 
           img {
             width: 90px;
@@ -592,12 +592,12 @@ export default {
         & > p {
           span:first-child {
             font-weight: 600;
-            font-size: 15px;
+            font-size: 25px;
           }
 
           span:last-child {
             background-color: #e9eaeb;
-            padding: 2px 16px;
+            padding: 2px 26px;
             border-radius: 30px;
             color: #7d7e7e;
             margin-left: 10px;
@@ -621,12 +621,12 @@ export default {
               background: url("https://editspring.oss-cn-hangzhou.aliyuncs.com/images/20201102/app_1604296122378bc6n.png")
                 no-repeat;
               background-size: cover;
-              margin-right: 16px;
+              margin-right: 26px;
             }
 
             .selected {
               background: url("https://editspring.oss-cn-hangzhou.aliyuncs.com/images/20201102/app_1604295577891vxth.png");
-              margin-right: 16px;
+              margin-right: 26px;
               width: 23px;
               height: 22px;
               background-size: cover;
@@ -658,12 +658,12 @@ export default {
         margin: 10px 0;
         .minute {
           position: relative;
-          font-size: 15px;
+          font-size: 25px;
         }
       }
 
       p:last-child {
-        margin-top: 16px;
+        margin-top: 26px;
         font-size: 13px;
         color: #888888;
       }
@@ -697,7 +697,7 @@ export default {
         }
 
         .addressName {
-          font-size: 16px;
+          font-size: 26px;
           font-family: PingFang SC;
         }
 
@@ -734,7 +734,7 @@ export default {
 
   h5 {
     color: rgba(124, 122, 122, 1);
-    font-size: 16px;
+    font-size: 26px;
     font-family: PingFang SC;
     margin-bottom: 20px;
     margin-left: 24px;
@@ -750,12 +750,12 @@ export default {
       align-items: center;
       justify-content: space-between;
       margin-bottom: 12px;
-      font-size: 14px;
+      font-size: 24px;
     }
 
     .other {
       margin-top: 10px;
-      font-size: 14px;
+      font-size: 24px;
       margin-bottom: 10px;
     }
 
@@ -800,13 +800,13 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin: 0 24px 20px 24px;
-    font-size: 15px;
+    font-size: 25px;
     span:first-child {
       width: 30%;
     }
 
     span:last-child {
-      font-size: 14px;
+      font-size: 24px;
       color: #363636;
       flex: 1;
       text-align: right;
@@ -817,7 +817,7 @@ export default {
       height: 20px;
     }
     .protect {
-      padding: 1px 15px;
+      padding: 1px 25px;
       border: 1px solid #88d292;
       color: #88d292 !important;
       border-radius: 30px;
@@ -832,7 +832,7 @@ export default {
     border-radius: 17px;
     margin: 0 24px 20px 24px;
     p:first-child {
-      font-size: 16px;
+      font-size: 26px;
       color: #333;
     }
 
@@ -842,7 +842,7 @@ export default {
       align-items: center;
       font-size: 12px;
       color: #888;
-      margin-bottom: 14px;
+      margin-bottom: 24px;
     }
   }
 
@@ -857,7 +857,7 @@ export default {
       align-items: center;
       font-size: 12px;
       color: #888;
-      margin-bottom: 14px;
+      margin-bottom: 24px;
     }
   }
   .block {
