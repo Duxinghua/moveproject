@@ -101,8 +101,8 @@ const server = {
   },
 //立即评价
 // export const orderEvaluate = params => { return post(`/orderEvaluate/save`, params).then(res => res.data) };
-  orderEvaluate(params){
-    return httpv1({method:"POST",url:'/orderEvaluate/save',params})
+  orderEvaluate(data){
+    return httpv1({method:"Post",url:'/orderEvaluate/save',data})
   },
   //线下支付wx_pay
   //export const orderPayOffLine = params => { return get(`/orderHead/orderPayOffLine`, params).then(res => res.data) };
@@ -134,8 +134,8 @@ const server = {
   },
   //取消订单
   //export const cancelStatusUser = params => { return post(`/orderSheet/cancelStatusUser`, params).then(res => res.data) };
-  cancelStatusUser(params){
-    return httpv1({method:"GET",url:'/orderSheet/cancelStatusUser',params})
+  cancelStatusUser(data){
+    return httpv1({method:"Post",url:'/orderSheet/cancelStatusUser',data})
   },
   ////订单生成后价格计算
   //export const orderSheet_price = params => { return get(`/orderSheet/calcPrice`, params).then(res => res.data) };

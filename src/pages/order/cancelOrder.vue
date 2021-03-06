@@ -22,7 +22,7 @@
 		    </div>
 			</div>
 			<div class="btn-wrap">
-				<button type="primary"   @click="testSubmit">确认取消</button>
+				<button type="primary" class="btn"   @click="testSubmit">确认取消</button>
 			</div>
 	</div>
 </template>
@@ -73,6 +73,8 @@ export default {
       this.fileList.splice(index, 1);
     },
     testSubmit(e) {
+      let _this = this;
+      let imgList = _this.fileList;
       if (!this.notedata) {
         this.$toast("请输入取消原因")
         return false;
@@ -81,9 +83,22 @@ export default {
         this.$toast("请上传图片")
         return false;
       }
-      let _this = this;
-      let imgList = _this.fileList;
-      let picture = [];
+      var imglist = []
+      this.fileList.map((item,index)=>{
+        var obj = {
+          picUrl:item.viewUrl,
+					sort:index,
+					picType:2,
+					sheetId:_this.sheetId
+        }
+        imglist.push(obj)
+      })
+      var data = {
+        		headSeqId: _this.seqId,
+						orderPicList:imglist,
+						remarks:_this.notedata,
+					  evaluateType:'P'
+      }
           new Promise((resolve) => {
             this.$dialog.confirm({
             title: '你正在取消订单',
@@ -91,10 +106,16 @@ export default {
           })
       .then(() => {
         // on confirm
-
+    //notedata
+        _this.$api.cancelStatusUser(data).then((result)=>{
+            					if (result.code == 200) {
+                              _this.$router.push({path:'/myorder'})
+											}
+        })
       })
       .catch(() => {
         // on cancel
+        _this.$router.push({path:'/myorder'})
       });
           })
     }
@@ -232,10 +253,10 @@ export default {
     font-size: 32px;
   }
   button[type="primary"] {
-    background: #acacac;
+    background: #28ae3a;
     border-radius: 45px;
     border: none;
-    color:#333333;
+    color:white;
   }
 
   button:after {

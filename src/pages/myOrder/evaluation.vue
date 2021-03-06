@@ -4,16 +4,16 @@
 			<div class='top_wrap'>
 				<img :src="detail.custDriverInfoSimpleVo.avatarUrl"></img>
 				<div class='carType' v-if="!detail.serverType=='HIRE_WORKER'">
-					<text>{{detail.custDriverInfoSimpleVo.plateNumber}}</text>
-					<text>{{detail.carType | carType}}</text>
+					<span>{{detail.custDriverInfoSimpleVo.plateNumber}}</span>
+					<span>{{detail.carType | carType}}</span>
 				</div>
 				<div class='name'>
-					<text>{{detail.custDriverInfoSimpleVo.name || detail.custDriverInfoSimpleVo.nickName}}</text>
+					<span>{{detail.custDriverInfoSimpleVo.name || detail.custDriverInfoSimpleVo.nickName}}</span>
 					<div class="rate">
 						<div v-for="(item,index) in num" :key="index" :class="{'selected' :index <=detail.custDriverInfoSimpleVo.score-1}"
 						 class='li'></div>
 					</div>
-					<text style='margin-left:10px'>{{detail.custDriverInfoSimpleVo.score}}分</text>
+					<span style='margin-left:10px'>{{detail.custDriverInfoSimpleVo.score}}分</span>
 				</div>
 			</div>
 			<div class='bottom_wrap'>
@@ -30,7 +30,7 @@
 			<textarea maxlength="200" v-model="notedata" placeholder="夸夸司机吧" placeholder-style="color:#999;font-size:14px" class="textarea" />
 
 			</div>
-			<div class='btn' @tap='goEvaluate'>
+			<div class='btn' @click='goEvaluate'>
 				<span>立即评价</span>
 			</div>
 	</div>
@@ -52,10 +52,10 @@
 				notedata:''
 			}
 		},
-		onLoad(option){
-			this.seqId=option.seqId;
-			this.sheetId=option.sheetId;
-			this.getOrderDetail(option.seqId)
+		mounted(){
+			this.seqId=this.$route.query.seqId;
+			this.sheetId=this.$route.query.sheetId;
+			this.getOrderDetail(this.$route.query.seqId)
 		},
 		filters:{
 			carType(value) {
@@ -118,7 +118,8 @@
           this.$toast('请进行评分')
 					return false
 				}
-				let userId = uni.getStorageSync('userId')
+        var payload = JSON.parse(localStorage.getItem("payload"));
+				let userId = payload.userId
 				this.$api.orderEvaluate({
 					userId: userId,
 					evaluateType : 'P',
@@ -129,7 +130,7 @@
 					sheetId:this.sheetId
 				}).then(res => {
 					if(res.code==200){
-            this.$router.push({path:'myorder'})
+            this.$router.push({path:'/myorder'})
 					}
 				})
 			}
@@ -161,12 +162,12 @@
 
 				.carType {
 					margin-top:15px;
-					text:first-child {
+					span:first-child {
 						font-weight: 600;
 						font-size: 15px;
 					}
 
-					text:last-child {
+					span:last-child {
 						background-color: #e9eaeb;
 						padding: 2px 16px;
 						border-radius: 30px;
@@ -181,7 +182,7 @@
 					margin-top: 9px;
 					justify-content: center;
 
-					&>text {
+					&>span {
 						font-size: 12px;
 					}
 

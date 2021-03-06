@@ -77,10 +77,10 @@
       <span>姓名</span><span>{{orderDetail.receiverName}}</span>
     </div>
     <div class='contact'>
-      <span>联系电话</span><span>{{orderDetail.receiverMobileNo}} <text
+      <span>联系电话</span><span>{{orderDetail.receiverMobileNo}} <span
           v-if='orderDetail.mobileProtected'
           class='protect'
-        >号码保护中</text></span>
+        >号码保护中</span></span>
     </div>
     <div
       class='particulars'
@@ -665,7 +665,11 @@ export default {
             }
 
             .selected {
-              background-img: url("https://editspring.oss-cn-hangzhou.aliyuncs.com/images/20201102/app_1604295577891vxth.png");
+              background: url("https://editspring.oss-cn-hangzhou.aliyuncs.com/images/20201102/app_1604295577891vxth.png");
+              margin-right: 16px;
+              width: 23px;
+              height: 22px;
+              background-size: cover;
             }
           }
         }
@@ -855,7 +859,7 @@ export default {
     .protect {
       padding: 1px 15px;
       border: 1px solid #88d292;
-      color: #88d292;
+      color: #88d292 !important;
       border-radius: 30px;
       font-size: 11px;
       margin-left: 10px;

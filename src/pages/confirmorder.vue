@@ -383,6 +383,7 @@
       round
       position="bottom"
       :style="{'min-height':'100px'}"
+      @close="changeHandler"
     >
       <div class="payClass">
         <div class="paytprice">
@@ -543,7 +544,7 @@ export default {
       },
       cartObject: {},
       orderType: 1,
-      payshow: false,
+      payshow: false,//
       paytype: 1,
       timeshow: false,
       currentDate: new Date(),
@@ -751,6 +752,9 @@ export default {
 
   },
   methods: {
+    changeHandler(){
+      this.$router.push({path:'/myorder'})
+    },
     clearLo(){
       localStorage.removeItem('otherList')
       localStorage.removeItem('platform')
