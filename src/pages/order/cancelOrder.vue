@@ -18,7 +18,7 @@
 				上传照片 <span>*每张图片大小不超过2M</span>
 			</div>
 		    <div class="weui-uploader__bd th-backwhite">
-           <van-uploader capture="camcorder" accept="video/*"  v-model="fileList" multiple  :max-count="4" :after-read="afterRead" :before-delete="beforedelete"  />
+           <van-uploader  capture="camera" accept="image"   v-model="fileList" multiple  :max-count="4" :after-read="afterRead" :before-delete="beforedelete"  />
 		    </div>
 			</div>
 			<div class="btn-wrap">

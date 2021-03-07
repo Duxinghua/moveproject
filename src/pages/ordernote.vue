@@ -17,7 +17,7 @@
     <div class="imgtitle">
       上传搬家照片
     </div>
-    <van-uploader capture="camcorder" accept="video/*"  v-model="fileList" multiple  :max-count="4" :after-read="afterRead" :before-delete="beforedelete"  />
+    <van-uploader capture="camera" accept="image"  v-model="fileList" multiple  :max-count="4" :after-read="afterRead" :before-delete="beforedelete"  />
   </div>
   <van-button type="primary" size="small" round block @click="messageHandler">确定</van-button>
   </div>

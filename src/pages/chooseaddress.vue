@@ -240,6 +240,9 @@ export default {
       });
     },
     confirmHandler() {
+      if(!this.regeocode.formattedAddress){
+            return this.$toast("请确认是否开启手机定位");
+      }
       var obj = this.regeocode;
       if (!this.unit) {
        // return this.$toast("请输入楼层及门牌号");

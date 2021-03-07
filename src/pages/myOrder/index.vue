@@ -941,7 +941,7 @@ export default {
           }
 
           .detailAddress {
-            font-size: 12px;
+            font-size: 28px;
             color: #c3c3c3;
             margin-top: 6px;
             text-overflow: -o-ellipsis-lastline;

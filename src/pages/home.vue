@@ -945,7 +945,7 @@ export default {
           }
           .cartag {
             padding: 0 4px;
-            font-size: 16px;
+            font-size: 26px;
             white-space: nowrap;
             color: #ff561e;
             height: 35px;
@@ -956,7 +956,7 @@ export default {
           }
         }
         .cardes {
-          font-size: 16px;
+          font-size: 28px;
           line-height: 50px;
           padding-right: 20px;
           overflow: hidden;
@@ -971,7 +971,7 @@ export default {
           align-items: center;
           margin-top: 15px;
           .pr {
-            font-size: 18px;
+            font-size: 28px;
             color: #28ae3a;
             span {
               color: #999999;
@@ -986,7 +986,7 @@ export default {
             line-height: 60px;
             text-align: center;
             background: #28ae3a;
-            font-size: 18px;
+            font-size: 32px;
             color: white;
           }
         }
