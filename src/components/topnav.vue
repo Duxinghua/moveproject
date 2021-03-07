@@ -72,7 +72,7 @@ export default {
     padding:0 30px;
     box-sizing: border-box;
     .menutext{
-      font-size: 28px;
+      font-size: 32px;
       color:#000000;
       width:calc(100% - 60px);
       display: flex;

@@ -1679,7 +1679,7 @@ export default {
       flex-direction: column;
     }
     .needtitle {
-      font-size: 18px;
+      font-size: 32px;
       color: #999999;
       margin-top: 30px;
     }
@@ -1739,7 +1739,7 @@ export default {
         flex-direction: row;
         height: 100px;
         align-items: center;
-        font-size: 18px;
+        font-size: 28px;
         color: #333333;
         span {
           margin-right: 20px;

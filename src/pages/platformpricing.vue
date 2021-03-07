@@ -1018,7 +1018,7 @@ export default {
     }
   }
   .itemtitle {
-    font-size: 26px;
+    font-size: 32px;
     color: #666666;
     margin-top: 30px;
     margin-bottom: 20px;
