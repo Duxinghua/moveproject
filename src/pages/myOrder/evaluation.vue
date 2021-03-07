@@ -173,7 +173,7 @@
 						border-radius: 30px;
 						color: #7d7e7e;
 						margin-left: 10px;
-						font-size: 13px;
+						font-size: 28px;
 					}
 				}
 
@@ -183,7 +183,7 @@
 					justify-content: center;
 
 					&>span {
-						font-size: 12px;
+						font-size: 28px;
 					}
 
 					.rate {
@@ -234,11 +234,11 @@
 					}
 				}
 				.word{
-					font-size:13px;
+					font-size: 26px;
 					color:#9b9b9b;
 				}
 				.content{
-					font-size: 13px;
+					font-size: 28px;
 					margin-top: 10px;
 					color:#ff7952;
 				}

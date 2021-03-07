@@ -190,7 +190,7 @@ export default {
         width: 170px;
         height: 90px;
         border-radius: 10px;
-        font-size: 16px;
+        font-size: 30px;
         background: #28ae3a;
         line-height: 90px;
         color: white;
@@ -204,7 +204,7 @@ export default {
       line-height: 90px;
       background: #28ae3a;
       text-align: center;
-      font-size: 18px;
+      font-size: 32px;
       color: white;
       margin-top: 80px;
     }

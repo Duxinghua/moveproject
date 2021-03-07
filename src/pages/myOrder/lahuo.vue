@@ -484,7 +484,7 @@ export default {
       border: none;
       text-align: center;
       display: flex;
-
+      font-size: 30px;
       .btns {
         background-color: #28ae3a;
         color: #fff;
@@ -561,7 +561,7 @@ export default {
     }
   }
   h4 {
-    font-size: 19px;
+    font-size: 32px;
     font-weight: 600;
     margin-bottom: 24px;
     margin-left: 24px;
@@ -659,13 +659,13 @@ export default {
               margin:10px 0;
         .minute {
           position: relative;
-          font-size: 25px;
+          font-size: 28px;
         }
       }
 
       p:last-child {
         margin-top: 26px;
-        font-size: 13px;
+        font-size: 28px;
         color: #888888;
       }
     }
@@ -698,14 +698,16 @@ export default {
         }
 
         .addressName {
-          font-size: 26px;
+          font-size: 32px;
           font-family: PingFang SC;
+          padding:0px;
+          margin:0;
         }
 
         .detailAddress {
-          font-size: 12px;
+          font-size: 28px;
           color: #c3c3c3;
-          margin-top: 6px;
+          margin-top: 3px;
           white-space: normal;
           word-break: break-all;
         }
@@ -751,7 +753,7 @@ export default {
       align-items: center;
       justify-content: space-between;
       margin-bottom: 12px;
-      font-size: 24px;
+      font-size: 28px;
     }
 
     .other {
@@ -763,7 +765,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       color: #888;
-      font-size: 12px;
+      font-size: 28px;
       margin-bottom: 12px;
 
       span:first-child {
@@ -787,6 +789,11 @@ export default {
     align-items: center;
     font-size: 25px;
     margin: 0 24px 20px 24px;
+    span{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
     span:first-child {
       width: 30%;
     }
@@ -801,13 +808,14 @@ export default {
     img {
       width: 20px;
       height: 20px;
+      margin-left:auto;
     }
     .protect {
       padding: 1px 25px;
       border: 1px solid #88d292;
       color: #88d292 !important;
       border-radius: 30px;
-      font-size: 11px;
+      font-size: 28px;
       margin-left: 10px;
     }
   }
@@ -818,7 +826,7 @@ export default {
     border-radius: 17px;
     margin: 0 24px 20px 24px;
     p:first-child {
-      font-size: 26px;
+      font-size: 28px;
       color: #333;
     }
 
@@ -826,7 +834,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      font-size: 28px;
       color: #888;
       margin-bottom: 24px;
     }
@@ -841,7 +849,7 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      font-size: 28px;
       color: #888;
       margin-bottom: 24px;
     }
@@ -867,7 +875,7 @@ export default {
       color: #949494;
       width: 180px;
       border-radius: 30px;
-      font-size: 13px;
+      font-size: 28px;
       margin-right: 24px;
     }
     .pay {
@@ -879,7 +887,7 @@ export default {
       text-align: center;
       width: 180px;
       border-radius: 30px;
-      font-size: 13px;
+      font-size: 28px;
       margin-right: 24px;
     }
     .back_order {
@@ -891,7 +899,7 @@ export default {
       text-align: center;
       width: 180px;
       border-radius: 30px;
-      font-size: 13px;
+      font-size: 28px;
       left: 24px;
       position: absolute;
     }
@@ -900,10 +908,10 @@ export default {
     background: #fff;
     padding: 20px 30px;
     border-radius: 17px;
-    font-size: 25px;
+    font-size: 32px;
     margin: 20px 24px;
     p:last-child {
-      font-size: 12px;
+      font-size: 28px;
       color: #888888;
       margin-top: 20px;
       word-break: break-all;

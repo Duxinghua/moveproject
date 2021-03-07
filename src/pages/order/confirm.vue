@@ -69,7 +69,7 @@
 					</picker>
 				</view>
 			</div>
-		
+
 		</div>
 		<view class='bigger'>
 			<div class='remark' style='padding:0px 0px;margin:0px'>
@@ -367,7 +367,7 @@
 					}
 					list.push(lc)
 				}
-				
+
 				if(Object.keys(this.brList).length >0 && this.serve){
 					let banru = {
 						refSeqId: this.brList.seqId,
@@ -409,7 +409,7 @@
 				getUserDataBySeqId({
 					customerSeqId: uni.getStorageSync('userId')
 				}).then(res => {
-					this.receiverMobileNo=res.data.mobileNo 
+					this.receiverMobileNo=res.data.mobileNo
 				})
 			},
 			getValuationInfo(id) {
@@ -526,7 +526,7 @@
 					}
 					list.push(lc)
 				}
-				
+
 				if(Object.keys(this.brList).length >0 && this.serve){
 					let banru = {
 						refSeqId: this.brList.seqId,
@@ -534,7 +534,7 @@
 					}
 					list.push(banru)
 				}
-				
+
 				obj = {
 					orderType: 'APPOINTMENT',
 					serverType: "CHANGE_HOUSE",
@@ -645,7 +645,7 @@
 					}
 					list.push(lc)
 				}
-				
+
 				if(Object.keys(this.brList).length >0 && this.serve){
 					let banru = {
 						refSeqId: this.brList.seqId,
@@ -798,7 +798,7 @@
 				border: none;
 				text-align: center;
 				display: flex;
-
+        font-size: 30px;
 				.btns {
 					background-color: #28ae3a;
 					color: #fff;

@@ -145,6 +145,10 @@ export default {
           }
 
         }
+        var need = localStorage.getItem('need')
+        if(!need){
+            localStorage.setItem('need',JSON.stringify({priceType:this.priceType}))
+        }
         this.$router.push('/confirmorder')
     }
   }

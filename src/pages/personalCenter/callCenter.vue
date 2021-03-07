@@ -7,7 +7,7 @@
 			</button> -->
 			<a class='offCall' :href="'tel:'+phone">
 				<img src='../../assets/img/call.png'></img>
-				<span>客服热线</span>
+				<span>客服热线 {{phone}}</span>
 			</a>
 		</div>
 		<h4>常见问题</h4>
@@ -123,7 +123,7 @@
 				phone: ''
 			}
 		},
-		onShow() {
+		mounted() {
 			this.getPhone()
 		},
 		methods: {
@@ -172,7 +172,7 @@
 
 				span {
 					color: rgba(255, 255, 255, .8);
-					font-size: 24px;
+					font-size: 28px;
 				}
 			}
 
@@ -193,7 +193,7 @@
 
 				span {
 					color: rgba(255, 255, 255, .8);
-					font-size: 24px;
+					font-size: 28px;
 				}
 			}
 		}
@@ -219,7 +219,7 @@
         padding:10px 0;
         margin:10px;
 				span {
-					font-size: 24px;
+					font-size: 28px;
 					color: #555555;
 				}
 

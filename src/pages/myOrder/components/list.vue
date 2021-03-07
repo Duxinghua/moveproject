@@ -371,7 +371,7 @@
 				border: none;
 				text-align: center;
 				display: flex;
-
+        font-size: 30px;
 				.btns {
 					background-color: #28ae3a;
 					color: #fff;

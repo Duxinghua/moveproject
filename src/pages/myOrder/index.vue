@@ -754,7 +754,7 @@ export default {
       border: none;
       text-align: center;
       display: flex;
-
+      font-size: 30px;
       .btns {
         background-color: #28ae3a;
         color: #fff;
@@ -881,12 +881,12 @@ export default {
           padding-bottom: 36px;
 
           .addressName {
-            font-size: 32px;
+            font-size: 34px;
             font-family: PingFang SC;
           }
 
           .detailAddress {
-            font-size: 24px;
+            font-size: 28px;
             color: #c3c3c3;
             margin-top: 6px;
             text-overflow: -o-ellipsis-lastline;
@@ -936,7 +936,7 @@ export default {
           }
 
           .addressName {
-            font-size: 26px;
+            font-size: 34px;
             font-family: PingFang SC;
           }
 
@@ -972,12 +972,12 @@ export default {
           }
 
           .addressName {
-            font-size: 26px;
+            font-size: 34px;
             font-family: PingFang SC;
           }
 
           .detailAddress {
-            font-size: 12px;
+            font-size: 28px;
             color: #c3c3c3;
             margin-top: 6px;
             text-overflow: -o-ellipsis-lastline;
@@ -1020,7 +1020,7 @@ export default {
         color: #949494;
         width: 180px;
         border-radius: 30px;
-        font-size: 13px;
+        font-size: 28px;
       }
       .pay_btn {
         background-color: #28ae3a;
@@ -1031,7 +1031,7 @@ export default {
         text-align: center;
         width: 180px;
         border-radius: 30px;
-        font-size: 13px;
+        font-size: 28px;
       }
     }
   }

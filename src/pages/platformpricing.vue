@@ -141,6 +141,7 @@
           label="¥"
           v-model="pricetext"
           input-align="left"
+          type="number"
           clearable
           maxlength="8"
           placeholder="请输入自定义价格"
@@ -181,6 +182,7 @@
       <van-checkbox
         v-model="rulechecked"
         icon-size="14"
+        @change="ruleHandler"
         checked-color="#28ae3a"
         shape="square"
       >勾选即代理服从</van-checkbox>
@@ -411,7 +413,7 @@ export default {
       timeshow: false,
       diyprice: false,
       rulechecked: false,
-      pricetext: "",
+      pricetext: 0,
       coupon: "",
       currentDate: new Date(),
       minDate: new Date(2020, 0, 1),
@@ -445,7 +447,18 @@ export default {
   },
   created(){
   },
+  watch:{
+    diyprice:{
+      handler(data){
+        if(data){
+          this.getorderHeadCalcPrice()
+        }
+      },
+      deep:true
+    }
+  },
   mounted() {
+    this.rulechecked = localStorage.getItem('rulechecked')
     if (
       window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
       "micromessenger"
@@ -529,6 +542,9 @@ export default {
     this.remark = remarks;
   },
   methods: {
+    ruleHandler(e){
+      localStorage.setItem('rulechecked',e)
+    },
     cal(){
       this.popshow = false
         this.$toast('取消支付')
@@ -589,7 +605,7 @@ export default {
     },
     change() {
       if(!this.diyprice){
-        this.pricetext = ''
+        this.pricetext = 0
         this.getorderHeadCalcPrice();
       }
 
@@ -601,7 +617,6 @@ export default {
         orderType: "ACTUAL_TIME",
         serverType: "HIRE_WORKER",
         ownerCity: localStorage.getItem("city"),
-        priceType: this.diyprice ? "DISCUSS" : "STANDARD",
         receiverName: this.name,
         receiverMobileNo: this.phone,
         mobileProtected: this.safe,
@@ -617,6 +632,11 @@ export default {
         workerRegion: this.workerRegion,
         workerAddress: this.address,
       };
+      if(this.diyprice){
+          data.priceType = "DISCUSS"
+      }else{
+          data.priceType = "STANDARD"
+      }
       if (data.priceType == "DISCUSS") {
         data.totalMoney = this.pricetext;
       }
@@ -706,6 +726,7 @@ export default {
           this.getorderHeadCalcPrice()
         }
       }else if(tag == 'diyprice'){
+        this.pricetext = this.pricetext.replace(/([0-9]+.[0-9]{2})[0-9]*/,"$1")
         this.getorderHeadCalcPrice()
       }
     },
@@ -752,7 +773,11 @@ export default {
          }
         })
       }else if(tag == 'goodrule'){
-        this.$router.push({ path: "/priceinfo" });
+        this.getorderHeadCalcPrice()
+        setTimeout(() => {
+              this.$router.push({ path: "/priceinfo" });
+        }, 300);
+
       }
     },
     couponHandler(item){
@@ -789,7 +814,50 @@ export default {
         this.$router.push({ path: "/pricedetail", query: { index: 3 } });
       }
     },
+    clearItem(){
+      localStorage.removeItem('workTypeName')
+      localStorage.removeItem('workTypeName2')
+      localStorage.removeItem('detail')
+      localStorage.removeItem("remarks")
+    },
     payTodo() {
+      this.getorderHeadCalcPrice()
+      setTimeout(() => {
+      var data = this.detail;
+      if(!data.workTypeName){
+         return this.$toast("请选择工种");
+      }
+      if(!data.workerUserCnt){
+         return this.$toast("请填写劳工人数");
+      }
+      if(!data.workerTimeQty){
+         return this.$toast("请填写服务周期");
+      }
+      if(!data.areatext){
+        return this.$toast("请选择服务区域");
+      }
+      if(!data.workerAddress){
+        return this.$toast("请输入详细地址");
+      }
+      if(!data.orderDate){
+         return this.$toast("请选择上门服务时间");
+      }
+      if(!data.receiverName){
+         return this.$toast("请输入联系人");
+      }
+      if(!data.receiverMobileNo){
+        return this.$toast("请输入联系人电话");
+      }
+      if(this.diyprice){
+        if(!data.totalMoney){
+          return this.$toast("请输入自定义价格");
+        }
+      }
+
+
+      if (!this.rulechecked) {
+        return this.$toast("请勾选货搬搬用户协议");
+      }
       var ot =  localStorage.getItem('time')
       if(ot){
         var diff = new Date().getTime() - 60*1000 > ot
@@ -797,10 +865,8 @@ export default {
             return this.$toast('一分钟之内只能下一单')
         }
       }
-      if (!this.rulechecked) {
-        return this.$toast("请勾选货搬搬用户协议");
-      } else {
-        var data = this.detail;
+
+
         data.payMoney = this.money_total;
         data.refundMoney = 0;
         this.$api.orderHeadInsert(data).then((result) => {
@@ -810,7 +876,10 @@ export default {
             this.payshow = true;
           }
         });
-      }
+
+
+      }, 1000);
+
     },
     alipay() {
       //支付宝
@@ -819,6 +888,7 @@ export default {
       localStorage.removeItem("workTypeName");
       localStorage.removeItem("workTypeName2");
       localStorage.removeItem("remarks")
+      localStorage.removeItem("rulechecked")
       if (this.paytype == 1) {
         window.location.href =
           config.apiurl+"/aliPay/wapPay?orderHeadSeqId=" +
@@ -903,7 +973,7 @@ export default {
       border: none;
       text-align: center;
       display: flex;
-
+      font-size: 30px;
       .btns {
         background-color: #28ae3a;
         color: #fff;

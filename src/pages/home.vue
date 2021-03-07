@@ -315,7 +315,9 @@ export default {
       ],
       city: "武汉",
       logoutshow:false,
-      userInfo:{}
+      userInfo:{
+
+      }
     };
   },
   mounted() {
@@ -411,10 +413,17 @@ export default {
     //退出处理
     logout(){
       // this.logoutshow = true
+      if(!this.userInfo.avatarUrl){
+        this.$router.push({
+          path: "/login",
+          query: {}
+        });
+      }else{
        this.$router.push({
           path: "/my",
           query: {}
         });
+      }
     },
     confirmhandler(){
       localStorage.clear()
@@ -568,20 +577,33 @@ export default {
             if(item.center.length > 2){
               var il = JSON.parse(item.center);
               if (il.length) {
-                arr.push({
-                  longitude:il[0],
-                  latitude:il[1]
-                });
+                if(il[0]){
+                  arr.push({
+                    longitude:il[0],
+                    latitude:il[1]
+                  });
+                }
               }
             }
           });
+
           if (arr.length < 2) {
             return this.$toast("请认真选择发货或收货地址");
+          }
+          if(this.adList.length == arr.length){
+            this.todoHandlers(arr)
+          }else{
+             return this.$toast("请认真选择发货或收货地址");
           }
         }else{
           return this.$toast("请认真选择发货或收货地址");
         }
         // var dis = AMap.GeometryUtil.distanceOfLine(arr);
+
+
+
+    },
+    todoHandlers(arr){
 
         this.$api.getDistance(arr).then((result)=>{
           if(result.code == 200){
@@ -595,8 +617,6 @@ export default {
           }
 
         })
-
-
 
     },
     priceDetail() {
@@ -627,8 +647,10 @@ export default {
       this.$router.push({ path: "/chooseaddress", query: { index: index } });
     },
     deleAddHandler(index) {
-      this.adList.splice(index, 1);
-      localStorage.setItem("adList", JSON.stringify(this.adList));
+      if(this.adList.length > 2){
+        this.adList.splice(index, 1);
+        localStorage.setItem("adList", JSON.stringify(this.adList));
+      }
     },
   },
   components: {},
@@ -687,8 +709,8 @@ export default {
       width: 12%;
       display: flex;
       .homeico {
-        width: 40px;
-        height: 40px;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         margin-right: auto;
       }
@@ -835,6 +857,24 @@ export default {
       height: 100px;
       justify-content: center;
       position: relative;
+      .a1{
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      .a2{
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
       .a4 {
         width: 100px;
         height: 100px;

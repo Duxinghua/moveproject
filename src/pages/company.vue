@@ -99,12 +99,12 @@ export default {
             overflow: hidden;
             line-height: 30px;
             text-align: center;
-            font-size: 14px;
+            font-size: 28px;
             color:white;
             background: #28ae3a;
           }
           .comname{
-            font-size: 16px;
+            font-size: 32px;
             color:#333333;
             font-weight: bold;
             width:340px;
@@ -118,7 +118,7 @@ export default {
           display: flex;
           flex-direction: row;
           align-items: center;
-          font-size: 14px;
+          font-size: 28px;
           color:#999999;
           margin-top:3px;
           span{
@@ -136,7 +136,7 @@ export default {
             margin-right:10px;
           }
           span{
-            font-size: 14px;
+            font-size: 28px;
             color:#28ae3a;
           }
         }
@@ -156,7 +156,7 @@ export default {
             text-overflow: ellipsis;
             white-space: nowrap;
             width:425px;
-            font-size: 18px;
+            font-size: 28px;
             color:#b2b1b2;
           }
         }

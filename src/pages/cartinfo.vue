@@ -75,13 +75,13 @@ export default {
       width:100%;
       height:427px;
       background: #f5f6f7;
-      position: relative;
+        display: table-cell;
+        vertical-align: middle;
       .cartimg{
-        position: absolute;
-        width:100%;
-        height:100%;
-        left:0;
-        top:0;
+        max-width: 100%;
+        max-height: 100%;
+        display: block;
+        margin: auto;
       }
     }
     .cartitem{

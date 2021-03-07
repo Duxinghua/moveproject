@@ -43,7 +43,7 @@
           v-model="refer.name"
           input-align="right"
           clearable
-          placeholder="请输入联系人姓名"
+          placeholder="请输入姓名"
           @click="itemHandler('name')"
           maxlength="10"
           @blur="nameBlurHandler"
@@ -54,7 +54,7 @@
           input-align="right"
           clearable
           maxlength="11"
-          placeholder="请输入联系人电话"
+          placeholder="请输入电话"
           @click="itemHandler('phone')"
           @blur="phoneHandler"
         />
@@ -636,6 +636,14 @@ export default {
   created(){
 
   },
+  watch:{
+    refer:{
+      handler(data){
+        localStorage.setItem("refer", JSON.stringify(data));
+      },
+      deep:true
+    }
+  },
   mounted() {
     //处理时间
     var placeOrder = localStorage.getItem('placeOrder')
@@ -648,7 +656,19 @@ export default {
          var day = Dates.getDate()
          this.minDate = new Date(year, month, day)
          this.maxDate = new Date(year, month, day,23,59,59)
+      }else{
+                var Dates = new Date()
+         var year = Dates.getFullYear()
+         var month = Dates.getMonth()
+         var day = Dates.getDate()
+         this.minDate = new Date(year, month, day)
       }
+    }else{
+              var Dates = new Date()
+         var year = Dates.getFullYear()
+         var month = Dates.getMonth()
+         var day = Dates.getDate()
+         this.minDate = new Date(year, month, day)
     }
     if (
       window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
@@ -885,10 +905,10 @@ export default {
         return this.$toast('请选择预约服务时间')
       }
       if(!this.refer.name){
-        return this.$toast('请输入联系人姓名')
+        return this.$toast('请输入姓名')
       }
       if(!this.refer.phone){
-        return this.$toast('请输入联系人电话')
+        return this.$toast('请输入手机号')
       }else{
         if (!/^1[0-9]{10}$/.test(this.refer.phone)) {
           this.refer.phone = "";
@@ -1158,11 +1178,9 @@ export default {
       var orderType = localStorage.getItem('orderType')
       if(orderType == 2 || orderType == 1){
         if(!this.refer.name){
-          this.refer.phone = ''
-          return this.$toast("请输入联系人姓名");
+          return this.$toast("请输入姓名");
         }
         if(!this.refer.time){
-          this.refer.phone = ''
           return this.$toast("请选择预约时间");
         }
       }
@@ -1334,6 +1352,12 @@ export default {
         }else if(orderType == 2){
 
           this.getjs()
+        }else if(orderType == 4){
+         var Dates = new Date()
+         var year = Dates.getFullYear()
+         var month = Dates.getMonth()
+         var day = Dates.getDate()
+         this.minDate = new Date(year, month, day)
         }
         this.timeshow = true;
       } else if (tag == "remarks") {
@@ -1417,17 +1441,16 @@ export default {
       //this.CalcSimplePrice();
     },
     payTodo() {
-      var ot =  localStorage.getItem('time')
-      if(ot){
-        var diff = new Date().getTime() - 60*1000 > ot
-        if(!diff){
-            return this.$toast('一分钟之内只能下一单')
-        }
-      }
       var orderType = localStorage.getItem('orderType')
+      if(orderType == 2){
+        this.getjs()
+      }
+      this.CalcSimplePrice()
+      setTimeout(()=>{
+
       if(orderType == 1 || orderType == 4 || orderType == 2){
         if(!this.detail.receiverName){
-          return this.$toast('请输入联系人姓名')
+          return this.$toast('请输入姓名')
         }
         if(!this.detail.receiverMobileNo){
           return this.$toast('请输入手机号')
@@ -1439,6 +1462,14 @@ export default {
           }
         }
 
+      }
+      if(orderType == 1){
+         if(this.refer.needtext != "已选择"){
+           return this.$toast('请选择额外需求')
+         }
+        if(!this.detail.orderDate){
+          return this.$toast('请选择预约服务时间')
+        }
       }
       if(orderType == 2){
         var adList = localStorage.getItem('adList')
@@ -1457,15 +1488,32 @@ export default {
         if(!this.refer.time){
           return this.$toast('请输入预约时间')
         }
+        if(!this.detail.routeKilometer){
+           return this.$toast('请选择搬家信息中的地址')
+        }
+        if(this.refer.moveHelp){
+          if(this.detail.orderPriceList.length == 0){
+            return this.$toast('请选择搬运楼层')
+          }
+        }
       }
       if(orderType == 4){
         if(!this.detail.orderDate){
           return this.$toast('请选择预约服务时间')
         }
       }
+      var ot =  localStorage.getItem('time')
+      if(ot){
+        var diff = new Date().getTime() - 60*1000 > ot
+        if(!diff){
+            return this.$toast('一分钟之内只能下一单')
+        }
+      }
       if(!this.refer.rulechecked){
         return this.$toast('请勾选货搬搬用户协议')
-      }else{
+      }
+
+
         var data = this.detail;
         data.payMoney = this.money_total;
         this.$api.orderHeadInsert(data).then((result) => {
@@ -1476,7 +1524,10 @@ export default {
             this.payshow = true;
           }
         });
-      }
+
+
+      },1000)
+
     },
     // onBridgeReady(data){
     //   WeixinJSBridge.invoke(
@@ -1592,7 +1643,7 @@ export default {
       border: none;
       text-align: center;
       display: flex;
-
+      font-size: 30px;
       .btns {
         background-color: #28ae3a;
         color: #fff;

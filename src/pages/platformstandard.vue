@@ -175,18 +175,18 @@ export default {
             if(value == '货物最长'){
               list1 = obj[value]
               list1.map((item)=>{
-                item.text = item.catItem + (item.price ? '  ¥'+item.price : '免费')
+                item.text = item.catItem + (item.price ? '  ¥'+item.price : '')
               })
             }else if(value == '货物最高'){
               list2 = obj[value]
               list2.map((item)=>{
-                item.text = item.catItem + (item.price ? '  ¥'+item.price : '免费')
+                item.text = item.catItem + (item.price ? '  ¥'+item.price : '')
               })
 
             }else if(value == '楼层'){
               list3 = obj[value]
               list3.map((item)=>{
-                item.text = item.remarks + (item.price ? '  ¥'+item.price : '免费')
+                item.text = item.remarks + (item.price ? '  ¥'+item.price : '')
               })
             }else if(value == '基础帮运费'){
               if(obj[value]){

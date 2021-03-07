@@ -174,6 +174,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.uni-btn{
+  font-size: 30px;
+}
  .payClass {
     min-height: 300px;
     display: flex;

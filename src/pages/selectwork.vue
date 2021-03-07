@@ -48,9 +48,12 @@ export default {
   },
   methods:{
     needHandler(){
+
       if(this.contentIndex == -1){
         return this.$toast('请选择工种')
       }else{
+        localStorage.setItem('workTypeName',this.cateList[this.contentIndex].workName)
+        localStorage.setItem('workTypeName2',this.cateList[this.contentIndex].workName2)
         this.$router.push('/platformpricing')
       }
     },

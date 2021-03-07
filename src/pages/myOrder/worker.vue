@@ -552,7 +552,7 @@ TopNav
       border: none;
       text-align: center;
       display: flex;
-
+      font-size: 30px;
       .btns {
         background-color: #28ae3a;
         color: #fff;
@@ -629,7 +629,7 @@ TopNav
     }
   }
   h4 {
-    font-size: 19px;
+    font-size: 32px;
     font-weight: 600;
     margin-bottom: 24px;
     margin-left: 24px;
@@ -733,13 +733,13 @@ TopNav
         margin:10px 0;
         .minute {
           position: relative;
-          font-size: 25px;
+          font-size: 28px;
         }
       }
 
       p:last-child {
         margin-top: 26px;
-        font-size: 13px;
+        font-size: 28px;
         color: #888888;
       }
     }
@@ -775,12 +775,14 @@ TopNav
         }
 
         .addressName {
-          font-size: 26px;
+          font-size: 32px;
           font-family: PingFang SC;
+          padding:0;
+          margin:0;
         }
 
         .detailAddress {
-          font-size: 12px;
+          font-size: 28px;
           color: #888888;
           margin-top: 6px;
           white-space: normal;
@@ -829,7 +831,7 @@ TopNav
       justify-content: space-between;
       align-items: center;
       color: #888;
-      font-size: 12px;
+      font-size: 28px;
       margin-bottom: 12px;
 
       span:first-child {
@@ -849,7 +851,7 @@ TopNav
     margin: 20px 24px;
     font-size: 25px;
     p:last-child {
-      font-size: 12px;
+      font-size: 28px;
       color: #888888;
       margin-top: 20px;
       word-break: break-all;
@@ -867,6 +869,11 @@ TopNav
     align-items: center;
     margin: 0 24px 20px 24px;
     font-size: 25px;
+    span{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
     span:first-child {
       width: 30%;
     }
@@ -874,13 +881,14 @@ TopNav
     span:last-child {
       font-size: 24px;
       color: #363636;
-      flex: 1;
+      // flex: 1;
       text-align: right;
     }
 
     img {
       width: 20px;
       height: 20px;
+      margin-left:auto;
     }
 
     .protect {
@@ -888,8 +896,9 @@ TopNav
       border: 1px solid #88d292;
       color: #88d292 !important;
       border-radius: 30px;
-      font-size: 11px;
+      font-size: 28px;
       margin-left: 10px;
+      width: fit-content!important;
     }
   }
 
@@ -900,7 +909,7 @@ TopNav
     margin: 0 24px 20px 24px;
 
     p:first-child {
-      font-size: 26px;
+      font-size: 28px;
       color: #333;
     }
 
@@ -908,7 +917,7 @@ TopNav
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      font-size: 28px;
       color: #888;
       margin-bottom: 24px;
     }
@@ -924,7 +933,7 @@ TopNav
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      font-size: 28px;
       color: #888;
       margin-bottom: 24px;
     }
@@ -943,7 +952,6 @@ TopNav
     align-items: center;
     justify-content: flex-end;
     width: 100%;
-
     .cancel_order {
       font-family: PingFang SC;
       border: 1px solid #e5e5e5;
@@ -953,10 +961,9 @@ TopNav
       color: #949494;
       width: 180px;
       border-radius: 30px;
-      font-size: 13px;
+      font-size: 28px;
       margin-right: 24px;
     }
-
     .pay {
       background-color: #28ae3a;
       color: #fff;
@@ -966,7 +973,7 @@ TopNav
       text-align: center;
       width: 180px;
       border-radius: 30px;
-      font-size: 13px;
+      font-size: 28px;
       margin-right: 24px;
     }
     .back_order {
@@ -978,7 +985,7 @@ TopNav
       text-align: center;
       width: 180px;
       border-radius: 30px;
-      font-size: 13px;
+      font-size: 28px;
       left: 24px;
       position: absolute;
     }
