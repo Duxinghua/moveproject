@@ -1,5 +1,6 @@
 <template>
 	<div class='question'>
+    <TopNav :menu="menutext" page="callCenter"/>
 		<div v-if='state==1'>
 			<div class='title'>
 				选择车型下单
@@ -206,9 +207,14 @@
 </template>
 
 <script>
+import TopNav from "@/components/topnav.vue";
 	export default{
+    components:{
+      TopNav
+    },
 		data(){
 			return{
+        menutext:'客服中心',
 				state:''
 			}
 		},

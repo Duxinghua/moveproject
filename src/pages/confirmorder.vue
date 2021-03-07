@@ -1871,16 +1871,16 @@ export default {
           flex-direction: column;
           justify-content: center;
           .a1 {
-            font-size: 18px;
+            font-size: 28px;
             color: #999999;
           }
           .a2 {
-            font-size: 34px;
+            font-size: 32px;
             color: #333333;
             padding-top: 30px;
           }
           .a3 {
-            font-size: 18px;
+            font-size: 28px;
             color: #999999;
             padding-bottom: 30px;
           }
@@ -1963,7 +1963,7 @@ export default {
     margin: 0 auto;
   }
   .itemtitle {
-    font-size: 18px;
+    font-size: 32px;
     color: #999999;
     padding: 0 30px;
   }

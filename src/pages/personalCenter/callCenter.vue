@@ -1,5 +1,6 @@
 <template>
 	<div class='callCenter'>
+    <TopNav :menu="menutext" page="my"/>
 		<div class='top'>
 			<!-- <button class="onCall" open-type="contact" session-from="message">
 				<img src='../static/tishi.png'></img>
@@ -117,9 +118,14 @@
 </template>
 
 <script>
+import TopNav from "@/components/topnav.vue";
 	export default {
+    components:{
+      TopNav
+    },
 		data() {
 			return {
+        menutext:'客服中心',
 				phone: ''
 			}
 		},
@@ -144,12 +150,12 @@
 <style lang='scss'>
 	.callCenter {
 		background-color: #f3f3f3;
-		padding-top: 60px;
 		padding-bottom: 30px;
 		.top {
 			display: flex;
 			align-items: center;
 			margin: 0 24px;
+      margin-top:30px;
       padding:0 28px;
       box-sizing: border-box;
       background: linear-gradient(#fca73c, #fe8a35);
