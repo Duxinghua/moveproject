@@ -846,6 +846,7 @@ export default {
       localStorage.removeItem('sCar')
       localStorage.removeItem('large_goods')
       localStorage.removeItem('fileList')
+      localStorage.removeItem('cartIndex')
     },
     getjs(){
       var list = localStorage.getItem("adList");
@@ -1357,7 +1358,7 @@ export default {
          var year = Dates.getFullYear()
          var month = Dates.getMonth()
          var day = Dates.getDate()
-         this.minDate = new Date(year, month, day)
+         this.minDate = new Date()
         }
         this.timeshow = true;
       } else if (tag == "remarks") {

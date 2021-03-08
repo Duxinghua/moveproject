@@ -455,7 +455,7 @@ export default {
 
   .uni-tip {
     background-color: #fff;
-    width: 82%;
+    width: 100%;
     margin: 0 auto;
     border-radius: 26px;
 
@@ -769,7 +769,9 @@ export default {
       margin-bottom: 12px;
 
       span:first-child {
-        flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
       }
 
       span:last-child {
@@ -801,7 +803,9 @@ export default {
     span:last-child {
       font-size: 24px;
       color: #363636;
-      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
       text-align: right;
     }
 
@@ -816,6 +820,7 @@ export default {
       color: #88d292 !important;
       border-radius: 30px;
       font-size: 28px;
+      width: fit-content!important;
       margin-left: 10px;
     }
   }

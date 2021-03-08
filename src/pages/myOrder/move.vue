@@ -990,7 +990,6 @@ export default {
     span:last-child {
       font-size: 24px;
       color: #363636;
-      flex: 1;
       text-align: right;
       display: flex;
       justify-content: flex-end;
@@ -1011,6 +1010,7 @@ export default {
       width:fit-content;
       border-radius: 30px;
       font-size: 28px;
+          width: fit-content!important;
       margin-left: 10px;
     }
   }

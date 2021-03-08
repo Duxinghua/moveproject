@@ -523,7 +523,7 @@ TopNav
 
   .uni-tip {
     background-color: #fff;
-    width: 82%;
+    width: 100%;
     margin: 0 auto;
     border-radius: 26px;
 
@@ -881,7 +881,9 @@ TopNav
     span:last-child {
       font-size: 24px;
       color: #363636;
-      // flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
       text-align: right;
     }
 

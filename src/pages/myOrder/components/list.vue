@@ -342,7 +342,7 @@
 		padding: 0 24px;
 		.uni-tip {
 			background-color: #fff;
-			width: 82%;
+			width: 100%;
 			margin: 0 auto;
 			border-radius: 16px;
 

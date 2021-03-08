@@ -10,6 +10,7 @@
         v-model="worktype"
         input-align="right"
         :clearable="true"
+        :readonly="true"
         placeholder="请选择"
         right-icon="arrow"
         @click="itemHandler('worktype')"
@@ -458,6 +459,11 @@ export default {
     }
   },
   mounted() {
+             var Dates = new Date()
+         var year = Dates.getFullYear()
+         var month = Dates.getMonth()
+         var day = Dates.getDate()
+         this.minDate = new Date(year, month, day)
     this.rulechecked = localStorage.getItem('rulechecked')
     if (
       window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
@@ -849,6 +855,9 @@ export default {
         return this.$toast("请输入联系人电话");
       }
       if(this.diyprice){
+        if(!parseFloat(this.pricetext)){
+          return this.$toast("请输入自定义价格");
+        }
         if(!data.totalMoney){
           return this.$toast("请输入自定义价格");
         }
@@ -871,6 +880,7 @@ export default {
         data.refundMoney = 0;
         this.$api.orderHeadInsert(data).then((result) => {
           if (result.code == 200) {
+            this.clearItem()
             localStorage.setItem('time',new Date().getTime())
             this.detail = result.data;
             this.payshow = true;

@@ -2,7 +2,7 @@
 <div class="list">
 <TopNav :menu="menutext"/>
 <div class="cartwrap">
-  <div class="cartitem" v-for="(item,index) in carList" :key="index" @click="cartHandler(item)">
+  <div class="cartitem" v-for="(item,index) in carList" :key="index" @click="cartHandler(item,index)">
     <img :src="item.picUrl"  class="cartico" />
     <div class="carttext">
     {{item.carName}}
@@ -45,8 +45,9 @@ export default {
         this.carList = result.list
       })
     },
-    cartHandler(item){
+    cartHandler(item,cartIndex){
       localStorage.setItem('sCar',1)
+         localStorage.setItem("cartIndex", cartIndex);
       localStorage.setItem('cartObject',JSON.stringify(item))
       var orderType = localStorage.getItem('orderType')
       if(orderType == 1 || orderType == 4){

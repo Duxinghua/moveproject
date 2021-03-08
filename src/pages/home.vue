@@ -473,32 +473,19 @@ export default {
         pagesize: this.cartPageSize,
       };
       this.$api.carStyleFindPage(data).then((result) => {
+        console.log(result,'result')
         if(result.code != 401){
           this.carList = result.list;
           console.log(result.list,'list',localStorage.getItem("sCar"))
-          if (localStorage.getItem("sCar") == 0) {
-            console.log(1)
-            localStorage.setItem("sCar",1)
-            this.cartObject = result.list[0];
-            localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
-          }else if (localStorage.getItem("sCar") == 1) {
-            var cartObject = JSON.parse(localStorage.getItem('cartObject'))
-            if(cartObject){
-              console.log( this.carList)
-              this.carList.map((item,index)=>{
-                if(item.seqId == cartObject.seqId){
-                    console.log(index)
-                  this.cartIndex = index
-                  this.cartObject = this.carList[index]
-                  console.log( this.cartIndex,'index')
-                  this.$forceUpdate()
-                }
-              })
+        if (localStorage.getItem("cartIndex")) {
+              this.cartIndex = localStorage.getItem('cartIndex')
+              this.cartObject = this.carList[this.cartIndex]
+              localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
             }else{
               this.cartObject = result.list[0];
               localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
             }
-          }
+
         }
       });
        console.log( this.cartIndex,'index')
@@ -541,6 +528,7 @@ export default {
       this.cartIndex = index;
       this.cartObject = this.carList[index];
       localStorage.setItem("cartObject", JSON.stringify(this.cartObject));
+      localStorage.setItem("cartIndex", this.cartIndex);
       localStorage.setItem("sCar",1)
     },
     goPos() {
