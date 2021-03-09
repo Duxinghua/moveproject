@@ -648,27 +648,33 @@ export default {
     //处理时间
     var placeOrder = localStorage.getItem('placeOrder')
     var orderType = localStorage.getItem('orderType')
-    if(orderType == 1 || orderType == 4){
+    if(orderType == 1){
       if(placeOrder == 'APPOINTMENT'){
          var Dates = new Date()
          var year = Dates.getFullYear()
          var month = Dates.getMonth()
          var day = Dates.getDate()
-         this.minDate = new Date(year, month, day)
+         var hour = Dates.getHours()
+         var minutes = Dates.getMinutes()+10
+         this.minDate = new Date(year, month, day,hour,minutes,0)
          this.maxDate = new Date(year, month, day,23,59,59)
       }else{
-                var Dates = new Date()
+          var Dates = new Date()
          var year = Dates.getFullYear()
          var month = Dates.getMonth()
          var day = Dates.getDate()
-         this.minDate = new Date(year, month, day)
+          var hour = Dates.getHours()
+         var minutes = Dates.getMinutes()+10
+          this.minDate = new Date(year, month, day,hour,minutes,0)
       }
     }else{
               var Dates = new Date()
          var year = Dates.getFullYear()
          var month = Dates.getMonth()
          var day = Dates.getDate()
-         this.minDate = new Date(year, month, day)
+        var hour = Dates.getHours()
+         var minutes = Dates.getMinutes()+10
+          this.minDate = new Date(year, month, day,hour,minutes,0)
     }
     if (
       window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
@@ -770,7 +776,7 @@ export default {
         : {};
       this.refer.carType = this.cartObject ? this.cartObject.carName : "请选择";
       localStorage.setItem("refer", JSON.stringify(this.refer));
-      this.getOther(true, "HOUSE_FLOOR");
+      // this.getOther(true, "HOUSE_FLOOR");
       var large_goods = localStorage.getItem("large_goods");
       if (large_goods) {
         large_goods = JSON.parse(large_goods);
@@ -797,8 +803,9 @@ export default {
       }
     }else if (this.orderType == 4){
       this.priceType = 'DISCUSS'
+      this.getOther(false, "OTHER");
     }
-    this.getOther(false, "OTHER");
+
     if(this.orderType != 2 || this.orderType != 3){
       this.CalcSimplePrice();
     }
@@ -902,37 +909,38 @@ export default {
     },
     priceTypeChange(e) {},
     serverArrHandler(e) {
-      if(!this.refer.time){
-        return this.$toast('请选择预约服务时间')
-      }
-      if(!this.refer.name){
-        return this.$toast('请输入姓名')
-      }
-      if(!this.refer.phone){
-        return this.$toast('请输入手机号')
-      }else{
-        if (!/^1[0-9]{10}$/.test(this.refer.phone)) {
-          this.refer.phone = "";
-          return this.$toast("请输入正确的手机号");
-        }
-      }
+      // if(!this.refer.time){
+      //   return this.$toast('请选择预约服务时间')
+      // }
+      // if(!this.refer.name){
+      //   return this.$toast('请输入姓名')
+      // }
+      // if(!this.refer.phone){
+      //   return this.$toast('请输入手机号')
+      // }else{
+      //   if (!/^1[0-9]{10}$/.test(this.refer.phone)) {
+      //     this.refer.phone = "";
+      //     return this.$toast("请输入正确的手机号");
+      //   }
+      // }
 
 
       localStorage.setItem("serverArr", JSON.stringify(e));
       var otherList = localStorage.getItem("otherList");
       if (otherList) {
         otherList = JSON.parse(otherList);
+        var list = []
         otherList.map((item) => {
-          e.map((sitem) => {
-            console.log(item.seqId,'sitem')
-            if (sitem == item.seqId) {
-              item.checked = true;
-            }else{
-              item.checked = false;
-            }
-          });
+          if(e.join(",").indexOf(item.seqId) > -1){
+            item.checked = true
+            list.push(item)
+          }else{
+            item.checked = false
+            list.push(item)
+          }
+
         });
-        //localStorage.setItem("otherList", JSON.stringify(otherList));
+        localStorage.setItem("otherList", JSON.stringify(list));
       }
       // this.CalcSimplePrice();
     },
@@ -1006,12 +1014,14 @@ export default {
       if (otherListServer) {
         otherListServer = JSON.parse(otherListServer);
         otherListServer.map((item) => {
-          var obj = {
-            refSeqId: item.seqId,
-            propName: item.catItem,
-            checked: item.checked,
-          };
-          orderPriceList.push(obj);
+          if(item.checked){
+            var obj = {
+              refSeqId: item.seqId,
+              propName: item.catItem,
+              checked: item.checked,
+            };
+            orderPriceList.push(obj);
+          }
         });
       }
       //平台服务
@@ -1121,7 +1131,7 @@ export default {
           orderPicList = JSON.parse(orderPicList);
           orderPicList.map((item) => {
             var obj = {
-              picUrl: item.viewUrl,
+              picUrl: item,
             };
             imglist.push(obj);
           });
@@ -1285,6 +1295,7 @@ export default {
               list.push(o);
             });
             this.otherList = list;
+            console.log(list,'list')
             var serverArr = localStorage.getItem("serverArr")
             if(serverArr){
               serverArr = JSON.parse(serverArr)
@@ -1448,6 +1459,9 @@ export default {
       }
       this.CalcSimplePrice()
       setTimeout(()=>{
+      if(new Date(this.detail.orderDate).getTime() <= new Date().getTime()){
+         return this.$toast('预约时间不能小于当前时间')
+      }
 
       if(orderType == 1 || orderType == 4 || orderType == 2){
         if(!this.detail.receiverName){

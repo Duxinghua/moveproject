@@ -506,6 +506,8 @@ export default {
         localStorage.setItem("sCar",1)
       }
       localStorage.setItem("orderType", this.serverIndex);
+      localStorage.removeItem("otherList")
+      localStorage.removeItem("serverArr")
       if (index == 1) {
         this.cartPageSize = 4;
         this.getAllCart();

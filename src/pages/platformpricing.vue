@@ -459,11 +459,13 @@ export default {
     }
   },
   mounted() {
-             var Dates = new Date()
+        var Dates = new Date()
          var year = Dates.getFullYear()
          var month = Dates.getMonth()
          var day = Dates.getDate()
-         this.minDate = new Date(year, month, day)
+        var hour = Dates.getHours()
+         var minutes = Dates.getMinutes()+10
+         this.minDate = new Date(year, month, day,hour,minutes,0)
     this.rulechecked = localStorage.getItem('rulechecked')
     if (
       window.navigator.userAgent.toLowerCase().match(/MicroMessenger/i) ==
@@ -829,6 +831,9 @@ export default {
     payTodo() {
       this.getorderHeadCalcPrice()
       setTimeout(() => {
+      if(new Date(this.detail.orderDate).getTime() <= new Date().getTime()){
+         return this.$toast('预约时间不能小于当前时间')
+      }
       var data = this.detail;
       if(!data.workTypeName){
          return this.$toast("请选择工种");

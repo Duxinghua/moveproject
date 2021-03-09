@@ -18,7 +18,7 @@
 				上传照片 <span>*每张图片大小不超过2M</span>
 			</div>
 		    <div class="weui-uploader__bd th-backwhite">
-           <van-uploader  capture="camera" accept="image"   v-model="fileList" multiple  :max-count="4" :after-read="afterRead" :before-delete="beforedelete"  />
+           <van-uploader  v-model="fileList"   :max-count="4" :after-read="afterRead" :before-delete="beforedelete"  />
 		    </div>
 			</div>
 			<div class="btn-wrap">
@@ -33,6 +33,7 @@ export default {
     return {
       notedata: "",
       fileList: [],
+      uploadimg:[],
       seqId: "",
       sheetId: "",
       menutext:'取消订单'
@@ -53,6 +54,7 @@ export default {
       this.$api.appealimgUpload(data).then((result) => {
         if(result.code == 200){
           this.fileList[detail.index].viewUrl = result.data.viewUrl
+          this.uploadimg[detail.index] = result.data.viewUrl
           // localStorage.setItem('fileList',JSON.stringify(this.fileList))
         }else{
           return this.$toast(result.msg)
@@ -62,6 +64,7 @@ export default {
     beforedelete(e,detail){
       var index = detail.index
       this.fileList.splice(index,1)
+      this.uploadimg.splice(index,1)
     },
     chooseImage(e) {
 
@@ -71,22 +74,22 @@ export default {
     },
     deletImg(index) {
       this.fileList.splice(index, 1);
+      this.uploadimg.splice(index,1)
     },
     testSubmit(e) {
       let _this = this;
-      let imgList = _this.fileList;
       if (!this.notedata) {
         this.$toast("请输入取消原因")
         return false;
       }
-      if (this.fileList.length == 0) {
+      if (this.uploadimg.length == 0) {
         this.$toast("请上传图片")
         return false;
       }
       var imglist = []
-      this.fileList.map((item,index)=>{
+      this.uploadimg.map((item,index)=>{
         var obj = {
-          picUrl:item.viewUrl,
+          picUrl:item,
 					sort:index,
 					picType:2,
 					sheetId:_this.sheetId

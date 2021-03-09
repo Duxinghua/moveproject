@@ -17,7 +17,7 @@
     <div class="imgtitle">
       上传搬家照片
     </div>
-    <van-uploader capture="camera" accept="image"  v-model="fileList" multiple  :max-count="4" :after-read="afterRead" :before-delete="beforedelete"  />
+    <van-uploader   v-model="fileList"   :max-count="4" :after-read="afterRead" :before-delete="beforedelete"  />
   </div>
   <van-button type="primary" size="small" round block @click="messageHandler">确定</van-button>
   </div>
@@ -43,11 +43,12 @@ export default {
   mounted(){
     this.orderType = localStorage.getItem('orderType')
     this.remarks = localStorage.getItem('remarks')
-    var fileList = localStorage.getItem('fileList')
-    if(fileList){
-      fileList = JSON.parse(fileList)
-      this.fileList = fileList
-    }
+    localStorage.removeItem('fileList')
+    // var fileList = localStorage.getItem('fileList')
+    // if(fileList){
+    //   fileList = JSON.parse(fileList)
+    //   this.fileList = fileList
+    // }
   },
   methods:{
     messageHandler(){
@@ -55,7 +56,12 @@ export default {
       if(this.orderType == 3){
         this.$router.push({ path: "/platformpricing" ,query:{remarks:this.remarks}});
       }else{
-        this.$router.push({ path: "/confirmorder" ,query:{remarks:this.remarks}});
+        if(this.uploadimg.length){
+            localStorage.setItem('fileList',JSON.stringify(this.uploadimg))
+            this.$router.push({ path: "/confirmorder" ,query:{remarks:this.remarks}});
+        }else{
+          this.$router.push({ path: "/confirmorder" ,query:{remarks:this.remarks}});
+        }
       }
     },
     afterRead(e,detail){
@@ -65,10 +71,9 @@ export default {
       this.$api.appealimgUpload(data).then((result) => {
         if(result.code == 200){
           this.fileList[detail.index].viewUrl = result.data.viewUrl
-          alert(1)
-          localStorage.setItem('fileList',JSON.stringify(this.fileList))
+          this.uploadimg[detail.index] = result.data.viewUrl
+          // localStorage.setItem('fileList',JSON.stringify(this.fileList))
         }else{
-          alert(2)
           return this.$toast(result.msg)
         }
       })
@@ -76,6 +81,7 @@ export default {
     beforedelete(e,detail){
       var index = detail.index
       this.fileList.splice(index,1)
+      this.uploadimg.splice(index,1)
     }
   }
 }

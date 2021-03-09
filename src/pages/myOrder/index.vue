@@ -467,7 +467,7 @@ export default {
                 that.orderList = [];
                 that.upCallback();
                 that.payshow = false
-                alert(JSON.stringify(res))
+                // alert(JSON.stringify(res))
                 // 支付成功后的回调函数
               },
               fail: function(res){
