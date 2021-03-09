@@ -55,7 +55,6 @@ export default {
       if(this.orderType == 3){
         this.$router.push({ path: "/platformpricing" ,query:{remarks:this.remarks}});
       }else{
-        localStorage.setItem('fileList',JSON.stringify(this.fileList))
         this.$router.push({ path: "/confirmorder" ,query:{remarks:this.remarks}});
       }
     },
@@ -66,8 +65,10 @@ export default {
       this.$api.appealimgUpload(data).then((result) => {
         if(result.code == 200){
           this.fileList[detail.index].viewUrl = result.data.viewUrl
+          alert(1)
           localStorage.setItem('fileList',JSON.stringify(this.fileList))
         }else{
+          alert(2)
           return this.$toast(result.msg)
         }
       })
