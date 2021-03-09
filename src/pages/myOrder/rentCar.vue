@@ -153,13 +153,15 @@
         </div>
       </div>
     </van-popup>
-        <PayItem ref="pays"  @update="update"/>
+          <PayItem ref="pays"  @update="update" @unline="unline"/>
+    <PopShowItem ref="pops" @update="update" />
   </div>
 </template>
 
 <script>
 import config from "@/utils/config.js";
 import PayItem from '@/components/payitem.vue';
+import PopShowItem from '@/components/popShowItem.vue';
 import TopNav from "@/components/topnav.vue";
 export default {
   props: {
@@ -168,6 +170,8 @@ export default {
     },
   },
   components: {
+    PayItem,
+    PopShowItem,
     TopNav
   },
   data() {
@@ -357,6 +361,10 @@ export default {
     this.getOrderDetail()
   },
   methods: {
+    unline(data){
+      this.$refs.pops.current_id = data.seqId
+      this.$refs.pops.popshow = true
+    },
     async getOrderDetail() {
       let data = await this.$api.orderSheet({ seqId: this.$route.query.id });
       if (data.code == 200) {
@@ -397,6 +405,7 @@ export default {
       update(e){
 
         this.$refs.pays.payshow = false
+        this.$refs.pops.popshow = false
         this.getOrderDetail()
       },
 			pay(item){

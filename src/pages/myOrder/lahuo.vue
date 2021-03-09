@@ -146,14 +146,16 @@
       >立即评价</span>
       <!-- 	<span class='cancel_order' v-if='orderDetail.orderStatus=="CANCEL"' @click='del(orderDetail.seqId)'>删除订单</span> -->
     </div>
-    <PayItem ref="pays"  @update="update"/>
+    <PayItem ref="pays"  @update="update" @unline="unline"/>
+    <PopShowItem ref="pops" @update="update" />
   </div>
 </template>
 
 <script>
 import config from "@/utils/config.js"
-import TopNav from "@/components/topnav.vue";
+import TopNav from "@/components/topnav.vue"
 import PayItem from '@/components/payitem.vue'
+import PopShowItem from '@/components/popShowItem.vue'
 export default {
   data() {
     return {
@@ -175,7 +177,8 @@ export default {
   },
   components: {
     TopNav,
-    PayItem
+    PayItem,
+    PopShowItem
   },
   mounted() {
         if (
@@ -344,6 +347,10 @@ export default {
     },
   },
   methods: {
+    unline(data){
+      this.$refs.pops.current_id = data.seqId
+      this.$refs.pops.popshow = true
+    },
     async getOrderDetail() {
       let data = await this.$api.orderSheet({ seqId: this.$route.query.id });
       if (data.code == 200) {
@@ -377,6 +384,7 @@ export default {
     update(e){
       this.getOrderDetail()
       this.$refs.pays.payshow = false
+      this.$refs.pops.popshow = false
     },
 			pay(item){
         this.$refs.pays.paytype = this.paytype

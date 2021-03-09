@@ -29,10 +29,33 @@
 export default {
   data(){
     return{
-
+      popshow:false,
+      current_id:''
     }
   },
   methods:{
+    cal() {
+      this.popshow = false;
+      this.$toast("取消支付");
+      this.$emit("update", 1);
+    },
+    contact() {
+      var that = this;
+      this.$api
+        .orderPayOffLine({
+          seqId: that.current_id,
+          payType: "OFF_LINE",
+        })
+        .then((res) => {
+          if (res.code == 200) {
+            that.popshow = false;
+            that.$toast("支付成功");
+            that.$emit("update", 1);
+          } else {
+            that.$toast("支付失败");
+          }
+        });
+    },
 
   }
 }

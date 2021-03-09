@@ -124,13 +124,14 @@ export default {
           }
         });
       } else if (this.paytype == 3) {
-        that.popshow = true;
+         that.payshow = true;
+         that.$emit("unline",{seqId:that.current_id,payType:"OFF_LINE"});
       }
     },
     cal() {
       this.popshow = false;
       this.$toast("取消支付");
-      that.$emit("update", 1);
+      this.$emit("update", 1);
     },
     contact() {
       var that = this;

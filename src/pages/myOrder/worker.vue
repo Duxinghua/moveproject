@@ -203,13 +203,16 @@
         </div>
       </div>
     </van-popup>
-        <PayItem ref="pays"  @update="update"/>
+               <PayItem ref="pays"  @update="update" @unline="unline"/>
+    <PopShowItem ref="pops" @update="update" />
+
   </div>
 </template>
 
 <script>
 import TopNav from "@/components/topnav.vue";
 import PayItem from '@/components/payitem.vue';
+import PopShowItem from '@/components/popShowItem.vue';
 import config from "@/utils/config.js";
 export default {
   props: {
@@ -219,6 +222,7 @@ export default {
   },
   components: {
     PayItem,
+    PopShowItem,
 TopNav
   },
   data() {
@@ -407,12 +411,17 @@ TopNav
     this.getOrderDetail();
   },
   methods: {
+    unline(data){
+      this.$refs.pops.current_id = data.seqId
+      this.$refs.pops.popshow = true
+    },
     goOrder(){
      this.$router.push({path: '/myorder'})
     },
       update(e){
 
         this.$refs.pays.payshow = false
+        this.$refs.pops.popshow = false
         this.getOrderDetail()
       },
 			pay(item){
