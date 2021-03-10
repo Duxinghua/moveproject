@@ -495,6 +495,7 @@ export default {
       console.log(index,'indexser')
       this.carList = [];
       localStorage.removeItem('refer')
+      localStorage.removeItem('detail')
       localStorage.removeItem('platform')
       // localStorage.setItem('adList',JSON.stringify(this.adList))
       localStorage.removeItem('cartObject')
