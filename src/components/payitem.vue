@@ -44,7 +44,7 @@
                 <span class="payname">微信支付</span>
               </div>
             </van-radio>
-            <van-radio name="3">
+            <van-radio name="3" v-if="couponSeqId == 0">
               <div class="payitem">
                 <img
                   src="../assets/img/xx.png"
@@ -81,6 +81,7 @@ export default {
       paytype: 1,
       current_id: "",
       popshow: false,
+      couponSeqId:0
     };
   },
   methods: {

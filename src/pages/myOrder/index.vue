@@ -88,7 +88,7 @@
                 <span
                   class='pay_btn'
                   v-if="item.orderStatus == 'NOPAY' || item.orderStatus == 'NOPAY2'"
-                  @click='pay(item.seqId,item.payMoney)'
+                  @click='pay(item.seqId,item.payMoney,item.couponSeqId)'
                 >去支付</span>
                 <!-- 	<span class='cancel_btn'  v-if='item.orderStatus=="CANCEL"' @tap='del(item.seqId)'>删除订单</span> -->
               </div>
@@ -164,7 +164,7 @@
                 <span class="payname">微信支付</span>
               </div>
             </van-radio>
-            <van-radio name="3" >
+            <van-radio name="3" v-if="couponSeqId == 0">
               <div class="payitem">
                 <img
                   src="../../assets/img/xx.png"
@@ -259,7 +259,8 @@ export default {
       },
       total: 0,
       paytype: 1,
-       isWx:2
+       isWx:2,
+       couponSeqId:0
     };
   },
   mounted() {
@@ -566,9 +567,10 @@ export default {
 					}
 				})
 			},
-			pay(id,money){
+			pay(id,money,couponSeqId){
 				this.current_id=id
 				this.payMoney=money
+        this.couponSeqId = couponSeqId ? couponSeqId : 0
         this.payshow = true
 			},
 			submit() {

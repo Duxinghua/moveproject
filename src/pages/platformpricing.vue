@@ -342,7 +342,7 @@
                 <span class="payname">微信支付</span>
               </div>
             </van-radio>
-            <van-radio name="3">
+            <van-radio name="3" v-if="couponSeqId == 0">
               <div class="payitem">
                 <img
                   src="../assets/img/xx.png"
@@ -443,7 +443,8 @@ export default {
       safe:true,
       worktimeobj:{},
       popshow:false,
-      current_id:''
+      current_id:'',
+      couponSeqId:0
     };
   },
   created(){
@@ -791,6 +792,7 @@ export default {
     couponHandler(item){
       this.couponshow = false
       this.couponObj = item
+      this.couponSeqId = item.seqId
       this.coupon = '已选优惠券'
       this.getorderHeadCalcPrice()
     },
@@ -838,6 +840,7 @@ export default {
       if(!data.workTypeName){
          return this.$toast("请选择工种");
       }
+
       if(!data.workerUserCnt){
          return this.$toast("请填写劳工人数");
       }
@@ -856,9 +859,20 @@ export default {
       if(!data.receiverName){
          return this.$toast("请输入联系人");
       }
+      if(!this.name){
+        return this.$toast("请输入联系人");
+      }
       if(!data.receiverMobileNo){
         return this.$toast("请输入联系人电话");
       }
+      if (!this.phone) {
+          return this.$toast("请输入联系方式");
+        } else {
+          if (!/^1[0-9]{10}$/.test(this.phone)) {
+            this.phone = "";
+            return this.$toast("请输入正确的手机号");
+          }
+        }
       if(this.diyprice){
         if(!parseFloat(this.pricetext)){
           return this.$toast("请输入自定义价格");
@@ -893,7 +907,7 @@ export default {
         });
 
 
-      }, 1000);
+      }, 300);
 
     },
     alipay() {

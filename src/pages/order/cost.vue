@@ -86,13 +86,13 @@ import TopNav from "@/components/topnav.vue";
 				}
 			}
 			&>span{
-				font-size:13px;
+				font-size:26px;
 			}
 			.tip{
 				margin-top:30px;
 				padding-bottom:60px;
 				border-bottom:1px solid #eee;
-				font-size:13px;
+				font-size:26px;
 				color:#888;
 			}
 			.basics,.extra{
@@ -106,7 +106,7 @@ import TopNav from "@/components/topnav.vue";
 					margin-top:18px;
 					display: flex;
 					justify-content: space-between;
-					font-size:24px;
+					font-size:26px;
 					align-items: flex-start;
 				}
 			}

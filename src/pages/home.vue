@@ -316,7 +316,7 @@ export default {
       city: "武汉",
       logoutshow:false,
       userInfo:{
-
+        avatarUrl:''
       }
     };
   },

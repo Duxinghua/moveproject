@@ -413,6 +413,7 @@ export default {
         this.$refs.pays.isWx = this.isWx
         this.$refs.pays.payMoney = item.payMoney
         this.$refs.pays.current_id = item.seqId
+        this.$refs.pays.couponSeqId = item.couponSeqId ? item.couponSeqId : 0
         this.$refs.pays.payshow = true
 			},
     submit() {

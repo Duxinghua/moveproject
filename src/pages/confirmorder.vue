@@ -414,7 +414,7 @@
                 <span class="payname">微信支付</span>
               </div>
             </van-radio>
-            <van-radio name="3" >
+            <van-radio name="3" v-if="couponSeqId == 0">
               <div class="payitem">
                 <img
                   src="../assets/img/xx.png"
@@ -630,7 +630,8 @@ export default {
       popshow:false,
       payload: {},
       couponlist:[],
-      current_id:''
+      current_id:'',
+      couponSeqId:0
     };
   },
   created(){
@@ -1413,6 +1414,7 @@ export default {
       this.refer.couponObj = item
       this.couponshow = false
       this.refer.coupon = '已选优惠券'
+      this.couponSeqId = item.seqId
       this.CalcSimplePrice()
     },
     cancelHandler() {
