@@ -833,6 +833,9 @@ export default {
     payTodo() {
       this.getorderHeadCalcPrice()
       setTimeout(() => {
+      if(!this.time){
+          return this.$toast('请输入预约时间')
+      }
       if(new Date(this.detail.orderDate).getTime() <= new Date().getTime()){
          return this.$toast('预约时间不能小于当前时间')
       }
