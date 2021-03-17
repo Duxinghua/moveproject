@@ -9,7 +9,8 @@
         :key="index"
         @click="listItemHandler(index)"
       >
-        {{item}}
+        {{item.name}}
+        <span v-if="item.number">{{item.number}}</span>
       </div>
     </div>
     <div
@@ -79,10 +80,40 @@ export default {
   mounted() {
     this.getOther();
   },
+  watch:{
+    selectList:{
+      handler(data){
+        this.$nextTick(()=>{
+                  var labelText = ''
+        var number = 0
+        data.map((item,index)=>{
+          number += item.number
+          if(index == 0){
+          labelText = item.catType
+          }
+        })
+       var lists = []
+        this.list.map((item)=>{
+          if(item.name == labelText){
+            item.number = number
+            lists.push(item)
+          }else{
+            lists.push(item)
+          }
+        })
+       console.log(lists)
+        this.$forceUpdate()
+
+        })
+
+      },
+      deep:true
+    }
+  },
   methods: {
     listItemHandler(index) {
       this.listIndex = index;
-      var key = this.list[index];
+      var key = this.list[index].name;
       this.selectList = this.resObj[key];
     },
     getOther() {
@@ -101,15 +132,20 @@ export default {
           var obj = result.data;
           var list = [];
           Object.keys(obj).forEach((value) => {
-            list.push(value);
+
+            list.push({
+              name:value,
+              number:0
+            });
           });
-          var key = list[0];
+          var key = list[0].name;
           this.labelText = key;
           Object.values(obj).forEach((value) => {
             value.map((item) => {
               item.number = 0;
             });
           });
+          // console.log(obj[key],'ss')
           this.selectList = obj[key];
           this.list = list;
           this.resObj = obj;
@@ -118,7 +154,28 @@ export default {
             var sobj = JSON.parse(large_goods).resObj
             this.resObj = sobj
             this.selectList = sobj[key]
+            // this.list = sobj
           }
+          this.$nextTick(()=>{
+            var lists = []
+            Object.keys(sobj).map((item)=>{
+              var obj = {
+                name:item,
+                number:0
+              }
+              sobj[item].map((sitem)=>{
+                obj.number += sitem.number
+              })
+              lists.push(obj)
+            })
+
+
+          this.list = lists
+          console.log(lists)
+
+            this.$forceUpdate()
+          })
+
         }
       });
     },
@@ -189,6 +246,22 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
+      span{
+        position: absolute;
+        right:10px;
+        top:10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding:3px;
+        min-width: 35px;
+        height: 35px;
+        font-size: 11px;
+        border-radius: 50%;
+        background: red;
+        color:white;
+      }
     }
     .active {
       color: #28ae3a;

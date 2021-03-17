@@ -533,6 +533,9 @@
               </div>
             </div>
           </div>
+          <div class="btnscancel" @click="cancelHandlers">
+            不使用优惠券
+          </div>
         </div>
       </div>
     </van-popup>
@@ -813,7 +816,14 @@ export default {
 
   },
   methods: {
-        cal(){
+    cancelHandlers(){
+      this.couponshow = false
+      this.couponSeqId = 0
+      this.refer.couponObj = {}
+      this.refer.coupon = '不使用优惠券'
+      this.CalcSimplePrice()
+    },
+    cal(){
       this.popshow = false
         this.$toast('取消支付')
         this.$router.push({path:'/myorder'})
@@ -2197,6 +2207,17 @@ export default {
             margin-top: 10px;
           }
         }
+      }
+      .btnscancel{
+        height:68px;
+        line-height: 68px;
+        border-radius: 35px;
+        width:100%;
+        font-size: 28px;
+        text-align: center;
+        border:2px solid  #28ae3a;
+        background:#28ae3a;
+        color:white
       }
     }
   }

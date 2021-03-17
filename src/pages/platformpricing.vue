@@ -300,6 +300,9 @@
               </div>
             </div>
           </div>
+          <div class="btnscancel" @click="cancelHandlers">
+            不使用优惠券
+          </div>
         </div>
       </div>
     </van-popup>
@@ -432,7 +435,7 @@ export default {
       menutext: "发布需求",
       timetype: "",
       detail: {},
-      couponshow: false,
+      couponshow:false,
       payshow: false,
       money_total:0,
       paytype:1,
@@ -551,6 +554,13 @@ export default {
     this.remark = remarks;
   },
   methods: {
+    cancelHandlers(){
+      this.couponshow = false
+      this.couponSeqId = 0
+      this.couponObj = {}
+      this.coupon = '不使用优惠券'
+      this.getorderHeadCalcPrice()
+    },
     ruleHandler(e){
       localStorage.setItem('rulechecked',e)
     },
@@ -1306,6 +1316,17 @@ export default {
             margin-top: 10px;
           }
         }
+      }
+      .btnscancel{
+        height:68px;
+        line-height: 68px;
+        border-radius: 35px;
+        width:100%;
+        font-size: 28px;
+        text-align: center;
+        border:2px solid  #28ae3a;
+        background:#28ae3a;
+        color:white
       }
     }
   }
