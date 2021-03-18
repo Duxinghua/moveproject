@@ -141,6 +141,7 @@
         <van-field
           label="¥"
           v-model="pricetext"
+          min="0.01"
           input-align="left"
           type="number"
           clearable
@@ -745,7 +746,22 @@ export default {
           this.getorderHeadCalcPrice()
         }
       }else if(tag == 'diyprice'){
-        this.pricetext = this.pricetext.replace(/([0-9]+.[0-9]{2})[0-9]*/,"$1")
+let sNum = this.pricetext; //先转换成字符串类型
+  if (sNum.indexOf('.') == 0) {//第一位就是 .
+    console.log('first str is .')
+    sNum = '0' + sNum
+  }
+  sNum = sNum.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+  sNum = sNum.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的
+  sNum = sNum.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+  sNum = sNum.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');//只能输入两个小数
+  //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+  if(sNum.indexOf(".")< 0 && sNum !=""){
+    sNum = parseFloat(sNum);
+  }
+ this.pricetext = sNum
+
+
         this.getorderHeadCalcPrice()
       }
     },
@@ -841,6 +857,10 @@ export default {
       localStorage.removeItem("remarks")
     },
     payTodo() {
+      this.pricetext = parseFloat(this.pricetext)
+      if(!this.pricetext){
+        return this.$toast('请输入正确的金额')
+      }
       this.getorderHeadCalcPrice()
       setTimeout(() => {
       if(!this.time){
