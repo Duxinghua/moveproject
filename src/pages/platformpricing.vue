@@ -536,6 +536,12 @@ export default {
       this.areatext = detail.areatext;
       this.workerRegion = detail.workerRegion;
       this.worktype = detail.workTypeName + "-" + detail.workTypeName2;
+      if( detail.priceType == "DISCUSS"){
+        this.pricetext = detail.totalMoney
+        this.diyprice = true
+      }else{
+        this.diyprice = false
+      }
       this.getorderHeadCalcPrice();
     }
     this.payload = JSON.parse(localStorage.getItem('payload'))
@@ -748,7 +754,6 @@ export default {
       }else if(tag == 'diyprice'){
 let sNum = this.pricetext; //先转换成字符串类型
   if (sNum.indexOf('.') == 0) {//第一位就是 .
-    console.log('first str is .')
     sNum = '0' + sNum
   }
   sNum = sNum.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
@@ -843,12 +848,17 @@ let sNum = this.pricetext; //先转换成字符串类型
       this.getorderHeadCalcPrice()
     },
     linkHandler(index) {
-      if(index == 1){
-        this.$router.push({ path: "/agreement" });
-      }else if (index == 2) {
-        localStorage.setItem("detail", JSON.stringify(this.detail));
-        this.$router.push({ path: "/pricedetail", query: { index: 3 } });
-      }
+       this.getorderHeadCalcPrice()
+       setTimeout(()=>{
+        if(index == 1){
+          this.$router.push({ path: "/agreement" });
+        }else if (index == 2) {
+          localStorage.setItem("detail", JSON.stringify(this.detail));
+          this.$router.push({ path: "/pricedetail", query: { index: 3 } });
+        }
+
+       },100)
+
     },
     clearItem(){
       localStorage.removeItem('workTypeName')
