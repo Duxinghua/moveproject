@@ -1,12 +1,19 @@
 import axios from 'axios';
 import router from '../router';
-import { Toast } from 'vant';
+import { Toast,Dialog } from 'vant';
 
 function directLogin() {
-  router.push({
+	Dialog.alert({
+		title: '提示',
+		message: '未登录或登录过期',
+	}).then(() => {
+		// on close
+		router.push({
       path: '/login',
       query: {}
-  })
+ 	  })
+	});
+
 }
 // 创建 axios 实例
 const service = axios.create({
