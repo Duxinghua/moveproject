@@ -115,6 +115,7 @@ export default {
           localStorage.setItem("token", result.data);
           var tokenresult = this.decodeToken(result.data);
           localStorage.setItem("payload", JSON.stringify(tokenresult.payload));
+          localStorage.setItem("mobile",this.mobile)
           localStorage.setItem("sCar", 0);
           this.timer = 60;
           this.timerText = "获取验证码";

@@ -248,6 +248,7 @@ export default {
        // return this.$toast("请输入楼层及门牌号");
       } else {
         obj.unit = this.unit;
+        obj.infos = obj.infos+''+obj.unit
       }
       if (!this.name) {
         //return this.$toast("请输入联系人姓名");
@@ -264,7 +265,7 @@ export default {
         }
           obj.phone = this.phone;
       }
-      console.log(obj)
+
       var list = localStorage.getItem("adList");
       var center = localStorage.getItem("center")
       list = JSON.parse(list);

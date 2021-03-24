@@ -565,7 +565,8 @@ export default {
           list = JSON.parse(list);
           var arr = [];
           list.map((item) => {
-            if(item.center.length > 2){
+            console.log(item,'item')
+            if(item.center && item.center.length > 2){
               var il = JSON.parse(item.center);
               if (il.length) {
                 if(il[0]){

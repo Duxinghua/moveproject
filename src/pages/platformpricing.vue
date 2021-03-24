@@ -452,6 +452,7 @@ export default {
     };
   },
   created(){
+
   },
   watch:{
     diyprice:{
@@ -464,6 +465,7 @@ export default {
     }
   },
   mounted() {
+     this.phone = localStorage.getItem('mobile') || ''
         var Dates = new Date()
          var year = Dates.getFullYear()
          var month = Dates.getMonth()

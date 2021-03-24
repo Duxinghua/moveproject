@@ -650,6 +650,8 @@ export default {
   },
   mounted() {
     //处理时间
+    this.refer.phone = localStorage.getItem('mobile') || ''
+
     var placeOrder = localStorage.getItem('placeOrder')
     var orderType = localStorage.getItem('orderType')
     if(orderType == 1){
