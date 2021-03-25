@@ -57,7 +57,7 @@
           placeholder="请输入楼层及门牌号"
         />
       </div>
-      <div class="addresswrap unitwrap">
+      <div class="addresswrap unitwrap" v-if="false">
         <img
           src="../assets/images/concat.png"
           class="icoa"
@@ -68,7 +68,7 @@
           placeholder="请输入联系人姓名"
         />
       </div>
-      <div class="addresswrap unitwrap">
+      <div class="addresswrap unitwrap" v-if="false">
         <img
           src="../assets/images/mobile1.png"
           class="icoa"
@@ -456,6 +456,8 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      margin-top:150px;
+      border-bottom: none;
       .adbtn {
         width: 100%;
         height: 80px;

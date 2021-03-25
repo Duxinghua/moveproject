@@ -146,7 +146,7 @@
           type="number"
           clearable
           maxlength="8"
-          placeholder="请输入自定义价格"
+          placeholder="请根据参考价格给出您的报价"
           @input='helpInputHandler("diyprice")'
           @click="itemHandler('diyprice')"
           @change="change"
@@ -418,7 +418,7 @@ export default {
       timeshow: false,
       diyprice: false,
       rulechecked: false,
-      pricetext: 0,
+      pricetext: '',
       coupon: "",
       currentDate: new Date(),
       minDate: new Date(2020, 0, 1),
@@ -639,7 +639,7 @@ export default {
 
     },
     getorderHeadCalcPrice() {
-      console.log(this.worktype)
+
       var data = {
         orderDate: this.DateFormat(this.currentDate, "yyyy-MM-dd hh:mm:ss"),
         orderType: "ACTUAL_TIME",
@@ -667,7 +667,11 @@ export default {
       }
       if (data.priceType == "DISCUSS") {
         data.totalMoney = this.pricetext;
+        if(!data.totalMoney){
+          return
+        }
       }
+
       if(this.couponObj.seqId){
         data.couponSeqId = this.couponObj.seqId
         data.couponName = this.couponObj.applicableName
@@ -855,6 +859,9 @@ let sNum = this.pricetext; //先转换成字符串类型
         if(index == 1){
           this.$router.push({ path: "/agreement" });
         }else if (index == 2) {
+          if(!this.money){
+             return this.$toast("请先填写订单信息再选择价格明细");
+          }
           localStorage.setItem("detail", JSON.stringify(this.detail));
           this.$router.push({ path: "/pricedetail", query: { index: 3 } });
         }

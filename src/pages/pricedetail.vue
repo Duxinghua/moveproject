@@ -19,14 +19,19 @@
         </div>
         <div class="pricew" v-for="(item,index) in content.list1" :key="index">
           <div class="pt">
-            {{item.name}}({{item.name2}})
+            {{item.name}}{{item.name2 ? '('+item.name2+')' : ''}}
           </div>
           <div class="pr">
             ¥{{item.feeMoney}}
           </div>
         </div>
       </div>
-      <div class="priceitem" v-if="orderType != 3">
+      <div class="priceitem" v-if="orderType == 2">
+        <div class="des" >
+        温馨提示:此基础搬运费只包含一楼到一楼的搬运费，超出楼层的费用需参考计价规则说明中的楼层收费标准，据实结算。
+        </div>
+      </div>
+      <div class="priceitem" v-if="orderType != 3 &&  content.list2.length">
         <div class="pricetitle">
           额外费用
         </div>
@@ -39,6 +44,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -53,7 +59,10 @@ export default {
   data(){
     return {
       detail:{},
-      content:{},
+      content:{
+        list1:[],
+        list2:[]
+      },
       menutext:'价格明细',
       orderType:localStorage.getItem('orderType')
     }
@@ -160,6 +169,15 @@ export default {
       display: flex;
       flex-direction: column;
       margin-bottom: 30px;
+      .des{
+      font-size: 24px;
+      color:#999999;
+      line-height: 50px;
+      margin-top:25px;
+      text-align: left;
+      padding-bottom: 40px;
+      border-bottom: 2px solid #e5e6e7;
+      }
       .pricetitle{
         font-size: 40px;
         color:#999999;
