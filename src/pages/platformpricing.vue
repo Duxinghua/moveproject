@@ -125,7 +125,7 @@
         @click="itemHandler('time')"
       />
       <div class="itemdiy">
-        <span class="itemlabel lm">自定义价格</span>
+        <span class="itemlabel lm">自定义价格（用户自主出价）</span>
         <van-switch
           v-model="diyprice"
           active-color="#28ae3a"
@@ -631,11 +631,16 @@ export default {
         cb(result.list)
       });
     },
-    change() {
-      if(!this.diyprice){
-        this.pricetext = 0
-        this.getorderHeadCalcPrice();
+    change(e) {
+      if(!e){
+        this.pricetext = ''
+      }else{
+          this.money = 0;
+          this.money_total = 0
+          this.money_total_s = 0
       }
+      this.getorderHeadCalcPrice();
+
 
     },
     getorderHeadCalcPrice() {
@@ -662,14 +667,20 @@ export default {
       };
       if(this.diyprice){
           data.priceType = "DISCUSS"
+          if(!this.diyprice){
+            this.diyprice = 0
+          this.money = 0;
+          this.money_total = 0
+          this.money_total_s = 0
+          }
       }else{
           data.priceType = "STANDARD"
       }
       if (data.priceType == "DISCUSS") {
         data.totalMoney = this.pricetext;
-        if(!data.totalMoney){
-          return
-        }
+        // if(!data.totalMoney){
+        //   return
+        // }
       }
 
       if(this.couponObj.seqId){
@@ -876,11 +887,18 @@ let sNum = this.pricetext; //先转换成字符串类型
       localStorage.removeItem("remarks")
     },
     payTodo() {
-      this.pricetext = parseFloat(this.pricetext)
-      if(!this.pricetext){
-        return this.$toast('请输入正确的金额')
+
+      console.log(this.pricetext)
+      if(this.diyprice){
+        if(!this.pricetext){
+
+          return this.$toast('请输入正确的金额')
+        }else{
+          this.getorderHeadCalcPrice()
+        }
+      }else{
+        this.getorderHeadCalcPrice()
       }
-      this.getorderHeadCalcPrice()
       setTimeout(() => {
       if(!this.time){
           return this.$toast('请输入预约时间')
