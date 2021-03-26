@@ -698,18 +698,19 @@ export default {
     box-sizing: border-box;
     overflow: hidden;
     .submenus {
-      width: 12%;
+      width: 50px;
       display: flex;
+      margin-right: 65px;
       .homeico {
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        margin-right: auto;
       }
     }
     .submenu {
       display: flex;
-      width: 22%;
+      width: fit-content;
+      margin-right: 65px;
       font-size: 34px;
       .homeico {
         width: 40px;
@@ -749,7 +750,8 @@ export default {
       position: relative;
       .caritem {
         font-size: 28px;
-        width: 25%;
+        width: fit-content;
+        margin-right: 50px;
         text-align: left;
         position: relative;
       }
