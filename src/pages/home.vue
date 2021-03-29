@@ -390,7 +390,7 @@ export default {
       this.adList.map((item)=>{
         if(item.obj){
           item.name = item.obj.formattedAddress
-          item.address = item.obj.infos
+          item.address = item.obj.infos+item.obj.unit
         }
       })
       this.active = this.adList.length;

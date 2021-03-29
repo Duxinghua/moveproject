@@ -248,7 +248,7 @@ export default {
        // return this.$toast("请输入楼层及门牌号");
       } else {
         obj.unit = this.unit;
-        obj.infos = obj.infos+''+obj.unit
+        obj.infos = obj.infos
       }
       if (!this.name) {
         //return this.$toast("请输入联系人姓名");

@@ -984,6 +984,7 @@ export default {
                 var obj = {
                   address1: item.obj.formattedAddress,
                   address2: item.obj.infos,
+                  address3: item.obj.unit,
                   longitude: locations[0],
                   latitude: locations[1],
                   sort: index + 1,

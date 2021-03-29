@@ -47,7 +47,7 @@
         >
           <div class="lt-icon-box"></div>
           <p class="addressName">{{item.address1}}</p>
-          <p class="detailAddress">{{item.address2}}</p>
+          <p class="detailAddress">{{item.address2 + (item.address3 ? item.address3 : '')}}</p>
         </div>
       </div>
     </div>
